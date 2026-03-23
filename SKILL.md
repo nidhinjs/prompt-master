@@ -165,6 +165,17 @@ Identify the tool and route accordingly. Read full templates from [references/te
 
 ---
 
+**Cortex Code (Snowflake's CLI coding agent)**
+- Agentic like Claude Code — runs tools, edits files, executes SQL, manages Snowflake objects autonomously
+- Powered by Claude Opus 4.x — apply the same anti-over-engineering guard: "Only make changes directly requested..."
+- Skills system: markdown-based system prompts loaded via `cortex skill add` — reference skill capabilities rather than re-explaining them
+- Snowflake-native: `snowflake_sql_execute` tool for SQL, `st.connection("snowflake")` for Streamlit in Snowflake apps — always prefer these over raw connectors
+- Stop conditions and human review triggers are critical — same runaway-loop risk as Claude Code
+- For complex tasks: use `cortex ctx task add` / `cortex ctx step add` to break work into tracked steps — the agent loses coherence on long unstructured tasks
+- Headless mode (`cortex -p "prompt" --output-format stream-json`) available for CI/automation — output is JSON events, not plain text
+
+---
+
 **Antigravity (Google's agent-first IDE, powered by Gemini 3 Pro)**
 - Task-based prompting — describe outcomes, not steps
 - Prompt for an Artifact (task list, implementation plan) before execution so you can review it first
