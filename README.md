@@ -1,5 +1,7 @@
 ![](https://s6.imgcdn.dev/YvLVug.png)
 
+[![gitcgr](https://gitcgr.com/badge/nidhinjs/prompt-master.svg)](https://gitcgr.com/nidhinjs/prompt-master)
+
 <br/>
 
 A Claude skill that writes the accurate prompts for any AI tool. Zero tokens or credits wasted. Full context and memory retention. No re-prompting your way to an answer you should have gotten on attempt one.
