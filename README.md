@@ -10,17 +10,30 @@ A Claude skill that writes the accurate prompts for any AI tool. Zero tokens or 
 
 ## 🚀 Installation
 
-### RECOMMENDED - Claude.ai (browser)
+Полная инструкция (3 способа) — [docs/installation.md](docs/installation.md).
 
-1. Download this repo as a ZIP
-2. Go to **claude.ai → Sidebar → Customize → Skills → Upload a Skill**
-
-
-### OR Clone directly into Claude Code skills directory (Not Suggested)
+### RECOMMENDED — Claude Code / Cowork (plugin marketplace)
 
 ```bash
-mkdir -p ~/.claude/skills
-git clone https://github.com/nidhinjs/prompt-master.git ~/.claude/skills/prompt-master
+# 1. Добавить маркетплейс из GitHub
+/plugin marketplace add azagreev/prompt-master-za
+
+# 2. Установить плагин
+/plugin install prompt-master@prompt-master
+```
+
+В Cowork: **Customize → Browse plugins → Personal → + → Add marketplace from GitHub →** `azagreev/prompt-master-za` → установить **prompt-master**.
+
+### OR — Claude.ai (browser, ZIP)
+
+1. Заархивируй `plugins/prompt-master/skills/prompt-master/` в ZIP (в корне архива — `SKILL.md` и `references/`).
+2. **claude.ai → Customize → Skills → Upload a Skill**.
+
+### OR — Clone into Claude Code skills directory
+
+```bash
+git clone https://github.com/azagreev/prompt-master-za.git
+cp -r prompt-master-za/plugins/prompt-master/skills/prompt-master ~/.claude/skills/prompt-master
 ```
 
 ## 🔥 The Problem This Solves
@@ -200,8 +213,9 @@ Prompt Master includes specific profiles for 20+ tools. For anything not on the 
 
 | Tool | Category | What Prompt Master Fixes |
 |------|----------|--------------------------|
-| **Claude** | Reasoning LLM | Removes padding, adds XML structure, specifies length |
-| **ChatGPT / GPT-5.x** | Reasoning LLM | Output contract, verbosity control, completion criteria |
+| **Claude (Opus 4.8 / 4.7)** | Reasoning LLM | Removes padding, adds XML structure, specifies length, front-loads scope |
+| **Claude Fable 5 / Mythos 5** | Frontier LLM | Outcome-first + brief intent, effort-based steering, progress grounding, no reasoning-echo (avoids refusal) |
+| **ChatGPT / GPT-5.5 / GPT-5.x** | Reasoning LLM | Outcome-first structure, `text.verbosity`, reasoning-effort tuning, preambles, retrieval budgets |
 | **Gemini 2.x** | Reasoning LLM | Grounding anchors, citation rules, format locks |
 | **o3 / o4-mini** | Thinking LLM | Short clean instructions only — never adds CoT (they think internally) |
 | **Ollama** | Local LLM | Asks which model is loaded, includes system prompt for Modelfile |
@@ -391,6 +405,7 @@ This is the single biggest fix for long sessions. Most wasted re-prompts come fr
 
 ## ℹ️ Version History
 
+- **1.8.0** — Claude Code marketplace plugin (restructured into `plugins/prompt-master/skills/`, added `marketplace.json` / `plugin.json` / `docs/installation.md`). Added Claude Fable 5 / Mythos 5 routing (effort-based steering, brief-intent prompting, progress grounding, `reasoning_extraction` hard rule). Rewrote GPT-5.x routing for GPT-5.5 (outcome-first, `text.verbosity`, reasoning-effort tuning, preambles, retrieval budgets). New "Model-fit failures" diagnostics. See [CHANGELOG.md](CHANGELOG.md).
 - **1.7.0** — Opus 4.8 compatibility. Made Claude 4.x routing version-aware: durable advice generalized across 4.6/4.7/4.8, added Opus 4.8 (current default) profile, kept Opus 4.7 labeled. De-hardcoded the effort-level note (now harness-managed). Template M and pattern 36 cover 4.7 and 4.8. Fixed a stray fragment in patterns.md.
 - **1.6.0** — Opus 4.7 update. Added Template M (Opus 4.7 Task Brief). Updated Claude and Claude Code routing for literalism, adaptive thinking, xhigh effort, and session hygiene. Added patterns 36–37.
 - **1.5.0** — Added more tool routing. New Agentic AI and 3D Model AI routing added. Fixed description to 189 chars. Removed token estimate from output. Added instruction layer and copywriting placeholders
@@ -410,6 +425,6 @@ MIT: See [LICENSE](LICENSE) for details.
 
 ## ⭐ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=nidhinjs/prompt-master&type=Date)](https://star-history.com/#nidhinjs/claude-skills&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=azagreev/prompt-master-za&type=Date)](https://star-history.com/#azagreev/prompt-master-za&Date)
 
 ---

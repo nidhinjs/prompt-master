@@ -1,0 +1,6 @@
+# Claude Code local session settings
+.claude/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db

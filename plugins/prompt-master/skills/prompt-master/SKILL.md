@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.7.0
+version: 1.8.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -25,6 +25,7 @@ Build prompts one at a time, ready to paste.
   - **Universal Self-Consistency** -- requires independent sampling passes
   - **Prompt chaining as a layered technique** -- compounds fabrication risk across longer chains
 - Do not add Chain of Thought to reasoning-native models (o3, o4-mini, DeepSeek-R1, Qwen3 thinking mode) — they think internally, CoT degrades output
+- Do not instruct Claude Fable 5 / Mythos 5 to echo, transcribe, reproduce, or "show your reasoning/thinking" in the response — this triggers a `reasoning_extraction` refusal and forces a fallback to Opus 4.8. For visible progress on long runs, use a send-to-user tool instead
 - Do not ask more than 3 clarifying questions before producing a prompt
 - Do not pad output with explanations the user did not request
 
@@ -69,7 +70,7 @@ Identify the tool and route accordingly. Read full templates from [references/te
 
 **Claude (claude.ai, Claude API, Claude 4.x)**
 
-Current default is **Opus 4.8**. Opus 4.7 is still selectable — keep its notes, but assume 4.8 unless the user names a specific version.
+Current default is **Opus 4.8**. Opus 4.7 is still selectable — keep its notes, but assume 4.8 unless the user names a specific version. **Claude Fable 5 / Mythos 5** are the newest, most capable models — when the user names Fable 5 or Mythos 5, or is targeting long-horizon, ambiguous, or multi-day autonomous work, route to the dedicated Fable 5 block below instead of this one.
 
 *Durable across Claude 4.x (4.6 / 4.7 / 4.8):*
 - Be explicit and specific — Claude 4.x follows instructions literally. It does exactly what you say, nothing more. Missing context = narrow literal output, not a smart guess.
@@ -91,13 +92,45 @@ Current default is **Opus 4.8**. Opus 4.7 is still selectable — keep its notes
 
 ---
 
+**Claude Fable 5 / Mythos 5 (newest, most capable — for hard, long-horizon, ambiguous work)**
+
+Fable 5 takes on problems too complex, long-running, or ambiguous for prior models — end-to-end work measured in hours to days. Prompt it differently from Opus 4.x: **steer with brief intent, not enumerated rules.** Instruction-following is strong enough that one short instruction replaces a long checklist.
+
+- **Effort is the primary lever.** Default `high`; `xhigh` for the most capability-sensitive work; `medium` / `low` for routine. Lower effort on Fable 5 still beats `xhigh` on prior models. Drop effort if a task completes but takes longer than needed.
+- **Don't over-prescribe.** Prompts and skills written for older models are often too prescriptive and *degrade* Fable 5 output. Strip step-by-step scaffolding; state the outcome and constraints, let it find the path.
+- **Curb over-engineering at high effort with one line:** "Don't add features, refactor, abstractions, error handling, or backwards-compat shims beyond what the task requires. Do the simplest thing that works. Only validate at system boundaries."
+- **Avoid overplanning on ambiguous tasks:** "When you have enough information to act, act. Don't re-derive established facts, re-litigate decided choices, or narrate options you won't pursue. Give a recommendation, not a survey."
+- **Ground progress claims on long runs:** "Before reporting progress, audit each claim against a tool result from this session. Report only work you can point to evidence for; if something isn't verified, say so. If tests fail, say so with the output."
+- **State the boundaries** — Fable 5 can take unrequested actions: "When the user is describing a problem or asking a question rather than requesting a change, report your assessment and stop. Don't apply a fix until asked."
+- **Checkpoints, not a wall of cases:** "Pause for the user only for a destructive/irreversible action, a real scope change, or input only they can provide. Otherwise proceed."
+- **Parallel subagents** are dispatched readily — encourage delegation and async communication: "Delegate independent subtasks to subagents and keep working while they run."
+- **Memory system** boosts repeat-task quality — point it at a notes file: "Store one lesson per file with a one-line summary; record corrections and confirmed approaches with why they mattered."
+- **Longer turns by default** — hard tasks run many minutes; autonomous runs, hours. Note this for harness/timeout/streaming expectations.
+- ⚠️ **NEVER instruct it to reproduce / echo / show its reasoning in the response** — triggers a `reasoning_extraction` refusal and fallback to Opus 4.8. For visible progress, use a send-to-user tool (renders the message verbatim without ending the turn).
+- **Give the reason, not just the request:** "I'm working on [larger task] for [who]. They need [what the output enables]. With that in mind: [request]."
+- Not for offensive-cybersecurity or biology/life-sciences work — those return a refusal; route the user to Opus 4.8 for benign cases in those domains.
+
+---
+
 **ChatGPT / GPT-5.x / OpenAI GPT models**
+
+*Durable across GPT-5.x:*
 - Start with the smallest prompt that achieves the goal — add structure only when needed
 - Be explicit about the output contract: what format, what length, what "done" looks like
 - State tool-use expectations explicitly if the model has access to tools
 - Use compact structured outputs — GPT-5.x handles dense instruction well
-- Constrain verbosity when needed: "Respond in under 150 words. No preamble. No caveats."
 - GPT-5.x is strong at long-context synthesis and tone adherence — leverage these
+
+*GPT-5.5 (current OpenAI guidance — outcome-first):*
+- Write **outcome-first**, not step-by-step. Define destination (goal + success criteria + constraints + available evidence + stop rules), not a prescribed procedure. Over-specifying process narrows the search space and produces mechanical answers.
+- **Drop legacy instruction stacks.** Shorter, less process-heavy prompts often beat prompts carried over from older models. Re-evaluate every inherited line.
+- **Avoid absolutes** (ALWAYS / NEVER / MUST / ONLY) unless they are true safety, policy, or invariant constraints — GPT-5.5 follows them literally and they distort otherwise-flexible behavior.
+- **Verbosity is a parameter, not prose.** For API users, control length with `text.verbosity` (`low` / `medium`); reserve in-prompt length caps for when the parameter isn't available.
+- **Reasoning effort:** re-test at `low` / `medium` before escalating — efficiency gains mean higher effort is often unnecessary. Use effort for genuinely hard tasks, not as a default lever.
+- **Preambles for tool/multi-step work:** "Before any tool calls, send a short user-visible update acknowledging the request and stating the first step." Improves perceived responsiveness when streaming.
+- **Retrieval budgets:** tell it when to stop searching — "Make another retrieval call only if the top results don't answer the core question, a required fact is missing, or exhaustive coverage was explicitly requested."
+- **Personality / collaboration style:** for conversational products, state tone and proactivity briefly and explicitly (default style is efficient and direct). For production systems the default is usually fine.
+- **Default to plain paragraphs.** Add bullets/headers only when they aid comprehension; distinguish source-backed facts from creative wording.
 
 ---
 
@@ -386,7 +419,15 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 **Reasoning failures**
 - Logic or analysis task with no step-by-step → add "Think through this carefully before answering"
 - CoT added to o3/o4-mini/R1/Qwen3-thinking → REMOVE IT
+- "Show/echo/reproduce your reasoning" sent to Claude Fable 5/Mythos 5 → REMOVE IT (triggers reasoning_extraction refusal); use a send-to-user tool for visible progress instead
 - New prompt contradicts prior session decisions → flag, resolve, include memory block
+
+**Model-fit failures (current-gen models)**
+- Step-by-step process over-specified for GPT-5.5 or Fable 5 → strip it, switch to outcome-first (goal + success criteria + constraints + stop rules); let the model choose the path
+- Absolutes (ALWAYS/NEVER/MUST/ONLY) used for non-invariants on GPT-5.5 → soften to plain instructions; reserve absolutes for true safety/policy/invariant constraints
+- In-prompt verbosity caps for GPT-5.x API context → replace with the `text.verbosity` parameter where applicable
+- Hardcoded effort/thinking budget for Opus 4.x, Fable 5, or Claude Code → REMOVE IT (harness/adaptive-managed); on Fable 5 steer via the `effort` setting, not the prompt body
+- Legacy instruction stack carried over to GPT-5.5 or Fable 5 → prune inherited lines; shorter, less prescriptive prompts perform better on current-gen models
 
 **Agentic failures**
 - No starting state → add current project state description
