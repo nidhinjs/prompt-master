@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-06-11
+
+Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://github.com/nidhinjs/prompt-master/pull/13)): tool-профили вынесены из `SKILL.md` и грузятся по требованию — меньше токенов на активацию и меньше «шумовых» инструкций, конкурирующих за внимание.
+
+### Added
+- **`references/tool-profiles.md`** — все ~28 per-tool профилей (Claude, Fable 5, GPT-5.x, reasoning-модели, агентные IDE, image/video/voice/3D/workflow AI, Prompt Decompiler, Unknown tool). Читается только секция под идентифицированный инструмент.
+- **Секция Gotchas** в `SKILL.md` — быстрый чеклист самых частых per-tool ошибок (9 пунктов), ловит их без загрузки полного профиля.
+
+### Changed
+- **`SKILL.md` ужат**: блок Tool Routing с инлайн-профилями заменён on-demand указателем на `tool-profiles.md`. Ядро (identity, hard rules, intent extraction, diagnostics, memory, safe techniques, verification) и универсальные правила (Credential Safety, Input Sanitization) остаются всегда загруженными.
+- Таблица Reference Files дополнена строкой `tool-profiles.md`.
+
 ## [1.8.0] - 2026-06-11
 
 ### Added
@@ -44,4 +56,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.9.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.9.0
 [1.8.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.8.0
