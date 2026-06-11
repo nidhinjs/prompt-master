@@ -405,15 +405,7 @@ This is the single biggest fix for long sessions. Most wasted re-prompts come fr
 
 ## ℹ️ Version History
 
-- **1.8.0** — Claude Code marketplace plugin (restructured into `plugins/prompt-master/skills/`, added `marketplace.json` / `plugin.json` / `docs/installation.md`). Added Claude Fable 5 / Mythos 5 routing (effort-based steering, brief-intent prompting, progress grounding, `reasoning_extraction` hard rule). Rewrote GPT-5.x routing for GPT-5.5 (outcome-first, `text.verbosity`, reasoning-effort tuning, preambles, retrieval budgets). New "Model-fit failures" diagnostics. See [CHANGELOG.md](CHANGELOG.md).
-- **1.7.0** — Opus 4.8 compatibility. Made Claude 4.x routing version-aware: durable advice generalized across 4.6/4.7/4.8, added Opus 4.8 (current default) profile, kept Opus 4.7 labeled. De-hardcoded the effort-level note (now harness-managed). Template M and pattern 36 cover 4.7 and 4.8. Fixed a stray fragment in patterns.md.
-- **1.6.0** — Opus 4.7 update. Added Template M (Opus 4.7 Task Brief). Updated Claude and Claude Code routing for literalism, adaptive thinking, xhigh effort, and session hygiene. Added patterns 36–37.
-- **1.5.0** — Added more tool routing. New Agentic AI and 3D Model AI routing added. Fixed description to 189 chars. Removed token estimate from output. Added instruction layer and copywriting placeholders
-- **1.4.0** — Added reference image editing detection, ComfyUI support, Prompt Decompiler mode. Fixed trigger description to invoke correctly in Claude Code. 3 new templates added to references folder
-- **1.3.0** — Rebuilt around PAC2026 positional structure (30/55/15). Silent routing replaces user-facing framework selection. References folder introduced
-- **1.2.0** — Restructured for attention architecture. Removed fabrication-prone techniques (ToT, GoT, USC, prompt chaining). Templates and patterns moved to references folder
-- **1.1.0** — Expanded tool coverage, added memory block system, 35 credit killing patterns
-- **1.0.0** — Initial release
+Полная история версий — [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
