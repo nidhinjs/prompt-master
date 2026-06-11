@@ -123,7 +123,7 @@ $skillText = [regex]::Replace($skillText, '(?m)^version:\s*\S+', "version: $new"
 Set-Content -LiteralPath $skillMd -Value $skillText -NoNewline -Encoding utf8
 Write-Host "  ok SKILL.md" -ForegroundColor Green
 
-# --- 3. CHANGELOG.md: вставить заготовку перед первой секцией ## [ ---
+# --- 3. CHANGELOG.md: дата-стаб секции + footer-ссылка на GitHub release ---
 if (-not $NoChangelog) {
     if (Test-Path $changelogMd) {
         $clText = Get-Content -Raw -LiteralPath $changelogMd
@@ -131,15 +131,28 @@ if (-not $NoChangelog) {
             Write-Host "  -- CHANGELOG: секция [$new] уже есть, пропуск" -ForegroundColor DarkYellow
         }
         else {
+            # 3a. Заготовка секции с датой перед первой ## [
             $today = (Get-Date).ToString('yyyy-MM-dd')
             $stub  = "## [$new] - $today`n`n### Added`n- `n`n### Changed`n- `n`n"
             $m = [regex]::Match($clText, '(?m)^##\s*\[')
-            if ($m.Success) {
-                $clText = $clText.Insert($m.Index, $stub)
+            if ($m.Success) { $clText = $clText.Insert($m.Index, $stub) }
+            else            { $clText = $clText.TrimEnd() + "`n`n" + $stub }
+
+            # 3b. Footer-ссылка [X.Y.Z]: <repo>/releases/tag/vX.Y.Z (newest сверху)
+            $repoUrl = (git -C $repoRoot config --get remote.origin.url 2>$null)
+            if ($repoUrl) {
+                $repoUrl = $repoUrl.Trim() -replace '\.git$', '' -replace '^git@github\.com:', 'https://github.com/'
+                $footer  = "[$new]: $repoUrl/releases/tag/v$new"
+                if ($clText -notmatch "(?m)^\[$([regex]::Escape($new))\]:") {
+                    $fm = [regex]::Match($clText, '(?m)^\[\d+\.\d+\.\d+\]:\s')
+                    if ($fm.Success) { $clText = $clText.Insert($fm.Index, "$footer`n") }
+                    else             { $clText = $clText.TrimEnd() + "`n`n$footer`n" }
+                }
             }
             else {
-                $clText = $clText.TrimEnd() + "`n`n" + $stub
+                Write-Host "  -- remote.origin.url не найден, footer-ссылка пропущена" -ForegroundColor DarkYellow
             }
+
             Set-Content -LiteralPath $changelogMd -Value $clText -NoNewline -Encoding utf8
             Write-Host "  ok CHANGELOG.md (заполни секцию [$new])" -ForegroundColor Green
         }
@@ -169,8 +182,10 @@ if (-not $NoChangelog) { Write-Host "  1. Заполни секцию ## [$new] 
 Write-Host "  2. git add -A && git commit -m `"chore: bump to v$new`""
 if ($Tag) {
     Write-Host "  3. git push origin HEAD && git push origin v$new"
+    Write-Host "  4. gh release create v$new --title `"v$new`" --notes `"<changelog>`"   # резолвит footer-ссылку в CHANGELOG"
 }
 else {
     Write-Host "  3. git push origin HEAD"
     Write-Host "     (тег: ./scripts/bump-version.ps1 -Version $new -Tag  — или git tag -a v$new -m v$new)"
+    Write-Host "  4. gh release create v$new --title `"v$new`" --notes `"<changelog>`"   # после пуша тега"
 }

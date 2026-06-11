@@ -1,8 +1,11 @@
 # Changelog
 
-Все заметные изменения навыка Prompt Master. Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.0.0/), версионирование — [SemVer](https://semver.org/lang/ru/).
+All notable changes to this project will be documented in this file.
 
-## [1.8.0]
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.8.0] - 2026-06-11
 
 ### Added
 - **Маркетплейс-установка Claude Code.** Репозиторий теперь работает как плагин-маркетплейс: `.claude-plugin/marketplace.json` + `plugins/prompt-master/.claude-plugin/plugin.json`. Установка через `/plugin marketplace add azagreev/prompt-master-za` → `/plugin install prompt-master@prompt-master`.
@@ -38,3 +41,7 @@
 
 ## [1.0.0]
 - Первый релиз.
+
+<!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
+
+[1.8.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.8.0

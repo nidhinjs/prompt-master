@@ -24,6 +24,18 @@ A Claude skill that writes the accurate prompts for any AI tool. Zero tokens or 
 
 В Cowork: **Customize → Browse plugins → Personal → + → Add marketplace from GitHub →** `azagreev/prompt-master-za` → установить **prompt-master**.
 
+#### 🔄 Обновление плагина
+
+Сторонние маркетплейсы (как этот) **не авто-обновляются по умолчанию** — авто-pull на старте сессии включён только для официального маркетплейса Anthropic. После нового релиза кнопка Update может оставаться неактивной, пока обновление не подтянуть.
+
+**✅ Рекомендуется — включить auto-update один раз** (дальше плагин обновляется сам на старте сессии):
+- **Claude Code (CLI/desktop):** `/plugin` → **Marketplaces** → `prompt-master` → включить **auto-update**.
+- **Cowork:** включи тумблер **auto-update** на странице плагина, если он показан.
+
+**Разовое обновление вручную:**
+- **Claude Code (CLI):** `/plugin marketplace update prompt-master` → обнови плагин → `/reload-plugins` (или перезапусти сессию).
+- **Cowork (GUI):** Customize → `prompt-master` → **удали и добавь заново** (`+` → Add marketplace from GitHub → `azagreev/prompt-master-za`) — форсит свежий клон.
+
 ### OR — Claude.ai (browser, ZIP)
 
 1. Заархивируй `plugins/prompt-master/skills/prompt-master/` в ZIP (в корне архива — `SKILL.md` и `references/`).
