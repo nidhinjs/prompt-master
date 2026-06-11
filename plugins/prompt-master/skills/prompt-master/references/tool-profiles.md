@@ -8,7 +8,7 @@ For volatile model facts (model IDs, current defaults, version-tied params, what
 
 **Claude (claude.ai, Claude API, Claude 4.x)**
 
-Current default is **Opus 4.8**. Opus 4.7 is still selectable — keep its notes, but assume 4.8 unless the user names a specific version. **Claude Fable 5 / Mythos 5** are the newest, most capable models — when the user names Fable 5 or Mythos 5, or is targeting long-horizon, ambiguous, or multi-day autonomous work, route to the dedicated Fable 5 block below instead of this one.
+Current default is **Claude Fable 5** (Mythos 5 is its sibling) — assume Fable 5 unless the user names a specific model, and route to the dedicated **Claude Fable 5 / Mythos 5** block below. **Opus 4.8** (and 4.7) remain selectable fallbacks: use them when the user names them, or for benign work in domains where Fable 5 refuses (offensive-security, biology/life-sciences). The Opus notes below apply to those cases.
 
 *Durable across Claude 4.x (4.6 / 4.7 / 4.8):*
 - Be explicit and specific — Claude 4.x follows instructions literally. It does exactly what you say, nothing more. Missing context = narrow literal output, not a smart guess.
@@ -20,7 +20,7 @@ Current default is **Opus 4.8**. Opus 4.7 is still selectable — keep its notes
 - Do NOT add "think step by step" or fixed thinking-budget instructions — Opus 4.x uses adaptive thinking and calibrates depth automatically. To influence depth: "Think carefully before responding" (more) or "Prioritize responding quickly" (less).
 - Use Template M for agentic or multi-step tasks.
 
-*Opus 4.8 (current default):*
+*Opus 4.8 (selectable fallback):*
 - Shares 4.7's literalism and adaptive thinking — the same front-loading discipline applies. Treat the first turn as the only turn for complex work: intent, scope, constraints, acceptance criteria up front.
 - 1M-token context window — large multi-file context can go in a single prompt, but keep it relevant; padding still dilutes attention.
 - Effort/thinking depth is calibrated automatically — do not specify an effort level or thinking budget.

@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.10.0
+version: 1.11.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -78,8 +78,8 @@ Model IDs, current defaults, and version-tied params are volatile — confirm th
 
 Catch these before generating; open the full profile in [references/tool-profiles.md](references/tool-profiles.md) when the task needs more.
 
-- **Claude Opus 4.x** over-engineers — add "Only make changes directly requested. No extra features, files, or refactors."
-- **Claude Fable 5 / Mythos 5** — NEVER ask it to show / echo / reproduce its reasoning (triggers a `reasoning_extraction` refusal); steer with brief intent + the `effort` setting, not long rule lists.
+- **Claude Fable 5 / Mythos 5** (default for "Claude" when unspecified) — NEVER ask it to show / echo / reproduce its reasoning (triggers a `reasoning_extraction` refusal); steer with brief intent + the `effort` setting, not long rule lists.
+- **Claude Opus 4.x** (selectable fallback) over-engineers — add "Only make changes directly requested. No extra features, files, or refactors."
 - **GPT-5.5** — outcome-first, not step-by-step; avoid absolutes (ALWAYS / NEVER) for non-invariants; control length via `text.verbosity`, not prose.
 - **o3 / o4-mini / DeepSeek-R1 / Qwen3-thinking** — reasoning-native: NEVER add CoT or "think step by step"; short clean instructions only.
 - **Gemini** — prone to hallucinated citations: add "Cite only sources you are certain of. If uncertain, say [uncertain]."

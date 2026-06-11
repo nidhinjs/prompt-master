@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - 2026-06-11
+
+### Changed
+- **Дефолтная модель Claude в роутинге — теперь Fable 5** (разворот решения 1.8.0). Когда пользователь говорит «Claude» без указания версии, скилл целится в Claude Fable 5 / Mythos 5. Opus 4.8 / 4.7 — selectable fallback (по явному запросу или для benign-работы в доменах, где Fable 5 отказывает: offensive-security, biology/life-sciences). Обновлены `tool-profiles.md` (Claude-блок + подзаголовок Opus → «selectable fallback»), `SKILL.md` Gotchas (Fable 5 первым) и `models.md` (Fable 5 помечена как дефолтный routing-target, факт о харнесс-дефолте Opus 4.8 сохранён).
+- Описания плагина/маркетплейса: Claude Fable 5 указана дефолтом; счётчик паттернов исправлен 35 → 38. README: строки Claude в таблице помечены «(default)» / «(fallback)».
+
 ## [1.10.0] - 2026-06-11
 
 Две идеи из апстрим-PR: Cortex Code ([nidhinjs#15](https://github.com/nidhinjs/prompt-master/pull/15)) и датированный fact-sheet моделей с протоколом ре-верификации ([nidhinjs#48](https://github.com/nidhinjs/prompt-master/pull/48)).
@@ -70,6 +76,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.11.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.11.0
 [1.10.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.10.0
 [1.9.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.9.0
 [1.8.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.8.0

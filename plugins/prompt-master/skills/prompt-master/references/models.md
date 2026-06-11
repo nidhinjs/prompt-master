@@ -16,8 +16,8 @@ All facts that go stale fast — model IDs, current defaults, version-tied param
 
 `last-verified: 2026-06-11`
 
-- **Newest, most capable:** Claude Fable 5 and Claude Mythos 5. Model ID — Fable 5: `claude-fable-5`. Route hard, long-horizon, ambiguous work here.
-- **Default for most harnesses:** Claude Opus 4.8 (`claude-opus-4-8`). 1M-token context. Opus 4.7 still selectable.
+- **Newest, most capable — the skill's default "Claude" routing target:** Claude Fable 5 and Claude Mythos 5. Model ID — Fable 5: `claude-fable-5`. Assume Fable 5 when the user says "Claude" without naming a version; route hard, long-horizon, ambiguous work here.
+- **Common harness default / selectable fallback:** Claude Opus 4.8 (`claude-opus-4-8`). 1M-token context. Opus 4.7 still selectable. Use for benign work in domains where Fable 5 refuses (offensive-security, biology/life-sciences).
 - **Other current 4.x IDs:** Sonnet 4.6 `claude-sonnet-4-6`; Haiku 4.5 `claude-haiku-4-5-20251001`.
 - **Thinking:** adaptive-thinking only on Fable 5 / Mythos 5 — summarized-only thinking output, **no extended-thinking budgets**. Do not set `budget_tokens` or a fixed thinking budget. Opus 4.x also calibrates depth automatically.
 - **Effort levels:** `low` / `medium` / `high` / `xhigh`. On Fable 5 effort is the primary intelligence/latency/cost lever; default `high`. On Claude Code the harness manages effort — do not hardcode it in prompts.

@@ -225,8 +225,8 @@ Prompt Master includes specific profiles for 20+ tools. For anything not on the 
 
 | Tool | Category | What Prompt Master Fixes |
 |------|----------|--------------------------|
-| **Claude (Opus 4.8 / 4.7)** | Reasoning LLM | Removes padding, adds XML structure, specifies length, front-loads scope |
-| **Claude Fable 5 / Mythos 5** | Frontier LLM | Outcome-first + brief intent, effort-based steering, progress grounding, no reasoning-echo (avoids refusal) |
+| **Claude Fable 5 / Mythos 5** (default) | Frontier LLM | Outcome-first + brief intent, effort-based steering, progress grounding, no reasoning-echo (avoids refusal) |
+| **Claude (Opus 4.8 / 4.7)** (fallback) | Reasoning LLM | Removes padding, adds XML structure, specifies length, front-loads scope |
 | **ChatGPT / GPT-5.5 / GPT-5.x** | Reasoning LLM | Outcome-first structure, `text.verbosity`, reasoning-effort tuning, preambles, retrieval budgets |
 | **Gemini 2.x** | Reasoning LLM | Grounding anchors, citation rules, format locks |
 | **o3 / o4-mini** | Thinking LLM | Short clean instructions only — never adds CoT (they think internally) |
