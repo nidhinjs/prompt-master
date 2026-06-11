@@ -2,6 +2,8 @@
 
 Per-tool routing profiles. **Read only the one section that matches the identified target tool** — do not load this whole file into context. SKILL.md carries a quick Gotchas cheat-sheet for the most common pitfalls; come here for the full per-tool profile, then read [templates.md](templates.md) only for the template structure you need.
 
+For volatile model facts (model IDs, current defaults, version-tied params, what's retired), see [models.md](models.md) and honor its 60-day re-verify protocol — the profiles below carry evergreen prompting advice, not point-in-time model specs.
+
 ---
 
 **Claude (claude.ai, Claude API, Claude 4.x)**
@@ -151,6 +153,17 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 - Human review triggers required: "Stop and ask before deleting any file, adding any dependency, or affecting the database schema"
 - Session hygiene matters: new task = new session. Use /rewind instead of correcting mid-conversation. /compact at ~50% context, not 90%.
 - For complex tasks: use Template M. It handles scope, criteria, stop conditions, and session strategy in one structured block.
+
+---
+
+**Cortex Code (Snowflake's CLI coding agent)**
+- Agentic like Claude Code — runs tools, edits files, executes SQL, manages Snowflake objects autonomously
+- Powered by Claude Opus 4.x — apply the same anti-over-engineering guard: "Only make changes directly requested. No extra files, abstractions, or features."
+- Skills system: markdown-based system prompts loaded via `cortex skill add` — reference skill capabilities rather than re-explaining them
+- Snowflake-native: prefer the `snowflake_sql_execute` tool for SQL and `st.connection("snowflake")` for Streamlit-in-Snowflake apps over raw connectors
+- Stop conditions and human-review triggers are critical — same runaway-loop risk as Claude Code
+- For complex tasks: use `cortex ctx task add` / `cortex ctx step add` to break work into tracked steps — the agent loses coherence on long unstructured tasks
+- Headless mode (`cortex -p "prompt" --output-format stream-json`) available for CI/automation — output is JSON events, not plain text
 
 ---
 

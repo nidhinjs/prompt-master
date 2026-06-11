@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.9.0
+version: 1.10.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -70,6 +70,8 @@ The Gotchas cheat-sheet below catches the most common per-tool mistakes without 
 
 If the target tool is ambiguous, ask "Which tool is this for?" before routing (counts toward the 3-question limit). If no listed tool matches, route to the closest category — see **Unknown tool** in tool-profiles.md.
 
+Model IDs, current defaults, and version-tied params are volatile — confirm them against [references/models.md](references/models.md), and re-verify any section whose `last-verified` date is more than 60 days old before asserting it. Do not hardcode a retired model name or a dead parameter.
+
 ---
 
 ### Gotchas — quick per-tool cheat-sheet
@@ -85,6 +87,7 @@ Catch these before generating; open the full profile in [references/tool-profile
 - **Local / open-weight** (Ollama, Llama, Mistral) — ask which model is running; keep prompts short and flat, no deep nesting; always include a system-prompt role.
 - **Image generation** — Midjourney wants comma descriptors, not prose; Stable Diffusion and ComfyUI require a mandatory negative prompt (ComfyUI: separate Positive / Negative blocks).
 - **Full-stack generators** (Bolt, v0, Lovable, Figma Make, Stitch) — scope down hard; specify stack + what NOT to scaffold to prevent boilerplate bloat.
+- **Stale model facts** — model IDs, defaults, and version-tied params drift; confirm against [references/models.md](references/models.md) and re-verify any section older than 60 days before asserting (pattern #38).
 
 ---
 
@@ -215,5 +218,6 @@ Read only when the task requires it. Load only the one section/file you need —
 | File | Read When |
 |------|-----------|
 | [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target tool — read only that tool's profile for full routing guidance |
+| [references/models.md](references/models.md) | You need a volatile model fact (ID, current default, version-tied param) — honor the 60-day re-verify protocol |
 | [references/templates.md](references/templates.md) | You need the full template structure for any tool category |
-| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 35-pattern reference |
+| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 38-pattern reference |

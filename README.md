@@ -4,7 +4,7 @@
 
 A Claude skill that writes the accurate prompts for any AI tool. Zero tokens or credits wasted. Full context and memory retention. No re-prompting your way to an answer you should have gotten on attempt one.
 
-**Works with:** Claude, ChatGPT, Gemini, o1/o3, MiniMax, Cursor, Claude Code, GitHub Copilot, Windsurf, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make, and any AI tool you throw at it.
+**Works with:** Claude, ChatGPT, Gemini, o1/o3, MiniMax, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make, and any AI tool you throw at it.
 
 ---
 
@@ -236,6 +236,7 @@ Prompt Master includes specific profiles for 20+ tools. For anything not on the 
 | **DeepSeek-R1** | Reasoning LLM | Short clean instructions, strips CoT, suppresses thinking output if needed |
 | **MiniMax (M3 / M2.7)** | Reasoning LLM | Temperature clamping, thinking tag control, structured output optimization |
 | **Claude Code** | Agentic AI | Stop conditions, file scope, checkpoint output |
+| **Cortex Code** | Agentic AI (Snowflake) | Anti-over-engineering guard, `cortex ctx` step tracking, Snowflake-native tools, headless JSON mode |
 | **Cursor / Windsurf** | IDE AI | File path, function name, do-not-touch list, sequential prompt guidance |
 | **Cline (formerly Claude Dev)** | Agentic IDE | File scope, approval gates, stop conditions, task breakdown |
 | **GitHub Copilot** | Autocomplete AI | Exact function contract as docstring |

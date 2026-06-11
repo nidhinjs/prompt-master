@@ -1,6 +1,6 @@
 # Credit-Killing Patterns Reference
 
-37 patterns that waste tokens and cause re-prompts. Read this file when the user pastes a bad prompt and asks you to fix it, or when diagnosing why a prompt is underperforming.
+38 patterns that waste tokens and cause re-prompts. Read this file when the user pastes a bad prompt and asks you to fix it, or when diagnosing why a prompt is underperforming.
 
 ---
 
@@ -80,3 +80,11 @@
 | 35 | **No human review trigger** | Agent decides everything autonomously | "Stop and ask before: deleting any file, adding any dependency, or changing the database schema" |
 | 36 | **Vague first turn on Opus 4.7 / 4.8** | "fix the auth bug" with no scope, no files, no criteria | Opus 4.7 and 4.8 read prompts literally — they no longer fill implicit context like 4.6 did. Use Template M. Front-load intent, file scope, constraints, and acceptance criteria. |
 | 37 | **Context rot on long sessions** | Keeps correcting in the same session for 60+ turns | New task = new session. Use /rewind instead of correcting. /compact at ~50% context. Subagents for file-heavy investigation. |
+
+---
+
+## Model Patterns
+
+| # | Pattern | Bad Example | Fixed |
+|---|---------|------------|-------|
+| 38 | **Hardcoded retired model or dead parameter** | "Use `gpt-4o` / `o1`", or sets a `budget_tokens` / fixed thinking budget on a current Claude model | Model IDs, defaults, and version-tied params are volatile. Confirm against [models.md](models.md); re-verify any section whose `last-verified` date is >60 days old before asserting it. Drop dead params (adaptive-thinking models manage depth themselves). |

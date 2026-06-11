@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-06-11
+
+Две идеи из апстрим-PR: Cortex Code ([nidhinjs#15](https://github.com/nidhinjs/prompt-master/pull/15)) и датированный fact-sheet моделей с протоколом ре-верификации ([nidhinjs#48](https://github.com/nidhinjs/prompt-master/pull/48)).
+
+### Added
+- **Профиль Cortex Code** (Snowflake CLI-агент) в `tool-profiles.md`: anti-over-engineering guard, `cortex ctx` step-tracking, Snowflake-native инструменты, headless JSON-режим. Добавлен в README («Works with» + таблица профилей).
+- **`references/models.md`** — датированный fact-sheet volatile-фактов (ID моделей, дефолты, version-tied параметры, что снято) по вендорам, каждая секция с `last-verified`. **Протокол: ре-верифицировать секцию старше 60 дней перед утверждением.** Быстро меняющиеся вендоры помечены `⚠️ verify`, а не выдуманы.
+- **Pattern #38** «hardcoded retired model / dead parameter» в `patterns.md` (теперь 38 паттернов).
+- Gotcha «Stale model facts» в `SKILL.md`.
+
+### Changed
+- `SKILL.md` Tool Routing: добавлен указатель на `models.md` + протокол ре-верификации; таблица Reference Files дополнена строкой `models.md`.
+- `tool-profiles.md`: шапка указывает на `models.md` как на слой volatile-фактов (профили несут evergreen-советы, не point-in-time спеки моделей).
+
 ## [1.9.0] - 2026-06-11
 
 Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://github.com/nidhinjs/prompt-master/pull/13)): tool-профили вынесены из `SKILL.md` и грузятся по требованию — меньше токенов на активацию и меньше «шумовых» инструкций, конкурирующих за внимание.
@@ -56,5 +70,6 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.10.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.10.0
 [1.9.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.9.0
 [1.8.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.8.0
