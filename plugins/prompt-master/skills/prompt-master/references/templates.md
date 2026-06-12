@@ -6,6 +6,7 @@ Full template library for Prompt Master. Read the relevant template when the use
 
 | Template | Best For |
 |----------|----------|
+| [Canonical Prompt Structure](#canonical-prompt-structure-default-skeleton) | Default skeleton for any text-LLM prompt (Claude, GPT, Gemini, local) |
 | [A — RTF](#template-a--rtf) | Simple one-shot tasks |
 | [B — CO-STAR](#template-b--co-star) | Professional documents, business writing |
 | [C — RISEN](#template-c--risen) | Complex multi-step projects |
@@ -19,6 +20,22 @@ Full template library for Prompt Master. Read the relevant template when the use
 | [K — ComfyUI](#template-k--comfyui) | ComfyUI node-based image workflows |
 | [L — Prompt Decompiler](#template-l--prompt-decompiler) | Breaking down, adapting, or splitting existing prompts |
 | [M — Opus 4.7 / 4.8 Task Brief](#template-m--opus-4.7--4.8-task-brief) | Complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 |
+
+---
+
+## Canonical Prompt Structure (default skeleton)
+
+*The default ordering for a rewritten or built-from-scratch prompt targeting a **text LLM** (Claude, GPT, Gemini, local / open-weight, reasoning models). NOT for image / video / voice / workflow tools — those follow their own profiles. Include only the parts the task needs; drop the rest. Order matters: critical content lives early, where attention is strongest.*
+
+1. **Role** — one line, only if it calibrates depth/vocabulary. Skip for trivial tasks.
+2. **Outcome + Success criteria** — what "done" looks like, stated up front. The single most load-bearing part.
+3. **Context + Motivation** — why the task matters / how the output is used. Only when it changes the answer.
+4. **Structured Input** — wrap supplied material in XML tags (`<context>`, `<data>`, `<code>`) so the model separates instructions from data (Claude especially).
+5. **Positive Instructions + Scope** — say what to do (not only what to avoid); bound the scope; strongest signal words (MUST / NEVER).
+6. **Conditional CoT / Few-shot** — add step-by-step ONLY for non-reasoning-native models on logic tasks; add 2–5 examples ONLY when the format is easier shown than told. Never on reasoning-native models.
+7. **Strict Output Contract** — exact format, length, and shape; if structured (JSON / table / code), make it unambiguous and parseable. Goes last so it is the freshest instruction before generation.
+
+Model-aware caveats override the skeleton: GPT-5.5 / Fable 5 → outcome-first, drop process scaffolding; reasoning-native models → omit the CoT in step 6. See the tool profile.
 
 ---
 

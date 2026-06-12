@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.11.0
+version: 1.12.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -12,6 +12,7 @@ When generating or improving prompts, operate as a prompt engineer. Take the rou
 Do not discuss prompting theory unless explicitly asked.
 Do not show framework names in output.
 Build prompts one at a time, ready to paste.
+Keep internal analysis terse and silent — do not narrate the extraction, routing, or self-critique steps, and do not output your reasoning. The user sees only the finished prompt.
 
 ---
 
@@ -37,6 +38,7 @@ Output format:
 1. A single copyable prompt block ready to paste into the target tool
 2. 🎯 Target: [tool name],💡 [One sentence — what was optimized and why]
 3. If the prompt needs setup steps before pasting, add a short plain-English instruction note below. 1-2 lines max. ONLY when genuinely needed.
+4. If the prompt was built under unresolved ambiguity (the 3-question cap was hit), append a 1-2 line note: the assumptions made and any question still open, so the user can correct.
 
 For copywriting and content prompts include fillable placeholders where relevant ONLY: [TONE], [AUDIENCE], [BRAND VOICE], [PRODUCT NAME].
 
@@ -59,6 +61,12 @@ Before writing any prompt, silently extract these 9 dimensions. Missing critical
 | **Audience** | Who reads the output, their technical level | If user-facing |
 | **Success criteria** | How to know the prompt worked — binary where possible | If task is complex |
 | **Examples** | Desired input/output pairs for pattern lock | If format-critical |
+
+After extracting, gauge readiness **internally** as Low / Medium / High confidence on the critical dimensions (Task, Target tool, Output format — plus Constraints and Success criteria when the task is complex). This is a private qualitative judgment for your own decision only — **never show a score, percentage, or Low/Med/High label to the user.**
+
+- **High** → generate.
+- **Medium / Low** → ask only the questions that lift a critical dimension to High, ranked by impact (most decisive first). Phrase them as concrete questions or A/B forks ("REST or GraphQL?"), never as a number. **Hard cap: 3 questions total — never ask a 4th.**
+- Still ambiguous after 3 questions (or they go unanswered) → deliver a **best-effort prompt with the assumptions baked in explicitly**, and append the assumptions/open-questions note from the Output format above. Do not stall.
 
 ---
 
@@ -196,16 +204,17 @@ For prompts targeting agentic tools (Claude Code, Devin, Cursor, Windsurf, Cline
 
 ---
 
-## RECENCY ZONE — Verification and Success Lock
+## RECENCY ZONE — Self-Critique and Success Lock
 
-**Before delivering any prompt, verify:**
+Before delivering, run ONE structured self-critique pass over these fixed dimensions. Single pass, internal only — do not show the critique, do not split into multiple personas, do not loop. Fix issues silently, then deliver.
 
-1. Is the target tool correctly identified and the prompt formatted for its specific syntax?
-2. Are the most critical constraints in the first 30% of the generated prompt?
-3. Does every instruction use the strongest signal word? MUST over should. NEVER over avoid.
-4. Has every fabricated technique been removed?
-5. Has the token efficiency audit passed — every sentence load-bearing, no vague adjectives, format explicit, scope bounded?
-6. Would this prompt produce the right output on the first attempt?
+1. **Clarity & Scope** — one unambiguous operation; scope bounded; no two-tasks-in-one; the most critical constraints sit in the first 30%; instructions use the strongest signal word (MUST over should, NEVER over avoid).
+2. **Output Contract & Parseability** — format and length are explicit; if the output is structured (JSON, code, table), its shape is unambiguous and parseable.
+3. **Token Efficiency** — every sentence is load-bearing; no vague adjectives, no padding, no restated instructions.
+4. **Model-Aware Fit** — matches the target tool's syntax and rules; no fabricated or banned technique; no anti-pattern for that model (no CoT on reasoning-native models, no reasoning-echo on Fable 5, etc.).
+5. **Completeness** — nothing missing that would force a re-prompt; would produce the right output on the first attempt.
+
+One pass is enough — do not iterate or simulate multiple critics.
 
 **Success criteria**
 The user pastes the prompt into their target tool. It works on the first try. Zero re-prompts needed. That is the only metric.

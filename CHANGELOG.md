@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0] - 2026-06-12
+
+Селективный срез из v2 PRD — взято только то, что не раздувает токены и не конфликтует с hard rules; Council-style multi-critic, числовой uncertainty-коэффициент, 4–5 вопросов и формальные Lean/Thorough-режимы **отклонены** (обоснование в [docs/sources.md](../docs/sources.md)).
+
+### Added
+- **Internal readiness gate** в Intent Extraction: качественная оценка Low/Med/High **только для решения скилла** (наружу не выводится — ни число, ни ярлык). При Medium/Low — вопросы-развилки, ранжированные по влиянию; жёсткий cap 3 вопроса; при остаточной неопределённости — best-effort промпт с явными допущениями + флаг открытых вопросов.
+- **Single-pass structured Self-Critique** (апгрейд RECENCY ZONE) по 5 фиксированным измерениям: Clarity & Scope, Output Contract & Parseability, Token Efficiency, Model-Aware Fit, Completeness. Один проход, internal-only, без итераций и без имитации мульти-персоны (в отличие от Council-варианта PRD).
+- **Canonical Prompt Structure** в `templates.md` — дефолт-скелет для текстовых LLM-промптов (Role → Outcome+Success → Context → Structured Input → Positive instructions → Conditional CoT/few-shot → Output contract); явно НЕ для image/video/voice/workflow.
+- **`docs/sources.md`** — обоснование техник со ссылками + список сознательно отклонённых пунктов PRD (human-facing, вне runtime).
+- Output format: пункт про note с допущениями/открытыми вопросами при достижении cap'а в 3 вопроса.
+
+### Changed
+- Identity: добавлена строка «внутренний анализ кратко и молча, рассуждения не выводить» — токен-дисциплина + усиление `reasoning_extraction`-правила Fable 5.
+- RECENCY ZONE переименована: Verification → **Self-Critique** and Success Lock.
+
 ## [1.11.0] - 2026-06-11
 
 ### Changed
@@ -76,6 +91,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.12.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.12.0
 [1.11.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.11.0
 [1.10.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.10.0
 [1.9.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.9.0
