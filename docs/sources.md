@@ -17,6 +17,8 @@ Why Prompt Master uses the techniques it does, with traceable references. **This
 | No CoT on reasoning-native models | hard rules, patterns | These models reason internally; added CoT degrades output | OpenAI reasoning-model guidance; The Prompt Report |
 | Single-pass structured Self-Critique (fixed dimensions) | RECENCY ZONE | Quality-checklist self-review **without** simulating multiple agents (single forward pass) | PhAlves23/prompt-engineering-skill; Self-Refine (Madaan et al., 2023) |
 | Internal qualitative readiness gate (no numeric score) | Intent Extraction | Reduce ambiguity before generating; LLMs are poorly calibrated for precise probabilities, so no coefficient is shown — only concrete questions | Reflexion (Shinn et al., 2023); anti-fabrication stance |
+| Placeholders vs open decision forks | Intent Extraction | A fill-in value can be a placeholder; a decision that changes the approach must be surfaced as a question/open fork, never silently defaulted — keeps the gate honest about what is still undecided | this project (v1.13) |
+| Conditional model/effort economy (not always-tier) | Claude Code profile, Template M | Tiering and subagent orchestration cost tokens; apply only to large multi-part work. A single scoped task is cheapest as one focused pass — over-orchestration is itself an anti-pattern | this project (v1.13); Fable 5 prompting guide (effort + delegation) |
 | Canonical Prompt Structure | `references/templates.md` | Consistent, attention-aware ordering for text-LLM prompts | The Prompt Report (Schulhoff et al., 2024); PhAlves23 |
 | Dated model fact-sheet + 60-day re-verify | `references/models.md` | Volatile model facts go stale within a quarter; date + re-verify degrades gracefully | maintenance practice |
 

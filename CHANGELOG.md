@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.0] - 2026-06-12
+
+Закрытие трёх изъянов, найденных в живом тесте v1.12 (auth-refactor): дефолт-модель в Claude Code, условная token-экономия в агентных промптах и честный readiness-gate. Прирост always-loaded ядра — ~5 строк; вся объёмная логика в on-demand references.
+
+### Changed
+- **Профиль Claude Code: дефолт-модель — теперь Claude Fable 5** (закрывает регресс v1.11 — подпрофиль всё ещё указывал Opus 4.8). Opus 4.8/4.7 — по явному запросу или для benign-работы в Fable-refusal-доменах. Модель рекомендуется, не хардкодится (выбор за харнессом/конфигом).
+- **Readiness-gate теперь различает «плейсхолдеры» и «открытые развилки»** (Intent Extraction): плейсхолдер — fill-in значение, развилка — решение, меняющее подход. Самая решающая развилка идёт первым вопросом; все оставшиеся развилки **обязательно** выносятся списком в заметку, а не маскируются под `[значение]`.
+- Output format: тело промпта адресовано только целевому инструменту — setup/usage-советы для человека (новая сессия, замена значений, пререквизиты) уходят в заметку под промптом, не внутрь copyable-блока.
+- Diagnostic Checklist: пункт «две задачи в одном» заострён под **refactor + migrate** (разносить с зелёными тестами между, либо обосновать слияние + флаг un-bisectable риска).
+
+### Added
+- **Условная model/effort-экономия в агентных промптах** (профиль Claude Code + Template M): одиночная scoped-задача → один сфокусированный проход без подагентов (дешевле всего); крупная multi-part работа → оркестратор на высоком effort (Fable 5) + делегирование независимых подзадач. Per-subagent модель задаётся конфигом, не телом промпта — управляем effort'ом и делегированием. **Сознательно НЕ «всегда тирить»** — оркестрация сама стоит токенов (обоснование в [docs/sources.md](../docs/sources.md)).
+- **Security-эквивалентность** в Diagnostic Checklist + Template M: рефактор/миграция в auth/crypto/payments → жёсткий инвариант «не понижать стойкость» (алгоритм подписи, hash-cost, constant-time, формат токенов/секретов).
+- **Refactor/migration safety net** (Diagnostic Checklist + Template M): не предполагать наличие тестов — подтвердить/создать characterization-тесты до изменений; снято противоречие «тесты не меняются» vs миграция (поведенческие ассерты зелёные, обвязка — моки/импорты — может меняться).
+- `docs/sources.md`: строки про forks≠placeholders и conditional-tiering-rationale.
+
 ## [1.12.0] - 2026-06-12
 
 Селективный срез из v2 PRD — взято только то, что не раздувает токены и не конфликтует с hard rules; Council-style multi-critic, числовой uncertainty-коэффициент, 4–5 вопросов и формальные Lean/Thorough-режимы **отклонены** (обоснование в [docs/sources.md](../docs/sources.md)).
@@ -91,6 +107,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.13.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.13.0
 [1.12.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.12.0
 [1.11.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.11.0
 [1.10.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.10.0

@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.12.0
+version: 1.13.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -37,8 +37,8 @@ Keep internal analysis terse and silent — do not narrate the extraction, routi
 Output format:
 1. A single copyable prompt block ready to paste into the target tool
 2. 🎯 Target: [tool name],💡 [One sentence — what was optimized and why]
-3. If the prompt needs setup steps before pasting, add a short plain-English instruction note below. 1-2 lines max. ONLY when genuinely needed.
-4. If the prompt was built under unresolved ambiguity (the 3-question cap was hit), append a 1-2 line note: the assumptions made and any question still open, so the user can correct.
+3. If the prompt needs setup steps before pasting, add a short plain-English instruction note below. 1-2 lines max. ONLY when genuinely needed. Keep the copyable prompt body addressed only to the target tool/agent — usage advice for the human (start a new session, replace these values, prerequisites) goes in this note, never inside the prompt block.
+4. If any decision fork is still open at generation time (the 3-question cap was hit or questions went unanswered), append a short note: the assumptions you baked in, plus a bullet list of every still-open fork so the user can correct. List the forks — do not bury them as placeholders.
 
 For copywriting and content prompts include fillable placeholders where relevant ONLY: [TONE], [AUDIENCE], [BRAND VOICE], [PRODUCT NAME].
 
@@ -67,6 +67,8 @@ After extracting, gauge readiness **internally** as Low / Medium / High confiden
 - **High** → generate.
 - **Medium / Low** → ask only the questions that lift a critical dimension to High, ranked by impact (most decisive first). Phrase them as concrete questions or A/B forks ("REST or GraphQL?"), never as a number. **Hard cap: 3 questions total — never ask a 4th.**
 - Still ambiguous after 3 questions (or they go unanswered) → deliver a **best-effort prompt with the assumptions baked in explicitly**, and append the assumptions/open-questions note from the Output format above. Do not stall.
+
+**Placeholders vs open decision forks — do not confuse them.** A *placeholder* is a fill-in value the user drops in without changing the approach (a path, version, name → leave `[like this]`). An *open fork* is an unresolved decision that changes the prompt's shape or the work's outcome (migrate from→to which library? keep backwards-compat? sync or async? does the token/output format change?). A fork must NOT be buried as a placeholder: the single most decisive fork becomes your first question, and **every fork still open at generation time is listed explicitly in the assumptions/open-questions note** — never silently defaulted.
 
 ---
 
@@ -123,7 +125,7 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 
 **Task failures**
 - Vague task verb → replace with a precise operation
-- Two tasks in one prompt → split, deliver as Prompt 1 and Prompt 2
+- Two tasks in one prompt → split, deliver as Prompt 1 and Prompt 2. Distinct operations bundled together (especially **refactor + migrate**) → sequence them with green tests between, or justify combining explicitly and flag the un-bisectable risk
 - No success criteria → derive a binary pass/fail from the stated goal
 - Emotional description ("it's broken") → extract the specific technical fault
 - Scope is "the whole thing" → decompose into sequential prompts
@@ -143,6 +145,8 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - No file or function boundaries for IDE AI → add explicit scope lock
 - No stop conditions for agents → add checkpoint and human review triggers
 - Entire codebase pasted as context → scope to the relevant file and function only
+- Security-sensitive refactor/migration (auth, crypto, payments) → add a hard security-equivalence invariant: do not weaken the signing algorithm, hash cost, constant-time comparison, or token/secret format
+- Behavior-preserving refactor/migration assumes tests exist → require confirming or establishing characterization tests first ("0 failed" with 0 tests is false confidence); on a migration, behavioral assertions stay green but test plumbing (mocks, imports) may change — never write "tests pass unchanged" next to a migration
 
 **Reasoning failures**
 - Logic or analysis task with no step-by-step → add "Think through this carefully before answering"

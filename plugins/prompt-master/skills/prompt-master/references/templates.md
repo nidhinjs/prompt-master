@@ -415,7 +415,7 @@ Run these in order. Each output feeds the next.
 
 ## Template M — Opus 4.7 / 4.8 Task Brief
 
-*Use for any complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 (current default) — claude.ai, API, or Claude Code. Both read prompts literally and produce narrow output when context is missing. This template front-loads everything so the first turn is the only turn.*
+*Use for any complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 — claude.ai, API, or Claude Code. Both read prompts literally and produce narrow output when context is missing. This template front-loads everything so the first turn is the only turn. (Default model for Claude Code is now Fable 5, which prefers brief intent over enumerated rules — but this brief's structure still applies; trim the prescriptive lines when targeting Fable 5.)*
 
 ```
 ## Objective
@@ -456,7 +456,7 @@ After each completed step: ✅ [what was done] — [file(s) affected]
 - Simple targeted change: `"Prioritize responding quickly. This is a scoped change."`
 - Default: say nothing — adaptive thinking calibrates itself.
 
-**Claude Code only — add Session Strategy block when relevant:**
+**Claude Code only — add Session Strategy block when relevant.** This is setup advice for the human, not an instruction to the agent — put it in the note below the prompt, not inside the copyable prompt block:
 ```
 ## Session Strategy
 [Pick one:]
@@ -465,5 +465,11 @@ After each completed step: ✅ [what was done] — [file(s) affected]
 - Subagent — spin off for [file-heavy research / verification] so intermediate output stays out of main context
 - Compact first — run /compact [focus on X] then begin
 ```
+
+**Refactor / migration safety net — add for any behavior-preserving change:**
+- Don't assume tests exist. Confirm or establish characterization tests BEFORE changing behavior — "0 failed" with 0 tests is false confidence.
+- Distinguish the invariant from the plumbing: behavioral assertions must stay green, but test wiring (mocks, imports, fixtures) may legitimately change. Don't pair "all tests pass unchanged" with a migration — it contradicts itself.
+- Security-sensitive target (auth, crypto, payments)? Add a security-equivalence invariant: signing algorithm, hash cost, constant-time comparison, and token/secret format must not weaken.
+- Two operations bundled (refactor + migrate)? Prefer sequencing — land the refactor green, then migrate — so a regression is bisectable.
 
 **When to use:** Opus 4.7 or 4.8 on any surface — claude.ai, API, Claude Code — when the task is complex, multi-file, ambiguous, or agentic. Not needed for simple one-shot tasks.
