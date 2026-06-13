@@ -14,15 +14,15 @@ All facts that go stale fast — model IDs, current defaults, version-tied param
 
 ## Anthropic — Claude
 
-`last-verified: 2026-06-11`
+`last-verified: 2026-06-14`
 
-- **Newest, most capable — the skill's default "Claude" routing target:** Claude Fable 5 and Claude Mythos 5. Model ID — Fable 5: `claude-fable-5`. Assume Fable 5 when the user says "Claude" without naming a version; route hard, long-horizon, ambiguous work here.
-- **Common harness default / selectable fallback:** Claude Opus 4.8 (`claude-opus-4-8`). 1M-token context. Opus 4.7 still selectable. Use for benign work in domains where Fable 5 refuses (offensive-security, biology/life-sciences).
+- **⚠️ Fable 5 / Mythos 5 — SUSPENDED / UNAVAILABLE since 2026-06-12.** Anthropic disabled Claude Fable 5 and Mythos 5 for **all** customers to comply with a US government export-control directive (national-security finding re: a potential jailbreak). All other Anthropic models are unaffected. **Do NOT route to Fable 5 / Mythos 5 — they return no access.** Re-check this before targeting them; if access is restored, Fable 5 (`claude-fable-5`) again becomes the most-capable option. Source: https://www.anthropic.com/news/fable-mythos-access (pattern #38).
+- **Default "Claude" routing target (current): Claude Opus 4.8** (`claude-opus-4-8`). 1M-token context. Assume Opus 4.8 when the user says "Claude" without naming a version. Opus 4.7 still selectable.
 - **Other current 4.x IDs:** Sonnet 4.6 `claude-sonnet-4-6`; Haiku 4.5 `claude-haiku-4-5-20251001`.
-- **Thinking:** adaptive-thinking only on Fable 5 / Mythos 5 — summarized-only thinking output, **no extended-thinking budgets**. Do not set `budget_tokens` or a fixed thinking budget. Opus 4.x also calibrates depth automatically.
-- **Effort levels:** `low` / `medium` / `high` / `xhigh`. On Fable 5 effort is the primary intelligence/latency/cost lever; default `high`. On Claude Code the harness manages effort — do not hardcode it in prompts.
-- **Refusals:** Fable 5 / Mythos 5 emit `stop_reason: "refusal"` for offensive-cybersecurity and biology/life-sciences work, and a `reasoning_extraction` refusal if asked to echo/show their reasoning. Configure fallback to Opus 4.8.
-- **Avoid (dead/counterproductive):** "think step by step" / CoT scaffolding on 4.x and Fable 5; fixed thinking budgets; instructing the model to reproduce its reasoning as response text.
+- **Thinking:** Opus 4.x calibrates depth automatically (adaptive thinking) — **no extended-thinking budgets**; do not set `budget_tokens` or a fixed thinking budget. (Fable 5 / Mythos 5 had summarized-only adaptive thinking too — moot while suspended.)
+- **Effort levels:** `low` / `medium` / `high` / `xhigh`. On Claude Code the harness manages effort — do not hardcode it in prompts. (On Fable 5, effort was the primary lever — moot while suspended.)
+- **Refusals:** Fable 5 / Mythos 5 emitted `stop_reason: "refusal"` for offensive-cybersecurity and biology/life-sciences work, plus a `reasoning_extraction` refusal if asked to echo/show reasoning — applies only if/when they are restored.
+- **Avoid (dead/counterproductive):** "think step by step" / CoT scaffolding on 4.x; fixed thinking budgets; instructing the model to reproduce its reasoning as response text.
 
 ## OpenAI — GPT
 

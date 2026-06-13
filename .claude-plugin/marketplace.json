@@ -10,7 +10,7 @@
     {
       "name": "prompt-master",
       "source": "./plugins/prompt-master",
-      "description": "Генератор оптимизированных промптов под конкретный AI-инструмент. Активируется по запросам «напиши/исправь/улучши/адаптируй промпт для …». Routing под Claude (Fable 5 — дефолт / Opus 4.8), GPT-5.5, Gemini, reasoning-модели, агентные IDE, image/video/voice AI.",
+      "description": "Генератор оптимизированных промптов под конкретный AI-инструмент. Активируется по запросам «напиши/исправь/улучши/адаптируй промпт для …». Routing под Claude (Opus 4.8 — дефолт; Fable 5/Mythos 5 временно недоступны), GPT-5.5, Gemini, reasoning-модели, агентные IDE, image/video/voice AI.",
       "category": "productivity"
     }
   ]

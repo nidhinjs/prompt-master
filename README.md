@@ -224,8 +224,8 @@ When you name a tool, Prompt Master silently routes to that tool's profile and a
 
 | Tool / Category | Handles | When to route |
 |---|---|---|
-| **Claude Fable 5 / Mythos 5** | Default text generation | Any "Claude" request without a version |
-| **Claude Opus 4.8 / 4.7** | Heavy reasoning, long context | Explicit request, or domains where Fable 5 refuses |
+| **Claude Opus 4.8 / 4.7** | Default text generation, heavy reasoning, long context | Any "Claude" request without a version |
+| **Claude Fable 5 / Mythos 5** | ⚠️ Suspended since 2026-06-12 (unavailable) | Do not route here until access is restored |
 | **ChatGPT / GPT-5.x** | Outcome-first generation | User names ChatGPT or GPT |
 | **o3 / o4-mini / DeepSeek-R1** | Reasoning-native models | Never add CoT — these think internally |
 | **Gemini 2.x** | Grounded generation | Needs citation/grounding anchors |
@@ -253,8 +253,8 @@ Prompt Master includes specific profiles for 20+ tools. For anything not on the 
 
 | Tool | Category | What Prompt Master Fixes |
 |------|----------|--------------------------|
-| **Claude Fable 5 / Mythos 5** (default) | Frontier LLM | Outcome-first + brief intent, effort-based steering, progress grounding, no reasoning-echo (avoids refusal) |
-| **Claude (Opus 4.8 / 4.7)** (fallback) | Reasoning LLM | Removes padding, adds XML structure, specifies length, front-loads scope |
+| **Claude (Opus 4.8 / 4.7)** (default) | Reasoning LLM | Removes padding, adds XML structure, specifies length, front-loads scope |
+| **Claude Fable 5 / Mythos 5** | Frontier LLM — ⚠️ suspended since 2026-06-12 (unavailable; see models.md) | Outcome-first + brief intent, effort-based steering, no reasoning-echo — applies if/when restored |
 | **ChatGPT / GPT-5.5 / GPT-5.x** | Reasoning LLM | Outcome-first structure, `text.verbosity`, reasoning-effort tuning, preambles, retrieval budgets |
 | **Gemini 2.x** | Reasoning LLM | Grounding anchors, citation rules, format locks |
 | **o3 / o4-mini** | Thinking LLM | Short clean instructions only — never adds CoT (they think internally) |

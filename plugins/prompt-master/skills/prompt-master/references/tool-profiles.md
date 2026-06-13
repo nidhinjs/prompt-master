@@ -14,8 +14,8 @@ Pick the row that matches the user's tool, then open only that profile below.
 
 | Tool | Handles | When to route |
 |---|---|---|
-| **Claude / Fable 5 / Mythos 5** | Hard, long-horizon, ambiguous work; agentic multi-step | Default for most tasks; Fable 5 unless user names another model |
-| **Claude Opus 4.x** | Literal execution; offensive-security / bio domains Fable 5 refuses | User names it, or Fable 5 refused |
+| **Claude Opus 4.8 / 4.7** | Default Claude; literal execution, heavy reasoning, 1M context, agentic | Any "Claude" request without a version |
+| **Claude Fable 5 / Mythos 5** | (frontier) — ⚠️ **suspended since 2026-06-12, unavailable** | Do not route here until access is restored (see models.md) |
 | **GPT-5.x / ChatGPT** | Long-context synthesis, tone adherence, persona framing | User is on OpenAI or ChatGPT |
 | **o3 / o4-mini / OpenAI reasoning** | Deep reasoning tasks where process must not be dictated | User names o3/o4-mini or an OpenAI reasoning model |
 | **Gemini 2.x / 3 Pro** | Multimodal, large-document, Google ecosystem | User is on Google AI Studio, Vertex, or Gemini |
@@ -48,7 +48,7 @@ Pick the row that matches the user's tool, then open only that profile below.
 
 **Claude (claude.ai, Claude API, Claude 4.x)**
 
-Current default is **Claude Fable 5** (Mythos 5 is its sibling) — assume Fable 5 unless the user names a specific model, and route to the dedicated **Claude Fable 5 / Mythos 5** block below. **Opus 4.8** (and 4.7) remain selectable fallbacks: use them when the user names them, or for benign work in domains where Fable 5 refuses (offensive-security, biology/life-sciences). The Opus notes below apply to those cases.
+Current default is **Claude Opus 4.8** (4.7 selectable) — assume Opus 4.8 unless the user names a specific model. ⚠️ **Claude Fable 5 / Mythos 5 are suspended/unavailable since 2026-06-12** (US export-control directive — see [models.md](models.md)); do NOT route to them until access is restored. The Fable 5 block below is retained for that case but is currently inactive.
 
 *Durable across Claude 4.x (4.6 / 4.7 / 4.8):*
 - Be explicit and specific — Claude 4.x follows instructions literally. It does exactly what you say, nothing more. Missing context = narrow literal output, not a smart guess.
@@ -71,6 +71,8 @@ Current default is **Claude Fable 5** (Mythos 5 is its sibling) — assume Fable
 ---
 
 **Claude Fable 5 / Mythos 5 (newest, most capable — for hard, long-horizon, ambiguous work)**
+
+> ⚠️ **SUSPENDED / UNAVAILABLE since 2026-06-12** (US export-control directive; see [models.md](models.md)). Do NOT route here — route "Claude" to **Opus 4.8** instead. This block is retained for if/when access is restored.
 
 Fable 5 takes on problems too complex, long-running, or ambiguous for prior models — end-to-end work measured in hours to days. Prompt it differently from Opus 4.x: **steer with brief intent, not enumerated rules.** Instruction-following is strong enough that one short instruction replaces a long checklist.
 
@@ -185,9 +187,9 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 - Agentic — runs tools, edits files, executes commands autonomously
 - Starting state + target state + allowed actions + forbidden actions + stop conditions + checkpoints
 - Stop conditions are MANDATORY — runaway loops are the biggest credit killer
-- **Default recommended model is Claude Fable 5** — most capable for hard, long-horizon, agentic work. Opus 4.8 (4.7 still selectable) only when the user asks for it, or for benign work in Fable-refusal domains (offensive-security, biology/life-sciences). The model is ultimately harness/config-selected — recommend it, don't hardcode it. Effort and thinking depth are harness/adaptive-managed — do NOT hardcode an effort level or thinking budget; on Fable 5 steer via the `effort` setting, not the prompt body.
-- **Match orchestration to task size — token economy first.** A single scoped change → one focused pass at the right effort, no subagents (cheapest; over-orchestration costs more than it saves). A large multi-part job → an orchestrator on higher effort (Fable 5) that plans and delegates independent subtasks to subagents, keeping mechanical steps lean. Per-subagent model is set by harness/config, not the prompt body — steer economy through effort + delegation, not by naming a model per agent. Don't spawn agents for a one-module task.
-- The literalism caveats below apply to Opus 4.x specifically; on Fable 5 steer with brief intent instead of enumerated rules (see the Fable 5 profile).
+- **Default recommended model is Claude Opus 4.8** (4.7 selectable) — Fable 5 / Mythos 5 are suspended/unavailable since 2026-06-12 (see models.md), so do NOT recommend them. The model is ultimately harness/config-selected — recommend it, don't hardcode it. Effort and thinking depth are harness/adaptive-managed — do NOT hardcode an effort level or thinking budget.
+- **Match orchestration to task size — token economy first.** A single scoped change → one focused pass at the right effort, no subagents (cheapest; over-orchestration costs more than it saves). A large multi-part job → an orchestrator (Opus 4.8) that plans and delegates independent subtasks to subagents, keeping mechanical steps lean. Per-subagent model is set by harness/config, not the prompt body — steer economy through effort + delegation, not by naming a model per agent. Don't spawn agents for a one-module task.
+- The literalism caveats below apply to Opus 4.x (the current default): be explicit, front-load context.
 - Opus 4.7 and 4.8 are more literal than 4.6 — vague first turns produce narrower results. Front-load everything: intent, file scope, constraints, acceptance criteria, session strategy.
 - Opus 4.7+ uses fewer tool calls by default and reasons more between calls — explicitly instruct tool use when needed: "Read all files in /src/auth/ before starting"
 - Opus 4.7+ spawns fewer subagents by default — explicitly request when needed: "Use a subagent to investigate X so it stays out of main context"

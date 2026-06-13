@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.0] - 2026-06-14
+
+Разворот дефолтной модели Claude обратно на **Opus 4.8**. Причина — внешнее событие: Anthropic [отключила Fable 5 и Mythos 5 для всех клиентов с 2026-06-12](https://www.anthropic.com/news/fable-mythos-access) по экспортно-контрольной директиве правительства США (все прочие модели работают). Дефолт `Claude → Fable 5` (введён в v1.11) указывал на недоступную модель — это реальная поломка. Сработал штатный механизм: датированный факт в `models.md` + pattern #38 (retired/unavailable model).
+
+### Changed
+- **Дефолтная модель Claude в роутинге — снова Opus 4.8** (`claude-opus-4-8`, 1M контекст; Opus 4.7 selectable). Обновлены: `SKILL.md` Gotchas, `tool-profiles.md` (шапка Claude-блока, Routing Index, профиль Claude Code), `templates.md` Template M, описания `plugin.json`/`marketplace.json`, `README` (обе таблицы роутинга).
+- **`models.md`**: Fable 5 / Mythos 5 помечены **SUSPENDED / UNAVAILABLE с 2026-06-12** с источником и протоколом ре-проверки; `last-verified: 2026-06-14`; дефолт routing-target = Opus 4.8.
+
+### Notes
+- **Fable 5 / Mythos 5 не удалены, а помечены suspended** (факт датирован) — если доступ вернут, откат тривиален. `reasoning_extraction`-правило и Fable-профиль сохранены с пометкой «применимо, если/когда восстановят».
+- Счётчик паттернов без изменений (42). Гард-рейлы v1.13 (A–G), v1.14, v1.15 (hook + Agentic Prompt Fragments) целы.
+- Обоснование — [docs/sources.md](../docs/sources.md).
+
 ## [1.15.0] - 2026-06-14
 
 Детект запроса «промпт для мультиагентной среды» (двухслойный) + обогащение Agentic Prompt Fragments **проверенными практиками** из курированного репозитория [DenisSergeevitch/agents-best-practices](https://github.com/DenisSergeevitch/agents-best-practices) (первоисточники: Anthropic «Building effective agents» / context-engineering / harnesses / evals; OpenAI harness-engineering / prompt-caching / guardrails; OWASP AI Agent Security; NIST AI RMF). По главному выводу исследования («не строй мультиагентную систему, пока одиночный цикл не провалился») сама v1.15 реализована **одиночным проходом**, без распараллеливания на субагентов — самодельные эвристики заменены на источники.
@@ -143,6 +156,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.16.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.16.0
 [1.15.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.15.0
 [1.14.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.14.0
 [1.13.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.13.0
