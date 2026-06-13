@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.14.0
+version: 1.15.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -94,6 +94,7 @@ Catch these before generating; open the full profile in [references/tool-profile
 - **o3 / o4-mini / DeepSeek-R1 / Qwen3-thinking** — reasoning-native: NEVER add CoT or "think step by step"; short clean instructions only.
 - **Gemini** — prone to hallucinated citations: add "Cite only sources you are certain of. If uncertain, say [uncertain]."
 - **Agentic tools** (Claude Code, Devin, Cursor, Cline, SWE-agent) — stop conditions are MANDATORY; always scope to explicit files/paths; add human-review triggers for destructive actions.
+- **Multi-agent / orchestrator prompt request** (user asks for a prompt for an orchestrator, fan-out, sub-agents, or an agent team) — load the **Agentic Prompt Fragments** in [references/templates.md](references/templates.md); default to a single loop, add orchestration only when the task hits the "when to orchestrate" criteria there.
 - **Local / open-weight** (Ollama, Llama, Mistral) — ask which model is running; keep prompts short and flat, no deep nesting; always include a system-prompt role.
 - **Image generation** — Midjourney wants comma descriptors, not prose; Stable Diffusion and ComfyUI require a mandatory negative prompt (ComfyUI: separate Positive / Negative blocks).
 - **Full-stack generators** (Bolt, v0, Lovable, Figma Make, Stitch) — scope down hard; specify stack + what NOT to scaffold to prevent boilerplate bloat.

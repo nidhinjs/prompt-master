@@ -1,6 +1,6 @@
 {
   "name": "prompt-master",
-  "version": "1.14.0",
+  "version": "1.15.0",
   "description": "Генерирует оптимизированные, готовые к вставке промпты для любого AI-инструмента с минимумом токенов. Routing под конкретную модель (Claude Fable 5 — дефолт, Opus 4.8, GPT-5.5, Gemini, reasoning-модели, агентные IDE, image/video/voice AI), anti-fabrication протокол, 42 паттерна-фикса.",
   "author": {
     "name": "Andrey Zagreev",

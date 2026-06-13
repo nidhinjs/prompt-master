@@ -27,6 +27,8 @@ Why Prompt Master uses the techniques it does, with traceable references. **This
 | Layered image-gen skeleton (positive / negative / params) | image AI profiles, templates | Image models parse token order and weighting differently from text LLMs; the three-block skeleton (positive descriptors → mandatory negative prompt → model-specific params) prevents style drift and parameter confusion across Midjourney / SD / ComfyUI | this project (v1.14) |
 | Routing index + self-contained references (Divio framing) | `references/tool-profiles.md`, `references/templates.md`, `references/patterns.md` | Divio doc-system framing: tool-profiles = reference (look up); templates = how-to (follow a procedure); patterns = explanation (understand why). Keeping each file to one quadrant lets the skill load only what a given task needs | Divio documentation system — https://docs.divio.com/documentation-system/; this project (v1.14) |
 | Agentic prompt fragments (opt-in) | Agentic Output Warning, Template M | Agentic scaffolding (orchestrator/subagent split, fan-out ceiling, chain ceiling) is expensive; it is generated only when the user explicitly requests an agentic prompt. Illustrative heuristics (e.g., a 7-agent fan-out or 5-agent chain as upper bounds) are not measured limits — they frame the cost trade-off | agency-agents study (v1.14) |
+| Multi-agent request detection (2 layers) | SKILL.md Gotchas (Layer 1) + `plugins/prompt-master/hooks/` (Layer 2) | In-skill trigger reliably routes a multi-agent prompt request to the Agentic Prompt Fragments; a high-precision `UserPromptSubmit` hook (Node, no deps) adds a self-aware nudge. Asymmetric by design: the hook is precision-first (silent unless intent + multi-agent signal both match), the skill trigger carries recall | this project (v1.15); Claude Code hooks docs |
+| Sourced agentic guardrails (orchestrate-only-when, packet contract, context isolation, independent verification, enforced budgets, parallelism, cache ordering) | `references/templates.md` Agentic Prompt Fragments | Replaces hand-rolled heuristics with curated practice: start single-agent and orchestrate only on explicit criteria; isolate worker context; verify with evidence not claims; enforce budgets | agents-best-practices study (v1.15); Anthropic / OpenAI / OWASP sources below |
 
 ## Profile-admission heuristic
 
@@ -50,3 +52,17 @@ To keep the skill cheap, honest, and consistent with its own hard rules, the fol
 - **PhAlves23/prompt-engineering-skill** — https://github.com/PhAlves23/prompt-engineering-skill
 - **OpenAI GPT-5.5 Prompt Guidance** — https://developers.openai.com/api/docs/guides/prompt-guidance
 - **Claude Fable 5 prompting guide** — https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5
+
+### Multi-agent / agentic best practices (v1.15 — via DenisSergeevitch/agents-best-practices)
+
+- **agents-best-practices (curated skill + source map)** — https://github.com/DenisSergeevitch/agents-best-practices
+- **Anthropic — Building effective agents** — https://www.anthropic.com/research/building-effective-agents
+- **Anthropic — Effective context engineering for AI agents** — https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
+- **Anthropic — Effective harnesses for long-running agents** — https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents
+- **Anthropic — Demystifying evals for AI agents** — https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents
+- **OpenAI — Harness engineering** — https://openai.com/index/harness-engineering/
+- **OpenAI — Prompt caching** — https://developers.openai.com/api/docs/guides/prompt-caching
+- **OpenAI — Agent guardrails & human approvals** — https://developers.openai.com/api/docs/guides/agents/guardrails-approvals
+- **OWASP — AI Agent Security Cheat Sheet** — https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html
+- **NIST — AI Risk Management Framework** — https://www.nist.gov/itl/ai-risk-management-framework
+- **Claude Code — Hooks** — https://docs.claude.com/en/docs/claude-code/hooks

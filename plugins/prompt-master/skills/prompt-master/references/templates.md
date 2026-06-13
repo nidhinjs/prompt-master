@@ -478,6 +478,18 @@ After each completed step: ✅ [what was done] — [file(s) affected]
 
 *Opt-in drop-ins for prompts that drive a **real multi-agent / tool-using runtime** (orchestrator + sub-agents, an eval loop, a review gate). Add ONLY when the user explicitly asks for an agentic prompt — never as a default. Each fragment is a clause to paste into the relevant section of a canonical text-LLM prompt; do not restate that skeleton here. Numeric ceilings below are illustrative heuristics for keeping fan-out/chains/roles tight, not measured limits.*
 
+**When to orchestrate (default: single loop).** Keep one linear agent loop until it provably fails; do NOT add orchestration for simple edits, small read-only questions, or ordinary drafting. Reach for orchestration only when the task hits one or more: (1) context too large/noisy for one window; (2) decomposable into independent packets; (3) needs explicit budget control; (4) high-impact, needs review before execution; (5) likely to produce conflicting findings; (6) needs broad coverage across many files/records/systems; (7) verification-heavy.
+
+**Situation → pattern**
+
+| Situation | Pattern |
+|---|---|
+| Bounded task, fits one window | **Single loop** — no orchestration |
+| Independent, parallel, read-only packets | **Fan-out + synthesizer** — define the merge rule up front |
+| Dependent, ordered stages | **Short chain + handoff block** |
+| Quality-critical, clear criteria | **Evaluator–optimizer** — independent verifier |
+| Long autonomous build, many steps | **Orchestrator-as-decomposer + task ledger** |
+
 **#19 Orchestrator-as-decomposer**
 ```
 Your role is decomposition and delegation, not execution. Break the goal into
@@ -541,3 +553,11 @@ For each verdict, include an evidence field citing the exact output line / file:
 - **Single-shot** — one pass, no scaffolding. Default for bounded tasks.
 - **Multi-step** — sequenced steps + checkpoints. Use when sub-tasks have ordering/dependencies.
 - **Long-horizon** — orchestrator + sub-agents + handoffs + loop contract. Use only when scope genuinely needs delegation.
+
+**Sourced guardrails** *(Anthropic "Building effective agents" / context-engineering / long-running harnesses; OpenAI harness-engineering & guardrails; OWASP AI Agent Security — see docs/sources.md):*
+- **Packet contract — every delegated unit has all 7:** single purpose · explicit inputs · narrow tool permissions · result schema · timeout + budget · evidence requirement · no hidden cross-packet dependency.
+- **Worker context isolation:** give a sub-agent only `{objective, inputs, allowed tools, output schema, trust boundaries, budget, forbidden actions, evidence rules}` — NOT the full parent history, every tool, or secrets. Pass a compact result back, not raw reasoning.
+- **Independent verification (choose by cost/value):** the verifier gets findings + source access, NOT the worker's reasoning. Pick one — independent review · sampling (a subset) · cross-check (two independent outputs) · replay (deterministic rerun) · tests (mechanical).
+- **Budgets are enforced, not just logged:** declare and hard-stop on `max_packets · max_parallel_workers · max_model_turns · max_tool_calls · max_wall_time · max_cost`.
+- **Parallelize only independent, read-only, concurrency-safe calls** (search, read, classify, summarize). Serialize writes, sends, deletes, payments, and permission changes.
+- **Cache-aware ordering** (cuts cost on a strong-orchestrator + cheap-worker split): stable prefix first (tool defs, static instructions), volatile content last; append-only history; deterministic tool/JSON ordering; compact only at explicit boundaries.

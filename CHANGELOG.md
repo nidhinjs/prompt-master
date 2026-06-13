@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.0] - 2026-06-14
+
+Детект запроса «промпт для мультиагентной среды» (двухслойный) + обогащение Agentic Prompt Fragments **проверенными практиками** из курированного репозитория [DenisSergeevitch/agents-best-practices](https://github.com/DenisSergeevitch/agents-best-practices) (первоисточники: Anthropic «Building effective agents» / context-engineering / harnesses / evals; OpenAI harness-engineering / prompt-caching / guardrails; OWASP AI Agent Security; NIST AI RMF). По главному выводу исследования («не строй мультиагентную систему, пока одиночный цикл не провалился») сама v1.15 реализована **одиночным проходом**, без распараллеливания на субагентов — самодельные эвристики заменены на источники.
+
+### Added
+- **Layer 1 — внутренний триггер** (`SKILL.md` Gotcha): запрос промпта для оркестратора / fan-out / субагентов / команды агентов → грузить «Agentic Prompt Fragments», выбирать топологию по таблице situation→pattern; по умолчанию — одиночный цикл.
+- **Layer 2 — harness-hook** (`plugins/prompt-master/hooks/`): `hooks.json` (`UserPromptSubmit` → Node) + `multi-agent-detect.js` — high-precision детектор (срабатывает только при «намерение-промпт **И** мультиагентный сигнал», EN+RU; голое `agent`/`агент` исключено), инжектит само-осознанную подсказку через `hookSpecificOutput.additionalContext`, иначе молчит; всегда exit 0 (не блокирует); только `fs`+regex, кросс-платформенно (Node).
+- **Обогащение Agentic Prompt Fragments** (`templates.md`) проверенными практиками: «когда оркестрировать» (7 признаков + анти-паттерн «не для simple edits»); таблица situation→pattern; **packet contract** (7 свойств); изоляция контекста воркера; независимый verifier (findings+source, не reasoning; стратегии review/sampling/cross-check/replay/tests); **бюджеты enforced**; правило параллелизма (только независимые read-only); cache-aware ordering.
+- `docs/sources.md`: строки-обоснования (детект; sourced guardrails) + блок первоисточников (Anthropic/OpenAI/OWASP/NIST + agents-best-practices + Claude Code hooks).
+- `.gitattributes`: `*.js text eol=lf`.
+
+### Changed
+- `SKILL.md` Gotchas-чеклист: +1 строка детекта мультиагентного запроса (ядро в пределах бюджета).
+
+### Notes
+- Счётчик паттернов без изменений (42). Гард-рейлы v1.13 (A–G) и v1.14 целы; loop-контракт остаётся runtime-only; одно-проходный self-critique не тронут.
+- T4 (юнит-тест хука, 6 кейсов: 2 позитива EN/RU + 3 негатива вкл. голое `agent` + JSON-валидность) — зелёный.
+
 ## [1.14.0] - 2026-06-13
 
 Срез из исследования репозитория [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (8-агентный workflow + opus-оценка применимости): взяты только паттерны, усиливающие уже принятые позиции (анти-фабрикация, токен-экономия, model-aware routing, условный тиринг). Реализовано распределённо — 5 параллельных агентов по непересекающимся файлам (opus на SKILL.md/templates.md, sonnet на остальном). Прирост always-loaded ядра — в пределах бюджета (~10 строк).
@@ -125,6 +143,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.15.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.15.0
 [1.14.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.14.0
 [1.13.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.13.0
 [1.12.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.12.0
