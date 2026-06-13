@@ -275,18 +275,16 @@ At the end, output a full summary of every file changed.
 
 *Use for Midjourney, DALL-E 3, Stable Diffusion, Sora, Runway, and any image or video generation tool.*
 
+*5-layer skeleton — build outward from the subject. Drop layers the task doesn't need.*
+
 ```
-Subject: [Main subject — specific, not vague]
-Action/Pose: [What the subject is doing]
-Setting: [Where the scene takes place]
-Style: [photorealistic / cinematic / anime / oil painting / vector / etc.]
-Mood: [dramatic / serene / eerie / joyful / etc.]
-Lighting: [golden hour / studio / neon / overcast / candlelight / etc.]
-Color Palette: [dominant colors or named palette]
-Composition: [wide shot / close-up / aerial / Dutch angle / etc.]
-Aspect Ratio: [16:9 / 1:1 / 9:16 / 4:3]
-Negative Prompts: [blurry, watermark, extra fingers, distortion, low quality]
-Style Reference: [artist / film / aesthetic reference if applicable]
+1. Subject: [main subject + action/pose — specific, not vague]
+2. Environment & Setting: [where the scene takes place, foreground/background, props]
+3. Lighting: [golden hour / studio / neon / overcast / candlelight + direction and quality]
+4. Technical: [camera + lens (e.g. 85mm), depth of field, exposure, shot type, aspect ratio]
+5. Style & Aesthetic: [photorealistic / cinematic / anime / oil painting; mood; color palette; artist/film reference]
+
+Negative prompt (platforms that support it): [blurry, watermark, extra fingers, distortion, low quality]
 ```
 
 **Tool-specific syntax:**
@@ -473,3 +471,73 @@ After each completed step: ✅ [what was done] — [file(s) affected]
 - Two operations bundled (refactor + migrate)? Prefer sequencing — land the refactor green, then migrate — so a regression is bisectable.
 
 **When to use:** Opus 4.7 or 4.8 on any surface — claude.ai, API, Claude Code — when the task is complex, multi-file, ambiguous, or agentic. Not needed for simple one-shot tasks.
+
+---
+
+## Agentic Prompt Fragments
+
+*Opt-in drop-ins for prompts that drive a **real multi-agent / tool-using runtime** (orchestrator + sub-agents, an eval loop, a review gate). Add ONLY when the user explicitly asks for an agentic prompt — never as a default. Each fragment is a clause to paste into the relevant section of a canonical text-LLM prompt; do not restate that skeleton here. Numeric ceilings below are illustrative heuristics for keeping fan-out/chains/roles tight, not measured limits.*
+
+**#19 Orchestrator-as-decomposer**
+```
+Your role is decomposition and delegation, not execution. Break the goal into
+sub-tasks, assign each to a sub-agent, and integrate their results — do not do
+the sub-task work yourself. Keep fan-out tight (≈7 parallel sub-agents max as a
+working heuristic). Output a task ledger:
+| sub-task | delegated to | status | result summary |
+```
+
+**#20/#21 Loop-termination contract** *(runtime behavior — a real agent acting across genuine separate passes, NOT "internally try 3 times," and NOT for our single-pass self-critique)*
+```
+Retry cap: after 3 failed attempts at a sub-task (each a real, separate
+execution pass with tool calls), stop retrying and escalate. Escalation menu —
+pick one: reassign (different agent/approach) · decompose (split into smaller
+sub-tasks) · accept-with-note (ship partial, flag the gap) · defer (park it,
+continue the rest).
+```
+Evaluator–optimizer loop only:
+```
+Generator produces; a separate evaluator judges against criteria the generator
+was NOT given verbatim. Exit on: criteria met, OR score plateau (no meaningful
+gain across 2 successive rounds — as a working heuristic), OR retry cap hit.
+```
+
+**#22/#28 Handoff + degraded output**
+```
+Handoff block (one agent → next):
+- Context: [state the next agent needs]
+- Deliverable: [exact artifact passed on]
+- Acceptance criteria: [what makes it usable downstream]
+- Evidence required: [proof the deliverable meets criteria]
+- Handoff to: [next agent / role]
+
+Degraded output: if you cannot finish, emit a structured partial result with
+explicit gaps (done / blocked / unknown) — do not refuse, and do not return
+prose in place of the contracted format.
+```
+
+**#27 Sub-agent role**
+```
+Role: [narrow identity]
+Responsible for: [the one job]
+NOT responsible for: [explicit exclusions — out-of-scope work to hand back, not attempt]
+Failure behavior: on error or out-of-scope input, [escalate / hand back / emit degraded output] — do not improvise outside the role.
+```
+Keep each role under ≈1500 tokens of system prompt (heuristic) so it stays sharp.
+
+**#29 HITL gates** — choose the lightest that fits; over-escalation trains the human to rubber-stamp and defeats the gate:
+- **Blocking** — agent pauses, cannot proceed without approval (irreversible/destructive actions).
+- **Advisory** — agent proceeds but flags for review (reversible, moderate risk).
+- **Sampling** — human spot-checks a fraction, not every action (high-volume, low-risk).
+
+**#24 Evidence-required review clause**
+```
+For each verdict, include an evidence field citing the exact output line / file:line
+/ artifact that justifies it. A verdict without a citation is not accepted.
+| item | verdict | evidence (cite exact source) |
+```
+
+**#18 Effort-tier chooser** — match scaffolding to scope; this is a chooser, NOT a mandatory ladder (consistent with conditional, not always-tier):
+- **Single-shot** — one pass, no scaffolding. Default for bounded tasks.
+- **Multi-step** — sequenced steps + checkpoints. Use when sub-tasks have ordering/dependencies.
+- **Long-horizon** — orchestrator + sub-agents + handoffs + loop contract. Use only when scope genuinely needs delegation.

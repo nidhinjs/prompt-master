@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.0] - 2026-06-13
+
+Срез из исследования репозитория [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (8-агентный workflow + opus-оценка применимости): взяты только паттерны, усиливающие уже принятые позиции (анти-фабрикация, токен-экономия, model-aware routing, условный тиринг). Реализовано распределённо — 5 параллельных агентов по непересекающимся файлам (opus на SKILL.md/templates.md, sonnet на остальном). Прирост always-loaded ядра — в пределах бюджета (~10 строк).
+
+### Added
+- **Agentic Prompt Fragments** (`templates.md`, opt-in — только когда пользователь просит агентный промпт): оркестратор-как-декомпозитор + task-ledger; контракт завершения циклов (retry-cap + меню эскалации, evaluator-optimizer с выходом по плато) — **с анти-фабрикационным фенсом**: это runtime-поведение реального агента на отдельных проходах, НЕ просачивается в одно-проходный self-critique; handoff-блок + правило деградированного вывода; шаблон роли (NOT-RESPONSIBLE-FOR + failure-behavior); таксономия HITL-гейтов + предупреждение о пере-эскалации; clause «evidence-required» для review/QA; chooser уровней усилия (single-shot / multi-step / long-horizon — выбор, не обязательная лестница).
+- **4 новых паттерна** в `patterns.md` (38 → **42**): #39 расплывчатый квалификатор → измеримое ограничение; #40 уязвимый к инъекциям / без OOD-fallback системный промпт → role-lock + фраза-fallback + санитизация; #41 переусложнённый/scope-creep промпт → scope self-check; #42 необработанный агентный сбой (silent/context failure) → схема-валидация + урезание инструкций.
+- **Routing Index** наверху `tool-profiles.md` — таблица Tool / Handles / When-to-route (надмножество Gotchas; pick-a-row → открой один профиль). Синтаксис-преференции по моделям (Claude → XML-теги, GPT → persona-фрейминг) и evergreen-заметки по синтаксису image-инструментов (Midjourney/SD/Flux/ComfyUI).
+- **`scripts/lint.ps1`** — релизный гейт (ERROR/WARN, exit 1 на ERROR): синхронизация версии, дрейф счётчика паттернов (читается из patterns.md, не хардкод), обязательные поля frontmatter, CRLF в `*.md`/`*.ps1`; WARN на бюджет строк ядра и footer-ссылку. Формализует разовые greps из v1.13. Адаптировано из lint-shape agency-agents (не копия их bash).
+- **`.gitattributes`** — LF для `*.md/*.yml/*.yaml/*.sh/*.ps1/*.json` (репозиторий пишется на Windows).
+- `docs/sources.md`: строки-обоснования новых техник + Divio-фрейминг references + editorial-тест «for the user, not the vendor».
+
+### Changed
+- **#23 анти-подхалимаж** (`SKILL.md`): внутренний дефолт-вердикт readiness-gate и self-critique инвертирован на **NEEDS REVISION**; повышение до READY — только при доказательстве по каждому критическому измерению. Остаётся внутренним (правило «никогда не показывать оценку/ярлык» сохранено).
+- **#42 scope-creep + «Surface, don't smuggle»** (`SKILL.md` Token-Efficiency): scope self-check (удалить ограничения, которых не требует задача); замечания вне scope — в заметку после промпта, не в тело.
+- **#35 память × бюджет вопросов** (`SKILL.md`): если вспомненная память отвечает на уточняющий вопрос — он считается решённым и не тратит лимит из 3; решения хранятся **с обоснованием**.
+- `SKILL.md` Diagnostic Checklist: однострочные хуки — HITL-гейт с предупреждением о пере-эскалации (#29) и evidence-over-claims (#24). README: 5-second-test интро; счётчик паттернов 35/38 → 42.
+
 ## [1.13.0] - 2026-06-12
 
 Закрытие трёх изъянов, найденных в живом тесте v1.12 (auth-refactor): дефолт-модель в Claude Code, условная token-экономия в агентных промптах и честный readiness-gate. Прирост always-loaded ядра — ~5 строк; вся объёмная логика в on-demand references.
@@ -107,6 +125,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.14.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.14.0
 [1.13.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.13.0
 [1.12.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.12.0
 [1.11.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.11.0

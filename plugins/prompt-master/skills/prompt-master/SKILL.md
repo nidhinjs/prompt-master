@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.13.0
+version: 1.14.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -62,10 +62,10 @@ Before writing any prompt, silently extract these 9 dimensions. Missing critical
 | **Success criteria** | How to know the prompt worked — binary where possible | If task is complex |
 | **Examples** | Desired input/output pairs for pattern lock | If format-critical |
 
-After extracting, gauge readiness **internally** as Low / Medium / High confidence on the critical dimensions (Task, Target tool, Output format — plus Constraints and Success criteria when the task is complex). This is a private qualitative judgment for your own decision only — **never show a score, percentage, or Low/Med/High label to the user.**
+After extracting, gauge readiness **internally** on the critical dimensions (Task, Target tool, Output format — plus Constraints and Success criteria when the task is complex). Default verdict is **NEEDS REVISION**; upgrade to **READY** only with cited evidence for each critical dimension — do not assume readiness, earn it. This is a private qualitative judgment for your own decision only — **never show a score, percentage, or Low/Med/High label to the user.**
 
-- **High** → generate.
-- **Medium / Low** → ask only the questions that lift a critical dimension to High, ranked by impact (most decisive first). Phrase them as concrete questions or A/B forks ("REST or GraphQL?"), never as a number. **Hard cap: 3 questions total — never ask a 4th.**
+- **READY** (every critical dimension evidenced) → generate.
+- **NEEDS REVISION** → ask only the questions that supply the missing evidence, ranked by impact (most decisive first). Phrase them as concrete questions or A/B forks ("REST or GraphQL?"), never as a number. If a recalled memory already answers a question, count it resolved and do NOT spend it against the cap. **Hard cap: 3 questions total — never ask a 4th.**
 - Still ambiguous after 3 questions (or they go unanswered) → deliver a **best-effort prompt with the assumptions baked in explicitly**, and append the assumptions/open-questions note from the Output format above. Do not stall.
 
 **Placeholders vs open decision forks — do not confuse them.** A *placeholder* is a fill-in value the user drops in without changing the approach (a path, version, name → leave `[like this]`). An *open fork* is an unresolved decision that changes the prompt's shape or the work's outcome (migrate from→to which library? keep backwards-compat? sync or async? does the token/output format change?). A fork must NOT be buried as a placeholder: the single most decisive fork becomes your first question, and **every fork still open at generation time is listed explicitly in the assumptions/open-questions note** — never silently defaulted.
@@ -133,6 +133,7 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 **Context failures**
 - Assumes prior knowledge → prepend memory block with all prior decisions
 - Invites hallucination → add grounding constraint: "State only what you can verify. If uncertain, say so."
+- Verification/QA claim with no evidence → require citing the exact output that justifies the claim, not asserting it
 - No mention of prior failures → ask what they already tried (counts toward 3-question limit)
 
 **Format failures**
@@ -167,17 +168,18 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - Silent agent → add "After each step output: ✅ [what was completed]"
 - Unrestricted filesystem → add scope lock on which files and directories are touchable
 - No human review trigger → add "Stop and ask before: [list destructive actions]"
+- Gate only irreversible/high-blast-radius actions → too many gates cause rubber-stamping theater; reserve human review for what's truly unrecoverable (full taxonomy in templates.md)
 
 ---
 
 ### Memory Block
 
-When the user's request references prior work, decisions, or session history — prepend this block to the generated prompt. Place it in the first 30% of the prompt so it survives attention decay in the target model.
+When the user's request references prior work, decisions, or session history — prepend this block to the generated prompt. Place it in the first 30% of the prompt so it survives attention decay in the target model. Store each decision WITH its rationale (the "why"), not just the decision. If a recalled memory already answers a clarifying question, count it resolved — do NOT spend it against the 3-question cap.
 
 ```
 ## Context (carry forward)
-- Stack and tool decisions established
-- Architecture choices locked
+- Stack and tool decisions established (with the why)
+- Architecture choices locked (with the why)
 - Constraints from prior turns
 - What was tried and failed
 ```
@@ -210,11 +212,11 @@ For prompts targeting agentic tools (Claude Code, Devin, Cursor, Windsurf, Cline
 
 ## RECENCY ZONE — Self-Critique and Success Lock
 
-Before delivering, run ONE structured self-critique pass over these fixed dimensions. Single pass, internal only — do not show the critique, do not split into multiple personas, do not loop. Fix issues silently, then deliver.
+Before delivering, run ONE structured self-critique pass over these fixed dimensions. Single pass, internal only — do not show the critique, do not split into multiple personas, do not loop. Default verdict is NEEDS REVISION; upgrade to READY only with cited evidence per dimension — never shown to the user. Fix issues silently, then deliver.
 
 1. **Clarity & Scope** — one unambiguous operation; scope bounded; no two-tasks-in-one; the most critical constraints sit in the first 30%; instructions use the strongest signal word (MUST over should, NEVER over avoid).
 2. **Output Contract & Parseability** — format and length are explicit; if the output is structured (JSON, code, table), its shape is unambiguous and parseable.
-3. **Token Efficiency** — every sentence is load-bearing; no vague adjectives, no padding, no restated instructions.
+3. **Token Efficiency** — every sentence is load-bearing; no vague adjectives, no padding, no restated instructions. Scope self-check: does each constraint exist because the task requires it? Delete the rest. **Surface, don't smuggle** — out-of-scope observations go in a note AFTER the prompt (like the Output-format notes), never inside the prompt body.
 4. **Model-Aware Fit** — matches the target tool's syntax and rules; no fabricated or banned technique; no anti-pattern for that model (no CoT on reasoning-native models, no reasoning-echo on Fable 5, etc.).
 5. **Completeness** — nothing missing that would force a re-prompt; would produce the right output on the first attempt.
 
@@ -233,4 +235,4 @@ Read only when the task requires it. Load only the one section/file you need —
 | [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target tool — read only that tool's profile for full routing guidance |
 | [references/models.md](references/models.md) | You need a volatile model fact (ID, current default, version-tied param) — honor the 60-day re-verify protocol |
 | [references/templates.md](references/templates.md) | You need the full template structure for any tool category |
-| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 38-pattern reference |
+| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 42-pattern reference |

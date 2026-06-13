@@ -2,7 +2,9 @@
 
 <br/>
 
-A Claude skill that writes the accurate prompts for any AI tool. Zero tokens or credits wasted. Full context and memory retention. No re-prompting your way to an answer you should have gotten on attempt one.
+**What:** A Claude skill that writes accurate, paste-ready prompts for any AI tool — routed to the specific model or platform you name.
+**Why:** Every vague prompt is a wasted credit. Prompt Master extracts intent, picks the right architecture, and strips every word that doesn't change the output.
+**How to start:** Install via plugin marketplace (see below), then say: `Write me a prompt for [tool] to [task]` — or paste a bad prompt and ask to fix it.
 
 **Works with:** Claude, ChatGPT, Gemini, o1/o3, MiniMax, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make, and any AI tool you throw at it.
 
@@ -216,6 +218,32 @@ Done When:
 
 ---
 
+## 🗺️ Routing Index
+
+When you name a tool, Prompt Master silently routes to that tool's profile and applies its rules. Quick reference:
+
+| Tool / Category | Handles | When to route |
+|---|---|---|
+| **Claude Fable 5 / Mythos 5** | Default text generation | Any "Claude" request without a version |
+| **Claude Opus 4.8 / 4.7** | Heavy reasoning, long context | Explicit request, or domains where Fable 5 refuses |
+| **ChatGPT / GPT-5.x** | Outcome-first generation | User names ChatGPT or GPT |
+| **o3 / o4-mini / DeepSeek-R1** | Reasoning-native models | Never add CoT — these think internally |
+| **Gemini 2.x** | Grounded generation | Needs citation/grounding anchors |
+| **Local / open-weight (Ollama, Llama, Mistral)** | Short, flat prompts | User running a local model |
+| **Claude Code / Devin / Cline** | Agentic file + terminal | Stop conditions and scope locks are mandatory |
+| **Cursor / Windsurf / Copilot** | IDE autocomplete/edit | File path + function name required |
+| **Bolt / v0 / Lovable / Figma Make** | Full-stack generation | Stack spec + what NOT to scaffold |
+| **Midjourney / DALL-E / Stable Diffusion** | Image generation | Comma descriptors, negative prompt, params |
+| **ComfyUI** | Node-based image | Positive/negative node split |
+| **Sora / Runway / LTX** | Video generation | Camera movement + duration |
+| **ElevenLabs** | Voice AI | Emotion, pacing, speech rate |
+| **Zapier / Make / n8n** | Workflow automation | Trigger + action + field mapping |
+| **Unknown tool** | Universal Fingerprint | 4 questions → quality prompt for any tool |
+
+Full per-tool rules live in [`references/tool-profiles.md`](plugins/prompt-master/skills/prompt-master/references/tool-profiles.md) — loaded on demand, not at startup.
+
+---
+
 ## 🤝 Works With Any AI Tool
 
 Prompt Master includes specific profiles for 20+ tools. For anything not on the list, it uses a **Universal Fingerprint**: 4 questions that let it write a quality prompt for any AI system it has never seen before.
@@ -307,7 +335,7 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 
 ---
 
-## 🚫 35 Credit-Killing Patterns Detected (with Before/After Examples)
+## 🚫 42 Credit-Killing Patterns Detected (with Before/After Examples)
 
 <details>
 <summary><h3> Task Patterns (7)</h3></summary>

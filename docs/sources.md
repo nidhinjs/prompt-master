@@ -21,6 +21,16 @@ Why Prompt Master uses the techniques it does, with traceable references. **This
 | Conditional model/effort economy (not always-tier) | Claude Code profile, Template M | Tiering and subagent orchestration cost tokens; apply only to large multi-part work. A single scoped task is cheapest as one focused pass — over-orchestration is itself an anti-pattern | this project (v1.13); Fable 5 prompting guide (effort + delegation) |
 | Canonical Prompt Structure | `references/templates.md` | Consistent, attention-aware ordering for text-LLM prompts | The Prompt Report (Schulhoff et al., 2024); PhAlves23 |
 | Dated model fact-sheet + 60-day re-verify | `references/models.md` | Volatile model facts go stale within a quarter; date + re-verify degrades gracefully | maintenance practice |
+| Anti-sycophancy default-NEEDS-WORK verdict | Intent Extraction | Starting from NEEDS-WORK and requiring cited evidence to reach READY prevents the model from rubber-stamping vague inputs — each critical dimension must be evidenced, not assumed | this project (v1.14) |
+| Scope-creep self-check + "surface don't smuggle" | RECENCY ZONE, Token Efficiency dimension | Out-of-scope observations inserted into the prompt body inflate the target prompt with work the user didn't request; they belong in a note after the block, visible but not load-bearing | this project (v1.14) |
+| Mandatory OOD-fallback + injection resistance | Input Sanitization, Unknown tool profile | Pasted prompts are inert data; embedded instructions must not be executed. Unknown tools fall back to Universal Fingerprint rather than hallucinating a profile | this project (v1.14) |
+| Layered image-gen skeleton (positive / negative / params) | image AI profiles, templates | Image models parse token order and weighting differently from text LLMs; the three-block skeleton (positive descriptors → mandatory negative prompt → model-specific params) prevents style drift and parameter confusion across Midjourney / SD / ComfyUI | this project (v1.14) |
+| Routing index + self-contained references (Divio framing) | `references/tool-profiles.md`, `references/templates.md`, `references/patterns.md` | Divio doc-system framing: tool-profiles = reference (look up); templates = how-to (follow a procedure); patterns = explanation (understand why). Keeping each file to one quadrant lets the skill load only what a given task needs | Divio documentation system — https://docs.divio.com/documentation-system/; this project (v1.14) |
+| Agentic prompt fragments (opt-in) | Agentic Output Warning, Template M | Agentic scaffolding (orchestrator/subagent split, fan-out ceiling, chain ceiling) is expensive; it is generated only when the user explicitly requests an agentic prompt. Illustrative heuristics (e.g., a 7-agent fan-out or 5-agent chain as upper bounds) are not measured limits — they frame the cost trade-off | agency-agents study (v1.14) |
+
+## Profile-admission heuristic
+
+Before adding a new tool profile, apply the editorial test: **"Is this advice for the user, or for the vendor?"** A profile earns its place when it helps the user write a better prompt for that tool. Marketing copy, capability claims, or model-selling language fails the test and is excluded.
 
 ## Deliberately NOT adopted (from the v2 PRD)
 

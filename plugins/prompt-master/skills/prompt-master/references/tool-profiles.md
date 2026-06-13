@@ -4,6 +4,46 @@ Per-tool routing profiles. **Read only the one section that matches the identifi
 
 For volatile model facts (model IDs, current defaults, version-tied params, what's retired), see [models.md](models.md) and honor its 60-day re-verify protocol — the profiles below carry evergreen prompting advice, not point-in-time model specs.
 
+**Each profile is self-contained — usable when loaded in isolation without SKILL.md in context.**
+
+---
+
+## Routing Index
+
+Pick the row that matches the user's tool, then open only that profile below.
+
+| Tool | Handles | When to route |
+|---|---|---|
+| **Claude / Fable 5 / Mythos 5** | Hard, long-horizon, ambiguous work; agentic multi-step | Default for most tasks; Fable 5 unless user names another model |
+| **Claude Opus 4.x** | Literal execution; offensive-security / bio domains Fable 5 refuses | User names it, or Fable 5 refused |
+| **GPT-5.x / ChatGPT** | Long-context synthesis, tone adherence, persona framing | User is on OpenAI or ChatGPT |
+| **o3 / o4-mini / OpenAI reasoning** | Deep reasoning tasks where process must not be dictated | User names o3/o4-mini or an OpenAI reasoning model |
+| **Gemini 2.x / 3 Pro** | Multimodal, large-document, Google ecosystem | User is on Google AI Studio, Vertex, or Gemini |
+| **Qwen 2.5 / Qwen3** | Structured output, JSON, instruct; Qwen3 adds thinking mode | User names Qwen or an Alibaba model |
+| **Ollama** | Local model deployment (Llama, Mistral, Qwen, CodeLlama …) | User running models locally via Ollama |
+| **Llama / Mistral / open-weight** | General open-weight; weaker instruction following | User names a Llama or Mistral variant |
+| **DeepSeek-R1** | Reasoning-native; outputs `<think>` blocks | User names DeepSeek or R1 |
+| **MiniMax M3 / M2.7** | OpenAI-compatible API; long context; fast variant | User names MiniMax |
+| **Claude Code** | Agentic file editing, terminal commands, multi-step coding | User is inside Claude Code or building a Claude Code prompt |
+| **Cortex Code** | Snowflake-native agentic coding + SQL + Streamlit | User names Cortex Code or Snowflake Cortex |
+| **Antigravity** | Google agent-first IDE; Gemini 3 Pro; browser automation | User names Antigravity or Google's agentic IDE |
+| **Cursor / Windsurf** | Agentic IDE file editing with path-scoped prompts | User is in Cursor or Windsurf |
+| **Cline** | VS Code agentic extension; autonomous edits + terminal | User is using Cline (Claude Dev) |
+| **GitHub Copilot** | Inline code completion from comments/signatures | User is completing code inside Copilot |
+| **Bolt / v0 / Lovable / Figma Make / Google Stitch** | Full-stack or UI generators | User names a no-code/low-code generator |
+| **Devin / SWE-agent** | Fully autonomous coding agent with web + terminal access | User names Devin or SWE-agent |
+| **Perplexity / Manus AI** | Research, orchestration, multi-agent web research | User names Perplexity or Manus |
+| **Computer-Use / Browser agents** | Real-browser automation (click, scroll, fill, transact) | User names Comet, Atlas, Claude in Chrome, or a browser agent |
+| **Image AI — Generation** | Text-to-image (Midjourney, DALL-E 3, SD, Flux, SeeDream) | User wants to generate an image |
+| **Image AI — Reference Editing** | Edit or modify an existing image | User mentions "change/edit/modify" an image or uploads a reference |
+| **ComfyUI** | Node-based image workflow; separate positive/negative blocks | User is using ComfyUI |
+| **3D AI** | Text-to-3D / game asset generation (Meshy, Tripo, Rodin) | User wants 3D output |
+| **3D AI — In-Engine** | Unity AI, Blender AI add-ons | User is working inside Unity or Blender |
+| **Video AI** | Text-to-video (Sora, Runway, Kling, LTX, Dream Machine) | User wants video output |
+| **Voice AI** | Speech synthesis, emotion, pacing (ElevenLabs) | User wants voice/audio output |
+| **Workflow AI** | Automation recipes (Zapier, Make, n8n) | User is building a no-code automation |
+| **Prompt Decompiler** | Break down, adapt, simplify, or split an existing prompt | User pastes an existing prompt to analyse or reuse |
+
 ---
 
 **Claude (claude.ai, Claude API, Claude 4.x)**
@@ -13,7 +53,7 @@ Current default is **Claude Fable 5** (Mythos 5 is its sibling) — assume Fable
 *Durable across Claude 4.x (4.6 / 4.7 / 4.8):*
 - Be explicit and specific — Claude 4.x follows instructions literally. It does exactly what you say, nothing more. Missing context = narrow literal output, not a smart guess.
 - Claude Opus 4.x over-engineers by default — add "Only make changes directly requested. Do not add features or refactor beyond what was asked."
-- XML tags help for complex multi-section prompts: `<context>`, `<task>`, `<constraints>`, `<output_format>`
+- XML tags help for complex multi-section prompts: `<context>`, `<task>`, `<constraints>`, `<output_format>` — **syntax preference: use XML tags for structured output** (evergreen; applies across Claude 4.x)
 - Provide context and reasoning WHY, not just WHAT — Claude generalizes better from explanations
 - Always specify output format and length explicitly
 - For complex or multi-step tasks: front-load everything in one turn — intent, constraints, acceptance criteria, relevant files. Every extra back-and-forth turn adds reasoning overhead and token cost.
@@ -58,6 +98,7 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 - State tool-use expectations explicitly if the model has access to tools
 - Use compact structured outputs — GPT-5.x handles dense instruction well
 - GPT-5.x is strong at long-context synthesis and tone adherence — leverage these
+- **Syntax preference: persona framing works well** — opening the system prompt with "You are a [role] who [trait]" reliably anchors tone and expertise (evergreen across GPT-5.x)
 
 *GPT-5.5 (current OpenAI guidance — outcome-first):*
 - Write **outcome-first**, not step-by-step. Define destination (goal + success criteria + constraints + available evidence + stop rules), not a prescribed procedure. Over-specifying process narrows the search space and produces mechanical answers.
@@ -247,9 +288,10 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 **Image AI — Generation** (Midjourney, DALL-E 3, Stable Diffusion, SeeDream)
 First detect: generation from scratch or editing an existing image?
 
-- **Midjourney**: Comma-separated descriptors, not prose. Subject first, then style, mood, lighting, composition. Parameters at end: `--ar 16:9 --v 6 --style raw`. Negative prompts via `--no [unwanted elements]`
+- **Midjourney**: Comma-separated descriptors, not prose. Subject first, then style, mood, lighting, composition. Parameters at end: `--ar 16:9 --v 6 --chaos 0`. Negative prompts via `--no [unwanted elements]`. *Syntax: comma-descriptor list + `--ar` / `--v` / `--chaos` flags; no full sentences.*
 - **DALL-E 3**: Prose description works. Add "do not include text in the image unless specified." Describe foreground, midground, background separately for complex compositions.
-- **Stable Diffusion**: `(word:weight)` syntax. CFG 7-12. Negative prompt is MANDATORY. Steps 20-30 for drafts, 40-50 for finals.
+- **Stable Diffusion**: `(word:weight)` syntax for emphasis. CFG 7-12. Negative prompt is MANDATORY — omitting it degrades quality. Steps 20-30 for drafts, 40-50 for finals. *Syntax: `(word:weight)` positive block + explicit negative block; both required.*
+- **Flux**: Responds well to natural language — write a clear, concise description as you would explain the image to a person; no special syntax or weight notation needed. *Syntax: natural language prose; avoid SD-style parenthetical weights.*
 - **SeeDream**: Strong at artistic and stylized generation. Specify art style explicitly (anime, cinematic, painterly) before scene content. Mood and atmosphere descriptors work well. Negative prompt recommended.
 
 ---
@@ -264,6 +306,7 @@ Read templates.md Template J for the full reference editing template.
 **ComfyUI**
 Node-based workflow — not a single prompt box. Ask which checkpoint model is loaded before writing.
 Always output two separate blocks: Positive Prompt and Negative Prompt. Never merge them.
+*Syntax: two labelled blocks — `Positive:` and `Negative:` — wired to separate conditioning nodes; merging them breaks the graph.*
 Read templates.md Template K for the full ComfyUI template.
 
 ---

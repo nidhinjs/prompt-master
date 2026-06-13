@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "prompt-master",
-  "description": "Prompt Master — навык-плагин для Claude Code: генерирует точные, готовые к вставке промпты для любого AI-инструмента (Claude, GPT-5.x, Gemini, Cursor, Claude Code, Midjourney и др.) без лишних токенов. Routing под конкретную модель, anti-fabrication протокол, 38 паттернов-фиксов.",
+  "description": "Prompt Master — навык-плагин для Claude Code: генерирует точные, готовые к вставке промпты для любого AI-инструмента (Claude, GPT-5.x, Gemini, Cursor, Claude Code, Midjourney и др.) без лишних токенов. Routing под конкретную модель, anti-fabrication протокол, 42 паттерна-фикса.",
   "owner": {
     "name": "Andrey Zagreev",
     "url": "https://github.com/azagreev"
