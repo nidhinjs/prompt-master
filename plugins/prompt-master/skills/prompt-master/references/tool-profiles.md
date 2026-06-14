@@ -132,7 +132,8 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 - **X Search is the signature differentiator** — realtime search of X (Twitter) for social sentiment, trends, and what people are saying. Reach for it on social / opinion / trend tasks; Web Search covers the open web. Both return citations.
 - **Search filters are request PARAMETERS, not prose** (same discipline as Perplexity): X Search — `allowed_x_handles` / `excluded_x_handles` (≤20, mutually exclusive), `from_date` / `to_date` (ISO8601); Web Search — `allowed_domains` / `excluded_domains` (≤5). "Only look at @handle / site X" written in prose is unreliable — set the parameter.
 - **Native multi-agent research** — for deep, multi-faceted research route to `grok-4.20-multi-agent` (beta): frame it as a research brief (Template N), choose 4 agents (focused) or 16 (deep/thorough), and enable `web_search` + `x_search` for sourced answers. Built-in tools only — no custom function-calling, no Chat Completions API.
-- **Always specify the answer's output format** — structure, length, sections, or a table (or Structured Outputs / JSON schema). Grok, especially multi-agent, follows structured-output requests well; leaving format open yields verbose prose. If format is unstated and matters, make it the first clarifying question.
+- **Always specify the answer's output format** — structure, length, sections, or a table (or Structured Outputs / JSON schema). Grok, especially multi-agent, follows structured-output requests well; leaving format open yields verbose prose. If the user didn't state the format, **ask it as the first clarifying question, or surface the assumed format as an explicit assumption in the note — never derive it silently.**
+- **Require inline citations when search is on and the task is factual** — Web/X Search return citations, but the prompt must ask for them: "Cite each non-obvious claim inline with a link to the source you actually retrieved; end with a sources list; never fabricate a citation or URL; mark unsourced claims [uncertain]." Skip for creative / code / no-search prompts.
 - **OpenAI-compatible API** (`base_url=https://api.x.ai/v1`) — prompts transfer from GPT; the Responses API is preferred (stateful, `previous_response_id`). No role-order restriction.
 - Image/video (**Grok Imagine**) and **Grok Voice** are separate APIs — route those requests to the Image / Video / Voice profiles.
 
@@ -141,6 +142,7 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 **Gemini 2.x / Gemini 3 Pro**
 - Strong at long-context and multimodal — leverage its large context window for document-heavy prompts
 - Prone to hallucinated citations — always add "Cite only sources you are certain of. If uncertain, say [uncertain]."
+- For grounded / research tasks (Gemini Deep Research, search-grounded answers): require inline citations per claim to retrieved sources, never fabricated — this complements the hallucinated-citation guard above
 - Can drift from strict output formats — use explicit format locks with a labelled example
 - For grounded tasks add "Base your response only on the provided context. Do not extrapolate."
 
@@ -286,7 +288,7 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 - **Perplexity Deep Research** = agentic multi-step → cited report (`sonar-deep-research`, 128K). Prompt it as a research brief — see Template N.
 - **Sonar search is driven by the USER MESSAGE only** — the system prompt is not seen by search (use it for tone/grounding). Put the specific, descriptive question in the user message.
 - **Set domain/recency/region limits as request PARAMETERS, not prose** (`search_domain_filter` ≤20 allow/deny via `-`, `search_recency_filter` hour/day/week/month/year). "Search only on X" in prose is ignored. Cap result counts; don't ask for URLs in prose; avoid few-shot. For new apps, Perplexity recommends the **Agent API**.
-- Always require a closing **Data gaps & confidence** section (what's missing, confidence per claim, data freshness). UI Deep Research: pick Focus in the selector; use Spaces (persistent prompt + files) for iterative work.
+- Always require a closing **Data gaps & confidence** section (what's missing, confidence per claim, data freshness) **and inline citations** — "cite each non-obvious claim inline with a link to the retrieved source; never fabricate a citation; mark unsourced claims [uncertain]." UI Deep Research: pick Focus in the selector; use Spaces (persistent prompt + files) for iterative work.
 - Manus and Perplexity Computer are multi-agent orchestrators — describe the end deliverable, not the steps. They decompose internally.
 - **Grok `grok-4.20-multi-agent`** (xAI, beta) is a native multi-agent research model — see the Grok profile. Same brief approach (Template N); pick 4 or 16 agents; enable `web_search` + `x_search`.
 - For long multi-step tasks: add verification checkpoints since each chained step compounds hallucination risk.

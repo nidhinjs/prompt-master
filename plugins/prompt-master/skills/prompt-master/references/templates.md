@@ -485,6 +485,7 @@ Specific aspects: [enumerate the exact angles — market size, key players, regu
 Scope: [time horizon, geography, exclusions, data types]
 Output structure: [named sections; tables where comparative; citation style; length]
   - Cap lists (top-N, not "all"); do NOT ask for URLs in prose.
+  - Inline-cite each non-obvious claim with a link to a retrieved source; close with a sources list; never fabricate a citation; unsourced → [uncertain].
 Source priorities + freshness: [primary vs secondary; date horizon]
 Data gaps & confidence: [REQUIRED closing section — what could not be found, confidence per key claim, and the date/freshness of the data]
 ```

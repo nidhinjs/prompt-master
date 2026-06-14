@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.18.0
+version: 1.18.1
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -67,6 +67,7 @@ After extracting, gauge readiness **internally** on the critical dimensions (Tas
 - **READY** (every critical dimension evidenced) → generate.
 - **NEEDS REVISION** → ask only the questions that supply the missing evidence, ranked by impact (most decisive first). Phrase them as concrete questions or A/B forks ("REST or GraphQL?"), never as a number. If a recalled memory already answers a question, count it resolved and do NOT spend it against the cap. **Hard cap: 3 questions total — never ask a 4th.**
 - Still ambiguous after 3 questions (or they go unanswered) → deliver a **best-effort prompt with the assumptions baked in explicitly**, and append the assumptions/open-questions note from the Output format above. Do not stall.
+- **Output format is never silently derived:** if the answer's format isn't specified and it shapes the deliverable (research/report, or any Grok prompt), make it your first question — or, if the cap is spent, state the assumed format in the open-questions note. A derived format is an assumption to surface, not a silent fix.
 
 **Placeholders vs open decision forks — do not confuse them.** A *placeholder* is a fill-in value the user drops in without changing the approach (a path, version, name → leave `[like this]`). An *open fork* is an unresolved decision that changes the prompt's shape or the work's outcome (migrate from→to which library? keep backwards-compat? sync or async? does the token/output format change?). A fork must NOT be buried as a placeholder: the single most decisive fork becomes your first question, and **every fork still open at generation time is listed explicitly in the assumptions/open-questions note** — never silently defaulted.
 
@@ -92,11 +93,11 @@ Catch these before generating; open the full profile in [references/tool-profile
 - **Claude Fable 5 / Mythos 5** — ⚠️ **suspended/unavailable since 2026-06-12** (US export-control directive; see models.md). Do NOT route here. If restored: never ask it to show/echo its reasoning (`reasoning_extraction` refusal); steer with brief intent + `effort`.
 - **GPT-5.5** — outcome-first, not step-by-step; avoid absolutes (ALWAYS / NEVER) for non-invariants; control length via `text.verbosity`, not prose.
 - **o3 / o4-mini / DeepSeek-R1 / Qwen3-thinking / Grok grok-4.3** — reasoning-native: NEVER add CoT or "think step by step"; short clean instructions only.
-- **Grok (xAI)** — reasoning-native (no CoT; depth via `reasoning_effort`, no `stop`/penalty params). No realtime knowledge unless **Web/X Search** is enabled; X Search is the signature for social/trend tasks. Set search filters (handles/domains/dates) as parameters, not prose. Deep research → `grok-4.20-multi-agent` (4 or 16 agents). Always specify the answer's output format (structure/table/JSON) — if unstated and critical, ask it first.
+- **Grok (xAI)** — reasoning-native (no CoT; depth via `reasoning_effort`, no `stop`/penalty params). No realtime knowledge unless **Web/X Search** is enabled; X Search is the signature for social/trend tasks. Set search filters (handles/domains/dates) as parameters, not prose. Deep research → `grok-4.20-multi-agent` (4 or 16 agents). Always specify the answer's output format — if the user didn't state it, ask first or surface it as an explicit assumption (never silently derive). When search is enabled and the task is factual, require inline citations (cite only retrieved sources; never fabricate).
 - **Gemini** — prone to hallucinated citations: add "Cite only sources you are certain of. If uncertain, say [uncertain]."
 - **Agentic tools** (Claude Code, Devin, Cursor, Cline, SWE-agent) — stop conditions are MANDATORY; always scope to explicit files/paths; add human-review triggers for destructive actions.
 - **Multi-agent / orchestrator prompt request** (user asks for a prompt for an orchestrator, fan-out, sub-agents, or an agent team) — load the **Agentic Prompt Fragments** in [references/templates.md](references/templates.md); default to a single loop, add orchestration only when the task hits the "when to orchestrate" criteria there.
-- **Research tools** (Perplexity Deep Research, Gemini/GPT Deep Research) — prompt as a research brief (Template N) with a required Data-gaps/confidence section. For Sonar, search is driven by the user message; set domain/recency limits as request parameters, not prose; UI — pick Focus in the selector.
+- **Research tools** (Perplexity Deep Research, Gemini/GPT Deep Research) — prompt as a research brief (Template N) with a required Data-gaps/confidence section and **inline citations** (cite only retrieved sources; never fabricate). For Sonar, search is driven by the user message; set domain/recency limits as request parameters, not prose; UI — pick Focus in the selector.
 - **Local / open-weight** (Ollama, Llama, Mistral) — ask which model is running; keep prompts short and flat, no deep nesting; always include a system-prompt role.
 - **Image generation** — Midjourney wants comma descriptors, not prose; Stable Diffusion and ComfyUI require a mandatory negative prompt (ComfyUI: separate Positive / Negative blocks).
 - **Full-stack generators** (Bolt, v0, Lovable, Figma Make, Stitch) — scope down hard; specify stack + what NOT to scaffold to prevent boilerplate bloat.
@@ -140,7 +141,8 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - No mention of prior failures → ask what they already tried (counts toward 3-question limit)
 
 **Format failures**
-- No output format specified → derive from task type and add explicit format lock
+- No output format specified → derive from task type, but **surface the derived format as an explicit assumption** in the note (never silently); if the format materially shapes the answer (research/report task, or any Grok prompt) → **ask it as the first clarifying question** instead
+- Factual / research / report prompt for a retrieval-capable tool (Grok + Web/X Search, Perplexity, deep-research modes, DeepSeek app) with no citation requirement → add the **citation contract**: inline source link per non-obvious claim + a closing sources list + "cite only sources you actually retrieved, never fabricate a citation or URL; mark unsourced claims [uncertain]". Do NOT add it for creative, code, transform, or no-retrieval tasks — forcing citations there invites fabricated sources
 - Implicit length ("write a summary") → add word or sentence count
 - No role assignment for complex tasks → add domain-specific expert identity
 - Vague aesthetic ("make it professional") → translate to concrete measurable specs
@@ -202,6 +204,8 @@ When the user's request references prior work, decisions, or session history —
 
 **Research grounding** — for deep-research / multi-source report tasks (Template N): require a closing **Data gaps & confidence** section (what couldn't be found, confidence per claim, data freshness), prioritize primary sources, and cap lists (top-N, not "all"). Stronger than a bare [uncertain] tag.
 
+**Source citations** — for factual / research / report prompts targeting a tool that can retrieve sources (Grok with Web/X Search, Perplexity, deep-research modes, DeepSeek app): require inline attribution. Add to the prompt: "Cite each non-obvious factual claim inline with a link to the source you actually opened; end with a sources list; never fabricate a citation or URL; if a claim can't be sourced, mark it [uncertain] rather than inventing a reference." Apply ONLY when the tool can retrieve AND the task is factual — omit for creative, code, transform, or no-retrieval tasks (forcing citations there invites fabricated sources, which the grounding rule forbids).
+
 **Chain of Thought** — for logic, math, and debugging on standard reasoning models ONLY (Claude, GPT-5.x, Gemini, Qwen2.5, Llama). Never on o3/o4-mini/R1/Qwen3-thinking/Grok grok-4.3.
 "Think through this step by step before answering."
 
@@ -240,4 +244,4 @@ Read only when the task requires it. Load only the one section/file you need —
 | [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target tool — read only that tool's profile for full routing guidance |
 | [references/models.md](references/models.md) | You need a volatile model fact (ID, current default, version-tied param) — honor the 60-day re-verify protocol |
 | [references/templates.md](references/templates.md) | You need the full template structure for any tool category |
-| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 44-pattern reference |
+| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 45-pattern reference |

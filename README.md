@@ -259,7 +259,7 @@ Prompt Master includes specific profiles for 20+ tools. For anything not on the 
 | **ChatGPT / GPT-5.5 / GPT-5.x** | Reasoning LLM | Outcome-first structure, `text.verbosity`, reasoning-effort tuning, preambles, retrieval budgets |
 | **Gemini 2.x** | Reasoning LLM | Grounding anchors, citation rules, format locks |
 | **o3 / o4-mini** | Thinking LLM | Short clean instructions only — never adds CoT (they think internally) |
-| **Grok 4.3 (xAI)** | Reasoning LLM + realtime search | Reasoning-native (no CoT; `reasoning_effort`); enables Web/X Search for current data; X Search for social/trends; `grok-4.20-multi-agent` for deep research; explicit output format |
+| **Grok 4.3 (xAI)** | Reasoning LLM + realtime search | Reasoning-native (no CoT; `reasoning_effort`); enables Web/X Search for current data; X Search for social/trends; `grok-4.20-multi-agent` for deep research; asks/surfaces output format; inline citations when search is on |
 | **Ollama** | Local LLM | Asks which model is loaded, includes system prompt for Modelfile |
 | **Qwen 2.5 / Qwen3** | Open-weight LLM | Chat template format, thinking vs non-thinking mode detection |
 | **Local models (Llama, Mistral)** | Open-weight LLM | Shorter prompts, simpler structure, no complex nesting |
@@ -323,7 +323,7 @@ Prompt Master picks the right architecture for every task automatically and rout
 
 ---
 
-## 🛡️ 5 Safe Techniques, Applied When Needed
+## 🛡️ 6 Safe Techniques, Applied When Needed
 
 Prompt Master only uses techniques with reliable, bounded effects. Methods known to produce hallucinations or unpredictable output (Tree of Thought, Graph of Thought, Universal Self-Consistency, prompt chaining) are explicitly excluded.
 
@@ -334,10 +334,11 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 | **XML Structural Tags** | Wraps sections in XML for Claude-based tools that parse it reliably |
 | **Grounding Anchors** | Adds anti-hallucination rules for factual and citation tasks |
 | **Chain of Thought** | Forces step-by-step reasoning for logic tasks — never applied to o3/o4-mini/Grok |
+| **Source citations** | For factual/research prompts on retrieval-capable tools (Grok+Web/X Search, Perplexity, deep research) — requires inline source links per claim; cite only retrieved sources, never fabricate |
 
 ---
 
-## 🚫 44 Credit-Killing Patterns Detected (with Before/After Examples)
+## 🚫 45 Credit-Killing Patterns Detected (with Before/After Examples)
 
 <details>
 <summary><h3> Task Patterns (7)</h3></summary>

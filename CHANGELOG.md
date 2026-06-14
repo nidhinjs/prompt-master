@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.1] - 2026-06-15
+
+Фикс двух поведенческих дефектов, найденных на установленном скилле (Grok-промпты): (1) скилл **молча придумывал формат ответа**, не спрашивая и не помечая допущением; (2) для retrieval-инструментов **не требовал inline-ссылок на источник** → проза без атрибуции. Общий корень (RCA): правило жило лишь в Gotcha-памятке и проигрывало оперативной инструкции Diagnostic Checklist «No output format → derive» + «Fix silently». Урок применён — оба правила **вшиты в Diagnostic Checklist + readiness-gate**, а не только в памятку. Цитаты — **условно** (фактологическая/research-задача на retrieval-инструменте) и всегда с анти-фабрикационной парой «cite only retrieved / never fabricate / [uncertain]», чтобы не провоцировать выдуманные ссылки.
+
+### Added
+- **Safe Technique «Source citations»** (`SKILL.md`): условный citation contract — inline-ссылка на каждое неочевидное утверждение + список источников + cite-only-retrieved + never-fabricate + `[uncertain]`. Только для factual/research на retrieval-инструменте; НЕ для креатива/кода/без-retrieval.
+- **#45 «Citable task with no inline-citation contract»** в `patterns.md` (44 → **45**).
+- **Diagnostic Checklist (`SKILL.md`)**: строка про citation contract + переписана строка output-format (вынести допущением/спросить, не выводить молча).
+
+### Changed
+- **`SKILL.md`**: readiness-gate — «output format is never silently derived» (спросить или вынести допущением для Grok/report); Gotchas Grok + Research tools усилены требованием inline-цитат; счётчик 44 → 45.
+- **`tool-profiles.md`**: Grok-профиль (формат — спросить/вынести допущением; citation contract при включённом поиске); Perplexity/Research (inline-цитаты per-claim + no-fabrication); Gemini (inline-цитаты для grounded/research).
+- **`templates.md` Template N**: inline-цитаты + sources list + no-fabrication + `[uncertain]` в Output structure.
+- **`README`**: «5 Safe Techniques» → «6» (+ «Source citations»); счётчик 44 → 45.
+- **`plugin.json`/`marketplace.json`**: счётчик 44 → 45.
+
+### Notes
+- **Анти-фабрикация цела:** citation contract не добавляется без retrieval и для креатива/кода; нигде не инструктируем выдумывать ссылки — наоборот, явно запрещаем.
+- **Проверка — clean-room behavioural test:** свежие субагенты только с файлами скилла (без этой переписки), 3 прогона × 3 кейса = 9/9 PASS (репро бага: формат спрошен/вынесен + цитаты; креатив: цитат нет; Perplexity: цитаты + data-gaps). Именно этот гейт поймал бы промах, которого не было видно в v1.18.
+- Гард-рейлы целы: профиль Grok v1.18, Perplexity research v1.17, Opus 4.8 дефолт/Fable suspended v1.16, hook v1.15, фрагменты v1.14, cap 3, single-pass self-critique.
+
 ## [1.18.0] - 2026-06-15
 
 Добавлен профиль **Grok (xAI)**. Факты **сверены по live-доке docs.x.ai** (через grok-doc-server MCP, 2026-06-15). До этого Grok в проекте не упоминался вообще — релиз закрывает пропуск, а не правит устаревшее. Фокус — текст / reasoning / поиск / multi-agent; image/video (Grok Imagine) и voice отложены в image-релиз (1.19.0).
@@ -193,6 +214,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.18.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.18.1
 [1.18.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.18.0
 [1.17.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.17.0
 [1.16.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.16.0
