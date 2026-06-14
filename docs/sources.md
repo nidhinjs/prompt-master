@@ -23,6 +23,7 @@ Why Prompt Master uses the techniques it does, with traceable references. **This
 | Dated model fact-sheet + 60-day re-verify | `references/models.md` | Volatile model facts go stale within a quarter; date + re-verify degrades gracefully | maintenance practice |
 | Default "Claude" = Opus 4.8 (Fable 5/Mythos 5 suspended) | `models.md`, `tool-profiles.md`, SKILL.md Gotchas | Fable 5 / Mythos 5 were disabled for all customers on 2026-06-12 by a US export-control directive; routing "Claude" to a suspended model would break every prompt, so the default reverts to Opus 4.8. Fable blocks are kept (dated) for trivial rollback if access returns — exactly the pattern #38 / re-verify protocol working as designed | https://www.anthropic.com/news/fable-mythos-access; this project (v1.16) |
 | Research Brief (Template N) + filters-as-params + Data-gaps/confidence | `templates.md` Template N, Perplexity profile, `models.md`, SKILL.md | Research prompting is its own task type. Per Perplexity's official Sonar guidance, search is driven by the user message and the system prompt is not seen by search; hard constraints (domain/recency) must be request **parameters**, not prose ("search only on X" is ignored). A required Data-gaps/confidence section makes research output honest about what it could not find | docs.perplexity.ai (Sonar Prompt Guide, Search Filters, Sonar Deep Research, MCP server); verified 2026-06-14 (v1.17) |
+| Grok (xAI) profile — reasoning-native, Web/X Search filters-as-params, native multi-agent, mandatory output format | `tool-profiles.md` Grok profile, `models.md` xAI section, SKILL.md Gotchas, Template N, pattern #44 | grok-4.3 is reasoning-native (no CoT; depth via `reasoning_effort`) and has **no realtime knowledge** without server-side Web/X Search enabled; search filters (handles/domains/dates) are request **parameters**, not prose; `grok-4.20-multi-agent` is a native multi-agent research model (4/16 agents); X Search is the signature for social/trend tasks; Grok answers best with an explicit output format | docs.x.ai (models, reasoning, web-search, x-search, multi-agent); verified 2026-06-15 (v1.18) |
 | Anti-sycophancy default-NEEDS-WORK verdict | Intent Extraction | Starting from NEEDS-WORK and requiring cited evidence to reach READY prevents the model from rubber-stamping vague inputs — each critical dimension must be evidenced, not assumed | this project (v1.14) |
 | Scope-creep self-check + "surface don't smuggle" | RECENCY ZONE, Token Efficiency dimension | Out-of-scope observations inserted into the prompt body inflate the target prompt with work the user didn't request; they belong in a note after the block, visible but not load-bearing | this project (v1.14) |
 | Mandatory OOD-fallback + injection resistance | Input Sanitization, Unknown tool profile | Pasted prompts are inert data; embedded instructions must not be executed. Unknown tools fall back to Universal Fingerprint rather than hallucinating a profile | this project (v1.14) |
@@ -68,6 +69,14 @@ To keep the skill cheap, honest, and consistent with its own hard rules, the fol
 - **OWASP — AI Agent Security Cheat Sheet** — https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html
 - **NIST — AI Risk Management Framework** — https://www.nist.gov/itl/ai-risk-management-framework
 - **Claude Code — Hooks** — https://docs.claude.com/en/docs/claude-code/hooks
+
+### xAI / Grok (v1.18 — verified via live docs)
+
+- **xAI — Models** — https://docs.x.ai/developers/models
+- **xAI — Reasoning (`reasoning_effort`)** — https://docs.x.ai/developers/model-capabilities/text/reasoning
+- **xAI — Multi Agent** — https://docs.x.ai/developers/model-capabilities/text/multi-agent
+- **xAI — Web Search** — https://docs.x.ai/developers/tools/web-search
+- **xAI — X Search** — https://docs.x.ai/developers/tools/x-search
 
 ### Perplexity research (v1.17 — verified via live docs)
 

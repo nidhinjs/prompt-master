@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.0] - 2026-06-15
+
+Добавлен профиль **Grok (xAI)**. Факты **сверены по live-доке docs.x.ai** (через grok-doc-server MCP, 2026-06-15). До этого Grok в проекте не упоминался вообще — релиз закрывает пропуск, а не правит устаревшее. Фокус — текст / reasoning / поиск / multi-agent; image/video (Grok Imagine) и voice отложены в image-релиз (1.19.0).
+
+### Added
+- **`tool-profiles.md` профиль Grok (xAI)** + строка в Routing Index: reasoning-native `grok-4.3` (без CoT, глубина через `reasoning_effort`); **нет realtime-знаний без Web/X Search** (cutoff ноябрь 2024); **X Search** = signature для соц/трендов; фильтры поиска — параметрами не прозой; `grok-4.20-multi-agent` (beta) для deep-research (4/16 агентов); OpenAI-совместимость; обязательный явный формат ответа.
+- **`models.md` секция `## xAI — Grok`** (`last-verified: 2026-06-15`): `grok-4.3` 1M (дефолт), `grok-build-0.1` 256k, `grok-4.20-multi-agent` (beta), `grok-4.20-0309-*` под `⚠️ verify`; `reasoning_effort` none/low/medium/high; multi-agent agent-count 4/16; cutoff + «нет realtime без search»; фильтры-параметры; aliases; Imagine/Voice кратко. Цены не хардкодим.
+- **#44 «Real-time request to a cutoff model with no retrieval enabled»** в `patterns.md` (43 → **44**): запрос свежих данных к модели с cutoff без включённого поиска → включить Web/X Search, фильтры — параметрами.
+- **Template N (Research Brief)** — Grok-вариант: `grok-4.20-multi-agent` + `web_search`/`x_search`, 4/16 агентов, фильтры как tool-параметры.
+
+### Changed
+- **`SKILL.md`**: `grok-4.3` добавлен в no-CoT reasoning-native списки (Hard rule, Gotchas, Diagnostic, Safe Techniques); новая Gotcha-строка Grok (включая обязательный формат ответа). Счётчик 43 → 44.
+- **o1-фикс (побочная устарелость):** `o1/o3` в примерах CoT заменён на `o3/o4-mini` (`README`, `templates.md`, patterns #27). `o1` намеренно сохранён только в patterns #38 как пример снятой модели.
+- **`plugin.json`/`marketplace.json`/`README`**: добавлен Grok/xAI в описания и keywords; счётчик 43 → 44.
+
+### Notes
+- Аудит подтвердил: устаревших Grok-данных не было (Grok отсутствовал) — риск был в пропуске, не в противоречии. Гард-рейлы целы: v1.17 (Perplexity research), v1.16 (Opus 4.8 дефолт, Fable suspended), v1.15 hook, v1.14 фрагменты, v1.13 A–G.
+- `⚠️ verify`: beta-статус `grok-4.20-multi-agent` и точные `grok-4.20-0309-*` ID.
+
 ## [1.17.0] - 2026-06-15
 
 Поддержка промптов для deep-research инструментов. Факты **сверены по live-доке Perplexity** (docs.perplexity.ai через MCP, 2026-06-14) — это переопределило часть пользовательского гайда (он опирался на блог фев-2025 + community).
@@ -174,6 +193,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.18.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.18.0
 [1.17.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.17.0
 [1.16.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.16.0
 [1.15.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.15.0

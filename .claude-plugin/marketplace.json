@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "prompt-master",
-  "description": "Prompt Master — навык-плагин для Claude Code: генерирует точные, готовые к вставке промпты для любого AI-инструмента (Claude, GPT-5.x, Gemini, Cursor, Claude Code, Midjourney и др.) без лишних токенов. Routing под конкретную модель, anti-fabrication протокол, 43 паттерна-фикса.",
+  "description": "Prompt Master — навык-плагин для Claude Code: генерирует точные, готовые к вставке промпты для любого AI-инструмента (Claude, GPT-5.x, Gemini, Grok, Cursor, Claude Code, Midjourney и др.) без лишних токенов. Routing под конкретную модель, anti-fabrication протокол, 44 паттерна-фикса.",
   "owner": {
     "name": "Andrey Zagreev",
     "url": "https://github.com/azagreev"
@@ -10,7 +10,7 @@
     {
       "name": "prompt-master",
       "source": "./plugins/prompt-master",
-      "description": "Генератор оптимизированных промптов под конкретный AI-инструмент. Активируется по запросам «напиши/исправь/улучши/адаптируй промпт для …». Routing под Claude (Opus 4.8 — дефолт; Fable 5/Mythos 5 временно недоступны), GPT-5.5, Gemini, reasoning-модели, агентные IDE, image/video/voice AI.",
+      "description": "Генератор оптимизированных промптов под конкретный AI-инструмент. Активируется по запросам «напиши/исправь/улучши/адаптируй промпт для …». Routing под Claude (Opus 4.8 — дефолт; Fable 5/Mythos 5 временно недоступны), GPT-5.5, Gemini, Grok (xAI), reasoning-модели, агентные IDE, image/video/voice AI.",
       "category": "productivity"
     }
   ]

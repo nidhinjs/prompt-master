@@ -143,7 +143,7 @@ Experiment: Give 3 variants ranging from minimal to bold.
 
 *Use for logic-heavy tasks, math, debugging, and multi-factor analysis where the AI needs to reason carefully before committing to an answer.*
 
-**Important:** Only use CoT for standard reasoning models (Claude, GPT-4o, Gemini). Do NOT add CoT instructions to o1, o3, or Claude extended thinking — they reason internally and CoT instructions degrade their output.
+**Important:** Only use CoT for standard reasoning models (Claude, GPT-5.x, Gemini). Do NOT add CoT instructions to o3, o4-mini, Grok grok-4.3, or Claude extended thinking — they reason internally and CoT instructions degrade their output.
 
 ```
 [Task statement]
@@ -166,7 +166,7 @@ Give your final answer in <answer> tags only.
 - Analysis where a wrong first impression is likely
 
 **When NOT to use:**
-- o1 / o3 / reasoning models (they think internally — adding CoT hurts)
+- o3 / o4-mini / Grok grok-4.3 / reasoning models (they think internally — adding CoT hurts)
 - Simple tasks where the answer is clear (unnecessary overhead)
 - Creative tasks (CoT can kill natural voice)
 
@@ -477,7 +477,7 @@ After each completed step: ✅ [what was done] — [file(s) affected]
 
 ## Template N — Research Brief
 
-*Use for deep-research / multi-source cited-report tools (Perplexity Deep Research, GPT/Gemini Deep Research, Sonar API). Prompt the research as an ASSIGNMENT, not a question.*
+*Use for deep-research / multi-source cited-report tools (Perplexity Deep Research, GPT/Gemini Deep Research, Sonar API, Grok `grok-4.20-multi-agent`). Prompt the research as an ASSIGNMENT, not a question.*
 
 ```
 Role + Goal: [expert role + what decision this report informs]
@@ -492,6 +492,7 @@ Data gaps & confidence: [REQUIRED closing section — what could not be found, c
 **Tool-aware (official Perplexity Sonar guidance):**
 - **Sonar / API:** search is driven by the **user message only** — the system prompt is not seen by search (use it for tone/grounding). Put the concrete, specific question in the user message. Set hard constraints as **request parameters, not prose**: `search_domain_filter` (≤20 domains, allow / deny with `-`), `search_recency_filter` (hour/day/week/month/year). "Search only on X" in prose is ignored. Avoid few-shot. For new apps Perplexity recommends the **Agent API**.
 - **UI Deep Research:** pick the Focus/source filter in the selector before running; for iterative work use a Space (persistent system prompt + curated sources + files) with in-thread follow-ups.
+- **Grok (xAI):** route deep research to `grok-4.20-multi-agent` (beta) and enable `web_search` + `x_search`. Choose agent count by depth — 4 (focused) or 16 (thorough), via `agent_count` or `reasoning.effort` (low/medium=4, high/xhigh=16). Set source limits as tool **parameters** (`allowed_x_handles`/`allowed_domains`, `from_date`/`to_date`), not prose. Grok has no realtime knowledge without these search tools enabled.
 
 ---
 

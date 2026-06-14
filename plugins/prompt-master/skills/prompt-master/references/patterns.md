@@ -1,6 +1,6 @@
 # Credit-Killing Patterns Reference
 
-43 patterns that waste tokens and cause re-prompts. Read this file when the user pastes a bad prompt and asks you to fix it, or when diagnosing why a prompt is underperforming.
+44 patterns that waste tokens and cause re-prompts. Read this file when the user pastes a bad prompt and asks you to fix it, or when diagnosing why a prompt is underperforming.
 
 ---
 
@@ -65,7 +65,7 @@
 | # | Pattern | Bad Example | Fixed |
 |---|---------|------------|-------|
 | 26 | **No CoT for logic task** | "which approach is better?" | "Think through both approaches step by step before recommending" |
-| 27 | **Adding CoT to reasoning models** | "think step by step" sent to o1/o3 | Remove it — reasoning models think internally, CoT instructions degrade output |
+| 27 | **Adding CoT to reasoning models** | "think step by step" sent to o3/o4-mini | Remove it — reasoning models think internally, CoT instructions degrade output |
 | 28 | **Expecting inter-session memory** | "you already know my project" | Always re-provide the Memory Block in every new session |
 | 29 | **Contradicting prior work** | New prompt ignores earlier architecture | Include Memory Block with all established decisions |
 | 30 | **No grounding rule for factual tasks** | "summarize what experts say about X" | "Use only information you are highly confident is accurate. Say [uncertain] if not." |
@@ -100,3 +100,4 @@
 | # | Pattern | Bad Example | Fixed |
 |---|---------|------------|-------|
 | 43 | **Vague / mis-specified research request** | "tell me about X" / "do a full market analysis"; or source limits in prose ("search only academic sites", "use the latest data") | Reframe as a research brief (Template N): role+goal, enumerated aspects, scope, output structure, **required "Data gaps & confidence" section**. For Sonar/API, set domain/recency limits as **parameters** (`search_domain_filter`/`search_recency_filter`), not prose; put the specific question in the user message; cap lists (top-N); don't ask for URLs in prose. |
+| 44 | **Real-time request to a cutoff model with no retrieval enabled** | "What are people saying about X today?" / "latest news on Y" sent to a model with a training cutoff and no search tool (e.g. Grok without Web/X Search) | The model answers from stale training data or guesses. Enable the model's search/browse tool (Grok: **Web Search** and/or **X Search**; others: their browse/search mode) and set source limits as **parameters** (handles/domains/dates), not prose. For social/sentiment/trend questions on Grok, use X Search specifically. |

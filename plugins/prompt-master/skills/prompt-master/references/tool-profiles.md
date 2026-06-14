@@ -18,6 +18,7 @@ Pick the row that matches the user's tool, then open only that profile below.
 | **Claude Fable 5 / Mythos 5** | (frontier) — ⚠️ **suspended since 2026-06-12, unavailable** | Do not route here until access is restored (see models.md) |
 | **GPT-5.x / ChatGPT** | Long-context synthesis, tone adherence, persona framing | User is on OpenAI or ChatGPT |
 | **o3 / o4-mini / OpenAI reasoning** | Deep reasoning tasks where process must not be dictated | User names o3/o4-mini or an OpenAI reasoning model |
+| **Grok 4.3 / xAI** | Reasoning-native chat/coding; realtime X + web search; native multi-agent research | User names Grok or xAI |
 | **Gemini 2.x / 3 Pro** | Multimodal, large-document, Google ecosystem | User is on Google AI Studio, Vertex, or Gemini |
 | **Qwen 2.5 / Qwen3** | Structured output, JSON, instruct; Qwen3 adds thinking mode | User names Qwen or an Alibaba model |
 | **Ollama** | Local model deployment (Llama, Mistral, Qwen, CodeLlama …) | User running models locally via Ollama |
@@ -121,6 +122,19 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 - Prefer zero-shot first — add few-shot only if strictly needed and tightly aligned
 - State what you want and what done looks like. Nothing more.
 - Keep system prompts under 200 words — longer prompts hurt performance on reasoning models
+
+---
+
+**Grok (xAI — grok-4.3, realtime X/web search, native multi-agent research)**
+
+- **grok-4.3 is reasoning-native** — it thinks internally before answering. Do NOT add "think step by step" / CoT scaffolding; control depth with the `reasoning_effort` setting (`none` / `low` default / `medium` / `high`) — raise to `high` for hard math, logic, or multi-step work. Do NOT set `stop`, `presencePenalty`, or `frequencyPenalty` — they error on reasoning models.
+- **No realtime knowledge** — Grok has a training cutoff and does not know current events unless server-side search is enabled. For any "today / latest / current" task, instruct enabling **Web Search** and/or **X Search**; without it, Grok answers from stale training data (or guesses).
+- **X Search is the signature differentiator** — realtime search of X (Twitter) for social sentiment, trends, and what people are saying. Reach for it on social / opinion / trend tasks; Web Search covers the open web. Both return citations.
+- **Search filters are request PARAMETERS, not prose** (same discipline as Perplexity): X Search — `allowed_x_handles` / `excluded_x_handles` (≤20, mutually exclusive), `from_date` / `to_date` (ISO8601); Web Search — `allowed_domains` / `excluded_domains` (≤5). "Only look at @handle / site X" written in prose is unreliable — set the parameter.
+- **Native multi-agent research** — for deep, multi-faceted research route to `grok-4.20-multi-agent` (beta): frame it as a research brief (Template N), choose 4 agents (focused) or 16 (deep/thorough), and enable `web_search` + `x_search` for sourced answers. Built-in tools only — no custom function-calling, no Chat Completions API.
+- **Always specify the answer's output format** — structure, length, sections, or a table (or Structured Outputs / JSON schema). Grok, especially multi-agent, follows structured-output requests well; leaving format open yields verbose prose. If format is unstated and matters, make it the first clarifying question.
+- **OpenAI-compatible API** (`base_url=https://api.x.ai/v1`) — prompts transfer from GPT; the Responses API is preferred (stateful, `previous_response_id`). No role-order restriction.
+- Image/video (**Grok Imagine**) and **Grok Voice** are separate APIs — route those requests to the Image / Video / Voice profiles.
 
 ---
 
@@ -274,6 +288,7 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 - **Set domain/recency/region limits as request PARAMETERS, not prose** (`search_domain_filter` ≤20 allow/deny via `-`, `search_recency_filter` hour/day/week/month/year). "Search only on X" in prose is ignored. Cap result counts; don't ask for URLs in prose; avoid few-shot. For new apps, Perplexity recommends the **Agent API**.
 - Always require a closing **Data gaps & confidence** section (what's missing, confidence per claim, data freshness). UI Deep Research: pick Focus in the selector; use Spaces (persistent prompt + files) for iterative work.
 - Manus and Perplexity Computer are multi-agent orchestrators — describe the end deliverable, not the steps. They decompose internally.
+- **Grok `grok-4.20-multi-agent`** (xAI, beta) is a native multi-agent research model — see the Grok profile. Same brief approach (Template N); pick 4 or 16 agents; enable `web_search` + `x_search`.
 - For long multi-step tasks: add verification checkpoints since each chained step compounds hallucination risk.
 
 ---

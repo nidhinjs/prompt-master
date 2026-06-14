@@ -42,6 +42,19 @@ All facts that go stale fast — model IDs, current defaults, version-tied param
 - Has a thinking/`thinking_level`-style control; may guess when information is missing — add explicit grounding.
 - Known quirk: hallucinated citations — always add "Cite only sources you are certain of. If uncertain, say [uncertain]."
 
+## xAI — Grok
+
+`last-verified: 2026-06-15`
+
+- **Default Grok routing target: `grok-4.3`** — flagship, **1M context**, used for both chat and coding. A reasoning model (thinks internally; exposes summaries). Other text IDs: `grok-build-0.1` (256k, fast agentic-coding model); prior gen `grok-4.20-0309-reasoning` / `grok-4.20-0309-non-reasoning` (⚠️ verify exact dated IDs).
+- **`reasoning_effort`:** `none` / `low` (default) / `medium` / `high`. `none` disables thinking. `stop`, `presencePenalty`, `frequencyPenalty` are rejected on reasoning models; `logprobs` / `top_logprobs` ignored on 4.20+. grok-4.3 is reasoning-native → do not add CoT.
+- **`grok-4.20-multi-agent`** — ⚠️ **beta** native multi-agent research model. Agent count is **4 or 16**: `agent_count` (4/16) in the xAI SDK, or `reasoning.effort` (`low`/`medium`=4, `high`/`xhigh`=16). Only leader-agent output is returned; built-in tools only (web/x/code/collections + remote MCP) — no custom function-calling, no Chat Completions API, no `max_tokens`.
+- **Knowledge cutoff Grok 3/4 = November 2024.** No realtime knowledge without server-side **Web Search** / **X Search** enabled — otherwise answers come from training data.
+- **Search filters are request parameters, not prose:** X Search — `allowed_x_handles`/`excluded_x_handles` (≤20, mutually exclusive), `from_date`/`to_date` (ISO8601); Web Search — `allowed_domains`/`excluded_domains` (≤5). Both return citations.
+- **API:** Responses API preferred (stateful, stored 30 days, `previous_response_id`); OpenAI-compatible at `base_url=https://api.x.ai/v1`. Aliases: `<name>` = latest stable, `-latest`, `-<date>` = pinned. Supports Structured Outputs (JSON schema).
+- **Imagine + Voice** (full revision deferred to image release): Grok Imagine generates and edits images and video (`grok-imagine-image*`, `grok-imagine-video*`); Grok Voice does realtime / TTS / STT.
+- Prices are volatile — do not hardcode in the skill.
+
 ## DeepSeek
 
 `last-verified: 2026-06-11`

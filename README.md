@@ -6,7 +6,7 @@
 **Why:** Every vague prompt is a wasted credit. Prompt Master extracts intent, picks the right architecture, and strips every word that doesn't change the output.
 **How to start:** Install via plugin marketplace (see below), then say: `Write me a prompt for [tool] to [task]` — or paste a bad prompt and ask to fix it.
 
-**Works with:** Claude, ChatGPT, Gemini, o1/o3, MiniMax, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make, and any AI tool you throw at it.
+**Works with:** Claude, ChatGPT, Gemini, Grok, o3/o4-mini, MiniMax, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make, and any AI tool you throw at it.
 
 ---
 
@@ -228,6 +228,7 @@ When you name a tool, Prompt Master silently routes to that tool's profile and a
 | **Claude Fable 5 / Mythos 5** | ⚠️ Suspended since 2026-06-12 (unavailable) | Do not route here until access is restored |
 | **ChatGPT / GPT-5.x** | Outcome-first generation | User names ChatGPT or GPT |
 | **o3 / o4-mini / DeepSeek-R1** | Reasoning-native models | Never add CoT — these think internally |
+| **Grok 4.3 / xAI** | Reasoning-native; realtime X/web search; multi-agent research | User names Grok or xAI |
 | **Gemini 2.x** | Grounded generation | Needs citation/grounding anchors |
 | **Local / open-weight (Ollama, Llama, Mistral)** | Short, flat prompts | User running a local model |
 | **Claude Code / Devin / Cline** | Agentic file + terminal | Stop conditions and scope locks are mandatory |
@@ -258,6 +259,7 @@ Prompt Master includes specific profiles for 20+ tools. For anything not on the 
 | **ChatGPT / GPT-5.5 / GPT-5.x** | Reasoning LLM | Outcome-first structure, `text.verbosity`, reasoning-effort tuning, preambles, retrieval budgets |
 | **Gemini 2.x** | Reasoning LLM | Grounding anchors, citation rules, format locks |
 | **o3 / o4-mini** | Thinking LLM | Short clean instructions only — never adds CoT (they think internally) |
+| **Grok 4.3 (xAI)** | Reasoning LLM + realtime search | Reasoning-native (no CoT; `reasoning_effort`); enables Web/X Search for current data; X Search for social/trends; `grok-4.20-multi-agent` for deep research; explicit output format |
 | **Ollama** | Local LLM | Asks which model is loaded, includes system prompt for Modelfile |
 | **Qwen 2.5 / Qwen3** | Open-weight LLM | Chat template format, thinking vs non-thinking mode detection |
 | **Local models (Llama, Mistral)** | Open-weight LLM | Shorter prompts, simpler structure, no complex nesting |
@@ -331,11 +333,11 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 | **Few-Shot Examples** | Adds 2-5 examples when format consistency matters more than instructions |
 | **XML Structural Tags** | Wraps sections in XML for Claude-based tools that parse it reliably |
 | **Grounding Anchors** | Adds anti-hallucination rules for factual and citation tasks |
-| **Chain of Thought** | Forces step-by-step reasoning for logic tasks — never applied to o1/o3 |
+| **Chain of Thought** | Forces step-by-step reasoning for logic tasks — never applied to o3/o4-mini/Grok |
 
 ---
 
-## 🚫 43 Credit-Killing Patterns Detected (with Before/After Examples)
+## 🚫 44 Credit-Killing Patterns Detected (with Before/After Examples)
 
 <details>
 <summary><h3> Task Patterns (7)</h3></summary>
@@ -405,7 +407,7 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 | # | Pattern | Before | After |
 |---|---------|--------|-------|
 | 26 | **No CoT for logic task** | "which approach is better?" | "Think through both approaches step by step before recommending" |
-| 27 | **Adding CoT to reasoning models** | "think step by step" sent to o1/o3 | Removed, reasoning models think internally and CoT instructions degrade output |
+| 27 | **Adding CoT to reasoning models** | "think step by step" sent to o3/o4-mini | Removed, reasoning models think internally and CoT instructions degrade output |
 | 28 | **No self-check on complex output** | (nothing) | "Before finishing, verify output against the constraints above" |
 | 29 | **Expecting inter-session memory** | "you already know my project" | Always re-provide the Memory Block |
 | 30 | **Contradicting prior decisions** | New prompt ignores earlier architecture | Memory Block with all established facts |
