@@ -64,6 +64,18 @@ All facts that go stale fast — model IDs, current defaults, version-tied param
 - Qwen 2.5 instruct variants: strong instruction-following and JSON. Qwen3 has thinking and non-thinking modes (thinking mode → treat like a reasoning model, no CoT).
 - ⚠️ verify the current Qwen generation/version before asserting — the line iterates quickly.
 
+## Perplexity
+
+`last-verified: 2026-06-14`
+
+- **Sonar Deep Research:** model `sonar-deep-research`, **128K context**, "exhaustive searches across hundreds of sources". UI Deep Research is Pro/Enterprise.
+- **Search ↔ prompt:** the search is driven by the **user message only**; the **system prompt does not influence search**. Search instructions written in prose are ignored.
+- **Filters = request-body parameters (not prose):** `search_domain_filter` (array, **max 20**, allowlist or denylist via `-` prefix); `search_recency_filter` (`hour`/`day`/`week`/`month`/`year`); date filters `search_after_date_filter` / `search_before_date_filter` (`%m/%d/%Y`), `last_updated_*`.
+- **`search_mode` / `academic` and exact `reasoning_effort` values:** ⚠️ verify in the API reference (forum mentioned `minimal`/`low`/`medium`/`high` + async; not confirmed on the verified pages).
+- **Agent API** is Perplexity's recommended default for new applications.
+- **Spaces** (formerly Collections, UI): persistent workspace — system prompt + curated sources + uploaded files.
+- Prices are volatile — do not hardcode in the skill.
+
 ---
 
 > Vendors not listed here have no volatile-fact entry yet. Add one (with a `last-verified` date) when the skill starts asserting model-specific facts about them.

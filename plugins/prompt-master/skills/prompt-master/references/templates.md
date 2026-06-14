@@ -20,6 +20,7 @@ Full template library for Prompt Master. Read the relevant template when the use
 | [K — ComfyUI](#template-k--comfyui) | ComfyUI node-based image workflows |
 | [L — Prompt Decompiler](#template-l--prompt-decompiler) | Breaking down, adapting, or splitting existing prompts |
 | [M — Opus 4.7 / 4.8 Task Brief](#template-m--opus-4.7--4.8-task-brief) | Complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 |
+| [N — Research Brief](#template-n--research-brief) | Deep-research / cited-report tools (Perplexity Deep Research, GPT/Gemini Deep Research, Sonar) |
 
 ---
 
@@ -471,6 +472,26 @@ After each completed step: ✅ [what was done] — [file(s) affected]
 - Two operations bundled (refactor + migrate)? Prefer sequencing — land the refactor green, then migrate — so a regression is bisectable.
 
 **When to use:** Opus 4.7 or 4.8 on any surface — claude.ai, API, Claude Code — when the task is complex, multi-file, ambiguous, or agentic. Not needed for simple one-shot tasks.
+
+---
+
+## Template N — Research Brief
+
+*Use for deep-research / multi-source cited-report tools (Perplexity Deep Research, GPT/Gemini Deep Research, Sonar API). Prompt the research as an ASSIGNMENT, not a question.*
+
+```
+Role + Goal: [expert role + what decision this report informs]
+Specific aspects: [enumerate the exact angles — market size, key players, regulatory, risks… NOT "about X"]
+Scope: [time horizon, geography, exclusions, data types]
+Output structure: [named sections; tables where comparative; citation style; length]
+  - Cap lists (top-N, not "all"); do NOT ask for URLs in prose.
+Source priorities + freshness: [primary vs secondary; date horizon]
+Data gaps & confidence: [REQUIRED closing section — what could not be found, confidence per key claim, and the date/freshness of the data]
+```
+
+**Tool-aware (official Perplexity Sonar guidance):**
+- **Sonar / API:** search is driven by the **user message only** — the system prompt is not seen by search (use it for tone/grounding). Put the concrete, specific question in the user message. Set hard constraints as **request parameters, not prose**: `search_domain_filter` (≤20 domains, allow / deny with `-`), `search_recency_filter` (hour/day/week/month/year). "Search only on X" in prose is ignored. Avoid few-shot. For new apps Perplexity recommends the **Agent API**.
+- **UI Deep Research:** pick the Focus/source filter in the selector before running; for iterative work use a Space (persistent system prompt + curated sources + files) with in-thread follow-ups.
 
 ---
 

@@ -1,6 +1,6 @@
 # Credit-Killing Patterns Reference
 
-42 patterns that waste tokens and cause re-prompts. Read this file when the user pastes a bad prompt and asks you to fix it, or when diagnosing why a prompt is underperforming.
+43 patterns that waste tokens and cause re-prompts. Read this file when the user pastes a bad prompt and asks you to fix it, or when diagnosing why a prompt is underperforming.
 
 ---
 
@@ -92,3 +92,11 @@
 | # | Pattern | Bad Example | Fixed |
 |---|---------|------------|-------|
 | 38 | **Hardcoded retired model or dead parameter** | "Use `gpt-4o` / `o1`", or sets a `budget_tokens` / fixed thinking budget on a current Claude model | Model IDs, defaults, and version-tied params are volatile. Confirm against [models.md](models.md); re-verify any section whose `last-verified` date is >60 days old before asserting it. Drop dead params (adaptive-thinking models manage depth themselves). |
+
+---
+
+## Research Patterns
+
+| # | Pattern | Bad Example | Fixed |
+|---|---------|------------|-------|
+| 43 | **Vague / mis-specified research request** | "tell me about X" / "do a full market analysis"; or source limits in prose ("search only academic sites", "use the latest data") | Reframe as a research brief (Template N): role+goal, enumerated aspects, scope, output structure, **required "Data gaps & confidence" section**. For Sonar/API, set domain/recency limits as **parameters** (`search_domain_filter`/`search_recency_filter`), not prose; put the specific question in the user message; cap lists (top-N); don't ask for URLs in prose. |

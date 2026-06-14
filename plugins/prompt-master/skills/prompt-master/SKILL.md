@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.16.0
+version: 1.17.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -95,6 +95,7 @@ Catch these before generating; open the full profile in [references/tool-profile
 - **Gemini** — prone to hallucinated citations: add "Cite only sources you are certain of. If uncertain, say [uncertain]."
 - **Agentic tools** (Claude Code, Devin, Cursor, Cline, SWE-agent) — stop conditions are MANDATORY; always scope to explicit files/paths; add human-review triggers for destructive actions.
 - **Multi-agent / orchestrator prompt request** (user asks for a prompt for an orchestrator, fan-out, sub-agents, or an agent team) — load the **Agentic Prompt Fragments** in [references/templates.md](references/templates.md); default to a single loop, add orchestration only when the task hits the "when to orchestrate" criteria there.
+- **Research tools** (Perplexity Deep Research, Gemini/GPT Deep Research) — prompt as a research brief (Template N) with a required Data-gaps/confidence section. For Sonar, search is driven by the user message; set domain/recency limits as request parameters, not prose; UI — pick Focus in the selector.
 - **Local / open-weight** (Ollama, Llama, Mistral) — ask which model is running; keep prompts short and flat, no deep nesting; always include a system-prompt role.
 - **Image generation** — Midjourney wants comma descriptors, not prose; Stable Diffusion and ComfyUI require a mandatory negative prompt (ComfyUI: separate Positive / Negative blocks).
 - **Full-stack generators** (Bolt, v0, Lovable, Figma Make, Stitch) — scope down hard; specify stack + what NOT to scaffold to prevent boilerplate bloat.
@@ -198,6 +199,8 @@ When the user's request references prior work, decisions, or session history —
 **Grounding anchors** — for any factual or citation task:
 "Use only information you are highly confident is accurate. If uncertain, write [uncertain] next to the claim. Do not fabricate citations or statistics."
 
+**Research grounding** — for deep-research / multi-source report tasks (Template N): require a closing **Data gaps & confidence** section (what couldn't be found, confidence per claim, data freshness), prioritize primary sources, and cap lists (top-N, not "all"). Stronger than a bare [uncertain] tag.
+
 **Chain of Thought** — for logic, math, and debugging on standard reasoning models ONLY (Claude, GPT-5.x, Gemini, Qwen2.5, Llama). Never on o3/o4-mini/R1/Qwen3-thinking.
 "Think through this step by step before answering."
 
@@ -236,4 +239,4 @@ Read only when the task requires it. Load only the one section/file you need —
 | [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target tool — read only that tool's profile for full routing guidance |
 | [references/models.md](references/models.md) | You need a volatile model fact (ID, current default, version-tied param) — honor the 60-day re-verify protocol |
 | [references/templates.md](references/templates.md) | You need the full template structure for any tool category |
-| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 42-pattern reference |
+| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 43-pattern reference |

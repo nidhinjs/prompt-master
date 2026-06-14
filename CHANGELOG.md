@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.17.0] - 2026-06-15
+
+Поддержка промптов для deep-research инструментов. Факты **сверены по live-доке Perplexity** (docs.perplexity.ai через MCP, 2026-06-14) — это переопределило часть пользовательского гайда (он опирался на блог фев-2025 + community).
+
+### Added
+- **Template N — Research Brief** (`templates.md`): универсальный скелет для deep-research / cited-report инструментов (Perplexity Deep Research, GPT/Gemini Deep Research, Sonar). Role+Goal → конкретные аспекты → scope → output structure (cap top-N, без URL-прозой) → source priorities+freshness → **обязательная секция «Data gaps & confidence»**. Tool-aware: Sonar — фильтры параметрами, запрос в user-message; UI — Focus/Spaces.
+- **#43 «Vague / mis-specified research request»** в `patterns.md` (42 → **43**): vague-тема ИЛИ source-фильтры прозой → research brief + фильтры параметрами.
+- **`models.md` секция `## Perplexity`** (`last-verified: 2026-06-14`): `sonar-deep-research` 128K; **поиск управляется только user-message, system-prompt поиск не видит**; фильтры — параметры запроса (`search_domain_filter` ≤20 allow/deny, `search_recency_filter` hour/day/week/month/year, date-фильтры); `search_mode`/`reasoning_effort`-значения под `⚠️ verify`; Agent API (рекоменд.); Spaces (= Collections).
+- **`SKILL.md` Safe Techniques** — «Research grounding» (обязательная секция data-gaps/confidence, primary-источники, cap top-N).
+
+### Changed
+- **`tool-profiles.md` профиль Perplexity** обогащён по офиц. Sonar prompt-guide: поиск из user-message; **фильтры параметрами, не прозой** («search only on X» прозой игнорируется); cap counts; без few-shot; Agent API. Заменены устаревшие буллеты.
+- **`SKILL.md` Gotchas** — строка про research tools (Template N; фильтры параметрами; Sonar-поиск из user-message). Счётчик паттернов 42 → 43 (`SKILL.md`/README/plugin/marketplace).
+
+### Notes
+- **Скорректировано против пользовательского гайда** (не протащили устаревшее): фильтры задаются параметрами, а не прозой; domain-limit = до 20 (не 3); «Finance» Focus не подтверждён — не записан; точные значения `search_mode`/`reasoning_effort` помечены `⚠️ verify`.
+- Гард-рейлы целы: v1.16 (Opus 4.8 дефолт, Fable suspended), v1.15, v1.14, v1.13 A–G.
+
 ## [1.16.0] - 2026-06-14
 
 Разворот дефолтной модели Claude обратно на **Opus 4.8**. Причина — внешнее событие: Anthropic [отключила Fable 5 и Mythos 5 для всех клиентов с 2026-06-12](https://www.anthropic.com/news/fable-mythos-access) по экспортно-контрольной директиве правительства США (все прочие модели работают). Дефолт `Claude → Fable 5` (введён в v1.11) указывал на недоступную модель — это реальная поломка. Сработал штатный механизм: датированный факт в `models.md` + pattern #38 (retired/unavailable model).
@@ -156,6 +174,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.17.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.17.0
 [1.16.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.16.0
 [1.15.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.15.0
 [1.14.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.14.0

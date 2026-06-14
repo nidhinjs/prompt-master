@@ -335,7 +335,7 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 
 ---
 
-## 🚫 42 Credit-Killing Patterns Detected (with Before/After Examples)
+## 🚫 43 Credit-Killing Patterns Detected (with Before/After Examples)
 
 <details>
 <summary><h3> Task Patterns (7)</h3></summary>

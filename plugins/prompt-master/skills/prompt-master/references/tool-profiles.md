@@ -269,10 +269,12 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 ---
 
 **Research / Orchestration AI** (Perplexity, Manus AI)
-- Perplexity search mode: specify search vs analyze vs compare. Add citation requirements. Reframe hallucination-prone questions as grounded queries.
+- **Perplexity Deep Research** = agentic multi-step → cited report (`sonar-deep-research`, 128K). Prompt it as a research brief — see Template N.
+- **Sonar search is driven by the USER MESSAGE only** — the system prompt is not seen by search (use it for tone/grounding). Put the specific, descriptive question in the user message.
+- **Set domain/recency/region limits as request PARAMETERS, not prose** (`search_domain_filter` ≤20 allow/deny via `-`, `search_recency_filter` hour/day/week/month/year). "Search only on X" in prose is ignored. Cap result counts; don't ask for URLs in prose; avoid few-shot. For new apps, Perplexity recommends the **Agent API**.
+- Always require a closing **Data gaps & confidence** section (what's missing, confidence per claim, data freshness). UI Deep Research: pick Focus in the selector; use Spaces (persistent prompt + files) for iterative work.
 - Manus and Perplexity Computer are multi-agent orchestrators — describe the end deliverable, not the steps. They decompose internally.
-- For Perplexity Computer: specify the output artifact type (report / spreadsheet / code / summary). Add "Flag any data point you are not confident about."
-- For long multi-step tasks: add verification checkpoints since each chained step compounds hallucination risk
+- For long multi-step tasks: add verification checkpoints since each chained step compounds hallucination risk.
 
 ---
 
