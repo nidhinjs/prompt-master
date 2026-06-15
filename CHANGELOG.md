@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.19.0] - 2026-06-15
+
+Ревизия профиля **DeepSeek** (V4, dual-mode). Секция была тонкой и устаревшей (только «DeepSeek-R1»). Все факты **сверены по live api-docs.deepseek.com** (через context7, 2026-06-15); три пользовательских файла `DeepSeek_Prompting_*` (Grok DeepSearch) использованы как лиды и местами скорректированы (напр., «единственная модель v4-pro» → есть и v4-flash; легаси-имена ещё живут до 24.07.2026).
+
+### Added
+- **`models.md` — переписана секция `## DeepSeek`** (`last-verified: 2026-06-15`): текущие модели `deepseek-v4-pro` / `deepseek-v4-flash` (1M, OpenAI+Anthropic интерфейс, dual-mode Thinking/Non-Thinking); легаси `deepseek-chat`/`deepseek-reasoner` → отключение **2026-07-24**; thinking enable/disable; `reasoning_effort` **только `high`/`max`** (не low/medium); `temperature`/penalties в thinking игнорируются; правило сохранения `reasoning_content` при tool calls; JSON-mode; нет нативного deep-research агента. GA-имена/цены/maxOutput под `⚠️ verify`.
+- **`tool-profiles.md` — профиль `DeepSeek (V4, dual-mode)`** (вместо «DeepSeek-R1») + Routing Index `DeepSeek V4`: decision-таблица модель×режим×effort (pro для сложного/agentic-coding/Math-STEM, flash для простого/объёмного/дёшево; thinking для reasoning, non-thinking для простого; high/max); правило `reasoning_content`; «глубокое исследование» = thinking + retrieval + citation contract (нет нативного агента); JSON-mode; OpenAI/Anthropic-совместимость.
+
+### Changed
+- **`SKILL.md`**: новая Gotcha-строка DeepSeek (v4-pro/flash, dual-mode, reasoning_effort high/max, не ставить temp/penalty в thinking, сохранять reasoning_content, легаси до 24.07.2026); no-CoT reasoning-native списки обновлены `DeepSeek-R1` → `DeepSeek thinking mode` (Hard rule, Gotchas, Diagnostic, Safe Techniques).
+- **`README`**: обе таблицы — `DeepSeek-R1` → `DeepSeek V4 (pro/flash, dual-mode)` с fix-заметками.
+- **`patterns.md` #38**: добавлен свежий пример снятой модели (`deepseek-chat`/`deepseek-reasoner`, 2026-07-24). Счётчик паттернов **без изменений (45)**.
+- **`plugin.json`/`marketplace.json`**: в перечень моделей добавлен DeepSeek V4.
+
+### Notes
+- **Сверено с live-доками, лиды Grok-DeepSearch скорректированы.** `⚠️ verify`: финальные GA-имена/цены V4, точный maxOutput (~384K).
+- **Проверка — clean-room behavioural test** (свежие субагенты, только файлы скилла, 4 кейса × 3 = **12/12 PASS**): A (hard math → v4-pro/thinking/effort high, без CoT/temp/penalty), B (JSON-классификация → v4-flash/non-thinking/json/few-shot), C (tools → сохранение `reasoning_content`), D (deep research → thinking+retrieval+citation contract, без выдуманного агента). Анти-фабрикация 12/12. Тест поймал слабую формулировку выбора варианта (A1 не закрепил pro) → усилено и перегнано до 3/3.
+- Гард-рейлы целы: citation contract v1.18.1, профиль Grok v1.18, Perplexity research v1.17, Opus 4.8 дефолт/Fable suspended v1.16, hook v1.15, фрагменты v1.14, cap 3.
+- Backlog сдвинут: image → 1.20, GPT → 1.21; добавлен пункт **Kimi (Moonshot AI)**.
+
 ## [1.18.1] - 2026-06-15
 
 Фикс двух поведенческих дефектов, найденных на установленном скилле (Grok-промпты): (1) скилл **молча придумывал формат ответа**, не спрашивая и не помечая допущением; (2) для retrieval-инструментов **не требовал inline-ссылок на источник** → проза без атрибуции. Общий корень (RCA): правило жило лишь в Gotcha-памятке и проигрывало оперативной инструкции Diagnostic Checklist «No output format → derive» + «Fix silently». Урок применён — оба правила **вшиты в Diagnostic Checklist + readiness-gate**, а не только в памятку. Цитаты — **условно** (фактологическая/research-задача на retrieval-инструменте) и всегда с анти-фабрикационной парой «cite only retrieved / never fabricate / [uncertain]», чтобы не провоцировать выдуманные ссылки.
@@ -214,6 +234,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.19.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.19.0
 [1.18.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.18.1
 [1.18.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.18.0
 [1.17.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.17.0

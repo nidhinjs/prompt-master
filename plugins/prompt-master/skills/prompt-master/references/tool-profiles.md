@@ -23,7 +23,7 @@ Pick the row that matches the user's tool, then open only that profile below.
 | **Qwen 2.5 / Qwen3** | Structured output, JSON, instruct; Qwen3 adds thinking mode | User names Qwen or an Alibaba model |
 | **Ollama** | Local model deployment (Llama, Mistral, Qwen, CodeLlama …) | User running models locally via Ollama |
 | **Llama / Mistral / open-weight** | General open-weight; weaker instruction following | User names a Llama or Mistral variant |
-| **DeepSeek-R1** | Reasoning-native; outputs `<think>` blocks | User names DeepSeek or R1 |
+| **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode (Thinking / Non-Thinking); reasoning-native in thinking | User names DeepSeek, V4, or R1 |
 | **MiniMax M3 / M2.7** | OpenAI-compatible API; long context; fast variant | User names MiniMax |
 | **Claude Code** | Agentic file editing, terminal commands, multi-step coding | User is inside Claude Code or building a Claude Code prompt |
 | **Cortex Code** | Snowflake-native agentic coding + SQL + Streamlit | User names Cortex Code or Snowflake Cortex |
@@ -180,10 +180,21 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 
 ---
 
-**DeepSeek-R1**
-- Reasoning-native like o3 — do NOT add CoT instructions
-- Short clean instructions only — state the goal and desired output format
-- Outputs reasoning in `<think>` tags by default — add "Output only the final answer, no reasoning." if needed
+**DeepSeek (V4 — `deepseek-v4-pro` / `deepseek-v4-flash`, dual-mode)**
+
+Current models are `deepseek-v4-pro` and `deepseek-v4-flash` (1M context; OpenAI-compatible at `base_url=https://api.deepseek.com`, also Anthropic-compatible). Each is one model with a per-request **Thinking / Non-Thinking** toggle. Legacy `deepseek-chat` / `deepseek-reasoner` are discontinued 2026-07-24 — don't target them without noting the date.
+
+*Pick model × mode × effort:*
+- **Model:** `v4-pro` for hard reasoning, agentic coding, Math/STEM, deep analysis (quality-first); `v4-flash` for simple/high-volume/latency- or cost-sensitive work (reasoning close to Pro). **Name the recommended variant explicitly (`deepseek-v4-pro` or `deepseek-v4-flash`) in the target line — don't leave it at bare "V4".** Recommend, don't hardcode — the user/harness selects finally.
+- **Mode:** **Thinking** (`thinking: {"type":"enabled"}`) for math, logic, debugging, multi-step, agentic, deep analysis; **Non-Thinking** (`"disabled"`) for chat, extraction, classification, formatting, translation, latency-sensitive.
+- **Effort (thinking only):** `reasoning_effort` is `high` (default) or `max` — there is no low/medium.
+
+*Rules:*
+- Thinking mode is reasoning-native → do NOT add CoT / "think step by step"; steer depth with `reasoning_effort`. In thinking mode `temperature` / `top_p` / penalties are ignored (no effect) — don't set them.
+- Non-thinking mode is an ordinary chat model — a full system prompt and few-shot examples work normally (don't carry over the old R1 "no system prompt" rule).
+- **Multi-turn + tool calls:** instruct preserving the assistant's `reasoning_content` across subsequent turns once a tool call has occurred (dropping it breaks the next turn); if no tool call happened, it can be omitted.
+- **JSON:** `response_format: {"type":"json_object"}` + tell the model to output JSON. OpenAI-compatible → GPT prompts transfer directly.
+- **"Deep research":** DeepSeek has no native deep-research agent — frame it as Thinking (`max`) + web search (app) / your own RAG, and apply the citation contract (the app's web search emits inline `[citation:X]`). For true agentic multi-source research, that's Perplexity / Grok multi-agent territory.
 
 ---
 

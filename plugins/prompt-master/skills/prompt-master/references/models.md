@@ -57,10 +57,16 @@ All facts that go stale fast — model IDs, current defaults, version-tied param
 
 ## DeepSeek
 
-`last-verified: 2026-06-11`
+`last-verified: 2026-06-15`
 
-- Reasoning-native line (R1 and successors): treat like OpenAI reasoning models — no CoT, short clean instructions. Outputs reasoning in `<think>` tags by default.
-- ⚠️ verify the current model names and whether legacy `deepseek-chat` / `deepseek-reasoner` aliases are retired before asserting.
+- **Current models: `deepseek-v4-pro` and `deepseek-v4-flash`** — 1M context, OpenAI-compatible (`base_url=https://api.deepseek.com`) and Anthropic-compatible interfaces. Each is **dual-mode** (Thinking / Non-Thinking) — one model, a per-request toggle, not separate models. V4-Pro (1.6T/49B active) = world-class reasoning (Math/STEM/coding), agentic coding; V4-Flash (284B/13B active) = reasoning close to Pro, cheaper/faster, good for simple agent tasks.
+- **Legacy `deepseek-chat` / `deepseek-reasoner` → discontinued 2026-07-24** (currently map to non-thinking / thinking modes of `deepseek-v4-flash`). Do not recommend them as the target without noting the date (pattern #38).
+- **Thinking mode:** enable with `thinking: {"type": "enabled"}` (`"disabled"` for non-thinking; default `enabled`). **`reasoning_effort` accepts only `high` (default) / `max`** — NOT low/medium (unlike Grok/OpenAI). Output = `reasoning_content` (CoT) + `content`.
+- **In thinking mode `temperature` / `top_p` / `presence_penalty` / `frequency_penalty` are unsupported** — ignored, no error.
+- **Multi-turn + tool calls:** if the assistant made a tool call, its `reasoning_content` MUST be passed back in subsequent turns; if no tool call occurred between user messages, `reasoning_content` may be omitted (ignored if passed).
+- Reasoning-native (thinking mode) → do not add CoT; steer depth via `reasoning_effort`. Non-thinking mode is an ordinary chat model — system prompt + few-shot work normally (the old R1 "no system prompt" rule is outdated for current models).
+- **JSON mode:** `response_format: {"type":"json_object"}` + instruct JSON in the prompt. **No native deep-research agent** (unlike Perplexity `sonar-deep-research` / Grok `grok-4.20-multi-agent`) — "deep research" = thinking (high/max) + web search (app) or your own RAG.
+- ⚠️ verify before asserting: final V4 GA model names/pricing and exact max output (~384K per integration configs). Prices are volatile — do not hardcode.
 
 ## MiniMax
 

@@ -91,7 +91,7 @@
 
 | # | Pattern | Bad Example | Fixed |
 |---|---------|------------|-------|
-| 38 | **Hardcoded retired model or dead parameter** | "Use `gpt-4o` / `o1`", or sets a `budget_tokens` / fixed thinking budget on a current Claude model | Model IDs, defaults, and version-tied params are volatile. Confirm against [models.md](models.md); re-verify any section whose `last-verified` date is >60 days old before asserting it. Drop dead params (adaptive-thinking models manage depth themselves). |
+| 38 | **Hardcoded retired model or dead parameter** | "Use `gpt-4o` / `o1`" or `deepseek-chat`/`deepseek-reasoner` (retire 2026-07-24), or sets a `budget_tokens` / fixed thinking budget on a current Claude model | Model IDs, defaults, and version-tied params are volatile. Confirm against [models.md](models.md); re-verify any section whose `last-verified` date is >60 days old before asserting it. Drop dead params (adaptive-thinking models manage depth themselves). |
 
 ---
 

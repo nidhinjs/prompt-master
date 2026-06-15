@@ -227,7 +227,8 @@ When you name a tool, Prompt Master silently routes to that tool's profile and a
 | **Claude Opus 4.8 / 4.7** | Default text generation, heavy reasoning, long context | Any "Claude" request without a version |
 | **Claude Fable 5 / Mythos 5** | ⚠️ Suspended since 2026-06-12 (unavailable) | Do not route here until access is restored |
 | **ChatGPT / GPT-5.x** | Outcome-first generation | User names ChatGPT or GPT |
-| **o3 / o4-mini / DeepSeek-R1** | Reasoning-native models | Never add CoT — these think internally |
+| **o3 / o4-mini** | Reasoning-native models | Never add CoT — these think internally |
+| **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode (Thinking / Non-Thinking) | Pick model + mode by task; no CoT in thinking; `reasoning_effort` high/max |
 | **Grok 4.3 / xAI** | Reasoning-native; realtime X/web search; multi-agent research | User names Grok or xAI |
 | **Gemini 2.x** | Grounded generation | Needs citation/grounding anchors |
 | **Local / open-weight (Ollama, Llama, Mistral)** | Short, flat prompts | User running a local model |
@@ -263,7 +264,7 @@ Prompt Master includes specific profiles for 20+ tools. For anything not on the 
 | **Ollama** | Local LLM | Asks which model is loaded, includes system prompt for Modelfile |
 | **Qwen 2.5 / Qwen3** | Open-weight LLM | Chat template format, thinking vs non-thinking mode detection |
 | **Local models (Llama, Mistral)** | Open-weight LLM | Shorter prompts, simpler structure, no complex nesting |
-| **DeepSeek-R1** | Reasoning LLM | Short clean instructions, strips CoT, suppresses thinking output if needed |
+| **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode LLM | Model + mode by task; thinking is reasoning-native (no CoT, `reasoning_effort` high/max, no temp/penalties); non-thinking takes system prompt + few-shot; preserve `reasoning_content` with tool calls; legacy names retire 2026-07-24 |
 | **MiniMax (M3 / M2.7)** | Reasoning LLM | Temperature clamping, thinking tag control, structured output optimization |
 | **Claude Code** | Agentic AI | Stop conditions, file scope, checkpoint output |
 | **Cortex Code** | Agentic AI (Snowflake) | Anti-over-engineering guard, `cortex ctx` step tracking, Snowflake-native tools, headless JSON mode |
