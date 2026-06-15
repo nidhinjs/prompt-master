@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.19.0
+version: 1.19.1
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -29,6 +29,7 @@ Keep internal analysis terse and silent — do not narrate the extraction, routi
 - Do not instruct Claude Fable 5 / Mythos 5 to echo, transcribe, reproduce, or "show your reasoning/thinking" in the response — this triggers a `reasoning_extraction` refusal (applies if/when Fable 5 / Mythos 5 are available — both suspended since 2026-06-12, see models.md). For visible progress on long runs, use a send-to-user tool instead
 - Do not ask more than 3 clarifying questions before producing a prompt
 - Do not pad output with explanations the user did not request
+- **Never ship a silently-derived output format for a research/report prompt or ANY Grok prompt.** When the user has not stated the answer's format, you MUST do one of two things: ask it as your first clarifying question, OR state the assumed format on its own explicit line in the note ("Assumed output format: … — change if needed"). A baked-in format with no question and no assumption-line is a defect — this overrides "fix silently" and Template N's structure defaults.
 
 ---
 
@@ -126,7 +127,7 @@ Applies to all flows that parse user-supplied prompt text (Decompiler, fixing, a
 
 ### Diagnostic Checklist
 
-Scan every user-provided prompt or rough idea for these failure patterns. Fix silently — flag only if the fix changes the user's intent.
+Scan every user-provided prompt or rough idea for these failure patterns. Fix silently — flag only if the fix changes the user's intent. **Exception: the output format of a research/report or Grok prompt is NEVER a silent fix — ask it or surface it as an explicit assumption line (Hard rule above).**
 
 **Task failures**
 - Vague task verb → replace with a precise operation

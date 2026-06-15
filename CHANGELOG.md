@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.19.1] - 2026-06-15
+
+Hardening-фикс. На установленном скилле баг «молча выбран формат ответа» **воспроизвёлся снова** (Grok-промпт). Перепроверка на актуальном репозитории показала: фикс v1.18.1 был **soft-правилом в MIDDLE-зоне** и проигрывал `SKILL.md` «Fix silently» + премиссе Template N → срабатывал лишь ~2/3. Плюс мой прежний clean-room тест был **бутафорией**: инструкция субагенту «следуй файлам точно» завышала соблюдение до 3/3, а N=3 не ловит 33%-й отказ.
+
+### Changed
+- **`SKILL.md` — правило формата поднято в Hard Rules (PRIMACY-зона, always-loaded, «NEVER violate»)**: для research/report и ЛЮБОГО Grok-промпта запрещено отдавать молча выведенный формат — только спросить первым вопросом ИЛИ строка «Assumed output format: …» в заметке. Явно перекрывает «fix silently» и дефолты структуры Template N.
+- **`SKILL.md` Diagnostic Checklist** — в преамбулу «Fix silently» добавлено исключение: формат вывода research/Grok-промпта НЕ silent fix.
+
+### Notes
+- **Честный re-gate (исправленная методика):** нейтральная формулировка (без «следуй точно»), **8 прогонов** на точном провальном репро (Grok deep search по докам Kimi), порог 8/8 → **8/8 PASS** (5× строка-допущение, 3× вопрос; ноль молча-зашитых). До правки тот же ввод давал 2/3. Оговорка: 8/8 — сильное доказательство, не «математические 100%».
+- **Урок по тестам:** поведенческие правила проверять нейтрально и с N≥8, порог near-100%, обязательно на реальном провальном вводе; «coached» прогоны и N=3 — ненадёжны.
+- **Важно для пользователя:** фикс уйдёт в установленный плагин только после **обновления/переустановки** — релизы на GitHub не подтягиваются автоматически.
+- Счётчик паттернов без изменений (45). Гард-рейлы целы (citation contract v1.18.1, DeepSeek v1.19, Grok v1.18, Perplexity v1.17, Opus 4.8 дефолт, hook v1.15, фрагменты v1.14).
+
 ## [1.19.0] - 2026-06-15
 
 Ревизия профиля **DeepSeek** (V4, dual-mode). Секция была тонкой и устаревшей (только «DeepSeek-R1»). Все факты **сверены по live api-docs.deepseek.com** (через context7, 2026-06-15); три пользовательских файла `DeepSeek_Prompting_*` (Grok DeepSearch) использованы как лиды и местами скорректированы (напр., «единственная модель v4-pro» → есть и v4-flash; легаси-имена ещё живут до 24.07.2026).
@@ -234,6 +248,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.19.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.19.1
 [1.19.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.19.0
 [1.18.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.18.1
 [1.18.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.18.0
