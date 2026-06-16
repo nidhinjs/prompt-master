@@ -7,10 +7,7 @@
   "plugins": [
     {
       "name": "prompt-master",
-      "source": {
-        "type": "relative",
-        "path": "."
-      },
+      "source": ".",
       "version": "1.7.0",
       "description": "Generates optimized, token-efficient prompts for any AI tool."
     }
