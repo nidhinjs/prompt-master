@@ -26,9 +26,9 @@
 
 В Cowork: **Customize → Browse plugins → Personal → + → Add marketplace from GitHub →** `azagreev/prompt-master-za` → установить **prompt-master**.
 
-### ИЛИ — Claude.ai (браузер, ZIP)
+### ИЛИ — Claude.ai (браузер, ZIP) — минует кэш маркетплейса
 
-1. Заархивируй `plugins/prompt-master/skills/prompt-master/` (в корне архива — `SKILL.md` и `references/`).
+1. Возьми готовый бандл `prompt-master-<version>.zip` из [последнего релиза](https://github.com/azagreev/prompt-master-za/releases/latest) — или собери из клона: `./scripts/package-skill.ps1` (архивирует `skills/prompt-master/` так, что в корне — `SKILL.md` и `references/`).
 2. **claude.ai → Customize → Skills → Upload a Skill.**
 
 ### ИЛИ — клонировать в директорию скиллов Claude Code

@@ -43,10 +43,10 @@ cd prompt-master-za
 
 ## Способ 2: Claude.ai (ZIP-скилл)
 
-Навык self-contained, поэтому загружается в Claude.ai как обычный скилл:
+Навык self-contained, поэтому загружается в Claude.ai как обычный скилл. Этот путь **минует кэш стороннего маркетплейса** (Claude Code / Cowork / claude.ai не авто-обновляют сторонние маркетплейсы) — если веб/десктоп завис на старой версии, ставь бандлом.
 
-1. Заархивируй папку `plugins/prompt-master/skills/prompt-master/` в ZIP.
-   В **корне** архива должны лежать `SKILL.md` и каталог `references/`.
+1. Возьми готовый бандл `prompt-master-<version>.zip` — он приложен к каждому релизу: [GitHub Releases (latest)](https://github.com/azagreev/prompt-master-za/releases/latest).
+   Или собери из клона: `./scripts/package-skill.ps1` → `dist/prompt-master-<version>.zip` (в **корне** архива — `SKILL.md` и `references/`).
 2. Claude → **Настройки → Возможности** → включи «Code execution and file creation».
 3. **Настроить → Скиллы → +** → загрузи ZIP.
 4. В любом чате попроси «напиши промпт для …» — навык активируется.
@@ -105,5 +105,5 @@ rm -rf ~/.config/Claude/skills/prompt-master
 
 - `plugins/prompt-master/skills/prompt-master/SKILL.md` — полная логика навыка
 - `plugins/prompt-master/skills/prompt-master/references/templates.md` — шаблоны промптов
-- `plugins/prompt-master/skills/prompt-master/references/patterns.md` — 35 паттернов-фиксов
+- `plugins/prompt-master/skills/prompt-master/references/patterns.md` — 46 паттернов-фиксов
 - [CHANGELOG.md](../CHANGELOG.md) — история версий
