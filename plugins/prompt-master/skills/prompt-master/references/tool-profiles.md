@@ -34,7 +34,8 @@ Pick the row that matches the user's tool, then open only that profile below.
 | **GitHub Copilot** | Inline code completion from comments/signatures | User is completing code inside Copilot |
 | **Bolt / v0 / Lovable / Figma Make / Google Stitch** | Full-stack or UI generators | User names a no-code/low-code generator |
 | **Devin / SWE-agent** | Fully autonomous coding agent with web + terminal access | User names Devin or SWE-agent |
-| **Perplexity / Manus AI** | Research, orchestration, multi-agent web research | User names Perplexity or Manus |
+| **Perplexity** | Agent API (default for new apps) + Sonar search / Deep Research | User names Perplexity, Sonar, or Comet |
+| **Manus / multi-agent orchestrators** | Multi-agent web research; decompose internally | User names Manus or a web-research orchestrator |
 | **Computer-Use / Browser agents** | Real-browser automation (click, scroll, fill, transact) | User names Comet, Atlas, Claude in Chrome, or a browser agent |
 | **Image AI — Generation** | Text-to-image (Midjourney, DALL-E 3, SD, Flux, SeeDream) | User wants to generate an image |
 | **Image AI — Reference Editing** | Edit or modify an existing image | User mentions "change/edit/modify" an image or uploads a reference |
@@ -322,12 +323,21 @@ Current models are `deepseek-v4-pro` and `deepseek-v4-flash` (1M context; OpenAI
 
 ---
 
-**Research / Orchestration AI** (Perplexity, Manus AI)
-- **Perplexity Deep Research** = agentic multi-step → cited report (`sonar-deep-research`, 128K). Prompt it as a research brief — see Template N.
-- **Sonar search is driven by the USER MESSAGE only** — the system prompt is not seen by search (use it for tone/grounding). Put the specific, descriptive question in the user message.
-- **Set domain/recency/region limits as request PARAMETERS, not prose** (`search_domain_filter` ≤20 allow/deny via `-`, `search_recency_filter` hour/day/week/month/year). "Search only on X" in prose is ignored. Cap result counts; don't ask for URLs in prose; avoid few-shot. For new apps, Perplexity recommends the **Agent API**.
-- Always require a closing **Data gaps & confidence** section (what's missing, confidence per claim, data freshness) **and inline citations** — "cite each non-obvious claim inline with a link to the retrieved source; never fabricate a citation; mark unsourced claims [uncertain]." UI Deep Research: pick Focus in the selector; use Spaces (persistent prompt + files) for iterative work.
-- Manus and Perplexity Computer are multi-agent orchestrators — describe the end deliverable, not the steps. They decompose internally.
+**Perplexity (Agent API — recommended default — + Sonar API / Deep Research)**
+
+Two surfaces — see [models.md](models.md) for current model IDs. Pick by task:
+- **Agent API** (`/v1/agent`, `client.responses.create`) is Perplexity's **recommended default for new apps**: an agent loop with custom tools, presets (incl. `deep-research`), output-control, and direct multi-provider model access (Perplexity Sonar + Anthropic/OpenAI/Google/xAI/NVIDIA). Reach for it when the user is building a research agent or app, wants custom tools, or wants to pick a specific underlying model.
+- **Sonar API** (OpenAI-compatible chat) for direct search-grounded answers: `sonar` / `sonar-pro` for quick cited answers, `sonar-reasoning-pro` for reasoned ones, `sonar-deep-research` (128K) for exhaustive cited reports.
+- **Deep research** → `sonar-deep-research`: prompt it as a research brief (Template N) with a required **Data gaps & confidence** section + the citation contract.
+- **Sonar search is driven by the USER MESSAGE only** — the system prompt is not seen by search (use it for tone/grounding). Put the concrete, specific question in the user message.
+- **Set domain / recency / region limits as request PARAMETERS, not prose** (`search_domain_filter` ≤20 allow/deny via `-`, `search_recency_filter` hour/day/week/month/year). "Search only on X" in prose is ignored. Cap result counts (top-N); don't ask for URLs in prose; avoid few-shot.
+- Always require a closing **Data gaps & confidence** section **and inline citations** — "cite each non-obvious claim inline with a link to the retrieved source; never fabricate a citation; mark unsourced claims [uncertain]."
+- `reasoning_effort` exact values are ⚠️ unverified — don't assert them. **UI:** Focus modes + Spaces (persistent instructions + files) are UI, not API. **"Search as Code" / "Deep Research in Computer"** is a product/blog concept — not a callable API feature; don't instruct it.
+
+---
+
+**Manus AI / multi-agent web orchestrators**
+- Manus (and Perplexity's Comet/Computer surfaces) are multi-agent orchestrators — describe the end deliverable, not the steps; they decompose internally.
 - **Grok `grok-4.20-multi-agent`** (xAI, beta) is a native multi-agent research model — see the Grok profile. Same brief approach (Template N); pick 4 or 16 agents; enable `web_search` + `x_search`.
 - For long multi-step tasks: add verification checkpoints since each chained step compounds hallucination risk.
 

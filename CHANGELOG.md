@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.21.0] - 2026-06-17
+
+Рефактор + актуализация профиля **Perplexity**. Live-сверка через perplexity doc-server (2026-06-17) показала, что Perplexity теперь **двухповерхностный продукт**, а профиль был тонким и смешан с Manus. Два пользовательских файла `Perplexity_Deep_Research_*` (про отдельный проект DResearch-Skill + UI Deep Research) использованы как лиды; «Search as Code / Deep Research in Computer» помечен как блоговый концепт (в API-доках отсутствует).
+
+### Added
+- **`tool-profiles.md` — отдельный профиль `Perplexity`** (выделен из смешанного блока «Research / Orchestration AI»): **Agent API** (`/v1/agent`, `responses.create`) как рекомендуемый дефолт для новых апп (agent loop + custom tools + presets incl. `deep-research` + мультипровайдерный доступ к моделям) vs **Sonar API** (`sonar`/`sonar-pro`/`sonar-reasoning-pro`/`sonar-deep-research` 128K) для прямых search-grounded ответов; search по user-msg; фильтры-как-параметры; Data-gaps & confidence + citation contract. Manus/мультиагентные оркестраторы — отдельным блоком. Routing Index разнесён на `Perplexity` и `Manus / multi-agent orchestrators`.
+
+### Changed
+- **`models.md` — переписана секция `## Perplexity`** (`last-verified: 2026-06-17`): две поверхности (Agent API мультипровайдерный шлюз + Sonar 4 модели); `sonar-deep-research` 128K с раздельным reasoning/citation/search-query биллингом; search по user-msg; фильтры-как-параметры; `reasoning_effort` enum под `⚠️ verify`; Search-as-Code помечен как блоговый концепт (не API); цены не хардкодить.
+- **`SKILL.md`**: Gotcha-строка «Research tools» обновлена (Agent API дефолт; Sonar модели; search по user-msg; Search-as-Code ≠ API).
+- **`templates.md` Template N**: Perplexity-заметка — Agent API дефолт + `sonar-deep-research` 128K + фильтры/cap-lists; Search-as-Code ≠ API.
+- **`README` (EN + RU)**: строка Perplexity в «Works With» — Agent API + Sonar Deep Research.
+- **`docs/sources.md`**: строка обоснования + источники Perplexity обновлены (Agent API + Sonar pages; verified 2026-06-17; SaC = blog).
+
+### Notes
+- **Сверено по live-докам** (perplexity doc-server). `⚠️ verify`: точные значения `reasoning_effort`, GA-список моделей Agent API (меняется ежемесячно), цены (волатильны — не хардкодить).
+- **Проверка — clean-room behavioural test** (свежие субагенты, только файлы скилла, нейтральная формулировка, 3 кейса × 3 = **9/9 PASS**): A (новый агент с кастомными тулзами → **Agent API** `/v1/agent`+`responses.create`+`tools`+preset `deep-research`, не голый Sonar), B (глубокое исследование → `sonar-deep-research`, research-бриф Template N, вопрос в user-msg, фильтры-как-параметры, Data-gaps & confidence + citation contract), C (быстрый факт → `sonar`/`sonar-pro`, «офиц. ЕС» как `search_domain_filter`, не прозой). Ноль фабрикаций: никто не выдумал `reasoning_effort`/цены и не подал Search-as-Code как API-фичу; формат вынесен допущением.
+- Счётчик паттернов **без изменений (46)**. Гард-рейлы целы: never-silent format v1.19.1, citation contract v1.18.1, профили Kimi v1.20/DeepSeek v1.19/Grok v1.18, Opus 4.8 дефолт/Fable suspended, hook v1.15, cap 3.
+- Backlog: «каждый паттерн — свой релиз». Дальше Claude Code (1.22) → MiniMax (1.23) → Gemini (1.24) → Memory-rebuild → Doc-grounding → image → GPT.
+
 ## [1.20.0] - 2026-06-17
 
 Добавлен профиль **Kimi (Moonshot AI)** — раньше в скилле не было ни одного упоминания Kimi. Все факты **сверены по live-докам** platform.kimi.ai / api.moonshot.ai + HF model cards (2026-06-17). Три лид-файла `Kimi_*DeepSearch*` использованы как лиды; **2 ошибки лидов исправлены по первоисточнику** (см. Notes).
@@ -273,6 +293,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.21.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.21.0
 [1.20.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.20.0
 [1.19.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.19.1
 [1.19.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.19.0

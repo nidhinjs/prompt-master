@@ -243,7 +243,7 @@ Done When:
 | **Devin / SWE-agent** | Автономный агент | Стартовое состояние, целевое, стоп-условия |
 | **Manus** | Автономный агент | Фокус на результат, scope прав, memory-якоря |
 | **Computer-Use / браузер-агенты** (Comet, Atlas, Claude in Chrome) | Computer-use агент | Результат вместо навигации, ограниченные права, стоп перед необратимым |
-| **Perplexity** | Research AI | Research-бриф, фильтры-как-параметры, секция Data-gaps/confidence, inline-цитаты |
+| **Perplexity** (Agent API + Sonar) | Research / agent AI | Agent API (`/v1/agent`) — дефолт для новых апп; Sonar (`sonar`/`sonar-pro`/`sonar-deep-research` 128K) для search-grounded ответов; research-бриф (Template N); фильтры-как-параметры; search по user-сообщению; Data-gaps/confidence + inline-цитаты |
 | **Midjourney / DALL-E 3 / Stable Diffusion / SeeDream / Flux** | Image AI | Синтаксис под каждую модель, негатив-промпты, детект edit-vs-generate |
 | **ComfyUI** | Image AI | Раздельные ноды Positive/Negative, синтаксис чекпойнта |
 | **Meshy / Tripo / Rodin / BlenderGPT / Unity AI** | 3D / Game AI | Стиль + формат экспорта + полигон-бюджет + требования к ригу |

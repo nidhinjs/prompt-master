@@ -99,15 +99,17 @@ All facts that go stale fast — model IDs, current defaults, version-tied param
 
 ## Perplexity
 
-`last-verified: 2026-06-14`
+`last-verified: 2026-06-17`
 
-- **Sonar Deep Research:** model `sonar-deep-research`, **128K context**, "exhaustive searches across hundreds of sources". UI Deep Research is Pro/Enterprise.
-- **Search ↔ prompt:** the search is driven by the **user message only**; the **system prompt does not influence search**. Search instructions written in prose are ignored.
-- **Filters = request-body parameters (not prose):** `search_domain_filter` (array, **max 20**, allowlist or denylist via `-` prefix); `search_recency_filter` (`hour`/`day`/`week`/`month`/`year`); date filters `search_after_date_filter` / `search_before_date_filter` (`%m/%d/%Y`), `last_updated_*`.
-- **`search_mode` / `academic` and exact `reasoning_effort` values:** ⚠️ verify in the API reference (forum mentioned `minimal`/`low`/`medium`/`high` + async; not confirmed on the verified pages).
-- **Agent API** is Perplexity's recommended default for new applications.
-- **Spaces** (formerly Collections, UI): persistent workspace — system prompt + curated sources + uploaded files.
-- Prices are volatile — do not hardcode in the skill.
+Two surfaces — pick by task:
+- **Agent API** (`POST https://api.perplexity.ai/v1/agent`; SDK `client.responses.create(model=…, input=…, max_output_tokens=…)`) — **Perplexity's recommended default for new applications** ("the agent loop, custom tools, and richer prompt control make it the better default"). A **multi-provider gateway** with direct first-party model access: `perplexity/sonar`, `anthropic/claude-opus-4-8` (…4-7/4-6/4-5) / `claude-sonnet-4-6` / `claude-haiku-4-5`, `openai/gpt-5.5` / `gpt-5.4`(+mini/nano) / `gpt-5.x`, `google/gemini-3.1-pro-preview` / `gemini-3.5-flash` / `gemini-3.1-flash-lite`, `xai/grok-4.3` / `grok-4.20-*`, `nvidia/nemotron-3-super-120b-a12b`. Has **presets** (incl. `deep-research`), custom **tools**, output-control, model-fallback, image-attachments. ⚠️ verify the GA model list — it changes monthly.
+- **Sonar API** (OpenAI-compatible `chat.completions.create`) — search-grounded answers. Models: `sonar`, `sonar-pro`, `sonar-reasoning-pro`, `sonar-deep-research`. **`sonar-deep-research`** — **128K context**, reasoning model for exhaustive multi-source cited reports; **reasoning / citation / search-query tokens are billed separately**.
+- **Sonar search is driven by the USER MESSAGE only** — the **system prompt does not influence search** (it reaches the model only at answer time). Search instructions in prose ("search only on X", "latest") are ignored.
+- **Filters = request-body parameters (not prose):** `search_domain_filter` (array, **max 20**, allowlist or denylist via `-` prefix; domain- and URL-level); `search_recency_filter` (`hour`/`day`/`week`/`month`/`year`); date filters `search_after_date_filter` / `search_before_date_filter` (`%m/%d/%Y`), `last_updated_*`.
+- **`reasoning_effort` exact values: ⚠️ verify** — `sonar-deep-research` is a reasoning model (separate reasoning-token billing), but the verified pages don't pin the enum. Don't assert specific values.
+- **UI:** Deep Research = `sonar-deep-research`; Focus modes (Web/Academic/Social/YouTube…) and **Spaces** (persistent instructions + curated sources + files) are UI features, **not** API params.
+- **"Search as Code" / "Deep Research in Computer"** (June 2026 blog) is a product concept — **not in the API docs**; do not present it as a callable API feature.
+- Prices are volatile (per-token, no markup, updated monthly) — do not hardcode in the skill.
 
 ---
 

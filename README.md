@@ -243,7 +243,7 @@ For anything not profiled, Prompt Master falls back to a **Universal Fingerprint
 | **Devin / SWE-agent** | Autonomous agent | Starting state, target state, stop conditions |
 | **Manus** | Autonomous agent | Task-outcome focus, permission scope, memory anchors |
 | **Computer-Use / Browser agents** (Comet, Atlas, Claude in Chrome) | Computer-use agent | Outcome over navigation, scoped permissions, stop before irreversible actions |
-| **Perplexity** | Research AI | Research brief, filters-as-parameters, Data-gaps/confidence section, inline citations |
+| **Perplexity** (Agent API + Sonar) | Research / agent AI | Agent API (`/v1/agent`) recommended for new apps; Sonar (`sonar`/`sonar-pro`/`sonar-deep-research` 128K) for search-grounded answers; research brief (Template N); filters-as-parameters; search driven by user message; Data-gaps/confidence + inline citations |
 | **Midjourney / DALL-E 3 / Stable Diffusion / SeeDream / Flux** | Image AI | Per-model syntax, negative prompts, edit-vs-generate detection |
 | **ComfyUI** | Image AI | Positive/negative node split, checkpoint syntax |
 | **Meshy / Tripo / Rodin / BlenderGPT / Unity AI** | 3D / Game AI | Style + export format + polygon budget + rig requirements |
