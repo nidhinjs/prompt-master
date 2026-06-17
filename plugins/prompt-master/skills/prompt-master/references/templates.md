@@ -143,7 +143,7 @@ Experiment: Give 3 variants ranging from minimal to bold.
 
 *Use for logic-heavy tasks, math, debugging, and multi-factor analysis where the AI needs to reason carefully before committing to an answer.*
 
-**Important:** Only use CoT for standard reasoning models (Claude, GPT-5.x, Gemini). Do NOT add CoT instructions to o3, o4-mini, Grok grok-4.3, or Claude extended thinking — they reason internally and CoT instructions degrade their output.
+**Important:** Only use CoT for standard reasoning models (Claude, GPT-5.x, Gemini). Do NOT add CoT instructions to o3, o4-mini, Grok grok-4.3, Kimi K2.x thinking, or Claude extended thinking — they reason internally and CoT instructions degrade their output.
 
 ```
 [Task statement]
@@ -166,7 +166,7 @@ Give your final answer in <answer> tags only.
 - Analysis where a wrong first impression is likely
 
 **When NOT to use:**
-- o3 / o4-mini / Grok grok-4.3 / reasoning models (they think internally — adding CoT hurts)
+- o3 / o4-mini / Grok grok-4.3 / Kimi K2.x thinking / reasoning models (they think internally — adding CoT hurts)
 - Simple tasks where the answer is clear (unnecessary overhead)
 - Creative tasks (CoT can kill natural voice)
 
@@ -494,6 +494,7 @@ Data gaps & confidence: [REQUIRED closing section — what could not be found, c
 - **Sonar / API:** search is driven by the **user message only** — the system prompt is not seen by search (use it for tone/grounding). Put the concrete, specific question in the user message. Set hard constraints as **request parameters, not prose**: `search_domain_filter` (≤20 domains, allow / deny with `-`), `search_recency_filter` (hour/day/week/month/year). "Search only on X" in prose is ignored. Avoid few-shot. For new apps Perplexity recommends the **Agent API**.
 - **UI Deep Research:** pick the Focus/source filter in the selector before running; for iterative work use a Space (persistent system prompt + curated sources + files) with in-thread follow-ups.
 - **Grok (xAI):** route deep research to `grok-4.20-multi-agent` (beta) and enable `web_search` + `x_search`. Choose agent count by depth — 4 (focused) or 16 (thorough), via `agent_count` or `reasoning.effort` (low/medium=4, high/xhigh=16). Set source limits as tool **parameters** (`allowed_x_handles`/`allowed_domains`, `from_date`/`to_date`), not prose. Grok has no realtime knowledge without these search tools enabled.
+- **Kimi (Moonshot AI):** split by surface. In the **app**: large decomposable jobs → `Agent Swarm` (K2.6 self-orchestrates — **do not set an agent count or script sub-agents**, unlike Grok); deep research → `Kimi-Researcher` (single-agent). Through the **API** there's no confirmed deep-research endpoint → build your own loop: retrieval is the built-in `$web_search` (`builtin_function`) which **requires thinking disabled**, so don't pack reasoning + live search into one call (pattern #46). Use Kimi's native research format — `[Source: Institution / Website: Page Title]`, credibility stars `*** / ** / *`, `Confirmed`/`Estimate`, verify 2+ sources, **no full URLs**, `【Insight】`, stages (Information Search → Data Analysis → Report Output → References). Don't list tools in the system prompt (pass via `tools`). Agent Swarm is subscription-tiered — surface as a prerequisite.
 
 ---
 
@@ -512,6 +513,9 @@ Data gaps & confidence: [REQUIRED closing section — what could not be found, c
 | Dependent, ordered stages | **Short chain + handoff block** |
 | Quality-critical, clear criteria | **Evaluator–optimizer** — independent verifier |
 | Long autonomous build, many steps | **Orchestrator-as-decomposer + task ledger** |
+| **Vendor-managed swarm** (e.g. Kimi Agent Swarm) | **Don't design a topology** — see carve-out below |
+
+**Vendor-managed swarm carve-out (Kimi Agent Swarm & similar).** When the target self-orchestrates its own sub-agents (Kimi K2.6 Agent Swarm spins up to ~300 sub-agents "without predefined subagents"), do **NOT** apply #19 or hand-script roles/fan-out/agent counts — that fights the model. Instead give **one large, decomposable task + a clear final artifact + acceptance criteria**, and let the model decompose. It's an app feature and **subscription-tiered** (free tier has no Swarm) — surface availability as a prerequisite, don't assume it. This is the opposite of the orchestrator-as-decomposer pattern below, which is for runtimes *you* orchestrate.
 
 **#19 Orchestrator-as-decomposer**
 ```

@@ -56,7 +56,10 @@ if (fire) {
     'the prompt-master skill, load the "Agentic Prompt Fragments" section in ' +
     'references/templates.md and pick a topology via its situation→pattern table ' +
     '(default to a single loop; orchestrate only if the task hits the listed ' +
-    'criteria). If prompt-master is not in use, ignore this note.';
+    'criteria). Exception — a vendor-managed swarm (e.g. Kimi Agent Swarm): the ' +
+    'model self-orchestrates, so do NOT design a topology or script sub-agents; ' +
+    'give one decomposable task + final artifact (see the Kimi carve-out). ' +
+    'If prompt-master is not in use, ignore this note.';
   process.stdout.write(
     JSON.stringify({
       hookSpecificOutput: {

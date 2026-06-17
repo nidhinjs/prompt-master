@@ -6,7 +6,7 @@
 **Why:** Every vague prompt is a wasted credit. Prompt Master extracts intent, picks the right architecture, and strips every word that doesn't change the output.
 **How to start:** Install via plugin marketplace (see below), then say: `Write me a prompt for [tool] to [task]` — or paste a bad prompt and ask to fix it.
 
-**Works with:** Claude, ChatGPT, Gemini, Grok, o3/o4-mini, MiniMax, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make, and any AI tool you throw at it.
+**Works with:** Claude, ChatGPT, Gemini, Grok, Kimi, DeepSeek, o3/o4-mini, MiniMax, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make, and any AI tool you throw at it.
 
 ---
 
@@ -230,6 +230,7 @@ When you name a tool, Prompt Master silently routes to that tool's profile and a
 | **o3 / o4-mini** | Reasoning-native models | Never add CoT — these think internally |
 | **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode (Thinking / Non-Thinking) | Pick model + mode by task; no CoT in thinking; `reasoning_effort` high/max |
 | **Grok 4.3 / xAI** | Reasoning-native; realtime X/web search; multi-agent research | User names Grok or xAI |
+| **Kimi / Moonshot AI** | Reasoning-native dual-mode; agentic/coding; Agent Swarm (app) | User names Kimi or Moonshot |
 | **Gemini 2.x** | Grounded generation | Needs citation/grounding anchors |
 | **Local / open-weight (Ollama, Llama, Mistral)** | Short, flat prompts | User running a local model |
 | **Claude Code / Devin / Cline** | Agentic file + terminal | Stop conditions and scope locks are mandatory |
@@ -265,6 +266,7 @@ Prompt Master includes specific profiles for 20+ tools. For anything not on the 
 | **Qwen 2.5 / Qwen3** | Open-weight LLM | Chat template format, thinking vs non-thinking mode detection |
 | **Local models (Llama, Mistral)** | Open-weight LLM | Shorter prompts, simpler structure, no complex nesting |
 | **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode LLM | Model + mode by task; thinking is reasoning-native (no CoT, `reasoning_effort` high/max, no temp/penalties); non-thinking takes system prompt + few-shot; preserve `reasoning_content` with tool calls; legacy names retire 2026-07-24 |
+| **Kimi (Moonshot AI)** (`kimi-k2.6` / `k2.7-code` / `k2.5`) | Dual-mode + agentic LLM | Reasoning-native (no CoT; keep defaults, don't tune temp on K2.x); `tool_choice` auto/none with thinking; tools via `tools` not system prompt; preserve `reasoning_content`; `$web_search` needs thinking off; multi-agent = **Agent Swarm** (app, self-orchestrated — no manual agent count) vs single-agent **Kimi-Researcher**; tier-gated features; `kimi-latest` deprecated 2026-01-28 |
 | **MiniMax (M3 / M2.7)** | Reasoning LLM | Temperature clamping, thinking tag control, structured output optimization |
 | **Claude Code** | Agentic AI | Stop conditions, file scope, checkpoint output |
 | **Cortex Code** | Agentic AI (Snowflake) | Anti-over-engineering guard, `cortex ctx` step tracking, Snowflake-native tools, headless JSON mode |
@@ -339,7 +341,7 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 
 ---
 
-## 🚫 45 Credit-Killing Patterns Detected (with Before/After Examples)
+## 🚫 46 Credit-Killing Patterns Detected (with Before/After Examples)
 
 <details>
 <summary><h3> Task Patterns (7)</h3></summary>

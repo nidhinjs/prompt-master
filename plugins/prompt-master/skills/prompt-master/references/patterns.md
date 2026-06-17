@@ -1,6 +1,6 @@
 # Credit-Killing Patterns Reference
 
-45 patterns that waste tokens and cause re-prompts. Read this file when the user pastes a bad prompt and asks you to fix it, or when diagnosing why a prompt is underperforming.
+46 patterns that waste tokens and cause re-prompts. Read this file when the user pastes a bad prompt and asks you to fix it, or when diagnosing why a prompt is underperforming.
 
 ---
 
@@ -91,7 +91,7 @@
 
 | # | Pattern | Bad Example | Fixed |
 |---|---------|------------|-------|
-| 38 | **Hardcoded retired model or dead parameter** | "Use `gpt-4o` / `o1`" or `deepseek-chat`/`deepseek-reasoner` (retire 2026-07-24), or sets a `budget_tokens` / fixed thinking budget on a current Claude model | Model IDs, defaults, and version-tied params are volatile. Confirm against [models.md](models.md); re-verify any section whose `last-verified` date is >60 days old before asserting it. Drop dead params (adaptive-thinking models manage depth themselves). |
+| 38 | **Hardcoded retired model or dead parameter** | "Use `gpt-4o` / `o1`" or `deepseek-chat`/`deepseek-reasoner` (retire 2026-07-24) or `kimi-latest` (deprecated 2026-01-28), or sets a `budget_tokens` / fixed thinking budget on a current Claude model | Model IDs, defaults, and version-tied params are volatile. Confirm against [models.md](models.md); re-verify any section whose `last-verified` date is >60 days old before asserting it. Drop dead params (adaptive-thinking models manage depth themselves). |
 
 ---
 
@@ -102,3 +102,4 @@
 | 43 | **Vague / mis-specified research request** | "tell me about X" / "do a full market analysis"; or source limits in prose ("search only academic sites", "use the latest data") | Reframe as a research brief (Template N): role+goal, enumerated aspects, scope, output structure, **required "Data gaps & confidence" section**. For Sonar/API, set domain/recency limits as **parameters** (`search_domain_filter`/`search_recency_filter`), not prose; put the specific question in the user message; cap lists (top-N); don't ask for URLs in prose. |
 | 44 | **Real-time request to a cutoff model with no retrieval enabled** | "What are people saying about X today?" / "latest news on Y" sent to a model with a training cutoff and no search tool (e.g. Grok without Web/X Search) | The model answers from stale training data or guesses. Enable the model's search/browse tool (Grok: **Web Search** and/or **X Search**; others: their browse/search mode) and set source limits as **parameters** (handles/domains/dates), not prose. For social/sentiment/trend questions on Grok, use X Search specifically. |
 | 45 | **Citable task with no inline-citation contract** | Factual / research / report prompt for a retrieval-capable tool (Grok + Web/X Search, Perplexity, deep-research, DeepSeek app) that doesn't require source attribution → unsourced prose, or fabricated references | Add the **citation contract**: "Cite each non-obvious claim inline with a link to the source you actually retrieved; end with a sources list; never fabricate a citation or URL; mark unsourced claims [uncertain]." Apply ONLY when the tool can retrieve and the task is factual — never on creative/code/no-retrieval prompts (forcing citations there invites fabrication). |
+| 46 | **Reasoning + live web search demanded in one call where the tool forbids it** | Asking for deep reasoning AND live web search in a single request on a tool that makes them mutually exclusive — e.g. Kimi's built-in `$web_search` requires thinking **disabled**; a "reason deeply AND search the web now" prompt errors or silently drops one | Split by mode/turn: do retrieval first (non-thinking + `$web_search`), then reason over the returned content in a separate thinking turn. Don't pack mutually-exclusive modes into one call; pick the mode the task needs and sequence the rest. |

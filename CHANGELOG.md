@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.20.0] - 2026-06-17
+
+Добавлен профиль **Kimi (Moonshot AI)** — раньше в скилле не было ни одного упоминания Kimi. Все факты **сверены по live-докам** platform.kimi.ai / api.moonshot.ai + HF model cards (2026-06-17). Три лид-файла `Kimi_*DeepSearch*` использованы как лиды; **2 ошибки лидов исправлены по первоисточнику** (см. Notes).
+
+### Added
+- **`models.md` — секция `## Moonshot AI — Kimi`** (`last-verified: 2026-06-17`): `kimi-k2.6` (флагман, мультимодал, 256K, dual-mode), `kimi-k2.7-code`(+highspeed — forced thinking+preserve_thinking, thinking-off→fallback K2.6, MoonViT vision, Modified MIT), `kimi-k2.5`, легаси `moonshot-v1-*` (единственные с полным сэмплингом), `kimi-latest` deprecated 2026-01-28; defaults K2.x (temp 1.0 / top_p 0.95 / 32768 / n1 — temperature не тюнить); `tool_choice` auto/none при thinking; `$web_search` требует thinking off; Agent Swarm (app, self-orchestrated, 300 sub-агентов) ≠ Kimi-Researcher (single, app-only); app-режимы + tier-gating; OpenAI/Anthropic, `api.moonshot.ai/v1`; Partial Mode.
+- **`tool-profiles.md` — профиль `Kimi (Moonshot AI)`** + строка Routing Index: decision-таблица модель×режим; reasoning-native (no CoT); инструменты не в system prompt (только `tools`); preserve `reasoning_content`; конфликт web_search⊕thinking; Kimi-нативный citation contract; Agent Swarm (без ручного agent count) ≠ Kimi-Researcher; app vs API; tier-gating.
+- **`patterns.md` #46** — «reasoning + живой web search в одном запросе на инструменте, где это взаимоисключено» (Kimi `$web_search` требует thinking off).
+- **`templates.md`** — Template N: Kimi research (app vs API + нативный формат цитат); **Agentic Fragments — Kimi carve-out** (vendor-managed swarm: не проектировать топологию/sub-агентов).
+
+### Changed
+- **`SKILL.md`**: новая Gotcha-строка Kimi; `Kimi K2.x thinking` добавлен в no-CoT reasoning-native списки (Hard rule, Gotchas, Diagnostic, Safe Techniques); в multi-agent Gotcha — exception про vendor-managed swarm; счётчик паттернов **45 → 46**.
+- **`patterns.md` #38**: добавлен `kimi-latest` (deprecated 2026-01-28); заголовок **45 → 46 patterns**.
+- **`README`**: «Works with» + обе таблицы — добавлен Kimi; счётчик **45 → 46**.
+- **`plugin.json` / `marketplace.json`**: в описания добавлен Kimi (Moonshot AI); keywords +`kimi`/`moonshot`; счётчик **46**.
+- **(опц.) `hooks/multi-agent-detect.js`**: в инжектируемую note добавлена строка про vendor-managed swarm (Kimi Agent Swarm) — regex не изменён (он уже ловил multi-agent/swarm).
+
+### Notes
+- **Сверено с live-доками.** `⚠️ verify`: max output, knowledge cutoff, inline-цитаты `$web_search`, API-доступ Agent Swarm / Claw Groups / Kimi-Researcher / Kimi Work, архитектура K2.7. Цены не хардкодятся.
+- **2 коррекции лид-файлов:** (1) заявленное «verbatim: do not duplicate tool schema in system prompt [tool-calls page]» — на той странице отсутствует; реальное правило (agent-страница) — *не описывать инструменты в System Prompt вообще* («interferes with K2.6 autonomous decision-making»); (2) «temperature не модифицируется / калибруй 0.6–1.0» — дефолт **1.0**, держать дефолт.
+- **Хук:** существующий v1.15 multi-agent-хук уже ловит «промпт … мультиагент/agent swarm»; вместо нового хука добавлен **Kimi carve-out** в Agentic Fragments, чтобы хук не уводил Kimi-Swarm в orchestrator-as-decomposer.
+- **Проверка — clean-room behavioural test** (свежие субагенты, только файлы скилла, нейтральная формулировка, 7 кейсов × 3 = **21/21 PASS**): A рефактор → k2.6/k2.7-code, no-CoT, дефолты; B агентный кодинг → k2.7-code + инструменты не в system prompt + preserve `reasoning_content`; C дешёвая JSON → k2.5/non-thinking/`response_format`; D веб-ресёрч API → `$web_search`+thinking-off + Kimi-нативный citation; E tool-loop → preserve `reasoning_content`; **F мультиагент → Agent Swarm, модель само-оркеструет, НЕ проектирует топологию/sub-агентов (Kimi carve-out перекрыл generic-нудж хука)**; G deep research → app (Researcher/Swarm) vs API (свой loop), не путает Researcher↔Swarm. Ноль фабрикаций; формат вывода нигде не выведен молча; tier-gating Swarm везде вынесен как prerequisite.
+- Гард-рейлы целы: never-silent format v1.19.1, citation contract v1.18.1, DeepSeek v1.19, Grok v1.18, Perplexity v1.17, Opus 4.8 дефолт/Fable suspended, hook v1.15, фрагменты v1.14, cap 3.
+- Backlog: image → 1.21, GPT → 1.22.
+
 ## [1.19.1] - 2026-06-15
 
 Hardening-фикс. На установленном скилле баг «молча выбран формат ответа» **воспроизвёлся снова** (Grok-промпт). Перепроверка на актуальном репозитории показала: фикс v1.18.1 был **soft-правилом в MIDDLE-зоне** и проигрывал `SKILL.md` «Fix silently» + премиссе Template N → срабатывал лишь ~2/3. Плюс мой прежний clean-room тест был **бутафорией**: инструкция субагенту «следуй файлам точно» завышала соблюдение до 3/3, а N=3 не ловит 33%-й отказ.
@@ -248,6 +273,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.20.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.20.0
 [1.19.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.19.1
 [1.19.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.19.0
 [1.18.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.18.1

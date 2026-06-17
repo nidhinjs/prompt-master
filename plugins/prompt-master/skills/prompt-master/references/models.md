@@ -83,6 +83,20 @@ All facts that go stale fast — model IDs, current defaults, version-tied param
 - Qwen 2.5 instruct variants: strong instruction-following and JSON. Qwen3 has thinking and non-thinking modes (thinking mode → treat like a reasoning model, no CoT).
 - ⚠️ verify the current Qwen generation/version before asserting — the line iterates quickly.
 
+## Moonshot AI — Kimi
+
+`last-verified: 2026-06-17`
+
+- **Current models:** `kimi-k2.6` — flagship, natively multimodal (text/image/video in), **256K** context, dual-mode (thinking / non-thinking), Preserved Thinking via `thinking.keep:"all"`. `kimi-k2.7-code` (+ `kimi-k2.7-code-highspeed`) — strongest coding model, 256K, **forced thinking + forced preserve_thinking** (cannot disable; passing `"disabled"` errors; in Kimi Code a thinking-off request falls back to K2.6); MoonViT vision, experimental video (official API only); open-weights (Modified MIT). `kimi-k2.5` — 256K dual-mode, **no** Preserved Thinking. `moonshot-v1-8k/32k/128k` (+ vision) — legacy; **the only models that take full sampling** (`temperature` 0–1 default 0, `top_p`, `n` 1–5, `presence_penalty` / `frequency_penalty`). `kimi-latest` — **deprecated 2026-01-28** (pattern #38).
+- **Thinking is reasoning-native** — the model emits `reasoning_content`; do not add CoT. Toggle `thinking:{"type":"enabled"|"disabled"}` (k2.6/k2.5; default enabled). **Defaults K2.x:** `temperature=1.0`, `top_p=0.95`, `max_tokens=32768`, `n=1` — keep the defaults; **do not tune `temperature` on K2.x** (full sampling is a `moonshot-v1-*`-only thing).
+- **`tool_choice` with thinking enabled — only `auto` or `none`** (any other value errors). Parallel `tool_calls` are supported.
+- **Tools / agent:** do **not** describe the tools or their usage in the system prompt ("interferes with Kimi K2.6's autonomous decision-making") — pass schemas via the `tools` array only. Multi-turn + tool calls → preserve the assistant's `reasoning_content` across turns (k2.6: set `thinking.keep:"all"`; tool loop: `max_tokens ≥ 16000` + streaming).
+- **Web search:** built-in function `$web_search` (`"type":"builtin_function"`) **requires thinking DISABLED** (`extra_body:{"thinking":{"type":"disabled"}}`) — so deep reasoning and live web search are mutually exclusive in one call (pattern #46). ~$0.005/call; search tokens count in `prompt_tokens`. Citations not documented → apply the citation contract.
+- **Multi-agent = Agent Swarm** (app): K2.6 self-orchestrates up to **300 sub-agents / 4000 coordinated steps** (K2.5: 100 / 1500), PARL-trained, "without predefined subagents" — so do **not** set an agent count or script sub-agents (unlike Grok's `agent_count`). App-first; ⚠️ verify API access / `Claw Groups` / `Kimi Work` (desktop agent). **`Kimi-Researcher`** is a separate, **single-agent** deep-research product, **app-only** (no API). Deep research via API = your own thinking + `$web_search`/browser/code loop + citation contract.
+- **App modes (kimi.com UI):** Instant / Thinking / Agent / Agent Swarm / Kimi Work — these are app modes, **not** API params (on API: thinking/non-thinking + `tools`). Feature availability (Agent Swarm, sub-agent concurrency, Kimi Claw, Kimi Code credits) is **subscription-tiered** — free (Adagio) has no Swarm; surface as a prerequisite, don't assume, don't hardcode quotas.
+- **API:** OpenAI- **and** Anthropic-compatible, `base_url=https://api.moonshot.ai/v1`. `response_format`: `text` / `json_object` / `json_schema`. `stop` ≤5 strings. Partial Mode (prefix-completion).
+- ⚠️ verify: max output tokens, knowledge cutoff, whether `$web_search` returns inline citations, API availability of Agent Swarm / Claw Groups / Kimi-Researcher / Kimi Work, exact K2.7 architecture. Prices are per-model and volatile — do not hardcode.
+
 ## Perplexity
 
 `last-verified: 2026-06-14`

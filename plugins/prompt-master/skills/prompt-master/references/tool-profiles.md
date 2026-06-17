@@ -20,6 +20,7 @@ Pick the row that matches the user's tool, then open only that profile below.
 | **o3 / o4-mini / OpenAI reasoning** | Deep reasoning tasks where process must not be dictated | User names o3/o4-mini or an OpenAI reasoning model |
 | **Grok 4.3 / xAI** | Reasoning-native chat/coding; realtime X + web search; native multi-agent research | User names Grok or xAI |
 | **Gemini 2.x / 3 Pro** | Multimodal, large-document, Google ecosystem | User is on Google AI Studio, Vertex, or Gemini |
+| **Kimi / Moonshot AI** | Reasoning-native dual-mode; agentic/coding; Agent Swarm (app); long-context | User names Kimi or Moonshot |
 | **Qwen 2.5 / Qwen3** | Structured output, JSON, instruct; Qwen3 adds thinking mode | User names Qwen or an Alibaba model |
 | **Ollama** | Local model deployment (Llama, Mistral, Qwen, CodeLlama …) | User running models locally via Ollama |
 | **Llama / Mistral / open-weight** | General open-weight; weaker instruction following | User names a Llama or Mistral variant |
@@ -145,6 +146,32 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 - For grounded / research tasks (Gemini Deep Research, search-grounded answers): require inline citations per claim to retrieved sources, never fabricated — this complements the hallucinated-citation guard above
 - Can drift from strict output formats — use explicit format locks with a labelled example
 - For grounded tasks add "Base your response only on the provided context. Do not extrapolate."
+
+---
+
+**Kimi (Moonshot AI — K2.x dual-mode, agentic; Agent Swarm)**
+
+For volatile model IDs/defaults see [models.md](models.md) (Moonshot — Kimi). Reasoning-native; OpenAI- and Anthropic-compatible (`base_url=https://api.moonshot.ai/v1`) → GPT/Claude prompts transfer.
+
+*Pick the model:*
+- `kimi-k2.6` — default (multimodal, dual-mode, web search); `kimi-k2.7-code` — coding / agentic coding (thinking is **always on** — don't pass `thinking`); `kimi-k2.5` — cheaper dual-mode (no Preserved Thinking); `moonshot-v1-*` — legacy / only when you genuinely need sampling params. Recommend, don't hardcode.
+
+*Pick the mode (K2.x):*
+- **Thinking** (default) for reasoning/coding/agentic/analysis — reasoning-native, so **no CoT / "think step by step."** **Non-thinking** for chat/extraction/classification/latency — **and required for `$web_search`.**
+- **Keep the defaults — do not tune `temperature`** on K2.x (default 1.0); full sampling (`temperature`/`top_p`/`n`/penalties) is a `moonshot-v1-*`-only thing. With thinking on, **`tool_choice` may only be `auto` or `none`**.
+
+*Tools / agent:*
+- **Do NOT describe the tools or their usage in the system prompt** — it interferes with K2.6's autonomous tool decisions; pass schemas via the `tools` array only. Parallel `tool_calls` supported; sustains ~200–300 sequential calls.
+- **Preserve `reasoning_content`** across turns once a tool call has happened (k2.6: set `thinking.keep:"all"`; tool loop: `max_tokens ≥ 16000` + streaming). Integrates as the model behind Claude Code / Cline / RooCode / Hermes / OpenClaw (esp. k2.7-code).
+
+*Web search & the reasoning⊕search conflict:*
+- Built-in `$web_search` (`"type":"builtin_function"`) **requires thinking DISABLED** — so you cannot deep-reason and live-search in the same call (pattern #46). For factual/research output apply the **citation contract** in Kimi's native style: `[Source: Institution / Website: Page Title]`, credibility stars `*** / ** / *`, `Confirmed`/`Estimate` tags, verify 2+ sources, **no full URLs in the report**, `【Insight】` tag, staged structure (Information Search → Data Analysis → Report Output → References).
+
+*Multi-agent, deep research, app vs API:*
+- **Multi-agent = Agent Swarm** (app): K2.6 **self-orchestrates** up to 300 sub-agents — so for a Swarm prompt **don't set an agent count and don't script sub-agents** (the opposite of Grok / orchestrator-as-decomposer); give one large decomposable task + a clear final artifact. **`Kimi-Researcher`** is a separate, single-agent deep-research product — app-only; don't conflate it with Swarm. Through the **API** there's no confirmed Swarm/Researcher endpoint → build your own agentic tool-loop.
+- **App modes (kimi.com):** Instant (quick) · Thinking (hard questions) · Agent (research/slides/docs/sheets) · Agent Swarm (large-scale/long-form/batch) · Kimi Work (desktop agent). On the API there are no modes — only thinking/non-thinking + tools.
+- **Tier-gated:** Agent Swarm, sub-agent concurrency, Kimi Claw, Kimi Code credits depend on the user's plan (free Adagio has no Swarm) — surface as a **prerequisite/assumption**, never assume availability; don't hardcode quotas or prices.
+- **Output format is never silently derived** (Hard rule) — ask it or surface it as an explicit assumption.
 
 ---
 
