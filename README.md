@@ -2,61 +2,61 @@
 
 <br/>
 
+**English** · [Русский](README.ru.md)
+
 **What:** A Claude skill that writes accurate, paste-ready prompts for any AI tool — routed to the specific model or platform you name.
 **Why:** Every vague prompt is a wasted credit. Prompt Master extracts intent, picks the right architecture, and strips every word that doesn't change the output.
-**How to start:** Install via plugin marketplace (see below), then say: `Write me a prompt for [tool] to [task]` — or paste a bad prompt and ask to fix it.
+**How to start:** Install via the plugin marketplace (see below), then say: `Write me a prompt for [tool] to [task]` — or paste a bad prompt and ask to fix it.
 
-**Works with:** Claude, ChatGPT, Gemini, Grok, Kimi, DeepSeek, o3/o4-mini, MiniMax, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make, and any AI tool you throw at it.
+**Works with:** Claude (Opus 4.8 default), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make — and any AI tool you throw at it.
 
 ---
 
 ## 🚀 Installation
 
-Полная инструкция (3 способа) — [docs/installation.md](docs/installation.md).
-
 ### RECOMMENDED — Claude Code / Cowork (plugin marketplace)
 
 ```bash
-# 1. Добавить маркетплейс из GitHub
+# 1. Add the marketplace from GitHub
 /plugin marketplace add azagreev/prompt-master-za
 
-# 2. Установить плагин
+# 2. Install the plugin
 /plugin install prompt-master@prompt-master
 ```
 
-В Cowork: **Customize → Browse plugins → Personal → + → Add marketplace from GitHub →** `azagreev/prompt-master-za` → установить **prompt-master**.
-
-#### 🔄 Обновление плагина
-
-Сторонние маркетплейсы (как этот) **не авто-обновляются по умолчанию** — авто-pull на старте сессии включён только для официального маркетплейса Anthropic. После нового релиза кнопка Update может оставаться неактивной, пока обновление не подтянуть.
-
-**✅ Рекомендуется — включить auto-update один раз** (дальше плагин обновляется сам на старте сессии):
-- **Claude Code (CLI/desktop):** `/plugin` → **Marketplaces** → `prompt-master` → включить **auto-update**.
-- **Cowork:** включи тумблер **auto-update** на странице плагина, если он показан.
-
-**Разовое обновление вручную:**
-- **Claude Code (CLI):** `/plugin marketplace update prompt-master` → обнови плагин → `/reload-plugins` (или перезапусти сессию).
-- **Cowork (GUI):** Customize → `prompt-master` → **удали и добавь заново** (`+` → Add marketplace from GitHub → `azagreev/prompt-master-za`) — форсит свежий клон.
+In Cowork: **Customize → Browse plugins → Personal → + → Add marketplace from GitHub →** `azagreev/prompt-master-za` → install **prompt-master**.
 
 ### OR — Claude.ai (browser, ZIP)
 
-1. Заархивируй `plugins/prompt-master/skills/prompt-master/` в ZIP (в корне архива — `SKILL.md` и `references/`).
-2. **claude.ai → Customize → Skills → Upload a Skill**.
+1. Zip `plugins/prompt-master/skills/prompt-master/` (with `SKILL.md` and `references/` at the archive root).
+2. **claude.ai → Customize → Skills → Upload a Skill.**
 
-### OR — Clone into Claude Code skills directory
+### OR — Clone into the Claude Code skills directory
 
 ```bash
 git clone https://github.com/azagreev/prompt-master-za.git
 cp -r prompt-master-za/plugins/prompt-master/skills/prompt-master ~/.claude/skills/prompt-master
 ```
 
+### 🔄 Keeping it updated (read this if you're on an old version)
+
+Third-party marketplaces (like this one) **do not auto-update by default** — only the official Anthropic marketplace auto-pulls on session start. After a new release the **Update** button can look active but do nothing, because it compares a stale local clone against itself.
+
+- **Enable auto-update once** (recommended): `/plugin` → **Marketplaces** → `prompt-master` → enable **auto-update** (CLI), or toggle it on the marketplace page in Cowork. Note: even with auto-update, the plugin *cache* is a snapshot — a reinstall may still be needed to pick up new files.
+- **Manual update:** `/plugin marketplace update prompt-master` → reinstall the plugin → `/reload-plugins` (or restart the session).
+- **Force-refresh** if the version looks stuck: `/plugin marketplace remove prompt-master` → `/plugin marketplace add azagreev/prompt-master-za` → `/plugin install prompt-master@prompt-master` → `/reload-plugins` → restart.
+- **CLI and Desktop/Cowork are separate installs** with separate stores — update each one. `/plugin` commands only work in the standalone Claude Code terminal, not inside the Cowork chat (use the GUI there).
+- To confirm what's *actually* running, compare four sources: the `/plugin` UI, `~/.claude/plugins/installed_plugins.json` (`version`), the cache dir it points to, and the marketplace clone's git HEAD vs the latest GitHub release.
+
+---
+
 ## 🔥 The Problem This Solves
 
 Every AI user wastes credits the same way:
 
-> Write vague prompt → get wrong output → re-prompt → get closer → re-prompt again → finally get what you wanted on attempt 4
+> Write vague prompt → get wrong output → re-prompt → get closer → re-prompt again → finally get what you wanted on attempt 4.
 
-That's 3 wasted API calls. Multiply by 50 prompts a day. That's real money and real time gone.
+That's 3 wasted calls. Multiply by 50 prompts a day. That's real money and time gone.
 
 ### The key insight
 
@@ -68,33 +68,25 @@ Most "prompt generators" make prompts longer. This skill makes them sharper.
 
 ## 🎯 Usage
 
-In Claude, you can invoke the skill naturally:
+Invoke the skill naturally:
 
 ```
 Write me a prompt for Cursor to refactor my auth module
 ```
-
 ```
 I need a prompt for Claude Code to build a REST API — ask me what you need to know
 ```
-
 ```
-Here's a bad prompt I wrote for GPT-4o, fix it: [paste prompt]
+Here's a bad prompt I wrote, fix it: [paste prompt]
 ```
-
 ```
 Generate a Midjourney prompt for a cyberpunk city at night
 ```
-
 ```
-I have a reference image — help me write a prompt to edit just the head angle
-```
-
-```
-Break this prompt down and adapt it for Stable Diffusion
+Write a prompt for Kimi to research X across multiple sources, with citations
 ```
 
-Or explicitly invoke it:
+Or invoke it explicitly:
 
 ```
 /prompt-master
@@ -108,191 +100,154 @@ I want to ask Claude Code to build a todo app with React and Supabase
 
 Prompt Master runs a structured pipeline on every request:
 
-1. **Detects the target tool** — figures out which AI system the prompt is for and routes silently to the right approach
-2. **Extracts 9 dimensions of intent** — task, input, output, constraints, context, audience, memory, success criteria, examples
-3. **Asks targeted clarifying questions** — max 3 questions if critical info is missing, never more
-4. **Routes to the right framework** — picks and applies the correct prompt architecture automatically, never shown to the user
-5. **Applies safe techniques only** — role assignment, few-shot examples, XML structure, grounding anchors, memory block as needed
-6. **Runs a token efficiency audit** — strips every word that doesn't change the output
-7. **Delivers the prompt** — one clean copyable block with a one-line strategy note
+1. **Detects the target tool** — figures out which AI system the prompt is for and routes silently.
+2. **Extracts 9 dimensions of intent** — task, target tool, output format, constraints, input, context, audience, success criteria, examples.
+3. **Asks targeted clarifying questions** — at most 3, only when critical info is missing.
+4. **Routes to the right architecture** — picks the correct template and tool profile automatically, never shown to you.
+5. **Applies safe techniques only** — role assignment, few-shot, XML structure, grounding anchors, memory block, source citations — as needed.
+6. **Runs a token-efficiency audit** — strips every word that doesn't change the output.
+7. **Delivers the prompt** — one clean copyable block with a one-line strategy note.
 
 ---
-## Full Example #1: Generating Prompts for Images
 
-### User Input
+## Full Example #1 — Image Prompt
+
+### Input
 ```
-Write me a midjourney prompt for a realistic samurai standing in the rain at night
+Write me a Midjourney prompt for a realistic samurai standing in the rain at night
 ```
 
-### Generated Prompt
+### Generated
 ```
-lone samurai standing in heavy rain at night, traditional armor, 
-neon reflections on wet cobblestone street, cinematic lighting, 
-dramatic shadows, fog, ultra detailed, photorealistic, 
+lone samurai standing in heavy rain at night, traditional armor,
+neon reflections on wet cobblestone street, cinematic lighting,
+dramatic shadows, fog, ultra detailed, photorealistic,
 shallow depth of field --ar 16:9 --v 6 --style raw
 
 negative: blurry, low quality, watermark, cartoon, anime, extra limbs
 ```
-**🎯 Target:** Midjourney · **⚡ Framework:** Visual Descriptor · **💰 Tokens:** Light (~60) · **💡 Strategy:** Comma-separated descriptors over prose, lighting and mood anchored early, aspect ratio and version locked, negative prompt prevents style drift.
+**🎯 Target:** Midjourney · **💡 Strategy:** Comma-separated descriptors over prose, lighting and mood anchored early, aspect ratio and version locked, negative prompt prevents style drift.
 
 ---
-## Full Example #2: Generating Prompts for Coding
 
-### User Input
+## Full Example #2 — Coding Prompt
+
+### Input
 ```
-Build a claude code prompt for a landing page for a business 
-dashboard that looks and feels exactly like notion - smooth animations, 
-clean ui
+Build a Claude Code prompt for a landing page for a business dashboard
+that looks and feels exactly like Notion — smooth animations, clean UI
 ```
 
-
-### Generated Prompt
+### Generated
 ```
 Objective:
-Build a fully detailed, production-quality static landing page for a 
-business dashboard product. Design must match Notion's exact aesthetic — 
+Build a fully detailed, production-quality static landing page for a
+business dashboard product. Design must match Notion's exact aesthetic —
 clean, minimal, typographic, with smooth animations throughout.
 
 Stack:
-Single HTML file with embedded CSS and vanilla JS. No frameworks. 
+Single HTML file with embedded CSS and vanilla JS. No frameworks.
 No external dependencies except Google Fonts (Inter).
 
 Design Spec — match these exactly:
-- Background: #ffffff
-- Primary text: #1a1a1a
-- Secondary text: #6b7280
-- Border color: #e5e7eb
-- Accent: #000000
+- Background: #ffffff / Primary text: #1a1a1a / Secondary: #6b7280
+- Border: #e5e7eb / Accent: #000000
 - Font: Inter, weights 400 / 500 / 600 / 700
-- Base spacing unit: 8px
-- Border radius: 6px on cards, 4px on buttons
-- Box shadows: 0 1px 3px rgba(0,0,0,0.08) only — no dramatic shadows
-- Buttons: black fill, white text, no border radius above 6px
+- Base spacing unit: 8px / Radius: 6px cards, 4px buttons
+- Shadows: 0 1px 3px rgba(0,0,0,0.08) only — no dramatic shadows
 
-Sections to build in order:
-1. Navbar — logo left, nav links center, "Get started free" CTA right. 
-   Sticky on scroll, adds subtle border-bottom on scroll with JS.
-2. Hero — large left-aligned heading (max 3 lines), subtext, two CTAs 
-   (primary black + secondary outlined), hero screenshot mockup 
-   placeholder (gray rounded card, 16:9 ratio).
-3. Logos bar — "Trusted by teams at..." with 5 placeholder company names 
-   in muted gray, centered.
-4. Features — 3-column grid. Each card: icon (use emoji), bold title, 
-   2-line description. Hover state: border darkens to #d1d5db, 
-   translateY(-2px), transition 200ms ease.
-5. How it works — alternating left/right layout, 3 steps. Number badge, 
-   heading, description, placeholder screenshot card.
-6. Pricing — 2 tiers side by side. Free tier: outlined card. Pro tier: 
-   black background, white text, "Most popular" badge. List 4 features 
-   each with checkmarks.
-7. CTA banner — full-width dark section, centered heading, subtext, 
-   single CTA button.
-8. Footer — 4-column links, copyright line, minimal.
+Sections in order:
+1. Navbar — logo left, links center, "Get started free" CTA right; sticky,
+   adds a subtle border-bottom on scroll via JS.
+2. Hero — large left-aligned heading (max 3 lines), subtext, two CTAs,
+   16:9 screenshot placeholder (gray rounded card).
+3. Logos bar — "Trusted by teams at…" + 5 muted placeholder names.
+4. Features — 3-column grid; card hover: border → #d1d5db, translateY(-2px), 200ms.
+5. How it works — alternating left/right, 3 steps with number badge.
+6. Pricing — 2 tiers; Pro tier black bg, "Most popular" badge, 4 features each.
+7. CTA banner — full-width dark section, centered heading + one CTA.
+8. Footer — 4-column links, copyright.
 
-Animations — implement all of these:
-- Fade-in + translateY(20px) to translateY(0) on scroll for every section, 
-  using IntersectionObserver. Threshold 0.15. Duration 500ms ease-out.
-- Staggered animation on feature cards: 100ms delay between each card.
-- Navbar CTA button: background transitions from black to #333 on hover, 
-  200ms ease.
-- Hero CTA primary: same hover transition. Secondary: background goes from 
-  transparent to #f3f4f6 on hover.
-- Smooth scroll on all anchor links.
-- Navbar border-bottom fades in on scroll past 60px using JS scroll event.
+Animations:
+- Fade-in + translateY(20px→0) on scroll via IntersectionObserver (threshold 0.15, 500ms ease-out).
+- Staggered feature cards (100ms apart). Smooth scroll on anchors.
 
 Constraints:
-- Single file only — all CSS and JS embedded, no external files
-- No dependencies except Google Fonts via CDN link tag
-- All placeholder images replaced with styled gray div elements
-- Must be pixel-perfect at 375px mobile and 1440px desktop
-- No CSS frameworks, no utility classes from external sources
+- Single file, all CSS/JS embedded, no external files except Google Fonts.
+- Placeholder images = styled gray divs. Pixel-perfect at 375px and 1440px.
 
 Done When:
-- All 8 sections render correctly at both breakpoints
-- All animations trigger on scroll without layout shift
-- Navbar sticks and border appears on scroll
-- Hover states work on all interactive elements
-- Opens in browser with zero console errors
+- All 8 sections render at both breakpoints; animations trigger without layout shift;
+  navbar sticks + border appears on scroll; hover states work; zero console errors.
 ```
-**🎯 Target:** Claude Code · **💰 Tokens:** Medium (~380) · **💡 Strategy:** Every vague Notion aesthetic cue translated into exact hex values and pixel specs — Claude Code cannot guess wrong. Animations defined with exact timing, method, and trigger so there is no interpretation needed.
+**🎯 Target:** Claude Code · **💡 Strategy:** Every vague "Notion aesthetic" cue translated to exact hex/pixel specs so Claude Code can't guess wrong; animations defined with exact timing, method, and trigger.
 
 ---
 
 ## 🗺️ Routing Index
 
-When you name a tool, Prompt Master silently routes to that tool's profile and applies its rules. Quick reference:
+When you name a tool, Prompt Master silently routes to its profile and applies its rules.
 
 | Tool / Category | Handles | When to route |
 |---|---|---|
-| **Claude Opus 4.8 / 4.7** | Default text generation, heavy reasoning, long context | Any "Claude" request without a version |
+| **Claude Opus 4.8 / 4.7** | Default text, heavy reasoning, 1M context | Any "Claude" request without a version |
 | **Claude Fable 5 / Mythos 5** | ⚠️ Suspended since 2026-06-12 (unavailable) | Do not route here until access is restored |
-| **ChatGPT / GPT-5.x** | Outcome-first generation | User names ChatGPT or GPT |
-| **o3 / o4-mini** | Reasoning-native models | Never add CoT — these think internally |
-| **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode (Thinking / Non-Thinking) | Pick model + mode by task; no CoT in thinking; `reasoning_effort` high/max |
+| **ChatGPT / GPT-5.x** | Outcome-first generation, tone, persona | User names ChatGPT or GPT |
+| **o3 / o4-mini** | Reasoning-native models | Never add CoT — they think internally |
 | **Grok 4.3 / xAI** | Reasoning-native; realtime X/web search; multi-agent research | User names Grok or xAI |
-| **Kimi / Moonshot AI** | Reasoning-native dual-mode; agentic/coding; Agent Swarm (app) | User names Kimi or Moonshot |
-| **Gemini 2.x** | Grounded generation | Needs citation/grounding anchors |
-| **Local / open-weight (Ollama, Llama, Mistral)** | Short, flat prompts | User running a local model |
-| **Claude Code / Devin / Cline** | Agentic file + terminal | Stop conditions and scope locks are mandatory |
+| **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode (Thinking / Non-Thinking) | Pick model + mode by task; no CoT in thinking |
+| **Kimi / Moonshot AI** (`kimi-k2.6` / `k2.7-code` / `k2.5`) | Reasoning-native dual-mode; agentic/coding; Agent Swarm (app) | User names Kimi or Moonshot |
+| **Gemini 2.x / 3 Pro** | Grounded, multimodal generation | Needs citation/grounding anchors |
+| **Qwen 2.5 / Qwen3** | Structured output, JSON; Qwen3 adds thinking mode | User names Qwen or an Alibaba model |
+| **Local / open-weight** (Ollama, Llama, Mistral) | Short, flat prompts | User runs a local model |
+| **Claude Code / Devin / Cline** | Agentic file + terminal | Stop conditions + scope locks mandatory |
 | **Cursor / Windsurf / Copilot** | IDE autocomplete/edit | File path + function name required |
 | **Bolt / v0 / Lovable / Figma Make** | Full-stack generation | Stack spec + what NOT to scaffold |
-| **Midjourney / DALL-E / Stable Diffusion** | Image generation | Comma descriptors, negative prompt, params |
-| **ComfyUI** | Node-based image | Positive/negative node split |
-| **Sora / Runway / LTX** | Video generation | Camera movement + duration |
+| **Midjourney / DALL-E / Stable Diffusion / ComfyUI** | Image generation | Comma descriptors, negative prompt, params |
+| **Sora / Runway / LTX / Kling** | Video generation | Camera movement + duration |
 | **ElevenLabs** | Voice AI | Emotion, pacing, speech rate |
 | **Zapier / Make / n8n** | Workflow automation | Trigger + action + field mapping |
-| **Unknown tool** | Universal Fingerprint | 4 questions → quality prompt for any tool |
+| **Unknown tool** | Universal Fingerprint | Asks → quality prompt for any tool |
 
 Full per-tool rules live in [`references/tool-profiles.md`](plugins/prompt-master/skills/prompt-master/references/tool-profiles.md) — loaded on demand, not at startup.
 
 ---
 
-## 🤝 Works With Any AI Tool
+## 🤝 Works With Any AI Tool (35+ profiles)
 
-Prompt Master includes specific profiles for 20+ tools. For anything not on the list, it uses a **Universal Fingerprint**: 4 questions that let it write a quality prompt for any AI system it has never seen before.
+For anything not profiled, Prompt Master falls back to a **Universal Fingerprint** to write a quality prompt for a tool it has never seen.
 
 <details>
-<summary><h3> Click to view all 30+ tool profiles </h3></summary>
+<summary><b>Click to view the full profile list</b></summary>
 
-| Tool | Category | What Prompt Master Fixes |
+| Tool | Category | What Prompt Master fixes |
 |------|----------|--------------------------|
 | **Claude (Opus 4.8 / 4.7)** (default) | Reasoning LLM | Removes padding, adds XML structure, specifies length, front-loads scope |
-| **Claude Fable 5 / Mythos 5** | Frontier LLM — ⚠️ suspended since 2026-06-12 (unavailable; see models.md) | Outcome-first + brief intent, effort-based steering, no reasoning-echo — applies if/when restored |
+| **Claude Fable 5 / Mythos 5** | Frontier LLM — ⚠️ suspended since 2026-06-12 | Outcome-first + brief intent, effort-based steering, no reasoning-echo — applies if/when restored |
 | **ChatGPT / GPT-5.5 / GPT-5.x** | Reasoning LLM | Outcome-first structure, `text.verbosity`, reasoning-effort tuning, preambles, retrieval budgets |
-| **Gemini 2.x** | Reasoning LLM | Grounding anchors, citation rules, format locks |
-| **o3 / o4-mini** | Thinking LLM | Short clean instructions only — never adds CoT (they think internally) |
-| **Grok 4.3 (xAI)** | Reasoning LLM + realtime search | Reasoning-native (no CoT; `reasoning_effort`); enables Web/X Search for current data; X Search for social/trends; `grok-4.20-multi-agent` for deep research; asks/surfaces output format; inline citations when search is on |
-| **Ollama** | Local LLM | Asks which model is loaded, includes system prompt for Modelfile |
-| **Qwen 2.5 / Qwen3** | Open-weight LLM | Chat template format, thinking vs non-thinking mode detection |
-| **Local models (Llama, Mistral)** | Open-weight LLM | Shorter prompts, simpler structure, no complex nesting |
+| **Grok 4.3 (xAI)** | Reasoning LLM + realtime search | Reasoning-native (no CoT; `reasoning_effort`); Web/X Search for current data; `grok-4.20-multi-agent` for deep research; asks/surfaces output format; inline citations when search is on |
 | **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode LLM | Model + mode by task; thinking is reasoning-native (no CoT, `reasoning_effort` high/max, no temp/penalties); non-thinking takes system prompt + few-shot; preserve `reasoning_content` with tool calls; legacy names retire 2026-07-24 |
-| **Kimi (Moonshot AI)** (`kimi-k2.6` / `k2.7-code` / `k2.5`) | Dual-mode + agentic LLM | Reasoning-native (no CoT; keep defaults, don't tune temp on K2.x); `tool_choice` auto/none with thinking; tools via `tools` not system prompt; preserve `reasoning_content`; `$web_search` needs thinking off; multi-agent = **Agent Swarm** (app, self-orchestrated — no manual agent count) vs single-agent **Kimi-Researcher**; tier-gated features; `kimi-latest` deprecated 2026-01-28 |
-| **MiniMax (M3 / M2.7)** | Reasoning LLM | Temperature clamping, thinking tag control, structured output optimization |
+| **Kimi (Moonshot AI)** (`kimi-k2.6` / `k2.7-code` / `k2.5`) | Dual-mode + agentic LLM | Reasoning-native (no CoT; keep defaults — don't tune temp on K2.x); `tool_choice` auto/none with thinking; tools via `tools` not system prompt; preserve `reasoning_content`; `$web_search` needs thinking off; multi-agent = **Agent Swarm** (app, self-orchestrated — no manual agent count) vs single-agent **Kimi-Researcher**; tier-gated features; `kimi-latest` deprecated 2026-01-28 |
+| **Gemini 2.x / 3 Pro** | Reasoning LLM | Grounding anchors, citation rules, format locks |
+| **o3 / o4-mini** | Thinking LLM | Short clean instructions only — never adds CoT |
+| **Qwen 2.5 / Qwen3** | Open-weight LLM | Chat template, thinking vs non-thinking detection |
+| **Local models (Llama, Mistral, Ollama)** | Open-weight LLM | Shorter prompts, simpler structure, no deep nesting |
+| **MiniMax (M3 / M2.7)** | Reasoning LLM | Temperature clamping, thinking-tag control, structured output |
 | **Claude Code** | Agentic AI | Stop conditions, file scope, checkpoint output |
-| **Cortex Code** | Agentic AI (Snowflake) | Anti-over-engineering guard, `cortex ctx` step tracking, Snowflake-native tools, headless JSON mode |
-| **Cursor / Windsurf** | IDE AI | File path, function name, do-not-touch list, sequential prompt guidance |
-| **Cline (formerly Claude Dev)** | Agentic IDE | File scope, approval gates, stop conditions, task breakdown |
+| **Cortex Code** | Agentic AI (Snowflake) | Anti-over-engineering guard, `cortex ctx` step tracking, Snowflake-native tools |
+| **Cursor / Windsurf** | IDE AI | File path, function name, do-not-touch list |
+| **Cline** | Agentic IDE | File scope, approval gates, stop conditions |
 | **GitHub Copilot** | Autocomplete AI | Exact function contract as docstring |
-| **Antigravity** | Agentic IDE | Task-based prompting, Artifact verification, autonomy level |
-| **Bolt / v0 / Lovable** | Full-stack generator | Stack spec, version, what NOT to scaffold |
-| **Figma Make** | Full-stack generator | Component name references, frame-to-code scope |
-| **Google Stitch** | Full-stack generator | Interface goal over implementation, Material Design 3 spec |
+| **Antigravity** | Agentic IDE (Gemini 3 Pro) | Task-based prompting, Artifact verification, autonomy level |
+| **Bolt / v0 / Lovable / Figma Make / Google Stitch** | Full-stack generators | Stack spec, version, what NOT to scaffold |
 | **Devin / SWE-agent** | Autonomous agent | Starting state, target state, stop conditions |
-| **Manus** | Autonomous agent | Task outcome focus, permission scope, memory anchors |
-| **OpenAI Computer Use** | Computer-use agent | Screen state, allowed apps, stop before irreversible actions |
-| **Perplexity Computer** | Computer-use agent | Artifact-first prompting, scoped permissions, verification steps |
-| **OpenClaw** | Computer-use agent | Conversational precision, persistent memory, security constraints |
-| **Perplexity / SearchGPT** | Search AI | Mode spec: search vs analyze vs compare |
-| **Midjourney** | Image AI | Comma-separated descriptors, parameters, negative prompts |
-| **DALL-E 3** | Image AI | Prose description, text exclusion — edit vs generate detection |
-| **Stable Diffusion** | Image AI | Weight syntax `(word:1.3)`, CFG guidance, mandatory negative prompt |
-| **SeeDream** | Image AI | Art style first, mood and atmosphere descriptors, negative prompt |
-| **ComfyUI** | Image AI | Positive/negative node split, checkpoint-specific syntax |
-| **Meshy / Tripo / Rodin** | 3D AI | Style + export format + polygon budget + rig requirements |
-| **BlenderGPT** | 3D AI | Python script output, Blender version, scene context |
-| **Unity AI** | 3D / Game AI | Game genre, platform target, mechanic description over code |
-| **Sora / Runway** | Video AI | Camera movement, duration, cut style |
-| **LTX / Dream Machine / Kling** | Video AI | Cinematic language, motion intensity, style reference |
+| **Manus** | Autonomous agent | Task-outcome focus, permission scope, memory anchors |
+| **Computer-Use / Browser agents** (Comet, Atlas, Claude in Chrome) | Computer-use agent | Outcome over navigation, scoped permissions, stop before irreversible actions |
+| **Perplexity** | Research AI | Research brief, filters-as-parameters, Data-gaps/confidence section, inline citations |
+| **Midjourney / DALL-E 3 / Stable Diffusion / SeeDream / Flux** | Image AI | Per-model syntax, negative prompts, edit-vs-generate detection |
+| **ComfyUI** | Image AI | Positive/negative node split, checkpoint syntax |
+| **Meshy / Tripo / Rodin / BlenderGPT / Unity AI** | 3D / Game AI | Style + export format + polygon budget + rig requirements |
+| **Sora / Runway / LTX / Kling / Dream Machine** | Video AI | Camera movement, duration, motion intensity |
 | **ElevenLabs** | Voice AI | Emotion, pacing, emphasis, speech rate |
 | **Zapier / Make / n8n** | Workflow automation | Trigger app + event, action app + field mapping |
 
@@ -300,27 +255,49 @@ Prompt Master includes specific profiles for 20+ tools. For anything not on the 
 
 ---
 
-## 📐 12 Prompt Templates (Auto-Selected)
+## 🤖 Multi-Agent Prompts (opt-in — you must ask)
 
-Prompt Master picks the right architecture for every task automatically and routes silently — you never see the framework name, just the prompt.
+Prompt Master **can** generate multi-agent / orchestration prompts, but it's **deliberately opt-in**: by default it keeps a prompt to a single agent loop, because over-orchestration burns tokens. To get a multi-agent prompt, **say so explicitly** — e.g. *"write a **multi-agent** prompt…"*, *"use an **orchestrator + sub-agents**"*, *"**fan-out** across agents"*, or name a tool's native mode (**Agent Swarm**, **multi-agent research**).
+
+Native multi-agent support by target:
+
+| Target | Multi-agent capability | How Prompt Master frames it |
+|---|---|---|
+| **Grok (xAI)** | `grok-4.20-multi-agent` — native multi-agent research model | Research brief; pick **4** (focused) or **16** (thorough) agents; enable Web/X Search |
+| **Kimi (Moonshot AI)** | **Agent Swarm** — the model self-orchestrates up to **300 sub-agents** (app-only, plan-gated) | One large decomposable task + final artifact; it does **not** set an agent count or script sub-agents (the model orchestrates). Single-agent deep research = **Kimi-Researcher** |
+| **Perplexity / Manus** | Multi-agent web-research orchestrators | Describe the end deliverable, not the steps — they decompose internally |
+| **Claude Code / Cline / Devin / SWE-agent** | You design the orchestration (orchestrator + sub-agents) | Agentic Prompt Fragments: fan-out + synthesizer, evaluator loop, handoff contracts, human-in-the-loop gates |
+| **DeepSeek V4** | No native multi-agent agent | "Deep research" = thinking (high/max) + retrieval + citation contract, or a DIY tool-loop |
+
+Two orchestration styles, and Prompt Master picks the right one automatically: **model-orchestrated** (Kimi Agent Swarm, Grok multi-agent — you just frame the goal) vs **you-design-it** (Claude Code, Devin — an explicit topology you specify). For a vendor-managed swarm like Kimi it will *not* hand-script sub-agents; for a Claude Code orchestrator it will.
+
+---
+
+## 📐 14 Prompt Templates (Auto-Selected)
+
+Prompt Master picks the right architecture for every task and routes silently — you never see the framework name, just the prompt.
 
 <details>
-<summary><h3> Click to view all 12 templates</h3></summary>
+<summary><b>Click to view all 14 templates</b></summary>
 
-| Template | Best For |
+| Template | Best for |
 |----------|----------|
-| **RTF** (Role, Task, Format) | Fast one-shot tasks |
-| **CO-STAR** (Context, Objective, Style, Tone, Audience, Response) | Professional documents, reports, business writing |
-| **RISEN** (Role, Instructions, Steps, End Goal, Narrowing) | Complex multi-step projects |
-| **CRISPE** (Capacity, Role, Insight, Statement, Personality, Experiment) | Creative work, brand voice, iterative content |
-| **Chain of Thought** | Math, logic, debugging, multi-step analysis |
-| **Few-Shot** | Consistent structured output, pattern replication |
-| **File-Scope Template** | Cursor, Windsurf, Copilot — any code editing AI |
-| **ReAct + Stop Conditions** | Claude Code, Devin, AutoGPT — any autonomous agent |
-| **Visual Descriptor** | Midjourney, DALL-E, Stable Diffusion, Sora — generation |
-| **Reference Image Editing** | Editing an existing image — detects edit vs generate automatically |
-| **ComfyUI** | Node-based image workflows — positive/negative split per checkpoint |
-| **Prompt Decompiler** | Breaking down, adapting, simplifying, or splitting existing prompts |
+| **A — RTF** (Role, Task, Format) | Fast one-shot tasks |
+| **B — CO-STAR** | Professional documents, reports, business writing |
+| **C — RISEN** | Complex multi-step projects |
+| **D — CRISPE** | Creative work, brand voice, iterative content |
+| **E — Chain of Thought** | Math, logic, debugging (standard reasoning models only) |
+| **F — Few-Shot** | Consistent structured output, pattern replication |
+| **G — File-Scope** | Cursor, Windsurf, Copilot — any code-editing AI |
+| **H — ReAct + Stop Conditions** | Claude Code, Devin — any autonomous agent |
+| **I — Visual Descriptor** | Midjourney, DALL-E, Stable Diffusion — image generation |
+| **J — Reference Image Editing** | Editing an existing image (edit-vs-generate detection) |
+| **K — ComfyUI** | Node-based image workflows — positive/negative split |
+| **L — Prompt Decompiler** | Breaking down, adapting, simplifying, or splitting prompts |
+| **M — Opus 4.7 / 4.8 Task Brief** | Complex, multi-file, ambiguous, or agentic Claude work |
+| **N — Research Brief** | Deep-research / multi-source cited reports (Perplexity, Grok multi-agent, Kimi) |
+
+Plus opt-in **Agentic Prompt Fragments** for real multi-agent / tool-using runtimes (orchestrator + sub-agents, eval loops, review gates).
 
 </details>
 
@@ -328,142 +305,85 @@ Prompt Master picks the right architecture for every task automatically and rout
 
 ## 🛡️ 6 Safe Techniques, Applied When Needed
 
-Prompt Master only uses techniques with reliable, bounded effects. Methods known to produce hallucinations or unpredictable output (Tree of Thought, Graph of Thought, Universal Self-Consistency, prompt chaining) are explicitly excluded.
+Prompt Master only uses techniques with reliable, bounded effects. Methods known to produce hallucinations or unpredictable output (Tree of Thought, Graph of Thought, Universal Self-Consistency, layered prompt chaining) are explicitly excluded.
 
-| Technique | What It Does |
+| Technique | What it does |
 |-----------|-------------|
 | **Role Assignment** | Assigns a specific expert identity to calibrate depth and vocabulary |
-| **Few-Shot Examples** | Adds 2-5 examples when format consistency matters more than instructions |
+| **Few-Shot Examples** | Adds 2–5 examples when format consistency matters more than instructions |
 | **XML Structural Tags** | Wraps sections in XML for Claude-based tools that parse it reliably |
 | **Grounding Anchors** | Adds anti-hallucination rules for factual and citation tasks |
-| **Chain of Thought** | Forces step-by-step reasoning for logic tasks — never applied to o3/o4-mini/Grok |
-| **Source citations** | For factual/research prompts on retrieval-capable tools (Grok+Web/X Search, Perplexity, deep research) — requires inline source links per claim; cite only retrieved sources, never fabricate |
+| **Chain of Thought** | Step-by-step reasoning for logic tasks — never applied to reasoning-native models (o3/o4-mini/Grok/DeepSeek-thinking/Kimi-thinking) |
+| **Source Citations** | For factual/research prompts on retrieval-capable tools — inline source links per claim; cite only retrieved sources, never fabricate |
 
 ---
 
-## 🚫 46 Credit-Killing Patterns Detected (with Before/After Examples)
+## 🚫 46 Credit-Killing Patterns Detected
+
+Prompt Master scans every rough idea against 46 known failure patterns and fixes them silently. A representative selection:
 
 <details>
-<summary><h3> Task Patterns (7)</h3></summary>
+<summary><b>Task / Context / Format / Scope (representative)</b></summary>
 
-| # | Pattern | Before | After |
-|---|---------|--------|-------|
-| 1 | **Vague task verb** | "help me with my code" | "Refactor `getUserData()` to use async/await and handle null returns" |
-| 2 | **Two tasks in one prompt** | "explain AND rewrite this function" | Split: explain first, rewrite second |
-| 3 | **No success criteria** | "make it better" | "Done when function passes existing unit tests and handles null input" |
-| 4 | **Over-permissive agent** | "do whatever it takes" | Explicit allowed + forbidden actions list |
-| 5 | **Emotional task description** | "it's totally broken, fix everything" | "Throws uncaught TypeError on line 43 when `user` is null" |
-| 6 | **Build-the-whole-thing** | "build my entire app" | Break into Prompt 1 (scaffold), Prompt 2 (feature), Prompt 3 (polish) |
-| 7 | **Implicit reference** | "now add the other thing we discussed" | Always restate the full task, never reference "the thing we discussed" |
+| # | Pattern | Before → After |
+|---|---------|----------------|
+| 1 | Vague task verb | "help me with my code" → "Refactor `getUserData()` to use async/await and handle null returns" |
+| 2 | Two tasks in one prompt | "explain AND rewrite" → split into two prompts |
+| 3 | No success criteria | "make it better" → "Done when it passes existing unit tests and handles null input" |
+| 8 | Assumed prior knowledge | "continue where we left off" → include a Memory Block |
+| 11 | Hallucination invite | "what do experts say?" → "Cite only sources you are certain of; else say [uncertain]" |
+| 14 | Missing output format | "explain this" → "3 bullets, ≤20 words each, one-sentence summary on top" |
+| 19 | Prose prompt for Midjourney | full sentence → "subject, style, mood, lighting, --ar 16:9 --v 6" |
+| 20 | No scope boundary | "fix my app" → "Fix only login validation in `src/auth.js`. Touch nothing else." |
+| 25 | Pasting the entire codebase | full repo every prompt → scope to the relevant function/file |
 
 </details>
 
 <details>
-<summary><h3> Context Patterns (6)</h3></summary>
+<summary><b>Reasoning / Agentic / Model & Research (representative)</b></summary>
 
-### Context Patterns
-
-| # | Pattern | Before | After |
-|---|---------|--------|-------|
-| 8 | **Assumed prior knowledge** | "continue where we left off" | Include Memory Block with all prior decisions |
-| 9 | **No project context** | "write a cover letter" | "PM role at B2B fintech, 2yr SWE experience, shipped 3 features as tech lead" |
-| 10 | **Forgotten stack** | New prompt contradicts prior tech choice | Always include Memory Block |
-| 11 | **Hallucination invite** | "what do experts say about X?" | "Cite only sources you are certain of. If uncertain, say so." |
-| 12 | **Undefined audience** | "write something for users" | "Non-technical B2B buyers, no coding knowledge, decision-maker level" |
-| 13 | **No mention of prior failures** | (blank) | "I already tried X and it failed because Y. Do not suggest X." |
-
-</details>
-
-
-<details>
-<summary><h3> Format Patterns (6)</h3></summary>
-
-| # | Pattern | Before | After |
-|---|---------|--------|-------|
-| 14 | **Missing output format** | "explain this concept" | "3 bullet points, each under 20 words, one-sentence summary at top" |
-| 15 | **Implicit length** | "write a summary" | "Write a summary in exactly 3 sentences" |
-| 16 | **No role assignment** | (blank) | "You are a senior backend engineer specializing in Node.js and PostgreSQL" |
-| 17 | **Vague aesthetic adjectives** | "make it look professional" | "Monochrome palette, 16px base font, 24px line height, no decorative elements" |
-| 18 | **No negative prompts (image AI)** | "a portrait of a woman" | Add: "no watermark, no blur, no extra fingers, no distortion, no text" |
-| 19 | **Prose prompt for Midjourney** | Full descriptive sentence | "subject, style, mood, lighting, --ar 16:9 --v 6" |
+| # | Pattern | Before → After |
+|---|---------|----------------|
+| 27 | CoT added to reasoning models | "think step by step" to o3 → remove it (they reason internally) |
+| 33 | Silent agent | no progress output → "After each step output: ✅ [what was completed]" |
+| 35 | No human-review trigger | agent decides everything → "Stop and ask before: delete a file, add a dependency, change DB schema" |
+| 38 | Hardcoded retired model / dead param | `gpt-4o` / `o1` / `deepseek-chat`,`reasoner` (retire 2026-07-24) / `kimi-latest` (deprecated 2026-01-28) → verify against `models.md` |
+| 43 | Vague / mis-specified research request | "tell me about X" → research brief (Template N) with a required Data-gaps & confidence section |
+| 44 | Real-time request to a cutoff model with no retrieval | "latest news on Y" to Grok with no search → enable Web/X Search; set filters as parameters |
+| 45 | Citable task with no citation contract | factual prompt on a retrieval tool with no attribution → add the inline-citation contract |
+| 46 | Reasoning + live web search in one call where mutually exclusive | e.g. Kimi `$web_search` requires thinking off → split by mode/turn |
 
 </details>
 
-
-<details>
-<summary><h3> Scope Patterns (6)</h3></summary>
-
-| # | Pattern | Before | After |
-|---|---------|--------|-------|
-| 20 | **No scope boundary** | "fix my app" | "Fix only login form validation in `src/auth.js`. Touch nothing else." |
-| 21 | **No stack constraints** | "build a React component" | "React 18, TypeScript strict, no external libraries, Tailwind only" |
-| 22 | **No stop condition for agents** | "build the whole feature" | Explicit stop conditions + checkpoint after each step |
-| 23 | **No file path for IDE AI** | "update the login function" | "Update `handleLogin()` in `src/pages/Login.tsx` only" |
-| 24 | **Wrong template for tool** | GPT-style prose used in Cursor | Adapted to File-Scope Template with path + scope |
-| 25 | **Pasting entire codebase** | Full repo context every prompt | Scoped to relevant function and file only |
-
-</details>
-
-
-<details>
-<summary><h3> Reasoning Patterns (5)</h3></summary>
-
-| # | Pattern | Before | After |
-|---|---------|--------|-------|
-| 26 | **No CoT for logic task** | "which approach is better?" | "Think through both approaches step by step before recommending" |
-| 27 | **Adding CoT to reasoning models** | "think step by step" sent to o3/o4-mini | Removed, reasoning models think internally and CoT instructions degrade output |
-| 28 | **No self-check on complex output** | (nothing) | "Before finishing, verify output against the constraints above" |
-| 29 | **Expecting inter-session memory** | "you already know my project" | Always re-provide the Memory Block |
-| 30 | **Contradicting prior decisions** | New prompt ignores earlier architecture | Memory Block with all established facts |
-
-</details>
-
-<details>
-<summary><h3> Agentic Patterns (5)</h3></summary>
-
-| # | Pattern | Before | After |
-|---|---------|--------|-------|
-| 31 | **No starting state** | "build me a REST API" | "Empty Node.js project, Express installed, `src/app.js` exists" |
-| 32 | **No target state** | "add authentication" | "`/src/middleware/auth.js` with JWT verify. `POST /login` and `POST /register` in `/src/routes/auth.js`" |
-| 33 | **Silent agent** | No progress output | "After each step output: ✅ [what was completed]" |
-| 34 | **Unlocked filesystem** | No file restrictions | "Only edit files inside `src/`. Do not touch `package.json`, `.env`, or any config file." |
-| 35 | **No human review trigger** | Agent decides everything | "Stop and ask before: deleting any file, adding any dependency, or touching the database schema" |
-
-</details>
+Full reference: [`references/patterns.md`](plugins/prompt-master/skills/prompt-master/references/patterns.md).
 
 ---
 
 ## 🧠 Memory Block System
 
-When your conversation has history, Prompt Master pulls out prior decisions and prepends a Memory Block so the AI never contradicts earlier work:
+When a conversation has history, Prompt Master pulls out prior decisions and prepends a Memory Block so the target AI never contradicts earlier work:
 
 ```
-## Memory (Carry Forward from Previous Context)
+## Context (carry forward)
 - Stack: React 18 + TypeScript + Supabase
-- Auth uses JWT stored in httpOnly cookies, not localStorage
-- Component naming convention: PascalCase, no default exports
-- Design system: Tailwind only, no custom CSS files
-- Architecture: no Redux, context API only
+- Auth uses JWT in httpOnly cookies, not localStorage
+- Component naming: PascalCase, no default exports
+- Design system: Tailwind only, no custom CSS
+- Architecture: no Redux, Context API only
 ```
 
-This is the single biggest fix for long sessions. Most wasted re-prompts come from the AI forgetting what you already decided.
+This is the single biggest fix for long sessions — most wasted re-prompts come from the AI forgetting what you already decided.
 
 ---
 
 ## ℹ️ Version History
 
-Полная история версий — [CHANGELOG.md](CHANGELOG.md).
-
----
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.20.0** (Kimi / Moonshot AI profile).
 
 ## 📄 License
 
-MIT: See [LICENSE](LICENSE) for details.
-
----
+MIT — see [LICENSE](LICENSE).
 
 ## ⭐ Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=azagreev/prompt-master-za&type=Date)](https://star-history.com/#azagreev/prompt-master-za&Date)
-
----
