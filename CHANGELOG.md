@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.23.0] - 2026-06-22
+
+UX-доработка **settings-as-knobs** профилей. Раньше скилл молча зашивал дефолты «ручек» (Gamma плотность/визуал/число карточек; Perplexity domain/recency-фильтры; Grok `reasoning_effort`/поиск/фильтры; image-AI CFG/steps/`--ar`/негатив) — пользователь не узнавал, что их можно менять, и перепромпчивал. Теперь скилл при выдаче подаёт заассумленные дефолты явной **переопределяемой строкой `Assumed settings:`** (только незаданные ручки, значение + где менять), **не тратя на это уточняющий вопрос**. Обобщает существующую конвенцию `Assumed output format` с формата на настройки тула.
+
+### Added
+- **Конвенция `Assumed settings:` note line** — сиблинг `Assumed output format`: выносит дефолтные ручки тула в setup-note, перечисляя только незаданные пользователем, каждую с дефолтом + где менять; пропускается для prose-тулов без ручек (DALL-E 3, Flux).
+- **`patterns.md` #48** — «Tool setting baked silently — user never told it's an adjustable, overridable knob» (счётчик паттернов **47 → 48**).
+
+### Changed
+- **`SKILL.md`** — Hard rule (never-silent) обобщён с output-format на «output-format + tool settings/knobs»; Diagnostic «Format failures» расширен на defaulted knobs; Gotcha-преамбула указывает выносить ручки строкой `Assumed settings:`. Нетто +0 строк (body 247/250).
+- **`tool-profiles.md`** — в профили **Grok / Perplexity / Gamma / Image AI** добавлена строка «surface defaulted knobs» с per-tool дефолтами (Grok `reasoning_effort=low` · Web+X on · no filter; Perplexity no domain/recency; Gamma 10 cards · Concise · Stock; Midjourney `--ar 16:9 · --v 6 · --chaos 0`, SD `CFG 7 · steps 20–30 · negative`); ⚠️ волатильное (кредиты, ID, лейблы) не хардкодится.
+- **`templates.md`** — Template I / K / N / O: выдавать `Assumed settings:` строкой; явный **skip** для DALL-E 3 / Flux.
+- **`README` (EN + RU)** — заголовок и проза паттернов **47 → 48** + строка #48 в обе таблицы; «Current release» → v1.23.0.
+- **`plugin.json` / `marketplace.json`** — счётчик в описании **47 → 48**.
+
 ## [1.22.0] - 2026-06-22
 
 Новый профиль **Gamma** (gamma.app — AI text-to-deck): в скилле не было профиля под генераторы презентаций. Факты сверены по live-докам (verify-don't-trust); пользовательский cookbook использован как лид и **скорректирован** (UI Text Content = Minimal/Concise/Detailed; «Very Detailed» — ошибка cookbook; brief/medium/detailed/extensive — это API-only шкала). Реализовано **агентной декомпозицией** (A0 verify → A1∥A2 авторинг → A3 adversarial gate → A4 clean-room), каждый агент со своей моделью / критериями / тестами.
@@ -315,6 +330,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.23.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.23.0
 [1.22.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.22.0
 [1.21.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.21.0
 [1.20.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.20.0

@@ -200,9 +200,11 @@ When you name a tool, Prompt Master silently routes to its profile and applies i
 | **Gemini 2.x / 3 Pro** | Grounded, multimodal generation | Needs citation/grounding anchors |
 | **Qwen 2.5 / Qwen3** | Structured output, JSON; Qwen3 adds thinking mode | User names Qwen or an Alibaba model |
 | **Local / open-weight** (Ollama, Llama, Mistral) | Short, flat prompts | User runs a local model |
+| **Perplexity** (Agent API + Sonar) | Search-grounded research / agents | Cited multi-source research |
 | **Claude Code / Devin / Cline** | Agentic file + terminal | Stop conditions + scope locks mandatory |
 | **Cursor / Windsurf / Copilot** | IDE autocomplete/edit | File path + function name required |
 | **Bolt / v0 / Lovable / Figma Make** | Full-stack generation | Stack spec + what NOT to scaffold |
+| **Gamma** | AI presentations (text-to-deck) | Deck / slides / presentation request |
 | **Midjourney / DALL-E / Stable Diffusion / ComfyUI** | Image generation | Comma descriptors, negative prompt, params |
 | **Sora / Runway / LTX / Kling** | Video generation | Camera movement + duration |
 | **ElevenLabs** | Voice AI | Emotion, pacing, speech rate |
@@ -213,7 +215,7 @@ Full per-tool rules live in [`references/tool-profiles.md`](plugins/prompt-maste
 
 ---
 
-## 🤝 Works With Any AI Tool (35+ profiles)
+## 🤝 Works With Any AI Tool (50+ tools across 30+ profiles)
 
 For anything not profiled, Prompt Master falls back to a **Universal Fingerprint** to write a quality prompt for a tool it has never seen.
 
@@ -320,9 +322,9 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 
 ---
 
-## 🚫 47 Credit-Killing Patterns Detected
+## 🚫 48 Credit-Killing Patterns Detected
 
-Prompt Master scans every rough idea against 47 known failure patterns and fixes them silently. A representative selection:
+Prompt Master scans every rough idea against 48 known failure patterns and fixes them silently. A representative selection:
 
 <details>
 <summary><b>Task / Context / Format / Scope (representative)</b></summary>
@@ -354,6 +356,8 @@ Prompt Master scans every rough idea against 47 known failure patterns and fixes
 | 44 | Real-time request to a cutoff model with no retrieval | "latest news on Y" to Grok with no search → enable Web/X Search; set filters as parameters |
 | 45 | Citable task with no citation contract | factual prompt on a retrieval tool with no attribution → add the inline-citation contract |
 | 46 | Reasoning + live web search in one call where mutually exclusive | e.g. Kimi `$web_search` requires thinking off → split by mode/turn |
+| 47 | Deck/slide generator with no card count, structure, or data | "make a presentation about X" to Gamma → generic deck + fabricated figures → specify card count + sections + density; supply real data or explicit [placeholder]s |
+| 48 | Tool setting baked silently without telling the user it's adjustable | defaulted Gamma density / Perplexity filter / Grok reasoning_effort / image CFG with no note → surface an "Assumed settings:" line — overridable, no extra question |
 
 </details>
 
@@ -380,7 +384,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.22.0** (Gamma text-to-deck profile).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.23.0** (surfaced overridable knob-defaults — `Assumed settings:` line).
 
 ## 📄 License
 

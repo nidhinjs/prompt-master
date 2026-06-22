@@ -295,6 +295,8 @@ Negative prompt (platforms that support it): [blurry, watermark, extra fingers, 
 - **DALL-E 3**: Prose works well. Add "do not include any text in the image" unless text is needed.
 - **Sora / video**: Add camera movement (slow dolly, static shot, crane up), duration in seconds, and cut style.
 
+**Deliver an `Assumed settings:` note line** for tools that have knobs the user didn't set (Midjourney `--ar 16:9 · --v 6 · --chaos 0`; SD `CFG 7 · steps 20–30 · negative included`) — each overridable at the prompt tail. Skip it for prose-driven tools (DALL-E 3, Flux) — they have no knobs.
+
 ---
 
 ## Template J — Reference Image Editing
@@ -355,6 +357,8 @@ CFG SCALE: 7 (increase for stricter prompt adherence)
 STEPS: 20-30
 RESOLUTION: [width x height — must be divisible by 64]
 ```
+
+**Surface these as an `Assumed settings:` note line** (`CFG 7 · Euler a · steps 20–30 · resolution [W×H ÷64]`) so the user knows they're adjustable in the workflow nodes.
 
 ---
 
@@ -496,6 +500,7 @@ Data gaps & confidence: [REQUIRED closing section — what could not be found, c
 - **UI Deep Research:** pick the Focus/source filter in the selector before running; for iterative work use a Space (persistent system prompt + curated sources + files) with in-thread follow-ups.
 - **Grok (xAI):** route deep research to `grok-4.20-multi-agent` (beta) and enable `web_search` + `x_search`. Choose agent count by depth — 4 (focused) or 16 (thorough), via `agent_count` or `reasoning.effort` (low/medium=4, high/xhigh=16). Set source limits as tool **parameters** (`allowed_x_handles`/`allowed_domains`, `from_date`/`to_date`), not prose. Grok has no realtime knowledge without these search tools enabled.
 - **Kimi (Moonshot AI):** split by surface. In the **app**: large decomposable jobs → `Agent Swarm` (K2.6 self-orchestrates — **do not set an agent count or script sub-agents**, unlike Grok); deep research → `Kimi-Researcher` (single-agent). Through the **API** there's no confirmed deep-research endpoint → build your own loop: retrieval is the built-in `$web_search` (`builtin_function`) which **requires thinking disabled**, so don't pack reasoning + live search into one call (pattern #46). Use Kimi's native research format — `[Source: Institution / Website: Page Title]`, credibility stars `*** / ** / *`, `Confirmed`/`Estimate`, verify 2+ sources, **no full URLs**, `【Insight】`, stages (Information Search → Data Analysis → Report Output → References). Don't list tools in the system prompt (pass via `tools`). Agent Swarm is subscription-tiered — surface as a prerequisite.
+- **Surface defaulted search knobs** — for Perplexity / Grok, deliver an `Assumed settings:` note line for the filters the user didn't set (domain / recency for Perplexity; `reasoning_effort` / search / handles / domains / dates for Grok), each overridable as request parameters — never an extra question.
 
 ---
 
@@ -615,4 +620,4 @@ Data: [supply real figures, OR instruct explicit [placeholder]s — do not let G
 
 **Paste-in-text mode:** when feeding existing notes/markdown via Paste-in-text (or the Generate API), separate cards with a line containing only `---` (i.e. `\n---\n`) to hint card boundaries.
 
-**Settings are knobs — set both.** Density (Text Content), visuals (Image Source — Stock recommended), and tone/audience are **Advanced settings** in Gamma, not just prose. Set them in the UI/API *and* state them in the brief above so intent is unambiguous. Layout, brand (→ Theme), and animations (→ Gamma Agent post-gen) are not controllable from the prompt.
+**Settings are knobs — set both.** Density (Text Content), visuals (Image Source — Stock recommended), and tone/audience are **Advanced settings** in Gamma, not just prose. Set them in the UI/API *and* state them in the brief above so intent is unambiguous. Layout, brand (→ Theme), and animations (→ Gamma Agent post-gen) are not controllable from the prompt. Deliver them to the user as an `Assumed settings:` note line (e.g. `10 cards · Concise density · Stock visuals · [tone]`) — list ONLY knobs they did NOT specify (drop any already given), all overridable.

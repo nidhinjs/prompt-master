@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.22.0
+version: 1.23.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -29,7 +29,7 @@ Keep internal analysis terse and silent — do not narrate the extraction, routi
 - Do not instruct Claude Fable 5 / Mythos 5 to echo, transcribe, reproduce, or "show your reasoning/thinking" in the response — this triggers a `reasoning_extraction` refusal (applies if/when Fable 5 / Mythos 5 are available — both suspended since 2026-06-12, see models.md). For visible progress on long runs, use a send-to-user tool instead
 - Do not ask more than 3 clarifying questions before producing a prompt
 - Do not pad output with explanations the user did not request
-- **Never ship a silently-derived output format for a research/report prompt or ANY Grok prompt.** When the user has not stated the answer's format, you MUST do one of two things: ask it as your first clarifying question, OR state the assumed format on its own explicit line in the note ("Assumed output format: … — change if needed"). A baked-in format with no question and no assumption-line is a defect — this overrides "fix silently" and Template N's structure defaults.
+- **Never ship a silently-derived output format for a research/report prompt or ANY Grok prompt.** When the user has not stated the answer's format, you MUST do one of two things: ask it as your first clarifying question, OR state the assumed format on its own explicit line in the note ("Assumed output format: … — change if needed"). A baked-in format with no question and no assumption-line is a defect — this overrides "fix silently" and Template N's structure defaults. **Likewise for settings-as-knobs tools (Gamma, Perplexity, Grok, image-AI): surface every knob you defaulted on an `Assumed settings:` note line — list ONLY the knobs the user did NOT specify (omit any they already set — never restate a user-given value), each with its value + where to change it — never an extra clarifying question. A silently-baked knob is the same defect; skip the line only when the tool has no knobs (or the user already set them all).**
 
 ---
 
@@ -88,7 +88,7 @@ Model IDs, current defaults, and version-tied params are volatile — confirm th
 
 ### Gotchas — quick per-tool cheat-sheet
 
-Catch these before generating; open the full profile in [references/tool-profiles.md](references/tool-profiles.md) when the task needs more.
+Catch these before generating; open the full profile in [references/tool-profiles.md](references/tool-profiles.md) when the task needs more. For settings-as-knobs tools (Gamma, Perplexity, Grok, image-AI), surface defaulted knobs as an `Assumed settings:` note line (see Hard rule above).
 
 - **Claude Opus 4.8** (default for "Claude" when unspecified) over-engineers — add "Only make changes directly requested. No extra features, files, or refactors." Front-load intent, file scope, constraints, acceptance criteria (4.7/4.8 read literally).
 - **Claude Fable 5 / Mythos 5** — ⚠️ **suspended/unavailable since 2026-06-12** (US export-control directive; see models.md). Do NOT route here. If restored: never ask it to show/echo its reasoning (`reasoning_extraction` refusal); steer with brief intent + `effort`.
@@ -145,7 +145,7 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - No mention of prior failures → ask what they already tried (counts toward 3-question limit)
 
 **Format failures**
-- No output format specified → derive from task type, but **surface the derived format as an explicit assumption** in the note (never silently); if the format materially shapes the answer (research/report task, or any Grok prompt) → **ask it as the first clarifying question** instead
+- No output format or tool settings specified → derive from task type, but **surface the derived format AND any defaulted knobs (Gamma/Perplexity/Grok/image-AI) as explicit assumption lines** in the note (never silently); if the format materially shapes the answer (research/report task, or any Grok prompt) → **ask format as the first clarifying question** instead (knobs are always surfaced, never asked)
 - Factual / research / report prompt for a retrieval-capable tool (Grok + Web/X Search, Perplexity, deep-research modes, DeepSeek app) with no citation requirement → add the **citation contract**: inline source link per non-obvious claim + a closing sources list + "cite only sources you actually retrieved, never fabricate a citation or URL; mark unsourced claims [uncertain]". Do NOT add it for creative, code, transform, or no-retrieval tasks — forcing citations there invites fabricated sources
 - Implicit length ("write a summary") → add word or sentence count
 - No role assignment for complex tasks → add domain-specific expert identity
@@ -248,4 +248,4 @@ Read only when the task requires it. Load only the one section/file you need —
 | [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target tool — read only that tool's profile for full routing guidance |
 | [references/models.md](references/models.md) | You need a volatile model fact (ID, current default, version-tied param) — honor the 60-day re-verify protocol |
 | [references/templates.md](references/templates.md) | You need the full template structure for any tool category |
-| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 47-pattern reference |
+| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 48-pattern reference |
