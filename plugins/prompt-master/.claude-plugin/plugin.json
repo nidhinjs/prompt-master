@@ -1,7 +1,7 @@
 {
   "name": "prompt-master",
-  "version": "1.21.0",
-  "description": "Генерирует оптимизированные, готовые к вставке промпты для любого AI-инструмента с минимумом токенов. Routing под конкретную модель (Claude Opus 4.8 — дефолт; Fable 5/Mythos 5 временно недоступны; GPT-5.5, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), reasoning-модели, агентные IDE, image/video/voice AI), anti-fabrication протокол, 46 паттернов-фиксов.",
+  "version": "1.22.0",
+  "description": "Генерирует оптимизированные, готовые к вставке промпты для любого AI-инструмента с минимумом токенов. Routing под конкретную модель (Claude Opus 4.8 — дефолт; Fable 5/Mythos 5 временно недоступны; GPT-5.5, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), reasoning-модели, агентные IDE, image/video/voice AI), anti-fabrication протокол, 47 паттернов-фиксов.",
   "author": {
     "name": "Andrey Zagreev",
     "url": "https://github.com/azagreev"

@@ -8,7 +8,7 @@
 **Why:** Every vague prompt is a wasted credit. Prompt Master extracts intent, picks the right architecture, and strips every word that doesn't change the output.
 **How to start:** Install via the plugin marketplace (see below), then say: `Write me a prompt for [tool] to [task]` — or paste a bad prompt and ask to fix it.
 
-**Works with:** Claude (Opus 4.8 default), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make — and any AI tool you throw at it.
+**Works with:** Claude (Opus 4.8 default), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Gamma, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make — and any AI tool you throw at it.
 
 ---
 
@@ -244,6 +244,7 @@ For anything not profiled, Prompt Master falls back to a **Universal Fingerprint
 | **Manus** | Autonomous agent | Task-outcome focus, permission scope, memory anchors |
 | **Computer-Use / Browser agents** (Comet, Atlas, Claude in Chrome) | Computer-use agent | Outcome over navigation, scoped permissions, stop before irreversible actions |
 | **Perplexity** (Agent API + Sonar) | Research / agent AI | Agent API (`/v1/agent`) recommended for new apps; Sonar (`sonar`/`sonar-pro`/`sonar-deep-research` 128K) for search-grounded answers; research brief (Template N); filters-as-parameters; search driven by user message; Data-gaps/confidence + inline citations |
+| **Gamma** | AI presentations (text-to-deck) | App + Generate API; structured deck brief (role/audience/goal/N-cards/sections/tone/density/visuals); settings-as-knobs (Text Content, Image Source); provide data or [placeholder] (fabricates figures); brand via Theme + Gamma Agent post-gen, not the prompt |
 | **Midjourney / DALL-E 3 / Stable Diffusion / SeeDream / Flux** | Image AI | Per-model syntax, negative prompts, edit-vs-generate detection |
 | **ComfyUI** | Image AI | Positive/negative node split, checkpoint syntax |
 | **Meshy / Tripo / Rodin / BlenderGPT / Unity AI** | 3D / Game AI | Style + export format + polygon budget + rig requirements |
@@ -273,12 +274,12 @@ Two orchestration styles, and Prompt Master picks the right one automatically: *
 
 ---
 
-## 📐 14 Prompt Templates (Auto-Selected)
+## 📐 15 Prompt Templates (Auto-Selected)
 
 Prompt Master picks the right architecture for every task and routes silently — you never see the framework name, just the prompt.
 
 <details>
-<summary><b>Click to view all 14 templates</b></summary>
+<summary><b>Click to view all 15 templates</b></summary>
 
 | Template | Best for |
 |----------|----------|
@@ -296,6 +297,7 @@ Prompt Master picks the right architecture for every task and routes silently �
 | **L — Prompt Decompiler** | Breaking down, adapting, simplifying, or splitting prompts |
 | **M — Opus 4.7 / 4.8 Task Brief** | Complex, multi-file, ambiguous, or agentic Claude work |
 | **N — Research Brief** | Deep-research / multi-source cited reports (Perplexity, Grok multi-agent, Kimi) |
+| **O — Deck Brief** | AI presentation generators (Gamma) — structured brief with card count, sections, tone, density, data |
 
 Plus opt-in **Agentic Prompt Fragments** for real multi-agent / tool-using runtimes (orchestrator + sub-agents, eval loops, review gates).
 
@@ -318,9 +320,9 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 
 ---
 
-## 🚫 46 Credit-Killing Patterns Detected
+## 🚫 47 Credit-Killing Patterns Detected
 
-Prompt Master scans every rough idea against 46 known failure patterns and fixes them silently. A representative selection:
+Prompt Master scans every rough idea against 47 known failure patterns and fixes them silently. A representative selection:
 
 <details>
 <summary><b>Task / Context / Format / Scope (representative)</b></summary>
@@ -378,7 +380,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.20.0** (Kimi / Moonshot AI profile).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.22.0** (Gamma text-to-deck profile).
 
 ## 📄 License
 

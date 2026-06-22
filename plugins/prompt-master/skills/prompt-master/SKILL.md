@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.21.0
+version: 1.22.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -104,6 +104,7 @@ Catch these before generating; open the full profile in [references/tool-profile
 - **Local / open-weight** (Ollama, Llama, Mistral) — ask which model is running; keep prompts short and flat, no deep nesting; always include a system-prompt role.
 - **Image generation** — Midjourney wants comma descriptors, not prose; Stable Diffusion and ComfyUI require a mandatory negative prompt (ComfyUI: separate Positive / Negative blocks).
 - **Full-stack generators** (Bolt, v0, Lovable, Figma Make, Stitch) — scope down hard; specify stack + what NOT to scaffold to prevent boilerplate bloat.
+- **Gamma (AI presentations / text-to-deck)** — app + Generate API. Pick mode by input: idea→Generate, existing notes→Paste in text (`\n---\n` splits cards), file/URL→Import. Build a structured deck brief (Template O): role + audience + goal + **explicit card count** + sections + tone + density + visuals + exclusions. Density/visuals/tone are Advanced **settings** (Text Content = Minimal/Concise/Detailed; Image Source = Stock), not just prose — note them as setup. **Provide real data or explicit [placeholder]s — Gamma fabricates figures.** Brand = custom Theme, polish = Gamma Agent (post-gen) — don't promise exact layout/brand/animations via the prompt. Credits/labels are volatile — don't hardcode.
 - **Stale model facts** — model IDs, defaults, and version-tied params drift; confirm against [references/models.md](references/models.md) and re-verify any section older than 60 days before asserting (pattern #38).
 
 ---
@@ -247,4 +248,4 @@ Read only when the task requires it. Load only the one section/file you need —
 | [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target tool — read only that tool's profile for full routing guidance |
 | [references/models.md](references/models.md) | You need a volatile model fact (ID, current default, version-tied param) — honor the 60-day re-verify protocol |
 | [references/templates.md](references/templates.md) | You need the full template structure for any tool category |
-| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 46-pattern reference |
+| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 47-pattern reference |

@@ -33,6 +33,7 @@ Pick the row that matches the user's tool, then open only that profile below.
 | **Cline** | VS Code agentic extension; autonomous edits + terminal | User is using Cline (Claude Dev) |
 | **GitHub Copilot** | Inline code completion from comments/signatures | User is completing code inside Copilot |
 | **Bolt / v0 / Lovable / Figma Make / Google Stitch** | Full-stack or UI generators | User names a no-code/low-code generator |
+| **Gamma / AI presentations** | Text-to-deck (app + Generate API); structured deck briefs | User names Gamma or wants slides/a deck/presentation |
 | **Devin / SWE-agent** | Fully autonomous coding agent with web + terminal access | User names Devin or SWE-agent |
 | **Perplexity** | Agent API (default for new apps) + Sonar search / Deep Research | User names Perplexity, Sonar, or Comet |
 | **Manus / multi-agent orchestrators** | Multi-agent web research; decompose internally | User names Manus or a web-research orchestrator |
@@ -312,6 +313,19 @@ Current models are `deepseek-v4-pro` and `deepseek-v4-flash` (1M context; OpenAI
 - Figma Make is design-to-code native — reference your Figma component names directly
 - Google Stitch is prompt-to-UI focused — describe the interface goal not the implementation. Add "match Material Design 3 guidelines" for Google-native styling
 - Add "Do not add authentication, dark mode, or features not explicitly listed" to prevent feature bloat
+
+---
+
+**Gamma (AI presentations — text-to-deck; app + Generate API)**
+
+Gamma turns text into **cards** (not classic slides). For volatile facts (params, defaults, credits) see [models.md](models.md). Route the deck's structure to **Template O**.
+
+- **Pick the mode by input:** an idea / short brief → **Generate**; existing notes or markdown → **Paste in text** (mark card boundaries with `\n---\n`); a file or URL → **Import**; programmatic / batch → the **Generate API** (`POST /generations`, `cardSplit:"inputTextBreaks"`).
+- **Settings are knobs, not prose — set them, don't only describe them** (then mirror the key ones in the prompt body for clarity): text **density** = the **Text Content** setting (Minimal / Concise / Detailed in the UI; `textOptions.amount` brief/medium/detailed/extensive on the API); **visuals** = **Image Source** (recommend **Stock photos**) plus concrete per-section image requests; **tone / target audience** = Advanced fields. Put these in a **setup-note** for the user, not buried in the prompt.
+- **Specify the card count explicitly** — don't rely on the default (API `numCards=10`). The "8–15 cards" figure is an ⚠️ unverified heuristic; state the exact N you want.
+- **Anti-fabrication of data** — Gamma invents figures or inserts placeholders if you don't supply them. Provide the real data, or instruct explicit `[placeholder]`s for the user to fill. Never let it fabricate numbers.
+- **Boundary honesty** — the prompt does NOT control exact layout/spacing, brand-lock (→ a saved **Theme**), or animations/transitions (→ post-generation **Gamma Agent** edits). Don't promise pixel-exact layout, brand compliance, or motion via the prompt; route those to Theme / Gamma Agent.
+- Don't hardcode credit cost (~40/generation is volatile) — surface it as a note if relevant, not a fixed claim.
 
 ---
 

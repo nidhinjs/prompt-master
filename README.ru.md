@@ -8,7 +8,7 @@
 **Зачем:** каждый расплывчатый промпт — это слитый кредит. Prompt Master извлекает намерение, выбирает правильную архитектуру и вычищает каждое слово, которое не меняет результат.
 **Как начать:** установи через маркетплейс плагинов (см. ниже) и скажи: `Напиши промпт для [инструмент], чтобы [задача]` — или вставь плохой промпт и попроси исправить.
 
-**Работает с:** Claude (Opus 4.8 — дефолт), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make — и любым AI-инструментом, который подкинешь.
+**Работает с:** Claude (Opus 4.8 — дефолт), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Gamma, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make — и любым AI-инструментом, который подкинешь.
 
 ---
 
@@ -244,6 +244,7 @@ Done When:
 | **Manus** | Автономный агент | Фокус на результат, scope прав, memory-якоря |
 | **Computer-Use / браузер-агенты** (Comet, Atlas, Claude in Chrome) | Computer-use агент | Результат вместо навигации, ограниченные права, стоп перед необратимым |
 | **Perplexity** (Agent API + Sonar) | Research / agent AI | Agent API (`/v1/agent`) — дефолт для новых апп; Sonar (`sonar`/`sonar-pro`/`sonar-deep-research` 128K) для search-grounded ответов; research-бриф (Template N); фильтры-как-параметры; search по user-сообщению; Data-gaps/confidence + inline-цитаты |
+| **Gamma** | AI-презентации (text-to-deck) | App + Generate API; структурированный deck-бриф (роль/аудитория/цель/число-карточек/секции/тон/плотность/визуал); настройки-как-параметры (Text Content, Image Source); давать данные или [placeholder] (иначе инструмент выдумывает цифры); бренд — через Theme + Gamma Agent пост-ген, не в промпте |
 | **Midjourney / DALL-E 3 / Stable Diffusion / SeeDream / Flux** | Image AI | Синтаксис под каждую модель, негатив-промпты, детект edit-vs-generate |
 | **ComfyUI** | Image AI | Раздельные ноды Positive/Negative, синтаксис чекпойнта |
 | **Meshy / Tripo / Rodin / BlenderGPT / Unity AI** | 3D / Game AI | Стиль + формат экспорта + полигон-бюджет + требования к ригу |
@@ -273,12 +274,12 @@ Prompt Master **умеет** генерировать мультиагентны
 
 ---
 
-## 📐 14 шаблонов промптов (выбираются автоматически)
+## 📐 15 шаблонов промптов (выбираются автоматически)
 
 Prompt Master сам подбирает архитектуру под задачу и роутит молча — ты видишь не название фреймворка, а готовый промпт.
 
 <details>
-<summary><b>Нажми, чтобы раскрыть все 14 шаблонов</b></summary>
+<summary><b>Нажми, чтобы раскрыть все 15 шаблонов</b></summary>
 
 | Шаблон | Для чего |
 |----------|----------|
@@ -296,6 +297,7 @@ Prompt Master сам подбирает архитектуру под задач
 | **L — Prompt Decompiler** | Разбор, адаптация, упрощение или разбиение промптов |
 | **M — Opus 4.7 / 4.8 Task Brief** | Сложная, многофайловая, неоднозначная или агентная работа в Claude |
 | **N — Research Brief** | Deep-research / многоисточниковые отчёты с цитатами (Perplexity, Grok multi-agent, Kimi) |
+| **O — Deck Brief** | AI-генераторы презентаций (Gamma) — структурированный бриф с числом карточек, секциями, тоном, плотностью, данными |
 
 Плюс опциональные **Agentic Prompt Fragments** для настоящих мультиагентных / tool-using рантаймов (оркестратор + sub-агенты, eval-петли, review-гейты).
 
@@ -318,9 +320,9 @@ Prompt Master использует только техники с надёжны
 
 ---
 
-## 🚫 46 паттернов-«убийц кредитов»
+## 🚫 47 паттернов-«убийц кредитов»
 
-Prompt Master сверяет каждую сырую идею с 46 известными паттернами провалов и чинит их молча. Репрезентативная выборка:
+Prompt Master сверяет каждую сырую идею с 47 известными паттернами провалов и чинит их молча. Репрезентативная выборка:
 
 <details>
 <summary><b>Задача / Контекст / Формат / Scope (выборка)</b></summary>
@@ -378,7 +380,7 @@ Prompt Master сверяет каждую сырую идею с 46 извест
 
 ## ℹ️ История версий
 
-Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.20.0** (профиль Kimi / Moonshot AI).
+Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.22.0** (профиль Gamma — text-to-deck).
 
 ## 📄 Лицензия
 

@@ -111,6 +111,17 @@ Two surfaces — pick by task:
 - **"Search as Code" / "Deep Research in Computer"** (June 2026 blog) is a product concept — **not in the API docs**; do not present it as a callable API feature.
 - Prices are volatile (per-token, no markup, updated monthly) — do not hardcode in the skill.
 
+## Gamma
+
+`last-verified: 2026-06-17`
+
+AI **text-to-deck** (gamma.app) — generates cards, not classic slides. Two surfaces — pick by task:
+- **App (gamma.app UI):** 3 create modes — **Generate** (short prompt) / **Paste in text** / **Import** (file or URL). An editable **Outline** step ("Generate Outline") runs before final generation. Advanced settings are knobs, not prose: **Text Content = Minimal / Concise / Detailed** (UI labels; there is **no** "Very Detailed"); **Image Source** (Web search / Stock photos / AI-generated; ⚠️ verify full enumeration); **Tone**; **Target Audience**; **Format / Card size** (Default/Fluid vs 16:9 / 4:3). Post-generation edits via **Gamma Agent** (natural-language global edits). Brand = a saved custom **Theme** (fonts/colors/logo), set in the UI — **not** the prompt.
+- **Generate API** (`POST /generations`, developers.gamma.app) — generates decks / docs / websites / carousels, 60+ languages. Params: `numCards` (default **10**, range 1–60; up to 75 on Ultra), `textOptions.amount` = **brief / medium / detailed / extensive** (API-only scale — distinct from the UI's Minimal/Concise/Detailed labels), `cardSplit: "inputTextBreaks"` (split input on `\n---\n`), `cardOptions.dimensions` (16x9 / 4x3 / fluid), `themeId`, image options.
+- **`\n---\n` (triple-dash on its own line)** in Paste-in-text / API input hints card boundaries (with `cardSplit:"inputTextBreaks"`).
+- **Boundaries — the prompt does NOT control:** exact layout/spacing; exact data/figures (Gamma fabricates or inserts placeholders — supply real data or instruct explicit `[placeholder]`s); brand-lock (→ Theme); animations/transitions (→ post-edit via Gamma Agent).
+- ⚠️ verify before asserting: **credits per generation (~40 — volatile, do NOT hardcode)**; the full **Image Source** enumeration; the often-cited **"8–15 cards"** heuristic (NOT confirmed — the only hard number is API default `numCards=10`). Specify card count explicitly rather than relying on a default.
+
 ---
 
 > Vendors not listed here have no volatile-fact entry yet. Add one (with a `last-verified` date) when the skill starts asserting model-specific facts about them.

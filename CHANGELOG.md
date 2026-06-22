@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.22.0] - 2026-06-22
+
+Новый профиль **Gamma** (gamma.app — AI text-to-deck): в скилле не было профиля под генераторы презентаций. Факты сверены по live-докам (verify-don't-trust); пользовательский cookbook использован как лид и **скорректирован** (UI Text Content = Minimal/Concise/Detailed; «Very Detailed» — ошибка cookbook; brief/medium/detailed/extensive — это API-only шкала). Реализовано **агентной декомпозицией** (A0 verify → A1∥A2 авторинг → A3 adversarial gate → A4 clean-room), каждый агент со своей моделью / критериями / тестами.
+
+### Added
+- **`tool-profiles.md` — профиль `Gamma (AI presentations — text-to-deck; app + Generate API)`** + строка Routing Index: режим-по-входу (Generate / Paste-in-text + `\n---\n` / Import); Deck Brief → Template O; settings-as-knobs (Text Content / Image Source / Tone / Audience) → setup-note; анти-фабрикация данных (real или `[placeholder]`); boundary-честность (бренд → Theme, полировка → Gamma Agent пост-факт, НЕ промптом).
+- **`models.md` — секция `## Gamma`**: две поверхности — **App** (3 режима + editable Outline + Advanced knobs; Text Content Minimal/Concise/Detailed) и **Generate API** (`POST /generations`; `numCards` default 10; `textOptions.amount` brief/medium/detailed/extensive — API-only; `cardSplit:"inputTextBreaks"`; `cardOptions.dimensions` 16x9/4x3/fluid; `themeId`); `⚠️ verify`: кредиты (~40, не хардкодить), enum Image Source, эвристика «8–15 карточек».
+- **`templates.md` — Template O — Deck / Presentation Brief** (role + audience + goal + N cards + sections + tone + density + visuals + exclusions + language; Paste-in-text + `\n---\n`).
+- **`patterns.md` #47** — «deck/слайд-генератор без числа карточек, структуры и данных → generic deck + выдуманные цифры + overcrowded карточки».
+
+### Changed
+- **`SKILL.md`**: новая Gotcha-строка Gamma; счётчик паттернов в Reference-table **46 → 47**.
+- **`README` (EN + RU)**: «Works with» + таблица «Works With Any AI Tool» — добавлен Gamma; **14 → 15 шаблонов**; **46 → 47 паттернов**; строка «Current release» обновлена до v1.22.0 (была устаревшая v1.20.0).
+- **`plugin.json` / `marketplace.json`**: счётчик паттернов **46 → 47**.
+- **`docs/sources.md`**: строка обоснования Gamma + источники (gamma.app/prompts, products/presentations, products/api, developers.gamma.app generate-api-parameters, pitch-insights; 24slides review 2026).
+
+### Notes
+- **Сверено по live-докам** (verify-don't-trust). `⚠️ verify`: кредиты (~40, волатильны — не хардкодить), точный enum Image Source, эвристика «8–15 карточек» (hard-факт только API default `numCards=10`). **Коррекция cookbook:** UI Text Content = Minimal/Concise/Detailed (нет «Very Detailed»; brief/medium/detailed/extensive — только в Generate API). **Подтверждено:** у Gamma есть публичный **Generate API** (`POST /generations`).
+- **Агентная декомпозиция (по запросу пользователя):** A0 live-verify (opus) → A1 profile-core ∥ A2 integration+counts (диздойнтные файлы, параллельно) → A3 adversarial gate (opus — content PASS) → A4 clean-room (sonnet, **9/9 PASS**: A pitch-deck / B paste-notes + `\n---\n` / C data+brand). Ноль фабрикаций кредитов/лейблов; бренд → Theme, данные → `[placeholder]`, формат вынесен допущением.
+- Счётчик паттернов **46 → 47**. Гард-рейлы целы: never-silent format v1.19.1, citation contract v1.18.1, профили Perplexity v1.21 / Kimi v1.20 / DeepSeek v1.19 / Grok v1.18, hook v1.15, cap 3.
+- Backlog («каждый паттерн — свой релиз»): дальше Claude Code (1.23) → MiniMax (1.24) → Gemini (1.25) → Memory-rebuild → Doc-grounding → image → GPT.
+
 ## [1.21.0] - 2026-06-17
 
 Рефактор + актуализация профиля **Perplexity**. Live-сверка через perplexity doc-server (2026-06-17) показала, что Perplexity теперь **двухповерхностный продукт**, а профиль был тонким и смешан с Manus. Два пользовательских файла `Perplexity_Deep_Research_*` (про отдельный проект DResearch-Skill + UI Deep Research) использованы как лиды; «Search as Code / Deep Research in Computer» помечен как блоговый концепт (в API-доках отсутствует).
@@ -293,6 +315,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.22.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.22.0
 [1.21.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.21.0
 [1.20.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.20.0
 [1.19.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.19.1

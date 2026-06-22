@@ -21,6 +21,7 @@ Full template library for Prompt Master. Read the relevant template when the use
 | [L — Prompt Decompiler](#template-l--prompt-decompiler) | Breaking down, adapting, or splitting existing prompts |
 | [M — Opus 4.7 / 4.8 Task Brief](#template-m--opus-4.7--4.8-task-brief) | Complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 |
 | [N — Research Brief](#template-n--research-brief) | Deep-research / cited-report tools (Perplexity Deep Research, GPT/Gemini Deep Research, Sonar) |
+| [O — Deck / Presentation Brief](#template-o--deck--presentation-brief) | Text-to-deck tools (Gamma) |
 
 ---
 
@@ -588,3 +589,30 @@ For each verdict, include an evidence field citing the exact output line / file:
 - **Budgets are enforced, not just logged:** declare and hard-stop on `max_packets · max_parallel_workers · max_model_turns · max_tool_calls · max_wall_time · max_cost`.
 - **Parallelize only independent, read-only, concurrency-safe calls** (search, read, classify, summarize). Serialize writes, sends, deletes, payments, and permission changes.
 - **Cache-aware ordering** (cuts cost on a strong-orchestrator + cheap-worker split): stable prefix first (tool defs, static instructions), volatile content last; append-only history; deterministic tool/JSON ordering; compact only at explicit boundaries.
+
+---
+
+## Template O — Deck / Presentation Brief
+
+*Use for AI text-to-deck tools (Gamma). The deck is built from **cards**; a structured brief — role, audience, goal, explicit card count, section list, tone, density, visual direction, exclusions, language — beats a vague prompt. See the Gamma profile in [tool-profiles.md](tool-profiles.md).*
+
+```
+Role: [who is presenting — e.g. founder pitching investors]
+Audience: [who reads/views it + their knowledge level]
+Goal / outcome: [what the deck must achieve — the decision or action it drives]
+Card count: [exact N cards — do not leave to default]
+Sections (one card each unless noted):
+  1. [card 1 title + what it covers]
+  2. [card 2 title + what it covers]
+  3. [continue — name every card]
+Tone: [authoritative / energetic / plain — matches audience]
+Text density: [Minimal / Concise / Detailed — how much text per card]
+Visuals: [specific direction per section — charts, product shots, diagrams; avoid generic AI art / stock handshakes / abstract gradients]
+Exclusions: [topics, claims, or sections to leave out]
+Language: [output language]
+Data: [supply real figures, OR instruct explicit [placeholder]s — do not let Gamma fabricate numbers]
+```
+
+**Paste-in-text mode:** when feeding existing notes/markdown via Paste-in-text (or the Generate API), separate cards with a line containing only `---` (i.e. `\n---\n`) to hint card boundaries.
+
+**Settings are knobs — set both.** Density (Text Content), visuals (Image Source — Stock recommended), and tone/audience are **Advanced settings** in Gamma, not just prose. Set them in the UI/API *and* state them in the brief above so intent is unambiguous. Layout, brand (→ Theme), and animations (→ Gamma Agent post-gen) are not controllable from the prompt.
