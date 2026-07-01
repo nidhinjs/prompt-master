@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.24.0] - 2026-07-01
+
+Полный рефреш **image + video профиля**. Актуализированы все существующие инструменты (снята «DALL-E-3-эпоха») и добавлены новые семейства, с верификацией фактов против живых доков (2026-07-01) и явной секцией дат в `models.md`. Роутинг теперь различает «быстро/дёшево» vs «бренд/консистентность» и помечает закрывающиеся модели.
+
+### Added
+- **Новые image-семейства:** Google Nano Banana 2 (`gemini-3.1-flash-image` / `-lite-image` / `gemini-3-pro-image`) и Grok Imagine (`grok-imagine-image` / `-image-quality`).
+- **Новые video-инструменты:** Veo 3.1 (Google), Seedance 2.0 (ByteDance), Omni Flash (Google conversational-video), Grok Imagine video.
+- **`models.md`:** новые секции `## Image AI` / `## Video AI` с `last-verified: 2026-07-01`, timeline дедлайнов и пометками DO-NOT-HARDCODE.
+- **Паттерны #49–51:** consistency-задача на неспособном тире → роутинг; video-edit переописанием вместо «Keep everything else the same»; дефолт на sunsetting/deprecated-модель без флага.
+- **templates.md:** фрагмент conversational-video (`<FIRST_FRAME>` / `<IMAGE_REF_n>`, таймкоды, «Keep everything else the same»).
+
+### Changed
+- **Midjourney → V8.1:** `--cref` → **Omni Reference `--oref` / `--ow`**; `--hd` = нативный 2K; `--sref` + `--sw`.
+- **DALL-E 3 → GPT-image (`gpt-image-2`)** (DALL·E выключен 2026-05-12; base64-only; edit до 16 refs + маска).
+- **Flux → FLUX.2** (klein / pro / flex / max / dev; structured/JSON + hex; guidance/steps). **Stable Diffusion → SD 3.5** (`sd3.5-*`; cfg 1–10; edit/Control-эндпоинты). **SeeDream → 5.0**.
+- **Video:** Runway → Gen-4.5 + `aleph2` (⚠️ `gen4_aleph` sunset 2026-07-30); Kling → 3.0/Omni; LTX → LTX-2 (4K@50fps + audio); Dream Machine → Luma **ray-3.2**; Sora помечена **shutdown 2026-09-24**; Veo 2/3 сняты.
+- Счётчик паттернов 48 → **51**; «50+ tools» → «55+ tools»; версия → 1.24.0 (README EN+RU, plugin.json, marketplace.json).
+
 ## [1.23.0] - 2026-06-22
 
 UX-доработка **settings-as-knobs** профилей. Раньше скилл молча зашивал дефолты «ручек» (Gamma плотность/визуал/число карточек; Perplexity domain/recency-фильтры; Grok `reasoning_effort`/поиск/фильтры; image-AI CFG/steps/`--ar`/негатив) — пользователь не узнавал, что их можно менять, и перепромпчивал. Теперь скилл при выдаче подаёт заассумленные дефолты явной **переопределяемой строкой `Assumed settings:`** (только незаданные ручки, значение + где менять), **не тратя на это уточняющий вопрос**. Обобщает существующую конвенцию `Assumed output format` с формата на настройки тула.
@@ -330,6 +348,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.24.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.24.0
 [1.23.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.23.0
 [1.22.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.22.0
 [1.21.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.21.0

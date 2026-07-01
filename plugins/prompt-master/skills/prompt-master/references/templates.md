@@ -15,11 +15,11 @@ Full template library for Prompt Master. Read the relevant template when the use
 | [F — Few-Shot](#template-f--few-shot) | Consistent structured output, pattern replication |
 | [G — File-Scope](#template-g--file-scope) | Cursor, Windsurf, Copilot — code editing AI |
 | [H — ReAct + Stop Conditions](#template-h--react--stop-conditions) | Claude Code, Devin — autonomous agents |
-| [I — Visual Descriptor](#template-i--visual-descriptor) | Midjourney, DALL-E, Stable Diffusion, Sora |
+| [I — Visual Descriptor](#template-i--visual-descriptor) | Midjourney, GPT-image, Stable Diffusion, FLUX.2, Sora |
 | [J — Reference Image Editing](#template-j--reference-image-editing) | Editing an existing image with a reference |
 | [K — ComfyUI](#template-k--comfyui) | ComfyUI node-based image workflows |
 | [L — Prompt Decompiler](#template-l--prompt-decompiler) | Breaking down, adapting, or splitting existing prompts |
-| [M — Opus 4.7 / 4.8 Task Brief](#template-m--opus-4.7--4.8-task-brief) | Complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 |
+| [M — Opus 4.7 / 4.8 Task Brief](#template-m--opus-47--48-task-brief) | Complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 |
 | [N — Research Brief](#template-n--research-brief) | Deep-research / cited-report tools (Perplexity Deep Research, GPT/Gemini Deep Research, Sonar) |
 | [O — Deck / Presentation Brief](#template-o--deck--presentation-brief) | Text-to-deck tools (Gamma) |
 
@@ -275,7 +275,7 @@ At the end, output a full summary of every file changed.
 
 ## Template I — Visual Descriptor
 
-*Use for Midjourney, DALL-E 3, Stable Diffusion, Sora, Runway, and any image or video generation tool.*
+*Use for Midjourney, GPT-image, Stable Diffusion, FLUX.2, SeeDream, Google Nano Banana, and any image or video generation tool.*
 
 *5-layer skeleton — build outward from the subject. Drop layers the task doesn't need.*
 
@@ -290,12 +290,13 @@ Negative prompt (platforms that support it): [blurry, watermark, extra fingers, 
 ```
 
 **Tool-specific syntax:**
-- **Midjourney**: Comma-separated descriptors, not prose. Add `--ar`, `--style`, `--v 6` at the end.
-- **Stable Diffusion**: Use `(word:1.3)` weight syntax. CFG scale 7 to 12. Negative prompt is mandatory.
-- **DALL-E 3**: Prose works well. Add "do not include any text in the image" unless text is needed.
-- **Sora / video**: Add camera movement (slow dolly, static shot, crane up), duration in seconds, and cut style.
+- **Midjourney (V8.1)**: Comma-separated descriptors, not prose. Add `--ar`, `--sref`, `--oref` (character/object — replaces `--cref`), `--v 8.1` at the end.
+- **Stable Diffusion (3.5)**: Use `(word:1.3)` weight syntax. `cfg_scale` 1–10. Negative prompt is mandatory.
+- **GPT-image (`gpt-image-2`)**: Prose works well (DALL·E is retired). Add "do not include any text in the image" unless text is needed; set `size`/`quality` as request params.
+- **FLUX.2 / Nano Banana**: Natural language (FLUX.2 also takes JSON + hex colors). For Google, route character-consistency/brand to Nano Banana 2 or Pro, not the Lite tier.
+- **Video (Veo 3.1 / Kling / Runway / Sora)**: Add camera movement (slow dolly, static, crane up), duration in seconds, and cut style. ⚠️ Sora sunsets 2026-09-24 — prefer Veo 3.1 / Kling 3.0 for new work.
 
-**Deliver an `Assumed settings:` note line** for tools that have knobs the user didn't set (Midjourney `--ar 16:9 · --v 6 · --chaos 0`; SD `CFG 7 · steps 20–30 · negative included`) — each overridable at the prompt tail. Skip it for prose-driven tools (DALL-E 3, Flux) — they have no knobs.
+**Deliver an `Assumed settings:` note line** for tools with knobs the user didn't set (Midjourney `--ar 16:9 · --v 8.1 · --s 100`; SD `cfg 7 · steps 20–30 · negative included`; FLUX.2 `guidance 5 · steps 30`; GPT-image `quality high · size auto`; video `duration · resolution · aspect`) — each overridable at the prompt tail / request params.
 
 ---
 
@@ -307,9 +308,10 @@ Negative prompt (platforms that support it): [blurry, watermark, extra fingers, 
 "Attach your reference image to [tool name] before sending this prompt."
 
 **Detect the tool's editing capability:**
-- Midjourney: use `--cref [image URL]` for character reference or `--sref` for style reference
-- DALL-E 3: use the Edit endpoint, not the Generate endpoint. User must be in ChatGPT with image editing enabled
-- Stable Diffusion: use img2img mode, not txt2img. Set denoising strength 0.3-0.6 to preserve the original
+- Midjourney: use `--oref [image URL]` for character/object reference (Omni Reference — replaces the retired `--cref`) or `--sref` for style
+- GPT-image (`gpt-image-2`): use `/images/edits` (not generate) — up to 16 reference images + optional PNG mask for masked edits
+- Stable Diffusion (3.5): use img2img or the edit endpoints (inpaint / search-and-replace); denoising strength 0.3-0.6 to preserve the original
+- Google Nano Banana / Grok Imagine: pass the source image with the instruction; keep the delta small ("change X, keep everything else the same")
 
 ```
 Reference image: [attached / URL]
@@ -332,6 +334,14 @@ Negative prompt: no new elements, no style changes, no background changes
 
 ---
 
+### Conversational video editing (Omni Flash · Grok Imagine · Runway aleph2)
+For models that iterate on an existing video in natural language. Keep instructions short and direct — long re-descriptions cause drift.
+- Always add **"Keep everything else the same."** to lock the parts that must not change.
+- Reference inputs by role tag: `<FIRST_FRAME>` (starting frame), `<IMAGE_REF_n>` (reference, n from 0).
+- Time events with timecodes `[0-3s] …` or natural language ("after 3 seconds…"); for one take say "In a single continuous shot" (models default to multi-cut).
+
+---
+
 ## Template K — ComfyUI
 
 *Use for ComfyUI node-based workflows. Always output Positive and Negative prompts as separate blocks. Ask for the checkpoint model before writing — syntax and token limits differ per model.*
@@ -341,8 +351,8 @@ Negative prompt: no new elements, no style changes, no background changes
 
 **Model-specific notes:**
 - SD 1.5: shorter prompts work better, under 75 tokens per block, use (word:weight) syntax
-- SDXL: handles longer prompts, supports more natural language alongside weighted syntax
-- Flux: natural language works well, less reliance on weighted syntax, very responsive to style descriptions
+- SDXL / SD 3.5: handle longer prompts, support natural language alongside weighted syntax
+- FLUX.2: natural language works well, less reliance on weighted syntax, very responsive to style descriptions and hex colors
 
 ```
 POSITIVE PROMPT:

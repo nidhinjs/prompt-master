@@ -52,7 +52,7 @@ All facts that go stale fast — model IDs, current defaults, version-tied param
 - **Knowledge cutoff Grok 3/4 = November 2024.** No realtime knowledge without server-side **Web Search** / **X Search** enabled — otherwise answers come from training data.
 - **Search filters are request parameters, not prose:** X Search — `allowed_x_handles`/`excluded_x_handles` (≤20, mutually exclusive), `from_date`/`to_date` (ISO8601); Web Search — `allowed_domains`/`excluded_domains` (≤5). Both return citations.
 - **API:** Responses API preferred (stateful, stored 30 days, `previous_response_id`); OpenAI-compatible at `base_url=https://api.x.ai/v1`. Aliases: `<name>` = latest stable, `-latest`, `-<date>` = pinned. Supports Structured Outputs (JSON schema).
-- **Imagine + Voice** (full revision deferred to image release): Grok Imagine generates and edits images and video (`grok-imagine-image*`, `grok-imagine-video*`); Grok Voice does realtime / TTS / STT.
+- **Imagine + Voice:** Grok Imagine generates/edits images (`grok-imagine-image` fast · `grok-imagine-image-quality`) and video (`grok-imagine-video-1.5` · `grok-imagine-video` for reference-to-video); no negative-prompt param — see the Image/Video AI model-facts sections below. Grok Voice does realtime / TTS / STT.
 - Prices are volatile — do not hardcode in the skill.
 
 ## DeepSeek
@@ -121,6 +121,35 @@ AI **text-to-deck** (gamma.app) — generates cards, not classic slides. Two sur
 - **`\n---\n` (triple-dash on its own line)** in Paste-in-text / API input hints card boundaries (with `cardSplit:"inputTextBreaks"`).
 - **Boundaries — the prompt does NOT control:** exact layout/spacing; exact data/figures (Gamma fabricates or inserts placeholders — supply real data or instruct explicit `[placeholder]`s); brand-lock (→ Theme); animations/transitions (→ post-edit via Gamma Agent).
 - ⚠️ verify before asserting: **credits per generation (~40 — volatile, do NOT hardcode)**; the full **Image Source** enumeration; the often-cited **"8–15 cards"** heuristic (NOT confirmed — the only hard number is API default `numCards=10`). Specify card count explicitly rather than relying on a default.
+
+---
+
+## Image AI — model facts
+
+`last-verified: 2026-07-01` · ⚠️ Active GA-transition — preview IDs and prices move within days; **do NOT hardcode** any `*-preview` ID or price. Full prompting profiles in [tool-profiles.md](tool-profiles.md).
+
+- **Midjourney** — **V8.1** default (since 2026-06-10; V7 selectable via `--v 7`). Character/object consistency = **Omni Reference `--oref` + `--ow` (0–1000, default 100)** — the old `--cref` is retired. Style `--sref` + `--sw` (0–1000, default 100). `--chaos` 0–100; `--no a, b`; `--hd` = native 2K; `--raw`. Editing (Vary Region/Pan) may fall back to the V6.1 engine.
+- **GPT-image (OpenAI)** — flagship **`gpt-image-2`**. ⚠️ **DALL·E fully shut down 2026-05-12**; `gpt-image-1.5` / `gpt-image-1-mini` / `chatgpt-image-latest` **deprecated, shutdown 2026-12-01** → consolidate on `gpt-image-2`. Output is **base64 only** (no URL). Edit `/images/edits`: up to 16 refs + optional mask. Knobs: `size` (÷16, ratio ≤3:1, ≤3840px edge), `quality`, `n` 1–10, `background` opaque/auto, `moderation` auto/low.
+- **Stable Diffusion (Stability)** — **SD 3.5** line: `sd3.5-large` / `-large-turbo` / `-medium` / `-flash`. `cfg_scale` **1–10** (legacy SDXL 0–35). `style_preset` (17 values); mandatory negative prompt. Edit endpoints: inpaint / outpaint / search-and-replace / erase; Control: structure / style-transfer. SD 3.0 APIs deprecated 2025-04-17 (auto-routed to 3.5).
+- **FLUX.2 (Black Forest Labs)** — variants **klein** (fast/open) / **pro** / **flex** (typography) / **max** (+grounding) / **dev**. NL + structured/JSON prompts + hex colors. `[flex]` knobs: `guidance` 1.5–10, `steps` 1–50, `safety_tolerance` 0–5. Multi-reference up to 8 (10 in playground). Output up to 4MP.
+- **SeeDream (ByteDance ModelArk)** — **5.0 / 5.0 Lite** (+4.x). Model IDs e.g. `seedream-5-0-260128`, `seedream-5-0-lite`. `POST /api/v3/images/generations`: `model` / `prompt` / `size` (1K–4K) / `output_format` / `watermark`. Unified gen+edit, multi-image references, grouped outputs. ⚠️ negative-prompt & exact `output_format` enum not documented — verify.
+- **Google Nano Banana 2 (Gemini)** — GA IDs: **`gemini-3.1-flash-image`** (Nano Banana 2 — grounding + character-consistency), **`gemini-3.1-flash-lite-image`** (Lite — **1K-only, no grounding / no character-consistency / no style refs**, up to 14 object refs, ~$0.0336/1K), **`gemini-3-pro-image`** (Pro). `gemini-2.5-flash-image` is legacy. Route brand/character-consistency to 2 or Pro, not Lite. SynthID watermark by default. AR: 1:1,3:2,2:3,3:4,4:3,4:5,5:4,9:16,16:9,21:9. Prices volatile.
+- **Grok Imagine (xAI)** — `grok-imagine-image` (fast) / `grok-imagine-image-quality`. **No negative-prompt parameter.** `aspect_ratio` (incl. 19.5:9 / 20:9 — image only), `resolution` 1k/2k. Edit `/images/edits` up to 3 refs. OpenAI-compatible `https://api.x.ai/v1`. Prices volatile.
+
+## Video AI — model facts
+
+`last-verified: 2026-07-01` · ⚠️ preview IDs / prices volatile — do NOT hardcode `*-preview` IDs. Full profiles in [tool-profiles.md](tool-profiles.md).
+
+- **⏰ Deprecation timeline:** Google **Veo 2.0 / 3.0 shut down 2026-06-30** (migrate → Veo 3.1). Runway **`gen4_aleph` sunsets 2026-07-30** (→ `aleph2`). OpenAI **Sora `sora-2` / `-pro` scheduled shutdown 2026-09-24** — don't default new work to it.
+- **Veo 3.1 (Google)** — preview `veo-3.1-generate-preview` / `-fast-generate-preview` / `-lite-generate-preview`; GA form keeps `-generate-`: `veo-3.1-generate-001` / `-fast-generate-001` / `-lite-generate-001` (⚠️ verify GA infix — Vertex page was gated). Clips 4/6/8s; 720p/1080p/4K (**4K not on Lite**); AR 16:9/9:16; up to 3 subject reference images; synced audio; extend, insert/remove objects.
+- **Kling 3.0 / 3.0 Omni (Kuaishou)** — `kling-v3` / `kling-v3-omni`. Duration 3–15s; `mode` std (720p) / pro (1080p) / 4k (⚠️ 4K in API schema but Omni product-guide lists only 1080p/720p — verify); `cfg_scale` 0–1 default 0.5 (Omni cfg_scale unconfirmed). Multi-shot, native audio, Omni element/voice tags. Extension via legacy `/v1/videos/video-extend` (4–5s/ext, up to 3 min; only V1.0/1.5/1.6 sources). Lip-sync via `/v1/videos/identify-face`.
+- **Runway** — `gen4.5` (generate) + `aleph2` (video-to-video edit). `/v1/{text_to_video,image_to_video,video_to_video}`; `ratio` (1280:720 / 720:1280 / 1104:832 / 832:1104 / 960:960 / 1584:672 / 672:1584), `duration` 2–10s, `seed`, aleph2 ≤5 keyframes, `contentModeration.publicFigureThreshold` auto/low. Also hosts Veo 3.1 / Seedance 2.0 / Omni Flash / happyhorse.
+- **Sora (OpenAI)** — `sora-2` / `sora-2-pro`. Clips up to 20s, extend to 120s (≤6×); up to 1080p (`sora-2-pro`); `input_reference` first-frame; Characters API (≤2/video). ⚠️ shutdown 2026-09-24.
+- **LTX-2 (Lightricks)** — primary line; checkpoints `ltx-2.3-22b-dev` / `-distilled-1.1` (LTXV 0.9.8 legacy). Native 4K up to 50fps + synced audio (≤10s). Knobs: `guidance_scale` ~3–3.5, `inference_steps` (40+ quality / 20–30 fast / distilled 8·4), keyframe conditioning (frames ÷8+1), LoRA. t2v/i2v/v2v/extend/interpolate.
+- **Luma Ray (Dream Machine)** — `ray-3.2`. `type` video / video_edit / video_reframe; resolution 360p–1080p (default 720p); 5s or 10s (10s not with HDR); up to 64 keyframes; edit controls depth / pose (**`precise` / `coarse`**, not numeric) / trajectory. video_edit source ≤18s.
+- **Seedance 2.0 (ByteDance)** — `dreamina-seedance-2-0-260128` (BytePlus) / `doubao-seedance-2-0-260128` (Volcengine); Fast `…-fast-260128`, Mini `…-mini-260615`. `POST /api/v3/contents/generations/tasks`, multimodal `content[]` (image/video/audio refs, role `reference_*`), `generate_audio`, `ratio`, `duration` 4–15s, `resolution` 480p/720p/1080p/4K (**1080p not on Fast/Mini; 4K only standard**). Reference assets addressed as "Image 1", not by ID.
+- **Omni Flash (Google)** — `gemini-omni-flash-preview` (Interactions API). Conversational video generation + editing (keep unchanged parts). Techniques: single-scene cues, `<FIRST_FRAME>` / `<IMAGE_REF_n>` tags, timecodes `[0-3s]`, "Keep everything else the same". SynthID watermark. ~$0.10/sec 720p (volatile). ⚠️ max clip length unconfirmed.
+- **Grok Imagine video (xAI)** — `grok-imagine-video-1.5` / `grok-imagine-video` (reference-to-video). 5 modes (t2v / i2v first-frame / ref-to-video `<IMAGE_n>` / edit / extend). `duration` ≤15s, `resolution` 480p/720p/1080p (1080p only on `-1.5` for i2v); video-edit capped ~8.7s / 720p. `image` + `reference_images` mutually exclusive.
 
 ---
 

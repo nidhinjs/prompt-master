@@ -8,7 +8,7 @@
 **Зачем:** каждый расплывчатый промпт — это слитый кредит. Prompt Master извлекает намерение, выбирает правильную архитектуру и вычищает каждое слово, которое не меняет результат.
 **Как начать:** установи через маркетплейс плагинов (см. ниже) и скажи: `Напиши промпт для [инструмент], чтобы [задача]` — или вставь плохой промпт и попроси исправить.
 
-**Работает с:** Claude (Opus 4.8 — дефолт), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Gamma, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make — и любым AI-инструментом, который подкинешь.
+**Работает с:** Claude (Opus 4.8 — дефолт), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Gamma, Midjourney, GPT-image, Stable Diffusion, FLUX.2, ComfyUI, Google Nano Banana, Grok Imagine, Veo 3.1, Kling, Runway, Sora, Seedance, LTX-2, ElevenLabs, Zapier, Make — и любым AI-инструментом, который подкинешь.
 
 ---
 
@@ -122,7 +122,7 @@ Prompt Master прогоняет на каждом запросе структу
 lone samurai standing in heavy rain at night, traditional armor,
 neon reflections on wet cobblestone street, cinematic lighting,
 dramatic shadows, fog, ultra detailed, photorealistic,
-shallow depth of field --ar 16:9 --v 6 --style raw
+shallow depth of field --ar 16:9 --v 8.1 --raw
 
 negative: blurry, low quality, watermark, cartoon, anime, extra limbs
 ```
@@ -205,8 +205,8 @@ Done When:
 | **Cursor / Windsurf / Copilot** | IDE-автокомплит/правки | Нужны путь к файлу + имя функции |
 | **Bolt / v0 / Lovable / Figma Make** | Full-stack генерация | Спека стека + что НЕ скаффолдить |
 | **Gamma** | AI-презентации (text-to-deck) | Запрос на deck / слайды / презентацию |
-| **Midjourney / DALL-E / Stable Diffusion / ComfyUI** | Генерация изображений | Дескрипторы через запятую, негатив, параметры |
-| **Sora / Runway / LTX / Kling** | Генерация видео | Движение камеры + длительность |
+| **Midjourney / GPT-image / Stable Diffusion / FLUX.2 / Nano Banana / Grok Imagine** | Генерация изображений | Синтаксис под модель, негатив, роутинг консистентности |
+| **Veo 3.1 / Kling / Runway / Seedance 2.0 / Sora / Omni Flash** | Генерация видео | Камера + длительность; разговорное редактирование; учёт sunset |
 | **ElevenLabs** | Voice AI | Эмоция, темп, скорость речи |
 | **Zapier / Make / n8n** | Автоматизация | Триггер + действие + маппинг полей |
 | **Неизвестный инструмент** | Universal Fingerprint | Спрашивает → качественный промпт под любой инструмент |
@@ -215,7 +215,7 @@ Done When:
 
 ---
 
-## 🤝 Работает с любым AI-инструментом (50+ инструментов в 30+ профилях)
+## 🤝 Работает с любым AI-инструментом (55+ инструментов в 30+ профилях)
 
 Для всего, чего нет в профилях, Prompt Master использует **Universal Fingerprint** — чтобы написать качественный промпт под незнакомый инструмент.
 
@@ -247,10 +247,10 @@ Done When:
 | **Computer-Use / браузер-агенты** (Comet, Atlas, Claude in Chrome) | Computer-use агент | Результат вместо навигации, ограниченные права, стоп перед необратимым |
 | **Perplexity** (Agent API + Sonar) | Research / agent AI | Agent API (`/v1/agent`) — дефолт для новых апп; Sonar (`sonar`/`sonar-pro`/`sonar-deep-research` 128K) для search-grounded ответов; research-бриф (Template N); фильтры-как-параметры; search по user-сообщению; Data-gaps/confidence + inline-цитаты |
 | **Gamma** | AI-презентации (text-to-deck) | App + Generate API; структурированный deck-бриф (роль/аудитория/цель/число-карточек/секции/тон/плотность/визуал); настройки-как-параметры (Text Content, Image Source); давать данные или [placeholder] (иначе инструмент выдумывает цифры); бренд — через Theme + Gamma Agent пост-ген, не в промпте |
-| **Midjourney / DALL-E 3 / Stable Diffusion / SeeDream / Flux** | Image AI | Синтаксис под каждую модель, негатив-промпты, детект edit-vs-generate |
+| **Midjourney V8.1 / GPT-image / Stable Diffusion 3.5 / FLUX.2 / SeeDream 5 / Google Nano Banana / Grok Imagine** | Image AI | Синтаксис под каждую модель, негатив-промпты, детект edit-vs-generate, роутинг character-consistency |
 | **ComfyUI** | Image AI | Раздельные ноды Positive/Negative, синтаксис чекпойнта |
 | **Meshy / Tripo / Rodin / BlenderGPT / Unity AI** | 3D / Game AI | Стиль + формат экспорта + полигон-бюджет + требования к ригу |
-| **Sora / Runway / LTX / Kling / Dream Machine** | Video AI | Движение камеры, длительность, интенсивность движения |
+| **Veo 3.1 / Kling 3.0 / Runway Gen-4.5 / Sora / LTX-2 / Luma Ray / Seedance 2.0 / Grok Imagine / Omni Flash** | Video AI | Камера, длительность, референсы; разговорное редактирование; sunset-aware роутинг |
 | **ElevenLabs** | Voice AI | Эмоция, темп, акценты, скорость речи |
 | **Zapier / Make / n8n** | Автоматизация | Триггер-приложение + событие, действие + маппинг полей |
 
@@ -293,7 +293,7 @@ Prompt Master сам подбирает архитектуру под задач
 | **F — Few-Shot** | Стабильный структурный вывод, копирование паттерна |
 | **G — File-Scope** | Cursor, Windsurf, Copilot — любой code-editing AI |
 | **H — ReAct + Stop Conditions** | Claude Code, Devin — любой автономный агент |
-| **I — Visual Descriptor** | Midjourney, DALL-E, Stable Diffusion — генерация картинок |
+| **I — Visual Descriptor** | Midjourney, GPT-image, Stable Diffusion, FLUX.2 — генерация картинок |
 | **J — Reference Image Editing** | Правка существующего изображения (детект edit-vs-generate) |
 | **K — ComfyUI** | Node-based image workflow — разделение positive/negative |
 | **L — Prompt Decompiler** | Разбор, адаптация, упрощение или разбиение промптов |
@@ -322,9 +322,9 @@ Prompt Master использует только техники с надёжны
 
 ---
 
-## 🚫 48 паттернов-«убийц кредитов»
+## 🚫 51 паттернов-«убийц кредитов»
 
-Prompt Master сверяет каждую сырую идею с 48 известными паттернами провалов и чинит их молча. Репрезентативная выборка:
+Prompt Master сверяет каждую сырую идею с 51 известными паттернами провалов и чинит их молча. Репрезентативная выборка:
 
 <details>
 <summary><b>Задача / Контекст / Формат / Scope (выборка)</b></summary>
@@ -337,7 +337,7 @@ Prompt Master сверяет каждую сырую идею с 48 извест
 | 8 | Предполагается прошлое знание | «продолжи с того места» → включить Memory-блок |
 | 11 | Приглашение к галлюцинации | «что говорят эксперты?» → «Цитируй только то, в чём уверен; иначе [uncertain]» |
 | 14 | Нет формата вывода | «объясни это» → «3 буллета ≤20 слов, одно предложение-итог сверху» |
-| 19 | Проза-промпт для Midjourney | целое предложение → «subject, style, mood, lighting, --ar 16:9 --v 6» |
+| 19 | Проза-промпт для Midjourney | целое предложение → «subject, style, mood, lighting, --ar 16:9 --v 8.1» |
 | 20 | Нет границ scope | «почини приложение» → «Почини только валидацию логина в `src/auth.js`. Ничего больше.» |
 | 25 | Вставка всей кодовой базы | весь репо каждый раз → scope до нужной функции/файла |
 
@@ -358,6 +358,9 @@ Prompt Master сверяет каждую сырую идею с 48 извест
 | 46 | Рассуждение + живой web search в одном вызове, где они взаимоисключены | напр. Kimi `$web_search` требует thinking off → разнести по режиму/ходу |
 | 47 | Генератор презентаций без числа карточек, структуры и данных | «сделай презентацию про X» в Gamma → generic deck + выдуманные цифры → задать число карточек + секции + плотность; дать реальные данные или явные [placeholder] |
 | 48 | Настройка зашита молча, юзеру не сказано что её можно менять | дефолтные Gamma density / Perplexity-фильтр / Grok reasoning_effort / image CFG без заметки → вынести строкой «Assumed settings:» — переопределяемо, без лишнего вопроса |
+| 49 | Задача на character-consistency на тире, который так не умеет | бренд-маскот / один и тот же персонаж в Nano Banana 2 Lite → роутить на Nano Banana 2·Pro, FLUX.2 multi-ref или Midjourney `--oref` |
+| 50 | Правка видео целым переописанием вместо запертой дельты | длинное переописание в Omni Flash / Grok → короткая дельта + «Keep everything else the same» + теги `<FIRST_FRAME>`/`<IMAGE_REF_n>` |
+| 51 | Дефолт на закрывающуюся / снятую медиа-модель | таргет на Sora (2026-09-24) / Veo 2·3 / Runway `gen4_aleph` как на актуальные → флаг + роутинг на Veo 3.1 / Kling 3.0 / `aleph2` |
 
 </details>
 
@@ -384,7 +387,7 @@ Prompt Master сверяет каждую сырую идею с 48 извест
 
 ## ℹ️ История версий
 
-Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.23.0** (подача переопределяемых дефолтов настроек — строка `Assumed settings:`).
+Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.24.0** (рефреш image+video профиля — 14 инструментов актуализировано/добавлено, model-facts с датами и timeline дедлайнов).
 
 ## 📄 Лицензия
 

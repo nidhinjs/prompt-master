@@ -8,7 +8,7 @@
 **Why:** Every vague prompt is a wasted credit. Prompt Master extracts intent, picks the right architecture, and strips every word that doesn't change the output.
 **How to start:** Install via the plugin marketplace (see below), then say: `Write me a prompt for [tool] to [task]` — or paste a bad prompt and ask to fix it.
 
-**Works with:** Claude (Opus 4.8 default), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Gamma, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make — and any AI tool you throw at it.
+**Works with:** Claude (Opus 4.8 default), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Gamma, Midjourney, GPT-image, Stable Diffusion, FLUX.2, ComfyUI, Google Nano Banana, Grok Imagine, Veo 3.1, Kling, Runway, Sora, Seedance, LTX-2, ElevenLabs, Zapier, Make — and any AI tool you throw at it.
 
 ---
 
@@ -122,7 +122,7 @@ Write me a Midjourney prompt for a realistic samurai standing in the rain at nig
 lone samurai standing in heavy rain at night, traditional armor,
 neon reflections on wet cobblestone street, cinematic lighting,
 dramatic shadows, fog, ultra detailed, photorealistic,
-shallow depth of field --ar 16:9 --v 6 --style raw
+shallow depth of field --ar 16:9 --v 8.1 --raw
 
 negative: blurry, low quality, watermark, cartoon, anime, extra limbs
 ```
@@ -205,8 +205,8 @@ When you name a tool, Prompt Master silently routes to its profile and applies i
 | **Cursor / Windsurf / Copilot** | IDE autocomplete/edit | File path + function name required |
 | **Bolt / v0 / Lovable / Figma Make** | Full-stack generation | Stack spec + what NOT to scaffold |
 | **Gamma** | AI presentations (text-to-deck) | Deck / slides / presentation request |
-| **Midjourney / DALL-E / Stable Diffusion / ComfyUI** | Image generation | Comma descriptors, negative prompt, params |
-| **Sora / Runway / LTX / Kling** | Video generation | Camera movement + duration |
+| **Midjourney / GPT-image / Stable Diffusion / FLUX.2 / Nano Banana / Grok Imagine** | Image generation | Per-model syntax, negative prompt, consistency routing |
+| **Veo 3.1 / Kling / Runway / Seedance 2.0 / Sora / Omni Flash** | Video generation | Camera + duration; conversational edit; sunset-aware |
 | **ElevenLabs** | Voice AI | Emotion, pacing, speech rate |
 | **Zapier / Make / n8n** | Workflow automation | Trigger + action + field mapping |
 | **Unknown tool** | Universal Fingerprint | Asks → quality prompt for any tool |
@@ -215,7 +215,7 @@ Full per-tool rules live in [`references/tool-profiles.md`](plugins/prompt-maste
 
 ---
 
-## 🤝 Works With Any AI Tool (50+ tools across 30+ profiles)
+## 🤝 Works With Any AI Tool (55+ tools across 30+ profiles)
 
 For anything not profiled, Prompt Master falls back to a **Universal Fingerprint** to write a quality prompt for a tool it has never seen.
 
@@ -247,10 +247,10 @@ For anything not profiled, Prompt Master falls back to a **Universal Fingerprint
 | **Computer-Use / Browser agents** (Comet, Atlas, Claude in Chrome) | Computer-use agent | Outcome over navigation, scoped permissions, stop before irreversible actions |
 | **Perplexity** (Agent API + Sonar) | Research / agent AI | Agent API (`/v1/agent`) recommended for new apps; Sonar (`sonar`/`sonar-pro`/`sonar-deep-research` 128K) for search-grounded answers; research brief (Template N); filters-as-parameters; search driven by user message; Data-gaps/confidence + inline citations |
 | **Gamma** | AI presentations (text-to-deck) | App + Generate API; structured deck brief (role/audience/goal/N-cards/sections/tone/density/visuals); settings-as-knobs (Text Content, Image Source); provide data or [placeholder] (fabricates figures); brand via Theme + Gamma Agent post-gen, not the prompt |
-| **Midjourney / DALL-E 3 / Stable Diffusion / SeeDream / Flux** | Image AI | Per-model syntax, negative prompts, edit-vs-generate detection |
+| **Midjourney V8.1 / GPT-image / Stable Diffusion 3.5 / FLUX.2 / SeeDream 5 / Google Nano Banana / Grok Imagine** | Image AI | Per-model syntax, negative prompts, edit-vs-generate detection, character-consistency routing |
 | **ComfyUI** | Image AI | Positive/negative node split, checkpoint syntax |
 | **Meshy / Tripo / Rodin / BlenderGPT / Unity AI** | 3D / Game AI | Style + export format + polygon budget + rig requirements |
-| **Sora / Runway / LTX / Kling / Dream Machine** | Video AI | Camera movement, duration, motion intensity |
+| **Veo 3.1 / Kling 3.0 / Runway Gen-4.5 / Sora / LTX-2 / Luma Ray / Seedance 2.0 / Grok Imagine / Omni Flash** | Video AI | Camera, duration, references; conversational edit; sunset-aware routing |
 | **ElevenLabs** | Voice AI | Emotion, pacing, emphasis, speech rate |
 | **Zapier / Make / n8n** | Workflow automation | Trigger app + event, action app + field mapping |
 
@@ -293,7 +293,7 @@ Prompt Master picks the right architecture for every task and routes silently �
 | **F — Few-Shot** | Consistent structured output, pattern replication |
 | **G — File-Scope** | Cursor, Windsurf, Copilot — any code-editing AI |
 | **H — ReAct + Stop Conditions** | Claude Code, Devin — any autonomous agent |
-| **I — Visual Descriptor** | Midjourney, DALL-E, Stable Diffusion — image generation |
+| **I — Visual Descriptor** | Midjourney, GPT-image, Stable Diffusion, FLUX.2 — image generation |
 | **J — Reference Image Editing** | Editing an existing image (edit-vs-generate detection) |
 | **K — ComfyUI** | Node-based image workflows — positive/negative split |
 | **L — Prompt Decompiler** | Breaking down, adapting, simplifying, or splitting prompts |
@@ -322,9 +322,9 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 
 ---
 
-## 🚫 48 Credit-Killing Patterns Detected
+## 🚫 51 Credit-Killing Patterns Detected
 
-Prompt Master scans every rough idea against 48 known failure patterns and fixes them silently. A representative selection:
+Prompt Master scans every rough idea against 51 known failure patterns and fixes them silently. A representative selection:
 
 <details>
 <summary><b>Task / Context / Format / Scope (representative)</b></summary>
@@ -337,7 +337,7 @@ Prompt Master scans every rough idea against 48 known failure patterns and fixes
 | 8 | Assumed prior knowledge | "continue where we left off" → include a Memory Block |
 | 11 | Hallucination invite | "what do experts say?" → "Cite only sources you are certain of; else say [uncertain]" |
 | 14 | Missing output format | "explain this" → "3 bullets, ≤20 words each, one-sentence summary on top" |
-| 19 | Prose prompt for Midjourney | full sentence → "subject, style, mood, lighting, --ar 16:9 --v 6" |
+| 19 | Prose prompt for Midjourney | full sentence → "subject, style, mood, lighting, --ar 16:9 --v 8.1" |
 | 20 | No scope boundary | "fix my app" → "Fix only login validation in `src/auth.js`. Touch nothing else." |
 | 25 | Pasting the entire codebase | full repo every prompt → scope to the relevant function/file |
 
@@ -358,6 +358,9 @@ Prompt Master scans every rough idea against 48 known failure patterns and fixes
 | 46 | Reasoning + live web search in one call where mutually exclusive | e.g. Kimi `$web_search` requires thinking off → split by mode/turn |
 | 47 | Deck/slide generator with no card count, structure, or data | "make a presentation about X" to Gamma → generic deck + fabricated figures → specify card count + sections + density; supply real data or explicit [placeholder]s |
 | 48 | Tool setting baked silently without telling the user it's adjustable | defaulted Gamma density / Perplexity filter / Grok reasoning_effort / image CFG with no note → surface an "Assumed settings:" line — overridable, no extra question |
+| 49 | Character-consistency task on a tier that can't do it | brand mascot / same character sent to Nano Banana 2 Lite → route to Nano Banana 2·Pro, FLUX.2 multi-ref, or Midjourney `--oref` |
+| 50 | Video edit as a full re-description instead of a locked delta | long re-description to Omni Flash / Grok → short delta + "Keep everything else the same" + `<FIRST_FRAME>`/`<IMAGE_REF_n>` tags |
+| 51 | Defaulting to a sunsetting / deprecated media model | targeting Sora (2026-09-24) / Veo 2·3 / Runway `gen4_aleph` as if current → flag + route to Veo 3.1 / Kling 3.0 / `aleph2` |
 
 </details>
 
@@ -384,7 +387,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.23.0** (surfaced overridable knob-defaults — `Assumed settings:` line).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.24.0** (image + video profile refresh — 14 tools actualized/added, model-facts dated with a deprecation timeline).
 
 ## 📄 License
 

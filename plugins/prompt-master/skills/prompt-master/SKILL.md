@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.23.0
+version: 1.24.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -36,7 +36,7 @@ Keep internal analysis terse and silent — do not narrate the extraction, routi
 **Output format — Follow this format**
 
 Output format:
-1. A single copyable prompt block ready to paste into the target tool
+1. A single copyable prompt block (in a fenced ``` code block) ready to paste into the target tool
 2. 🎯 Target: [tool name],💡 [One sentence — what was optimized and why]
 3. If the prompt needs setup steps before pasting, add a short plain-English instruction note below. 1-2 lines max. ONLY when genuinely needed. Keep the copyable prompt body addressed only to the target tool/agent — usage advice for the human (start a new session, replace these values, prerequisites) goes in this note, never inside the prompt block.
 4. If any decision fork is still open at generation time (the 3-question cap was hit or questions went unanswered), append a short note: the assumptions you baked in, plus a bullet list of every still-open fork so the user can correct. List the forks — do not bury them as placeholders.
@@ -102,7 +102,8 @@ Catch these before generating; open the full profile in [references/tool-profile
 - **Multi-agent / orchestrator prompt request** (user asks for a prompt for an orchestrator, fan-out, sub-agents, or an agent team) — load the **Agentic Prompt Fragments** in [references/templates.md](references/templates.md); default to a single loop, add orchestration only when the task hits the "when to orchestrate" criteria there. **Exception — a vendor-managed swarm (e.g. Kimi Agent Swarm): the model self-orchestrates, so do NOT design a topology or script sub-agents** — give one decomposable task + final artifact (see the Kimi carve-out there).
 - **Research tools** (Perplexity, Gemini/GPT Deep Research) — prompt as a research brief (Template N) with a required Data-gaps/confidence section and **inline citations** (cite only retrieved sources; never fabricate). **Perplexity: Agent API (`/v1/agent`, `responses.create`) is the recommended default for new apps; Sonar API (`sonar`/`sonar-pro`/`sonar-deep-research`) for direct search-grounded answers.** Sonar search is driven by the user message (system prompt isn't seen by search); set domain/recency limits as request parameters, not prose; UI Focus/Spaces ≠ API; "Search as Code" is a blog concept, not a callable feature.
 - **Local / open-weight** (Ollama, Llama, Mistral) — ask which model is running; keep prompts short and flat, no deep nesting; always include a system-prompt role.
-- **Image generation** — Midjourney wants comma descriptors, not prose; Stable Diffusion and ComfyUI require a mandatory negative prompt (ComfyUI: separate Positive / Negative blocks).
+- **Image generation** — Midjourney V8.1 wants comma descriptors + `--oref` (not the retired `--cref`); SD/ComfyUI require a mandatory negative prompt (ComfyUI: separate Positive / Negative blocks); DALL·E is retired → GPT-image (`gpt-image-2`); **character-consistency / brand → Nano Banana 2 or Pro, FLUX.2 multi-ref, or `--oref` — never a fast/Lite tier**.
+- **Video generation** — current: Veo 3.1 / Kling 3.0 / Runway Gen-4.5 / Seedance 2.0 / LTX-2 / Luma ray-3.2. ⚠️ **flag and don't default to sunsetting models — Sora (2026-09-24), Runway `gen4_aleph` (2026-07-30), Veo 2/3 (retired)**; conversational edit (Omni Flash, Grok) → short delta + "Keep everything else the same" + `<FIRST_FRAME>` / `<IMAGE_REF_n>` tags.
 - **Full-stack generators** (Bolt, v0, Lovable, Figma Make, Stitch) — scope down hard; specify stack + what NOT to scaffold to prevent boilerplate bloat.
 - **Gamma (AI presentations / text-to-deck)** — app + Generate API. Pick mode by input: idea→Generate, existing notes→Paste in text (`\n---\n` splits cards), file/URL→Import. Build a structured deck brief (Template O): role + audience + goal + **explicit card count** + sections + tone + density + visuals + exclusions. Density/visuals/tone are Advanced **settings** (Text Content = Minimal/Concise/Detailed; Image Source = Stock), not just prose — note them as setup. **Provide real data or explicit [placeholder]s — Gamma fabricates figures.** Brand = custom Theme, polish = Gamma Agent (post-gen) — don't promise exact layout/brand/animations via the prompt. Credits/labels are volatile — don't hardcode.
 - **Stale model facts** — model IDs, defaults, and version-tied params drift; confirm against [references/models.md](references/models.md) and re-verify any section older than 60 days before asserting (pattern #38).
@@ -248,4 +249,4 @@ Read only when the task requires it. Load only the one section/file you need —
 | [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target tool — read only that tool's profile for full routing guidance |
 | [references/models.md](references/models.md) | You need a volatile model fact (ID, current default, version-tied param) — honor the 60-day re-verify protocol |
 | [references/templates.md](references/templates.md) | You need the full template structure for any tool category |
-| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 48-pattern reference |
+| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 51-pattern reference |
