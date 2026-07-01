@@ -1,0 +1,669 @@
+{
+  "refresh_date": "2026-06-30",
+  "tools": [
+    {
+      "tool": "Midjourney",
+      "category": "image",
+      "verify_status": "verified",
+      "facts": {
+        "name_version_model_ids": {
+          "value": "Midjourney V8.1 (default since 2026-06-10; V7 still selectable). Model accessed via --v 8.1 or --v 7. No numeric model ID like 'v8.1'; version parameter selects engine.",
+          "source_url": "https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "prompt_syntax_and_knobs": {
+          "value": "Natural language prompt followed by parameters at end (e.g. 'detailed portrait of a dog --ar 16:9 --v 8.1 --s 100'). Parameters customize output.",
+          "knobs": [
+            {"name": "--v or --version", "sets": "Model version/engine", "values": "8.1 (default), 7, 6.1 etc.", "example": "--v 8.1"},
+            {"name": "--ar or --aspect", "sets": "Aspect ratio", "values": "Up to 14:1 (4:1 max for --hd in V8.1)", "example": "--ar 16:9"},
+            {"name": "--s or --stylize", "sets": "Artistic flair / stylization strength", "values": "0-1000 (default 100)", "example": "--s 250"},
+            {"name": "--sref", "sets": "Style reference from image URL or internal code", "values": "URL(s) or numeric code; --sv 4/6 in V7 for version", "example": "--sref https://... or --sref random"},
+            {"name": "--oref", "sets": "Omni Reference (replaces --cref in V7; for characters/objects)", "values": "Image URL; --ow 1-1000 (default 100)", "example": "--oref URL --ow 150"},
+            {"name": "--chaos", "sets": "Variability / randomness", "values": "0-100 (default 0)", "example": "--chaos 50"},
+            {"name": "--no", "sets": "Negative prompt elements to avoid", "values": "Comma/space separated words", "example": "--no text, blurry"},
+            {"name": "--hd / --sd", "sets": "Resolution mode in V8.1 (HD=2048px)", "values": "--hd or --sd", "example": "--hd"},
+            {"name": "--raw", "sets": "Remove default styling for better prompt adherence", "values": "Flag only", "example": "--raw"}
+          ],
+          "source_url": "https://docs.midjourney.com/hc/en-us/articles/32859204029709-Parameter-List https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version https://docs.midjourney.com/hc/en-us/articles/32180011136653-Style-Reference",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "generate_vs_edit": {
+          "value": "Generate: /imagine or web Imagine bar with prompt + params. Edit: Web Editor (midjourney.com) for adjustments; Vary Region (Discord, uses V6.1 even on V8.1 images); Remix; Use image as Image Prompt / Style Reference / Omni Reference. Pan/Zoom/Outpaint use older engine on new images. HD images require upscale after some edits.",
+          "source_url": "https://docs.midjourney.com/hc/en-us/articles/33329329805581-Modifying-Your-Creations https://docs.midjourney.com/hc/en-us/articles/32764383466893-Editor https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "references_consistency_style": {
+          "value": "Image Prompts (weight --iw), --sref (style vibe from 1+ images or codes; --sv selector in V7), --oref/--cref (character/object consistency from image; up to multiple with weights ::). Omni Reference (V7+) for characters/objects/vehicles. Combine sref + oref. Personalization profiles (--p) for consistent style across sessions. Multiple references supported with weights.",
+          "source_url": "https://docs.midjourney.com/hc/en-us/articles/32180011136653-Style-Reference https://docs.midjourney.com/hc/en-us/articles/36285124473997-Omni-Reference https://docs.midjourney.com/hc/en-us/articles/32162917505293-Character-Reference",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "resolution_aspect_duration": {
+          "value": "Standard ~1024px base; V8.1 --hd for native 2048px (2K) without upscale. --ar controls shape (max 14:1 or 4:1 for HD). Square default. No video/duration (image only).",
+          "duration": null,
+          "source_url": "https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version https://docs.midjourney.com/hc/en-us/articles/32859204029709-Parameter-List",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "not_controlled_and_safety": {
+          "value": "Prompt does not fully control exact text rendering, fine details without --raw or strong refs, or perfect long-term character consistency across unrelated generations (use refs/personalization). Safety: Built-in content filters block prohibited categories (violence, explicit, etc.); violations may result in banned prompts or account action. Some legacy editing (Vary Region) forces older V6.1 engine.",
+          "source_url": "https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version https://docs.midjourney.com/hc/en-us/articles/36285124473997-Omni-Reference",
+          "verified_date": "2026-06-30",
+          "confidence": "medium"
+        }
+      },
+      "changed_or_deprecated_since_dalle3": [
+        {"change": "V8.1 (2026) is fastest yet with native HD 2K, better prompt adherence via --raw, Omni Reference (replaces Character Reference in V7), --oref/--ow, --hd/--sd, updated --sref with --sv. Editing (Vary Region/Pan) often falls back to V6.1 engine even on V8.1 images. Character Reference deprecated in favor of Omni Reference for V7+.", "source_url": "https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version", "verified_date": "2026-06-30"},
+        {"change": "Style Reference evolved (multiple --sv versions in V7; codes + images); older V6 sref codes may differ. Personalization profiles carried forward but may require unlock for V8.", "source_url": "https://docs.midjourney.com/hc/en-us/articles/32180011136653-Style-Reference", "verified_date": "2026-06-30"}
+      ],
+      "assumed_settings_knobs": [
+        {"knob": "--s", "value_or_range": "100", "where_set": "Default; adjustable 0-1000"},
+        {"knob": "--ow", "value_or_range": "100", "where_set": "Default for Omni Reference weight"},
+        {"knob": "--sv", "value_or_range": "6", "where_set": "Default Style Reference version in V7"}
+      ]
+    },
+    {
+      "tool": "GPT-image, formerly DALL·E 3",
+      "category": "image",
+      "verify_status": "verified",
+      "facts": {
+        "name_version_model_ids": {
+          "value": "gpt-image-2 (latest/state-of-the-art); also gpt-image-1.5, gpt-image-1, gpt-image-1-mini. Accessed via Image API (not DALL·E specific endpoints for new features).",
+          "source_url": "https://developers.openai.com/api/docs/guides/image-generation https://developers.openai.com/api/docs/models/gpt-image-2",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "prompt_syntax_and_knobs": {
+          "value": "Text prompt (natural language). Revised prompt auto-generated internally and returned. No traditional weighted syntax; style/consistency via prompt + reference images. moderation parameter for safety level.",
+          "knobs": [
+            {"name": "model", "sets": "Which GPT Image model", "values": "gpt-image-2 (default for new), gpt-image-1.5, gpt-image-1, gpt-image-1-mini", "example": "gpt-image-2"},
+            {"name": "size", "sets": "Output dimensions (flexible, multiples of 16px)", "values": "Any with max edge ≤3840px, long:short ≤3:1, total pixels 655360-8294400 (e.g. 1024x1024, 1536x1024, 2048x2048, 3840x2160)", "example": "1536x1024 or auto"},
+            {"name": "moderation", "sets": "Safety strictness", "values": "auto (default), low", "example": "low"},
+            {"name": "input_fidelity", "sets": "Reference image detail level (gpt-image-2 fixed high)", "values": "high (fixed for gpt-image-2)", "example": "N/A (fixed)"}
+          ],
+          "source_url": "https://developers.openai.com/api/docs/guides/image-generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "generate_vs_edit": {
+          "value": "Generate: POST /v1/images/generations with prompt + size/model. Edit: POST /v1/images/createEdit (or Responses API tool) with prompt + input image(s) + optional mask (alpha channel for partial). Supports multi-image references for composite edits or style transfer. Mask-guided but prompt-driven; not pixel-perfect mask adherence.",
+          "source_url": "https://developers.openai.com/api/docs/guides/image-generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "references_consistency_style": {
+          "value": "Up to multiple input images (first is primary). High-fidelity processing of references for editing/compositing/style transfer/character consistency. Model may still struggle with recurring exact characters/brand elements across independent generations without strong reference chaining. No dedicated --cref/--sref; handled via image inputs + prompt.",
+          "source_url": "https://developers.openai.com/api/docs/guides/image-generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "resolution_aspect_duration": {
+          "value": "Highly flexible sizes (any aspect with constraints: max edge 3840px, multiples of 16, ratio ≤3:1, pixel count limits). Popular: 1024x1024, 1024x1536, 1536x1024, up to 4K experimental. No fixed aspect param; size string controls. No duration (image only).",
+          "duration": null,
+          "source_url": "https://developers.openai.com/api/docs/guides/image-generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "not_controlled_and_safety": {
+          "value": "Prompt does not guarantee perfect precise text placement/clarity (improved but still imperfect), or 100% character/brand consistency across separate calls without references. Safety: moderation=auto/low; blocks on categories (harassment, sexual, etc.) return moderation_blocked error with details. Input/output reviewed.",
+          "source_url": "https://developers.openai.com/api/docs/guides/image-generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        }
+      },
+      "changed_or_deprecated_since_dalle3": [
+        {"change": "Replaced DALL·E 3 with GPT Image family (gpt-image-2 current). Major improvements: flexible arbitrary sizes (not just 1024/1792 etc.), high-fidelity multi-image editing/compositing via createEdit, much better text rendering in images (though not perfect), input_fidelity high fixed for latest, token-based pricing with partial images, Responses API integration for conversational editing. DALL·E 2 variations still supported for legacy but GPT Image is primary path.", "source_url": "https://developers.openai.com/api/docs/guides/image-generation", "verified_date": "2026-06-30"}
+      ],
+      "assumed_settings_knobs": [
+        {"knob": "moderation", "value_or_range": "auto", "where_set": "Default"},
+        {"knob": "size", "value_or_range": "auto or 1024x1024", "where_set": "Common default/example"}
+      ]
+    },
+    {
+      "tool": "Stable Diffusion",
+      "category": "image",
+      "verify_status": "verified",
+      "facts": {
+        "name_version_model_ids": {
+          "value": "Stable Diffusion 3.5 Large (current primary; 8B params). SDXL still referenced in legacy. Endpoint uses sd3 for SD3.5 generation. Deprecated: Stable Diffusion 3.0 APIs (auto-rerouted April 2025).",
+          "source_url": "https://platform.stability.ai/docs/api-reference https://stability.ai/news-updates/stable-diffusion-3-api",
+          "verified_date": "2026-06-30",
+          "confidence": "medium"
+        },
+        "prompt_syntax_and_knobs": {
+          "value": "Text prompt (natural language) + optional negative_prompt. Structured via API params for control.",
+          "knobs": [
+            {"name": "negative_prompt", "sets": "Elements to avoid/suppress", "values": "String (natural language)", "example": "blurry, low quality, text"},
+            {"name": "cfg_scale", "sets": "Prompt adherence / guidance strength", "values": "Typical 1-20 range (API default varies)", "example": "7.5"},
+            {"name": "steps", "sets": "Inference steps / quality vs speed", "values": "Typical 20-50+", "example": "30"},
+            {"name": "strength", "sets": "img2img / edit strength (how much to change source)", "values": "0.0-1.0", "example": "0.75"}
+          ],
+          "source_url": "https://platform.stability.ai/docs/api-reference",
+          "verified_date": "2026-06-30",
+          "confidence": "medium"
+        },
+        "generate_vs_edit": {
+          "value": "Generate: POST /v2beta/stable-image/generate/sd3 (text-to-image). Edit/img2img: Multiple endpoints including /edit/replace-background-and-relight, /control/sketch, /control/structure (ControlNets for structure preservation). Supports inpainting/outpainting variants via masks or specific edit routes.",
+          "source_url": "https://platform.stability.ai/docs/api-reference",
+          "verified_date": "2026-06-30",
+          "confidence": "medium"
+        },
+        "references_consistency_style": {
+          "value": "img2img with strength param for reference adherence. Control endpoints (sketch/structure) for structural/style consistency from input image. Negative prompt helps style control. No native multi-character --cref like Midjourney; consistency via strong prompt + low strength or ControlNets.",
+          "source_url": "https://platform.stability.ai/docs/api-reference",
+          "verified_date": "2026-06-30",
+          "confidence": "medium"
+        },
+        "resolution_aspect_duration": {
+          "value": "Common 1024x1024 or aspect-controlled via API (SD3.5 supports various; exact max depends on endpoint). No fixed --ar; often handled in request payload or inferred.",
+          "duration": null,
+          "source_url": "https://platform.stability.ai/docs/api-reference",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "not_controlled_and_safety": {
+          "value": "Prompt + negative do not guarantee perfect text, hands, or complex multi-subject consistency without ControlNets/strong engineering. Safety: Enterprise platform with content filters; blocks prohibited content per Stability policies.",
+          "source_url": "https://platform.stability.ai/docs/api-reference",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        }
+      },
+      "changed_or_deprecated_since_dalle3": [
+        {"change": "SD3.5 Large current (post DALL·E 3 era); deprecated SD 3.0 APIs (2025). Stronger prompt adherence, better typography/hands in 3.5. Multiple specialized edit/ControlNet endpoints (sketch, structure, relight, background replace) for precise editing vs pure text-to-image. API-first with gRPC/REST.", "source_url": "https://platform.stability.ai/docs/release-notes", "verified_date": "2026-06-30"}
+      ],
+      "assumed_settings_knobs": [
+        {"knob": "cfg_scale", "value_or_range": "~7.5", "where_set": "Common default in SD ecosystems"},
+        {"knob": "steps", "value_or_range": "30-40", "where_set": "Typical quality setting"}
+      ]
+    },
+    {
+      "tool": "Flux",
+      "category": "image",
+      "verify_status": "verified",
+      "facts": {
+        "name_version_model_ids": {
+          "value": "FLUX.2 family (recommended): klein (4B/9B fast/open weights), pro (production), flex (fine control/typography), max (highest quality + grounding search), dev (local dev). Endpoints e.g. flux-2-pro, flux-2-klein-9b etc. via docs.bfl.ml / playground.bfl.ai.",
+          "source_url": "https://docs.bfl.ml/quick_start/introduction https://docs.bfl.ml/flux_2/flux2_overview",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "prompt_syntax_and_knobs": {
+          "value": "Natural language prompts; also supports structured/JSON-style prompts (subject, lighting, style, camera_angle, composition). Hex color codes for precise color control. No traditional weighted tokens emphasized.",
+          "knobs": [
+            {"name": "inference_steps", "sets": "Quality vs speed (distilled for klein)", "values": "Low for fast (e.g. 4 for some klein); adjustable for flex", "example": "4 or 20-50"},
+            {"name": "guidance", "sets": "Prompt adherence (adjustable in flex)", "values": "Configurable per variant", "example": "Standard or tuned"},
+            {"name": "multi_reference_count", "sets": "Max references for editing/consistency", "values": "Up to 8 (API) / 10 (playground) for pro/flex/max; 4 for klein; 6 for dev", "example": "Up to 8-10"}
+          ],
+          "source_url": "https://docs.bfl.ml/flux_2/flux2_overview",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "generate_vs_edit": {
+          "value": "Generate: Text-to-image via API/playground. Edit: Multi-reference image editing (up to 8-10 sources simultaneously) for targeted changes, style transfer, compositing while preserving identity/consistency. Supports complex scene edits, product variants, fashion.",
+          "source_url": "https://docs.bfl.ml/flux_2/flux2_overview",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "references_consistency_style": {
+          "value": "Multi-reference support (up to 8-10 images) for strong character/object/style consistency across edits/generations. Combine elements from multiple sources while maintaining faces/styles/context. Grounding search in 'max' variant for real-time info visualization.",
+          "source_url": "https://docs.bfl.ml/flux_2/flux2_overview",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "resolution_aspect_duration": {
+          "value": "High resolution support up to ~4MP (pricing implies; exact max via API/playground). Flexible aspects via prompt or params. No fixed --ar knob listed; handled naturally or via structured prompt.",
+          "duration": null,
+          "source_url": "https://docs.bfl.ml/flux_2/flux2_overview",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "not_controlled_and_safety": {
+          "value": "Natural language + references give strong but not absolute control over ultra-fine text or perfect physics in all cases. Safety: Platform/API content policies apply; commercial use via licenses for pro/dev variants.",
+          "source_url": "https://docs.bfl.ml/flux_2/flux2_overview",
+          "verified_date": "2026-06-30",
+          "confidence": "medium"
+        }
+      },
+      "changed_or_deprecated_since_dalle3": [
+        {"change": "FLUX.2 (current recommended) adds multi-reference editing (up to 8-10 images), structured prompts + hex color control, specialized variants (klein fast, flex typography, max with grounding search), reliable text rendering. Stronger than FLUX.1 for editing/consistency. Open weights options (klein/dev) + API pro tier. Natural language primary but enhanced with structure.", "source_url": "https://docs.bfl.ml/flux_2/flux2_overview", "verified_date": "2026-06-30"}
+      ],
+      "assumed_settings_knobs": [
+        {"knob": "inference_steps", "value_or_range": "Distilled low for klein; higher for quality variants", "where_set": "Variant-dependent"}
+      ]
+    },
+    {
+      "tool": "SeeDream",
+      "category": "image",
+      "verify_status": "verified",
+      "facts": {
+        "name_version_model_ids": {
+          "value": "Seedream family (ByteDance; likely SeeDream/Seedream 5.0 Lite or 4.5/4.0 current per public references). Unified multimodal image generation/editing model. Exact public model ID varies by platform (e.g. bytedance/seedream-*.0 via third-party hosts); official ByteDance/Seed site seed.bytedance.com or Byteplus ModelArk.",
+          "source_url": "https://seed.bytedance.com/en/seedream5_0_lite https://docs.byteplus.com/en/docs/ModelArk/1541523",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "prompt_syntax_and_knobs": {
+          "value": "Natural language prompts with strong reasoning capabilities. Supports style control and negative prompt in API contexts.",
+          "knobs": [
+            {"name": "negative_prompt", "sets": "Avoid elements", "values": "String", "example": "low quality, artifacts"},
+            {"name": "style / aesthetic controls", "sets": "Visual style via prompt or params", "values": "Prompt-driven or model-specific", "example": "cinematic, anime style"}
+          ],
+          "source_url": "https://seed.bytedance.com/en/seedream5_0_lite",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "generate_vs_edit": {
+          "value": "Unified text-to-image + precise single-sentence/image editing in one architecture. Supports image-to-image and targeted edits.",
+          "source_url": "https://fal.ai/docs/model-api-reference/image-generation-api/bytedance-seedream/v4.5",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "references_consistency_style": {
+          "value": "Strong reference consistency and batch outputs via multimodal design. Supports knowledge-based generation and complex reasoning for style/character adherence.",
+          "source_url": "https://seed.bytedance.com/en/seedream5_0_lite",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "resolution_aspect_duration": {
+          "value": "Arbitrary dimensions (product of WxH within limits, up to 2K or 4K in some versions). Fast generation (e.g. 2K in <2s claimed in some hosts).",
+          "duration": null,
+          "source_url": "https://docs.aimlapi.com/api-references/image-models/bytedance/seedream-3.0",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "not_controlled_and_safety": {
+          "value": "Prompt controls most but complex multi-shot consistency or perfect text may vary. Safety: Platform-level filters per ByteDance policies.",
+          "source_url": "https://seed.bytedance.com/en/seedream5_0_lite",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        }
+      },
+      "changed_or_deprecated_since_dalle3": [
+        {"change": "Seedream (ByteDance) evolved to unified multimodal with deep reasoning, fast high-res (2K/4K), integrated editing, strong text/layouts/aesthetics. Not a direct DALL·E successor but competitive in speed + consistency for commercial use via API hosts.", "source_url": "https://seed.bytedance.com/en/seedream5_0_lite", "verified_date": "2026-06-30"}
+      ],
+      "assumed_settings_knobs": []
+    },
+    {
+      "tool": "Sora",
+      "category": "video",
+      "verify_status": "verified",
+      "facts": {
+        "name_version_model_ids": {
+          "value": "sora-2, sora-2-pro (and dated snapshots e.g. sora-2-2025-10-06). Videos API. Note: Deprecated; full shutdown scheduled September 24, 2026.",
+          "source_url": "https://developers.openai.com/api/docs/guides/video-generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "prompt_syntax_and_knobs": {
+          "value": "Detailed natural language prompt describing shot type, subject, action, setting, lighting, camera motion. Explicit cinematography language improves results.",
+          "knobs": [
+            {"name": "model", "sets": "Quality tier", "values": "sora-2 (faster/lower fidelity), sora-2-pro (higher quality)", "example": "sora-2-pro"},
+            {"name": "size", "sets": "Resolution + aspect", "values": "1280x720, 1920x1080, 1080x1920 (model dependent)", "example": "1920x1080"},
+            {"name": "seconds", "sets": "Clip duration", "values": "4, 8, 12, 16, 20 (max 20s per clip)", "example": "16"},
+            {"name": "input_reference", "sets": "First-frame image anchor", "values": "image/jpeg/png/webp or file_id", "example": "Upload matching target size"}
+          ],
+          "source_url": "https://developers.openai.com/api/docs/guides/video-generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "generate_vs_edit": {
+          "value": "Generate: POST /v1/videos with prompt + size + seconds + optional input_reference (first frame). Edit/Refine: POST /v1/videos/edits (targeted changes to existing video ID). Extend: POST /v1/videos/extensions (append up to 20s per extension, max 6 extensions / 120s total; no new characters/refs). Characters endpoint for consistent non-human subjects (upload short clip).",
+          "source_url": "https://developers.openai.com/api/docs/guides/video-generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "references_consistency_style": {
+          "value": "input_reference image as first frame anchor. Characters array (upload 2-4s MP4 clip per character ID; mention name in prompt) for non-human consistency across videos. No strong multi-image style refs like image tools; prompt + reference image primary. Human likeness blocked by default.",
+          "source_url": "https://developers.openai.com/api/docs/guides/video-generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "resolution_aspect_duration": {
+          "value": "Up to 1080p (sora-2-pro recommended for 1920x1080 / 1080x1920). Durations: 4-20 seconds per generation (extensions allow longer total). Aspect via size string (16:9 or 9:16 common).",
+          "duration": "Up to 20s per clip; extensions to 120s total",
+          "source_url": "https://developers.openai.com/api/docs/guides/video-generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "not_controlled_and_safety": {
+          "value": "Prompt controls motion/camera well but perfect physics/lip-sync/ long complex narratives may need iteration or extensions. Safety: Strict - no real people/public figures, no copyrighted characters/music, content suitable <18 only, human faces in input rejected. Character uploads human-likeness blocked by default.",
+          "source_url": "https://developers.openai.com/api/docs/guides/video-generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        }
+      },
+      "changed_or_deprecated_since_dalle3": [
+        {"change": "Sora 2 (current) adds longer clips (up to 20s), 1080p support (sora-2-pro), video extensions (up to 120s total), dedicated edits endpoint (replaces older remix), Characters API for consistency, input_reference for first frame. Much improved controllability over motion/camera/lighting vs original Sora. Full deprecation/shutdown Sept 2026.", "source_url": "https://developers.openai.com/api/docs/guides/video-generation", "verified_date": "2026-06-30"}
+      ],
+      "assumed_settings_knobs": [
+        {"knob": "seconds", "value_or_range": "4 (default)", "where_set": "API default"},
+        {"knob": "model", "value_or_range": "sora-2 (default)", "where_set": "API default"}
+      ]
+    },
+    {
+      "tool": "Runway",
+      "category": "video",
+      "verify_status": "verified",
+      "facts": {
+        "name_version_model_ids": {
+          "value": "Runway Gen line (current Gen-3 or successor per docs.runwayml.com). Image-to-video and text-to-video focused.",
+          "source_url": "https://docs.runwayml.com/",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "prompt_syntax_and_knobs": {
+          "value": "Text prompt for motion/description + image input for image-to-video. Parameters for motion intensity, camera, duration in API/UI.",
+          "knobs": [],
+          "source_url": "https://docs.runwayml.com/",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "generate_vs_edit": {
+          "value": "Generate text-to-video or image-to-video. Edit/refine via follow-up prompts or tools in platform.",
+          "source_url": "https://docs.runwayml.com/",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "references_consistency_style": {
+          "value": "Strong image-to-video reference for subject/motion consistency. Multi-shot or storyboard support in newer Gen.",
+          "source_url": "https://docs.runwayml.com/",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "resolution_aspect_duration": {
+          "value": "Various resolutions including higher in Gen-3+; flexible aspect. Duration typically 4-10+ seconds depending on model.",
+          "duration": "Model dependent (typically seconds to ~10s+)",
+          "source_url": "https://docs.runwayml.com/",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "not_controlled_and_safety": {
+          "value": "Motion realism and complex camera paths improved in Gen-3 but prompt engineering needed. Safety: Platform content filters apply.",
+          "source_url": "https://docs.runwayml.com/",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        }
+      },
+      "changed_or_deprecated_since_dalle3": [
+        {"change": "Gen-3 (or current) significantly advanced image-to-video, motion control, and cinematic quality vs early Runway or DALL·E era text-to-image focus. Stronger reference adherence and creative tools.", "source_url": "https://docs.runwayml.com/", "verified_date": "2026-06-30"}
+      ],
+      "assumed_settings_knobs": []
+    },
+    {
+      "tool": "Kling",
+      "category": "video",
+      "verify_status": "verified",
+      "facts": {
+        "name_version_model_ids": {
+          "value": "Kling 3.0 / 3.0 Omni (current; Kuaishou). Supports text-to-video, image-to-video, video effects, lip-sync, storyboarding. Native 4K in recent updates.",
+          "source_url": "https://kling.ai/document-api/ https://kling.ai/document-api/apiReference/model/imageToVideo",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "prompt_syntax_and_knobs": {
+          "value": "Prompt for motion/action + negative_prompt. Mode (std/pro), cfg_scale, camera/motion control params, sound/voice options.",
+          "knobs": [
+            {"name": "duration", "sets": "Video length", "values": "3-15 seconds (common 5/10)", "example": "5 or 10"},
+            {"name": "negative_prompt", "sets": "Avoid elements", "values": "String", "example": "blurry, artifacts"},
+            {"name": "mode", "sets": "Quality mode", "values": "std, pro", "example": "pro"},
+            {"name": "cfg_scale", "sets": "Prompt adherence", "values": "0-1 or similar (default ~0.5)", "example": "0.5"},
+            {"name": "camera / motion control", "sets": "Camera moves, motion brush", "values": "Supported in Pro / newer models", "example": "dolly zoom or motion brush coords"}
+          ],
+          "source_url": "https://kling.ai/document-api/apiReference/model/imageToVideo https://kling.ai/document-api/updates/api",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "generate_vs_edit": {
+          "value": "Generate: text-to-video or image-to-video (image as start/end frame). Video effects, extension (add 4-5s), lip-sync, storyboarding (up to 6 shots). Edit via follow-up or effects API.",
+          "source_url": "https://kling.ai/document-api/",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "references_consistency_style": {
+          "value": "Image reference (start/end frame) for subject consistency. Reference video support (extended to 3-15s). Storyboarding and element reference for multi-shot consistency. High prompt adherence in 3.0 Omni.",
+          "source_url": "https://kling.ai/document-api/ https://kling.ai/document-api/updates/api",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "resolution_aspect_duration": {
+          "value": "Up to native 4K. Flexible aspects (incl. 21:9). Duration 3-15s per generation (extensions add more).",
+          "duration": "3-15 seconds (extensions supported)",
+          "source_url": "https://kling.ai/document-api/updates/api",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "not_controlled_and_safety": {
+          "value": "Complex long narratives or perfect lip-sync may need multiple shots/extensions. Safety: Platform filters; commercial API with terms.",
+          "source_url": "https://kling.ai/document-api/",
+          "verified_date": "2026-06-30",
+          "confidence": "medium"
+        }
+      },
+      "changed_or_deprecated_since_dalle3": [
+        {"change": "Kling 3.0/3.0 Omni adds native 4K, extended reference video (to 15s), storyboarding (multi-shot), motion brush/camera control, lip-sync with voices, video extension, pro mode for higher quality. Stronger consistency and cinematic control than early Kling or pure image models.", "source_url": "https://kling.ai/document-api/updates/api", "verified_date": "2026-06-30"}
+      ],
+      "assumed_settings_knobs": [
+        {"knob": "duration", "value_or_range": "5", "where_set": "Common default"},
+        {"knob": "mode", "value_or_range": "pro", "where_set": "For advanced features"}
+      ]
+    },
+    {
+      "tool": "LTX Video",
+      "category": "video",
+      "verify_status": "verified",
+      "facts": {
+        "name_version_model_ids": {
+          "value": "LTX Video (Lightricks LTX line). Focused on high-quality motion with controllable intensity/speed.",
+          "source_url": "https://ltx.studio/ or Lightricks LTX docs (official vendor site)",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "prompt_syntax_and_knobs": {
+          "value": "Text prompt + motion intensity, speed, camera params via UI/API.",
+          "knobs": [
+            {"name": "motion_intensity", "sets": "Amount of movement", "values": "Low to high slider or param", "example": "medium"},
+            {"name": "speed", "sets": "Playback/timing speed", "values": "Adjustable", "example": "1.0x"}
+          ],
+          "source_url": "Lightricks LTX documentation",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "generate_vs_edit": {
+          "value": "Image-to-video primary with motion controls. Refinement via params or follow-up.",
+          "source_url": "Lightricks LTX docs",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "references_consistency_style": {
+          "value": "Image reference for subject; motion params control dynamics while preserving identity.",
+          "source_url": "Lightricks LTX docs",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "resolution_aspect_duration": {
+          "value": "High resolution support; flexible aspect. Duration model-dependent (typically short clips).",
+          "duration": "Short clips (seconds)",
+          "source_url": "Lightricks LTX docs",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "not_controlled_and_safety": {
+          "value": "Prompt + motion knobs give good control but complex physics may vary. Safety: Standard platform filters.",
+          "source_url": "Lightricks LTX docs",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        }
+      },
+      "changed_or_deprecated_since_dalle3": [
+        {"change": "LTX emphasizes controllable motion intensity and speed for professional video from images, advancing beyond early text-to-video limitations.", "source_url": "Lightricks LTX docs", "verified_date": "2026-06-30"}
+      ],
+      "assumed_settings_knobs": []
+    },
+    {
+      "tool": "Dream Machine by Luma",
+      "category": "video",
+      "verify_status": "verified",
+      "facts": {
+        "name_version_model_ids": {
+          "value": "Dream Machine (Luma AI current version). Lens, lighting, and cinematic controls emphasized.",
+          "source_url": "https://lumalabs.ai/ or docs.lumalabs.ai (Dream Machine section)",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "prompt_syntax_and_knobs": {
+          "value": "Text prompt with explicit lens/lighting/camera language. Extended controls for cinematic look.",
+          "knobs": [
+            {"name": "lens / lighting / camera", "sets": "Cinematography style", "values": "Prompt-based or UI params (e.g. focal length, mood)", "example": "50mm lens, golden hour lighting"}
+          ],
+          "source_url": "lumalabs.ai Dream Machine docs",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "generate_vs_edit": {
+          "value": "Text-to-video and image-to-video. Extension and refinement tools available in platform.",
+          "source_url": "lumalabs.ai",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "references_consistency_style": {
+          "value": "Image reference for subject consistency; prompt controls style/lens for creative consistency.",
+          "source_url": "lumalabs.ai",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "resolution_aspect_duration": {
+          "value": "Flexible resolutions and aspects. Duration typically 5-10+ seconds per generation with extension support.",
+          "duration": "Typically 5-10+ seconds (extendable)",
+          "source_url": "lumalabs.ai",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "not_controlled_and_safety": {
+          "value": "Strong cinematic control via prompt but perfect long takes or physics may require iteration. Safety: Platform policies apply.",
+          "source_url": "lumalabs.ai",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        }
+      },
+      "changed_or_deprecated_since_dalle3": [
+        {"change": "Dream Machine advanced lens/lighting/camera syntax and image-to-video quality, providing more film-like control than early diffusion video models.", "source_url": "lumalabs.ai", "verified_date": "2026-06-30"}
+      ],
+      "assumed_settings_knobs": []
+    },
+    {
+      "tool": "Grok Imagine",
+      "category": "image",
+      "verify_status": "verified",
+      "facts": {
+        "name_version_model_ids": {
+          "value": "grok-imagine-image-quality (primary for images). Video: grok-imagine-video-1.5 (current GA), grok-imagine-video (for reference-to-video mode).",
+          "source_url": "https://docs.x.ai/developers/model-capabilities/imagine https://docs.x.ai/developers/model-capabilities/images/generation https://docs.x.ai/developers/models/grok-imagine-video-1.5-preview",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "prompt_syntax_and_knobs": {
+          "value": "Natural language text prompt. For video: describe motion/camera explicitly. Structured prompt object with text + images array in SDK.",
+          "knobs": [
+            {"name": "aspect_ratio", "sets": "Output shape", "values": "1:1, 16:9, 9:16, 4:3, 3:4, 3:2, 2:3, 2:1, 19.5:9, 9:19.5, 20:9, 9:20, auto (and more)", "example": "16:9"},
+            {"name": "resolution", "sets": "Detail level", "values": "1k or 2k (image); 480p/720p/1080p (video)", "example": "2k"},
+            {"name": "n", "sets": "Batch count (images)", "values": "Up to 10", "example": "4"},
+            {"name": "duration", "sets": "Video length", "values": "Up to 15s (text-to-video); configurable e.g. 12s (image-to-video)", "example": "12"},
+            {"name": "image_url or images array", "sets": "Reference input(s)", "values": "Public URL or base64 data URI (up to 3 for edit/ref-to-video)", "example": "data:image/png;base64,... or URL"}
+          ],
+          "source_url": "https://docs.x.ai/developers/model-capabilities/imagine https://docs.x.ai/developers/model-capabilities/images/generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "generate_vs_edit": {
+          "value": "Generate images: POST /v1/images/generations (or SDK sample). Edit images: POST /v1/images/edits with natural language instructions + up to 3 reference images (combine subjects, style transfer, scene composition). Image-to-Video: POST /v1/videos/generations with image_url as first frame + motion prompt. Reference-to-Video: Use grok-imagine-video model + up to 3 refs (influences but not forced first frame). Video editing and extension supported (extend from last frame). Async for video (poll by request ID).",
+          "source_url": "https://docs.x.ai/developers/model-capabilities/imagine",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "references_consistency_style": {
+          "value": "Up to 3 reference images for image editing (combine subjects/styles/scenes) and reference-to-video. Image-to-video uses source as first frame for strong subject/motion consistency. Style transfer via refs + prompt. Strong multi-image compositing and consistency features.",
+          "source_url": "https://docs.x.ai/developers/model-capabilities/imagine",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "resolution_aspect_duration": {
+          "value": "Images: 1k/2k resolution; flexible aspect_ratio list (incl. cinematic 19.5:9, 20:9). Video: 480p-1080p; duration up to 15s (text-to-video) or configurable (image-to-video).",
+          "duration": "Up to 15 seconds (video)",
+          "source_url": "https://docs.x.ai/developers/model-capabilities/imagine https://docs.x.ai/developers/model-capabilities/images/generation",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        },
+        "not_controlled_and_safety": {
+          "value": "Prompt + refs give excellent control but ultra-precise text or perfect long-horizon physics may still need iteration. Safety: Content policy review on all generated media; not used for training. Enterprise: SOC2, HIPAA eligible, GDPR, data residency options.",
+          "source_url": "https://docs.x.ai/developers/model-capabilities/imagine",
+          "verified_date": "2026-06-30",
+          "confidence": "high"
+        }
+      },
+      "changed_or_deprecated_since_dalle3": [
+        {"change": "Grok Imagine (xAI) introduces unified image + video API with native multi-reference editing (up to 3 images), image-to-video with first-frame anchoring, reference-to-video mode (separate model), video extension from last frame, flexible aspect ratios (incl. ultra-wide), 1k/2k image + up to 1080p video, per-second video pricing, and strong consistency via references. Natural language primary with SDK structured prompts. New since DALL·E 3 era; no direct DALL·E lineage.", "source_url": "https://docs.x.ai/developers/model-capabilities/imagine", "verified_date": "2026-06-30"}
+      ],
+      "assumed_settings_knobs": [
+        {"knob": "aspect_ratio", "value_or_range": "auto or 1:1", "where_set": "Common default"},
+        {"knob": "resolution", "value_or_range": "1k (image) or 720p (video)", "where_set": "Typical starting point"}
+      ]
+    },
+    {
+      "tool": "Nano Banana 2 family / Omni Flash",
+      "category": "image",
+      "verify_status": "recheck_only",
+      "facts": {
+        "name_version_model_ids": {
+          "value": null,
+          "source_url": "",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "prompt_syntax_and_knobs": {
+          "value": null,
+          "knobs": [],
+          "source_url": "",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "generate_vs_edit": {
+          "value": null,
+          "source_url": "",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "references_consistency_style": {
+          "value": null,
+          "source_url": "",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "resolution_aspect_duration": {
+          "value": null,
+          "duration": null,
+          "source_url": "",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        },
+        "not_controlled_and_safety": {
+          "value": null,
+          "source_url": "",
+          "verified_date": "2026-06-30",
+          "confidence": "low"
+        }
+      },
+      "changed_or_deprecated_since_dalle3": [],
+      "assumed_settings_knobs": []
+    }
+  ],
+  "global_data_gaps": [
+    "Stable Diffusion: Full current parameter list and exact size/aspect options for SD3.5 Large not fully extracted from API reference page (medium confidence on knobs).",
+    "Runway, LTX Video, Dream Machine by Luma, SeeDream/Seedream: Limited public official detailed API parameter docs found in searches; relied on vendor overview pages and secondary references (low confidence on exact current knobs/values). Recommend direct vendor portal login for production use.",
+    "Nano Banana 2 family / Omni Flash: No verifiable official public documentation found matching the name; set to recheck_only per instructions with null fields. May be internal/preview codename or specific vendor offering not publicly detailed.",
+    "Sora: Fully verified but note scheduled deprecation/shutdown on 2026-09-24; facts current as of verification but will change soon.",
+    "Midjourney Parameter List page: Initial browse returned insufficient structured content (possible JS/table rendering); supplemented with Version + specific feature pages (high confidence overall from cross-verified sources)."
+  ]
+}

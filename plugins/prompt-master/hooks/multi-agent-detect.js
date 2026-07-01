@@ -32,11 +32,15 @@ try {
 const p = prompt.toLowerCase();
 
 // Class A — intent to author/modify a prompt (EN + RU).
-const A = /prompt|промпт|промт/;
+// EN needs a word boundary: bare /prompt/ also matches "promptly"/"prompted".
+const A = /\bprompt(s|ing)?\b|промпт|промт/;
 
 // Class B — multi-agent signal. STRONG tokens only; bare "agent"/"агент" is
 // excluded on purpose (user agent, support agent, …). RU matched by root
-// (JS \b is not Cyrillic-aware), so morphology is covered.
+// (JS \b is not Cyrillic-aware), so the "рой/команда" branch anchors on a
+// preceding non-Cyrillic char instead — otherwise "рой" matches inside
+// imperative verbs (настрой/построй/устрой агента = false positive) — and
+// covers the case forms команда/команды/команду/команде/командой/команд.
 const B = [
   /multi-?agent|мультиагент/,
   /orchestrat|оркестрат|оркестрир/,
@@ -44,7 +48,8 @@ const B = [
   /fan-?out/,
   /agentic/,
   /agent\s+(team|swarm)/,
-  /(рой|команд[аыео])\s+\S*агент/,
+  /(team|swarm|fleet)\s+of\s+agents?/,
+  /(?:^|[^а-яё])(?:ро(?:й|я|ю|ем|е)|команд(?:[аыуое]й?|ами|ах)?)\s+\S*агент/,
 ];
 
 const fire = A.test(p) && B.some((r) => r.test(p));

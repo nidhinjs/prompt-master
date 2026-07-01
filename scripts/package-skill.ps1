@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Собирает self-contained скилл-бандл (ZIP) для загрузки в Claude.ai / ручной установки.
 
@@ -47,7 +47,7 @@ if (-not (Test-Path $pluginJson)) { Fail "Не найден plugin.json: $plugin
 if (-not (Test-Path (Join-Path $skillDir 'SKILL.md'))) { Fail "Не найден SKILL.md в $skillDir" }
 
 # --- Версия (канон = plugin.json) ---
-$pluginText = Get-Content -Raw -LiteralPath $pluginJson
+$pluginText = Get-Content -Raw -LiteralPath $pluginJson -Encoding UTF8
 if ($pluginText -notmatch '"version"\s*:\s*"(\d+\.\d+\.\d+)"') { Fail "Не удалось прочитать version из plugin.json" }
 $version = $Matches[1]
 
@@ -70,8 +70,12 @@ Compress-Archive -Path (Join-Path $skillDir '*') -DestinationPath $zipPath -Forc
 Write-Host "  ok $zipPath" -ForegroundColor Green
 
 # --- Санити-проверка: SKILL.md в корне архива ---
+# ZipArchive обязательно закрываем, иначе открытый handle живёт до конца
+# сессии и повторный запуск падает на Remove-Item ("file in use").
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$entries = [System.IO.Compression.ZipFile]::OpenRead($zipPath).Entries.FullName
+$zip = [System.IO.Compression.ZipFile]::OpenRead($zipPath)
+try     { $entries = @($zip.Entries.FullName) }
+finally { $zip.Dispose() }
 if ($entries -notcontains 'SKILL.md') { Fail "В корне архива нет SKILL.md — проверь layout" }
 Write-Host "  верх архива: $(( $entries | Where-Object { $_ -notmatch '/' } ) -join ', ')" -ForegroundColor DarkGray
 

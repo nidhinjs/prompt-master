@@ -55,18 +55,16 @@ cd prompt-master-za
 
 ## Способ 3: Ручная установка (Claude Code skills dir)
 
-Скопируй self-contained папку навыка в каталог скиллов Claude:
-
-- **macOS**: `~/Library/Application Support/Claude/skills/`
-- **Windows**: `%APPDATA%/Claude/skills/`
-- **Linux**: `~/.config/Claude/skills/`
+Скопируй self-contained папку навыка в каталог персональных скиллов Claude Code — на всех ОС это `~/.claude/skills/`:
 
 ```bash
 cp -r plugins/prompt-master/skills/prompt-master \
-      ~/.config/Claude/skills/prompt-master
+      ~/.claude/skills/prompt-master
 ```
 
-Перезапусти Claude.
+(Windows без WSL: `%USERPROFILE%\.claude\skills\prompt-master`.)
+
+Перезапусти Claude Code. Пути вида `~/.config/Claude/skills/` относятся к другим продуктам — Claude Code их не сканирует.
 
 ---
 
@@ -96,7 +94,7 @@ cp -r plugins/prompt-master/skills/prompt-master \
 /plugin marketplace remove prompt-master
 
 # Ручная установка
-rm -rf ~/.config/Claude/skills/prompt-master
+rm -rf ~/.claude/skills/prompt-master
 ```
 
 ---
@@ -105,5 +103,5 @@ rm -rf ~/.config/Claude/skills/prompt-master
 
 - `plugins/prompt-master/skills/prompt-master/SKILL.md` — полная логика навыка
 - `plugins/prompt-master/skills/prompt-master/references/templates.md` — шаблоны промптов
-- `plugins/prompt-master/skills/prompt-master/references/patterns.md` — 46 паттернов-фиксов
+- `plugins/prompt-master/skills/prompt-master/references/patterns.md` — 51 паттернов-фиксов
 - [CHANGELOG.md](../CHANGELOG.md) — история версий

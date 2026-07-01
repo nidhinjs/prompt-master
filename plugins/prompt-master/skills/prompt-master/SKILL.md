@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.24.0
+version: 1.25.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -18,18 +18,18 @@ Keep internal analysis terse and silent — do not narrate the extraction, routi
 
 **Hard rules — NEVER violate these**
 
-- Do not output a prompt without first confirming the target tool — ask if ambiguous
+- Do not output a prompt without first confirming the target tool — ask if ambiguous. If that question goes unanswered (or the cap is spent), do not stall: deliver the best-effort prompt routed to the closest category and surface the choice as an explicit `Assumed target tool:` line in the note — never silently
 - Prefer simpler techniques (role assignment, few-shot, grounding anchors, chain of thought) over complex meta-reasoning frameworks in single-prompt contexts. The following techniques carry higher fabrication risk when used in a single prompt and should only be applied when the user explicitly requests them and the target tool supports them:
   - **Mixture of Experts** -- simulated multi-persona routing in a single forward pass
   - **Tree of Thought** -- simulated branching without real parallel execution
   - **Graph of Thought** -- requires an external graph engine not present in most tools
   - **Universal Self-Consistency** -- requires independent sampling passes
   - **Prompt chaining as a layered technique** -- compounds fabrication risk across longer chains
-- Do not add Chain of Thought to reasoning-native models (o3, o4-mini, DeepSeek thinking mode / R1, Qwen3 thinking mode, Grok grok-4.3, Kimi K2.x thinking) — they think internally, CoT degrades output
+- Do not add Chain of Thought to reasoning-native models — they think internally, CoT degrades output. **Canonical no-CoT list (the single source — other sections reference it, do not restate it):** o3, o4-mini, DeepSeek thinking mode / R1, Qwen3 thinking mode, Grok grok-4.3, Kimi K2.x thinking, MiniMax M3. Also never add "think step by step" to Claude Opus 4.x (adaptive thinking — see the Claude profile) or GPT-5.5 (outcome-first)
 - Do not instruct Claude Fable 5 / Mythos 5 to echo, transcribe, reproduce, or "show your reasoning/thinking" in the response — this triggers a `reasoning_extraction` refusal (applies if/when Fable 5 / Mythos 5 are available — both suspended since 2026-06-12, see models.md). For visible progress on long runs, use a send-to-user tool instead
 - Do not ask more than 3 clarifying questions before producing a prompt
 - Do not pad output with explanations the user did not request
-- **Never ship a silently-derived output format for a research/report prompt or ANY Grok prompt.** When the user has not stated the answer's format, you MUST do one of two things: ask it as your first clarifying question, OR state the assumed format on its own explicit line in the note ("Assumed output format: … — change if needed"). A baked-in format with no question and no assumption-line is a defect — this overrides "fix silently" and Template N's structure defaults. **Likewise for settings-as-knobs tools (Gamma, Perplexity, Grok, image-AI): surface every knob you defaulted on an `Assumed settings:` note line — list ONLY the knobs the user did NOT specify (omit any they already set — never restate a user-given value), each with its value + where to change it — never an extra clarifying question. A silently-baked knob is the same defect; skip the line only when the tool has no knobs (or the user already set them all).**
+- **Never ship a silently-derived output format for a research/report prompt or ANY Grok prompt.** When the user has not stated the answer's format, ask it as your **first clarifying question**; only when the question cap is already spent (or questions go unanswered) state the assumed format on its own explicit line in the note ("Assumed output format: … — change if needed"). A baked-in format with no question and no assumption-line is a defect — this overrides "fix silently" and Template N's structure defaults. **Likewise for settings-as-knobs tools (Gamma, Perplexity, Grok, image-AI, video-AI): surface every knob you defaulted on an `Assumed settings:` note line — list ONLY the knobs the user did NOT specify (omit any they already set — never restate a user-given value), each with its value + where to change it — never an extra clarifying question. A silently-baked knob is the same defect; skip the line only when the tool has no knobs (or the user already set them all).**
 
 ---
 
@@ -88,12 +88,12 @@ Model IDs, current defaults, and version-tied params are volatile — confirm th
 
 ### Gotchas — quick per-tool cheat-sheet
 
-Catch these before generating; open the full profile in [references/tool-profiles.md](references/tool-profiles.md) when the task needs more. For settings-as-knobs tools (Gamma, Perplexity, Grok, image-AI), surface defaulted knobs as an `Assumed settings:` note line (see Hard rule above).
+Catch these before generating; open the full profile in [references/tool-profiles.md](references/tool-profiles.md) when the task needs more. For settings-as-knobs tools (Gamma, Perplexity, Grok, image-AI, video-AI), surface defaulted knobs as an `Assumed settings:` note line (see Hard rule above).
 
 - **Claude Opus 4.8** (default for "Claude" when unspecified) over-engineers — add "Only make changes directly requested. No extra features, files, or refactors." Front-load intent, file scope, constraints, acceptance criteria (4.7/4.8 read literally).
 - **Claude Fable 5 / Mythos 5** — ⚠️ **suspended/unavailable since 2026-06-12** (US export-control directive; see models.md). Do NOT route here. If restored: never ask it to show/echo its reasoning (`reasoning_extraction` refusal); steer with brief intent + `effort`.
 - **GPT-5.5** — outcome-first, not step-by-step; avoid absolutes (ALWAYS / NEVER) for non-invariants; control length via `text.verbosity`, not prose.
-- **o3 / o4-mini / DeepSeek thinking / Qwen3-thinking / Grok grok-4.3 / Kimi K2.x thinking** — reasoning-native: NEVER add CoT or "think step by step"; short clean instructions only.
+- **Reasoning-native models** (canonical no-CoT list — see Hard rules above) — NEVER add CoT or "think step by step"; short clean instructions only.
 - **DeepSeek (V4)** — current models `deepseek-v4-pro` (hard reasoning/coding) / `deepseek-v4-flash` (simple/cheap/fast); each dual-mode. Thinking mode: reasoning-native (no CoT), depth via `reasoning_effort` `high`/`max` (no low/medium), and `temperature`/penalties are ignored — don't set them. Non-thinking: ordinary chat (system prompt + few-shot OK). Preserve `reasoning_content` across turns once a tool call occurs. Legacy `deepseek-chat`/`deepseek-reasoner` retire 2026-07-24. No native deep-research agent.
 - **Grok (xAI)** — reasoning-native (no CoT; depth via `reasoning_effort`, no `stop`/penalty params). No realtime knowledge unless **Web/X Search** is enabled; X Search is the signature for social/trend tasks. Set search filters (handles/domains/dates) as parameters, not prose. Deep research → `grok-4.20-multi-agent` (4 or 16 agents). Always specify the answer's output format — if the user didn't state it, ask first or surface it as an explicit assumption (never silently derive). When search is enabled and the task is factual, require inline citations (cite only retrieved sources; never fabricate).
 - **Kimi (Moonshot AI)** — `kimi-k2.6` default / `kimi-k2.7-code` coding (thinking always on) / `kimi-k2.5` / `moonshot-v1-*` legacy. Reasoning-native (no CoT); keep defaults — don't tune `temperature` on K2.x (full sampling is `moonshot-v1-*`-only); `tool_choice` only `auto`/`none` with thinking. Don't put tool schemas in the system prompt (pass via `tools`); preserve `reasoning_content` across tool turns. `$web_search` requires thinking OFF — can't deep-reason + live-search in one call. **Multi-agent = Agent Swarm** (app; K2.6 self-orchestrates — don't set agent count / script sub-agents) ≠ **Kimi-Researcher** (single-agent, app-only); deep research via API = your own tool-loop. Paid/scale features (Swarm, Kimi Claw) are tier-gated — surface as prerequisite, don't assume. `kimi-latest` deprecated 2026-01-28.
@@ -102,8 +102,8 @@ Catch these before generating; open the full profile in [references/tool-profile
 - **Multi-agent / orchestrator prompt request** (user asks for a prompt for an orchestrator, fan-out, sub-agents, or an agent team) — load the **Agentic Prompt Fragments** in [references/templates.md](references/templates.md); default to a single loop, add orchestration only when the task hits the "when to orchestrate" criteria there. **Exception — a vendor-managed swarm (e.g. Kimi Agent Swarm): the model self-orchestrates, so do NOT design a topology or script sub-agents** — give one decomposable task + final artifact (see the Kimi carve-out there).
 - **Research tools** (Perplexity, Gemini/GPT Deep Research) — prompt as a research brief (Template N) with a required Data-gaps/confidence section and **inline citations** (cite only retrieved sources; never fabricate). **Perplexity: Agent API (`/v1/agent`, `responses.create`) is the recommended default for new apps; Sonar API (`sonar`/`sonar-pro`/`sonar-deep-research`) for direct search-grounded answers.** Sonar search is driven by the user message (system prompt isn't seen by search); set domain/recency limits as request parameters, not prose; UI Focus/Spaces ≠ API; "Search as Code" is a blog concept, not a callable feature.
 - **Local / open-weight** (Ollama, Llama, Mistral) — ask which model is running; keep prompts short and flat, no deep nesting; always include a system-prompt role.
-- **Image generation** — Midjourney V8.1 wants comma descriptors + `--oref` (not the retired `--cref`); SD/ComfyUI require a mandatory negative prompt (ComfyUI: separate Positive / Negative blocks); DALL·E is retired → GPT-image (`gpt-image-2`); **character-consistency / brand → Nano Banana 2 or Pro, FLUX.2 multi-ref, or `--oref` — never a fast/Lite tier**.
-- **Video generation** — current: Veo 3.1 / Kling 3.0 / Runway Gen-4.5 / Seedance 2.0 / LTX-2 / Luma ray-3.2. ⚠️ **flag and don't default to sunsetting models — Sora (2026-09-24), Runway `gen4_aleph` (2026-07-30), Veo 2/3 (retired)**; conversational edit (Omni Flash, Grok) → short delta + "Keep everything else the same" + `<FIRST_FRAME>` / `<IMAGE_REF_n>` tags.
+- **Image generation** — Midjourney V8.1 wants comma descriptors + `--oref` (not the retired `--cref`); SD/ComfyUI: always include a negative prompt (optional in the API but strongly recommended; ComfyUI: separate Positive / Negative blocks); DALL·E is retired → GPT-image (`gpt-image-2`); **character-consistency / brand → Nano Banana 2 or Pro, FLUX.2 multi-ref, or `--oref` — never a fast/Lite tier**.
+- **Video generation** — current: Veo 3.1 / Kling 3.0 / Runway Gen-4.5 / Seedance 2.0 / LTX-2 / Luma ray-3.2. ⚠️ **flag and don't default to sunsetting models — Sora (2026-09-24), Runway `gen4_aleph` (2026-07-30), Veo 2/3 (retired)**; surface defaulted duration/resolution/aspect/mode on the `Assumed settings:` line (Hard rule above); conversational edit (Omni Flash, Grok) → short delta + "Keep everything else the same" + `<FIRST_FRAME>` / `<IMAGE_REF_n>` tags — full structure in the **Conversational video editing** section of [references/templates.md](references/templates.md).
 - **Full-stack generators** (Bolt, v0, Lovable, Figma Make, Stitch) — scope down hard; specify stack + what NOT to scaffold to prevent boilerplate bloat.
 - **Gamma (AI presentations / text-to-deck)** — app + Generate API. Pick mode by input: idea→Generate, existing notes→Paste in text (`\n---\n` splits cards), file/URL→Import. Build a structured deck brief (Template O): role + audience + goal + **explicit card count** + sections + tone + density + visuals + exclusions. Density/visuals/tone are Advanced **settings** (Text Content = Minimal/Concise/Detailed; Image Source = Stock), not just prose — note them as setup. **Provide real data or explicit [placeholder]s — Gamma fabricates figures.** Brand = custom Theme, polish = Gamma Agent (post-gen) — don't promise exact layout/brand/animations via the prompt. Credits/labels are volatile — don't hardcode.
 - **Stale model facts** — model IDs, defaults, and version-tied params drift; confirm against [references/models.md](references/models.md) and re-verify any section older than 60 days before asserting (pattern #38).
@@ -143,10 +143,10 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - Assumes prior knowledge → prepend memory block with all prior decisions
 - Invites hallucination → add grounding constraint: "State only what you can verify. If uncertain, say so."
 - Verification/QA claim with no evidence → require citing the exact output that justifies the claim, not asserting it
-- No mention of prior failures → ask what they already tried (counts toward 3-question limit)
+- Fixing or debugging an EXISTING prompt with no mention of prior failures → ask what they already tried (counts toward 3-question limit). Does not apply to brand-new prompt requests — generate without asking
 
 **Format failures**
-- No output format or tool settings specified → derive from task type, but **surface the derived format AND any defaulted knobs (Gamma/Perplexity/Grok/image-AI) as explicit assumption lines** in the note (never silently); if the format materially shapes the answer (research/report task, or any Grok prompt) → **ask format as the first clarifying question** instead (knobs are always surfaced, never asked)
+- No output format or tool settings specified → derive from task type, but **surface the derived format AND any defaulted knobs (Gamma/Perplexity/Grok/image-AI/video-AI) as explicit assumption lines** in the note (never silently); if the format materially shapes the answer (research/report task, or any Grok prompt) → **ask format as the first clarifying question**, falling back to the assumption line only when the cap is spent (knobs are always surfaced, never asked)
 - Factual / research / report prompt for a retrieval-capable tool (Grok + Web/X Search, Perplexity, deep-research modes, DeepSeek app) with no citation requirement → add the **citation contract**: inline source link per non-obvious claim + a closing sources list + "cite only sources you actually retrieved, never fabricate a citation or URL; mark unsourced claims [uncertain]". Do NOT add it for creative, code, transform, or no-retrieval tasks — forcing citations there invites fabricated sources
 - Implicit length ("write a summary") → add word or sentence count
 - No role assignment for complex tasks → add domain-specific expert identity
@@ -160,12 +160,12 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - Behavior-preserving refactor/migration assumes tests exist → require confirming or establishing characterization tests first ("0 failed" with 0 tests is false confidence); on a migration, behavioral assertions stay green but test plumbing (mocks, imports) may change — never write "tests pass unchanged" next to a migration
 
 **Reasoning failures**
-- Logic or analysis task with no step-by-step → add "Think through this carefully before answering"
-- CoT added to o3/o4-mini/DeepSeek-thinking/Qwen3-thinking/Grok grok-4.3/Kimi-K2.x-thinking → REMOVE IT
+- Logic or analysis task with no step-by-step, on a target that is NOT reasoning-native (canonical no-CoT list in Hard rules) and not Opus 4.x / GPT-5.5 → add "Think through this carefully before answering"
+- CoT added to a model on the canonical no-CoT list — including softer phrasings like "think through this carefully" → REMOVE IT
 - "Show/echo/reproduce your reasoning" sent to Claude Fable 5/Mythos 5 → REMOVE IT (triggers reasoning_extraction refusal); use a send-to-user tool for visible progress instead
 - New prompt contradicts prior session decisions → flag, resolve, include memory block
 
-**Model-fit failures (current-gen models)**
+**Model-fit failures (current-gen models; Fable 5 items apply only if/when it is restored — see Hard rules)**
 - Step-by-step process over-specified for GPT-5.5 or Fable 5 → strip it, switch to outcome-first (goal + success criteria + constraints + stop rules); let the model choose the path
 - Absolutes (ALWAYS/NEVER/MUST/ONLY) used for non-invariants on GPT-5.5 → soften to plain instructions; reserve absolutes for true safety/policy/invariant constraints
 - In-prompt verbosity caps for GPT-5.x API context → replace with the `text.verbosity` parameter where applicable
@@ -211,8 +211,9 @@ When the user's request references prior work, decisions, or session history —
 
 **Source citations** — for factual / research / report prompts targeting a tool that can retrieve sources (Grok with Web/X Search, Perplexity, deep-research modes, DeepSeek app): require inline attribution. Add to the prompt: "Cite each non-obvious factual claim inline with a link to the source you actually opened; end with a sources list; never fabricate a citation or URL; if a claim can't be sourced, mark it [uncertain] rather than inventing a reference." Apply ONLY when the tool can retrieve AND the task is factual — omit for creative, code, transform, or no-retrieval tasks (forcing citations there invites fabricated sources, which the grounding rule forbids).
 
-**Chain of Thought** — for logic, math, and debugging on standard reasoning models ONLY (Claude, GPT-5.x, Gemini, Qwen2.5, Llama). Never on o3/o4-mini/DeepSeek-thinking/Qwen3-thinking/Grok grok-4.3/Kimi-K2.x-thinking.
+**Chain of Thought** — for logic, math, and debugging ONLY on models WITHOUT built-in reasoning (Gemini non-thinking modes, Qwen2.5, Llama, Mistral, other local/legacy chat models).
 "Think through this step by step before answering."
+Never on the canonical no-CoT list (Hard rules above), never on Claude Opus 4.x (adaptive thinking — the sanctioned depth lever is "Think carefully before responding", see the Claude profile), never on GPT-5.5 (outcome-first).
 
 ---
 

@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.25.0] - 2026-07-02
+
+Консистентность-релиз по итогам хеликоптер-ревью (26 подтверждённых расхождений): устранён дрейф между слоями (SKILL.md ↔ профили ↔ шаблоны ↔ доки), закрыты дыры роутинга, добавлены защитные линт-проверки и тесты хука.
+
+### Added
+- **Канонический no-CoT список** — единственный источник в hard rules SKILL.md (+ MiniMax M3); Gotchas, диагностики, Safe Techniques и Template E теперь ссылаются на него, а не дублируют (дрейф ловит линт).
+- **Comet tie-break** в Routing Index (research-вопрос → Perplexity; действия в браузере → Browser agents; автономная миссия → оркестраторы).
+- Video AI профиль: указатели на Template I и секцию «Conversational video editing»; сама секция добавлена в ToC templates.md (была сиротой), как и «Agentic Prompt Fragments».
+- `scripts/test-hook.js` — 18 fixture-тестов хука multi-agent-detect.
+- `lint.ps1`: проверки ToC ↔ секции templates.md, cross-ref'ов «Template X»/«pattern #NN», no-CoT-синхронизации, knob-перечней, Comet tie-break, счётчика паттернов в README.ru/installation.md.
+- `docs/REFRESH_CHECKLIST.md` — «sites to touch» при обновлении модельных фактов; research-доки v1.24 закоммичены в `docs/`.
+
+### Changed
+- Safe Techniques: CoT больше не рекомендуется для Claude/GPT-5.x (противоречило models.md и профилю Claude); Template M — «Think carefully before starting.» вместо запрещённого «step-by-step».
+- Hard rules: снят deadlock «подтверди тул vs не стопорись» (явная строка `Assumed target tool:`); правило output-format унифицировано (вопрос первым, note только при исчерпанном лимите).
+- Knob-перечень settings-as-knobs дополнен **video-AI** (SKILL.md ×3, pattern #48, Gotchas).
+- Факты сверены с research-доками 2026-06-30: Kling `mode` 4k помечен неподтверждённым; Sora Characters — только non-human; SD 3.5 `cfg_scale` 1–20, negative optional; DALL·E 2 variations endpoint ещё жив; Midjourney `--ow` 1–1000.
+- Grok Voice: честная оговорка «нет верифицированного профиля» вместо роутинга в ElevenLabs-профиль; заголовок Opus 4.8 в профиле Claude исправлен на «current default».
+- Диагностика «спроси, что уже пробовали» ограничена сценарием fix/debug существующего промпта; pattern #18 учитывает тулы без negative-prompt (Grok Imagine/SeeDream, Midjourney `--no`).
+- docs/installation.md: Способ 3 указывает на `~/.claude/skills/` (были пути Claude Desktop), счётчик паттернов 46→51, форма вызова `/prompt-master:prompt-master` унифицирована с README.
+
+### Fixed
+- Хук: «настрой/построй агента» больше не даёт ложного срабатывания, «promptly» не считается за prompt, падежи «команду/командой агентов» распознаются; добавлен паттерн «team of agents».
+- `bump-version.ps1`: замена frontmatter-версии реально ограничена первым вхождением (у статического `[regex]::Replace` 4-й int-аргумент — это RegexOptions, а не count); запись UTF-8 строго без BOM; чтение с `-Encoding UTF8` (PS 5.1 иначе корёжит кириллицу).
+- `package-skill.ps1`: ZipArchive закрывается (повторный запуск в той же сессии не падает на «file in use»).
+- `.ps1`-скрипты сохранены UTF-8 with BOM — Windows PowerShell 5.1 парсит кириллицу корректно (SHELL_PITFALLS SP-запись).
+- patterns.md: битая ссылка «#40 folds #37» (номер #37 переиспользован другим паттерном).
+
 ## [1.24.0] - 2026-07-01
 
 Полный рефреш **image + video профиля**. Актуализированы все существующие инструменты (снята «DALL-E-3-эпоха») и добавлены новые семейства, с верификацией фактов против живых доков (2026-07-01) и явной секцией дат в `models.md`. Роутинг теперь различает «быстро/дёшево» vs «бренд/консистентность» и помечает закрывающиеся модели.
@@ -348,6 +376,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.25.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.25.0
 [1.24.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.24.0
 [1.23.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.23.0
 [1.22.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.22.0

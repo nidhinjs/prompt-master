@@ -89,7 +89,7 @@ Write a prompt for Kimi to research X across multiple sources, with citations
 Or invoke it explicitly:
 
 ```
-/prompt-master
+/prompt-master:prompt-master
 
 I want to ask Claude Code to build a todo app with React and Supabase
 ```

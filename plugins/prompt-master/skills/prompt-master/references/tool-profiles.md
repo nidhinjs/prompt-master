@@ -48,6 +48,8 @@ Pick the row that matches the user's tool, then open only that profile below.
 | **Workflow AI** | Automation recipes (Zapier, Make, n8n) | User is building a no-code automation |
 | **Prompt Decompiler** | Break down, adapt, simplify, or split an existing prompt | User pastes an existing prompt to analyse or reuse |
 
+**Comet appears in three rows — tie-break:** a research/search *question* → **Perplexity**; in-browser *actions* (click, fill forms, transact) → **Computer-Use / Browser agents**; a long multi-step autonomous *mission* (decompose-and-deliver) → **Manus / multi-agent orchestrators**.
+
 ---
 
 **Claude (claude.ai, Claude API, Claude 4.x)**
@@ -64,7 +66,7 @@ Current default is **Claude Opus 4.8** (4.7 selectable) — assume Opus 4.8 unle
 - Do NOT add "think step by step" or fixed thinking-budget instructions — Opus 4.x uses adaptive thinking and calibrates depth automatically. To influence depth: "Think carefully before responding" (more) or "Prioritize responding quickly" (less).
 - Use Template M for agentic or multi-step tasks.
 
-*Opus 4.8 (selectable fallback):*
+*Opus 4.8 (current default):*
 - Shares 4.7's literalism and adaptive thinking — the same front-loading discipline applies. Treat the first turn as the only turn for complex work: intent, scope, constraints, acceptance criteria up front.
 - 1M-token context window — large multi-file context can go in a single prompt, but keep it relevant; padding still dilutes attention.
 - Effort/thinking depth is calibrated automatically — do not specify an effort level or thinking budget.
@@ -139,7 +141,7 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 - **Require inline citations when search is on and the task is factual** — Web/X Search return citations, but the prompt must ask for them: "Cite each non-obvious claim inline with a link to the source you actually retrieved; end with a sources list; never fabricate a citation or URL; mark unsourced claims [uncertain]." Skip for creative / code / no-search prompts.
 - **Surface the knobs you defaulted** — deliver an `Assumed settings:` note line for the levers the user didn't set (e.g. `reasoning_effort=low · Web+X Search on · no handle/domain/date filter`; add `· 4 agents` only for `grok-4.20-multi-agent`), each with where to change it (request parameters). Never ask — always overridable. Keep it separate from the `Assumed output format` line above (format may still be asked first).
 - **OpenAI-compatible API** (`base_url=https://api.x.ai/v1`) — prompts transfer from GPT; the Responses API is preferred (stateful, `previous_response_id`). No role-order restriction.
-- Image/video (**Grok Imagine**) and **Grok Voice** are separate APIs — route those requests to the Image / Video / Voice profiles.
+- Image/video (**Grok Imagine**) are separate APIs — route those requests to the Image / Video profiles. **Grok Voice** (realtime / TTS / STT) has **no verified prompting profile in this skill** — do not apply the ElevenLabs voice guidance to it; state the gap and point the user to the current xAI voice docs instead of inventing markup.
 
 ---
 
@@ -375,7 +377,7 @@ First detect: generation from scratch or editing an existing image?
 
 - **Midjourney (V8.1)**: Comma-separated descriptors, not prose. Subject first, then style, mood, lighting, composition. Parameters at end: `--ar 16:9 --v 8.1 --s 100`. Character/object consistency via `--oref [url] --ow 100` (Omni Reference — replaces the retired `--cref`); style via `--sref [url] --sw 100`. Also `--chaos 0–100`, negatives `--no a, b`, `--hd` for native 2K, `--raw` for stricter adherence. *Syntax: comma-descriptor list + `--` flags; no full sentences.*
 - **GPT-image (`gpt-image-2`)**: OpenAI's current image model — DALL·E is retired; `gpt-image-2` is the flagship (older `gpt-image-1.5` / `gpt-image-1-mini` / `chatgpt-image-latest` are sunset-scheduled). Prose works; add "do not include text unless specified." Knobs: `size` (arbitrary, ÷16, ratio ≤3:1), `quality` low/med/high, `n`, `background` opaque/auto, `output_format`, `moderation` auto/low. Returns base64. Edit/compose via `/images/edits` with up to 16 reference images + optional mask.
-- **Stable Diffusion (3.5)**: `(word:weight)` syntax for emphasis. Models `sd3.5-large` / `-large-turbo` / `-medium` / `-flash`; `cfg_scale` 1–10; negative prompt MANDATORY; `style_preset` for style bias. Edit via dedicated endpoints (inpaint / outpaint / search-and-replace / erase) and Control (structure / style-transfer). *Syntax: weighted positive + explicit negative; both required.*
+- **Stable Diffusion (3.5)**: `(word:weight)` syntax for emphasis. Models `sd3.5-large` / `-large-turbo` / `-medium` / `-flash`; `cfg_scale` typical 1–20 (default varies by endpoint); negative prompt optional in the API but strongly recommended — include one; `style_preset` for style bias. Edit via dedicated endpoints (inpaint / outpaint / search-and-replace / erase) and Control (structure / style-transfer). *Syntax: weighted positive + explicit negative block.*
 - **FLUX.2** (klein fast · pro · flex typography · max +grounding · dev): natural-language OR structured/JSON prompts (subject, lighting, camera_angle, composition) + hex colors for exact color. Knobs: `guidance` 1.5–10, `steps` 1–50, `safety_tolerance` 0–5. Multi-reference editing up to 8 (10 in playground) for character/style consistency. *Syntax: prose or JSON; no SD-style weights.*
 - **SeeDream (5.0)**: ByteDance unified generate+edit (ModelArk). Model e.g. `seedream-5-0-260128` / `-lite`; `size` 1K–4K; multi-image references (character / style / subject transfer), grouped outputs. Specify art style explicitly before scene content. (No documented negative-prompt parameter — steer via positive wording.)
 - **Google Nano Banana 2** (`gemini-3.1-flash-image`): generalist with Google-Search grounding + character-consistency. **Lite** (`gemini-3.1-flash-lite-image`) is the fast/cheap **1K-only** tier optimized for speed — **no grounding, no character-consistency, no style refs**. **Pro** (`gemini-3-pro-image`) for the hardest jobs. **Route character-consistency / brand work to Nano Banana 2 or Pro, NOT Lite.** Edit by passing the source image with the instruction.
@@ -419,15 +421,16 @@ Read templates.md Template K for the full ComfyUI template.
 
 **Video AI** (Veo 3.1, Kling 3.0, Runway Gen-4.5, Sora, LTX-2, Luma Ray, Seedance 2.0, Grok Imagine, Omni Flash)
 - **Veo 3.1** (Google; `veo-3.1-generate-preview`, GA `veo-3.1-generate-001`): text- or image-to-video with synced audio; up to 3 subject reference images; clips 4/6/8s; 720p/1080p/4K (4K not on the Lite tier); first/last-frame, extend, insert/remove objects. Veo 2.0/3.0 are deprecated — migrate to 3.1.
-- **Kling 3.0 / 3.0 Omni** (`kling-v3` / `kling-v3-omni`): strong realistic motion — describe body movement, camera angle, shot type. Multi-shot (`Shot 1 (3s): …`), native audio, element/voice references via Omni tags `<<<element_1>>>` / `<<<image_1>>>`. Duration 3–15s; `mode` std (720p) / pro (1080p) / 4k; `cfg_scale` 0–1. Extension via legacy `/v1/videos/video-extend`.
+- **Kling 3.0 / 3.0 Omni** (`kling-v3` / `kling-v3-omni`): strong realistic motion — describe body movement, camera angle, shot type. Multi-shot (`Shot 1 (3s): …`), native audio, element/voice references via Omni tags `<<<element_1>>>` / `<<<image_1>>>`. Duration 3–15s; `mode` std (720p) / pro (1080p) — ⚠️ a `4k` value appears in the API schema but the product guide lists only 720p/1080p; verify before recommending it; `cfg_scale` 0–1. Extension via legacy `/v1/videos/video-extend`.
 - **Runway** (`gen4.5` generate; `aleph2` video-to-video edit): cinematic language, reference film styles. `ratio` (`1280:720` / `720:1280` / `1104:832` / `832:1104` / `960:960` / `1584:672` / `672:1584`), `duration` 2–10s, `seed`; aleph2 takes up to 5 keyframes. ⚠️ `gen4_aleph` retired 2026-07-30 → use `aleph2`. Runway also hosts Veo 3.1 / Seedance 2.0 / Omni Flash.
-- **Sora** (`sora-2` / `sora-2-pro`): ⚠️ **scheduled shutdown 2026-09-24** — flag this and prefer an alternative for new work. Direct as a film shot; camera movement critical; clips up to 20s, extend to 120s; `input_reference` first-frame; Characters API for reusable subjects.
+- **Sora** (`sora-2` / `sora-2-pro`): ⚠️ **scheduled shutdown 2026-09-24** — flag this and prefer an alternative for new work. Direct as a film shot; camera movement critical; clips up to 20s, extend to 120s; `input_reference` first-frame; Characters API for reusable **non-human** subjects (human likeness in uploads is blocked by default — don't route a recurring human protagonist there).
 - **LTX-2** (Lightricks): fast; native 4K up to 50fps with synced audio (≤10s). Write a concise chronological shot description (<200 words). Image-to-video, keyframe conditioning, extend, video-to-video; LoRA for style.
 - **Luma Ray** (Dream Machine; `ray-3.2`): cinematic — reference lens, lighting, color grading. `type` video / video_edit / video_reframe; resolution 360p–1080p; 5s or 10s; up to 64 keyframes; edit controls (depth / pose `precise`/`coarse` / trajectory).
 - **Seedance 2.0** (ByteDance; `dreamina-seedance-2-0-260128`, plus Fast / Mini variants): multimodal references (image + video + audio, addressed as "Image 1"), native generated audio, first/last-frame, extend. `ratio`, `duration` 4–15s, `resolution` 480p/720p/1080p/4K (1080p not on Fast/Mini; 4K only on standard).
 - **Omni Flash** (Google; `gemini-omni-flash-preview`, Interactions API): conversational video generation + editing — iterate in natural language, keeping unchanged parts. Use single-scene cues ("In a single continuous shot"), role tags `<FIRST_FRAME>` / `<IMAGE_REF_n>`, timecodes `[0-3s] …`; for edits, short direct instructions + "Keep everything else the same" (long re-descriptions cause drift).
 - **Grok Imagine video** (`grok-imagine-video-1.5` / `grok-imagine-video`): five modes — text-to-video, image-to-video (source = first frame), reference-to-video (`grok-imagine-video`, refs as `<IMAGE_n>`, no first-frame lock), edit, extend. `duration` ≤15s, `resolution` 480p/720p/1080p (1080p only on `-1.5` for image-to-video). No negative-prompt parameter.
 - **Surface defaulted knobs** — deliver an `Assumed settings:` note line for video params the user didn't set (duration, resolution, aspect ratio, `mode`/quality tier), each with where to change it.
+- Read templates.md **Template I** for the full generation template; for conversational editing (Omni Flash / Grok Imagine / Runway `aleph2`) read the **Conversational video editing** section in [templates.md](templates.md).
 
 ---
 
@@ -435,6 +438,7 @@ Read templates.md Template K for the full ComfyUI template.
 - Specify emotion, pacing, emphasis markers, and speech rate directly
 - Use SSML-like markers for emphasis: indicate which words to stress, where to pause
 - Prose descriptions do not translate — specify parameters directly
+- This profile covers **ElevenLabs only**. Grok Voice and other TTS/STT APIs are NOT covered — don't transplant this markup; say the skill has no verified profile for them and point to the vendor docs
 
 ---
 

@@ -89,7 +89,7 @@ cp -r prompt-master-za/plugins/prompt-master/skills/prompt-master ~/.claude/skil
 Или вызови явно:
 
 ```
-/prompt-master
+/prompt-master:prompt-master
 
 Хочу попросить Claude Code собрать todo-приложение на React и Supabase
 ```

@@ -15,12 +15,14 @@ Full template library for Prompt Master. Read the relevant template when the use
 | [F — Few-Shot](#template-f--few-shot) | Consistent structured output, pattern replication |
 | [G — File-Scope](#template-g--file-scope) | Cursor, Windsurf, Copilot — code editing AI |
 | [H — ReAct + Stop Conditions](#template-h--react--stop-conditions) | Claude Code, Devin — autonomous agents |
-| [I — Visual Descriptor](#template-i--visual-descriptor) | Midjourney, GPT-image, Stable Diffusion, FLUX.2, Sora |
+| [I — Visual Descriptor](#template-i--visual-descriptor) | Midjourney, GPT-image, Stable Diffusion, FLUX.2, SeeDream, Nano Banana — any image or video generation tool |
+| [Conversational video editing](#conversational-video-editing-omni-flash--grok-imagine--runway-aleph2) | Iterative video edits (Omni Flash, Grok Imagine, Runway `aleph2`) |
 | [J — Reference Image Editing](#template-j--reference-image-editing) | Editing an existing image with a reference |
 | [K — ComfyUI](#template-k--comfyui) | ComfyUI node-based image workflows |
 | [L — Prompt Decompiler](#template-l--prompt-decompiler) | Breaking down, adapting, or splitting existing prompts |
 | [M — Opus 4.7 / 4.8 Task Brief](#template-m--opus-47--48-task-brief) | Complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 |
 | [N — Research Brief](#template-n--research-brief) | Deep-research / cited-report tools (Perplexity Deep Research, GPT/Gemini Deep Research, Sonar) |
+| [Agentic Prompt Fragments](#agentic-prompt-fragments) | Prompts for orchestrators, fan-out, sub-agents, agent teams |
 | [O — Deck / Presentation Brief](#template-o--deck--presentation-brief) | Text-to-deck tools (Gamma) |
 
 ---
@@ -144,7 +146,7 @@ Experiment: Give 3 variants ranging from minimal to bold.
 
 *Use for logic-heavy tasks, math, debugging, and multi-factor analysis where the AI needs to reason carefully before committing to an answer.*
 
-**Important:** Only use CoT for standard reasoning models (Claude, GPT-5.x, Gemini). Do NOT add CoT instructions to o3, o4-mini, Grok grok-4.3, Kimi K2.x thinking, or Claude extended thinking — they reason internally and CoT instructions degrade their output.
+**Important:** Only use CoT on models WITHOUT built-in reasoning (Gemini non-thinking modes, Qwen2.5, Llama, Mistral, local/legacy chat models). Do NOT add CoT instructions to any model on the canonical no-CoT list in SKILL.md hard rules — o3, o4-mini, DeepSeek thinking mode / R1, Qwen3 thinking mode, Grok grok-4.3, Kimi K2.x thinking, MiniMax M3 — nor to Claude Opus 4.x (adaptive thinking) or GPT-5.5 (outcome-first): they reason internally and CoT instructions degrade their output.
 
 ```
 [Task statement]
@@ -167,7 +169,7 @@ Give your final answer in <answer> tags only.
 - Analysis where a wrong first impression is likely
 
 **When NOT to use:**
-- o3 / o4-mini / Grok grok-4.3 / Kimi K2.x thinking / reasoning models (they think internally — adding CoT hurts)
+- Any reasoning-native model (canonical no-CoT list in SKILL.md hard rules: o3 / o4-mini / DeepSeek-thinking / Qwen3-thinking / Grok grok-4.3 / Kimi K2.x thinking / MiniMax M3), plus Claude Opus 4.x and GPT-5.5 (they think internally — adding CoT hurts)
 - Simple tasks where the answer is clear (unnecessary overhead)
 - Creative tasks (CoT can kill natural voice)
 
@@ -291,7 +293,7 @@ Negative prompt (platforms that support it): [blurry, watermark, extra fingers, 
 
 **Tool-specific syntax:**
 - **Midjourney (V8.1)**: Comma-separated descriptors, not prose. Add `--ar`, `--sref`, `--oref` (character/object — replaces `--cref`), `--v 8.1` at the end.
-- **Stable Diffusion (3.5)**: Use `(word:1.3)` weight syntax. `cfg_scale` 1–10. Negative prompt is mandatory.
+- **Stable Diffusion (3.5)**: Use `(word:1.3)` weight syntax. `cfg_scale` typical 1–20 (default varies by endpoint). Negative prompt optional in the API but strongly recommended — include one.
 - **GPT-image (`gpt-image-2`)**: Prose works well (DALL·E is retired). Add "do not include any text in the image" unless text is needed; set `size`/`quality` as request params.
 - **FLUX.2 / Nano Banana**: Natural language (FLUX.2 also takes JSON + hex colors). For Google, route character-consistency/brand to Nano Banana 2 or Pro, not the Lite tier.
 - **Video (Veo 3.1 / Kling / Runway / Sora)**: Add camera movement (slow dolly, static, crane up), duration in seconds, and cut style. ⚠️ Sora sunsets 2026-09-24 — prefer Veo 3.1 / Kling 3.0 for new work.
@@ -466,7 +468,7 @@ After each completed step: ✅ [what was done] — [file(s) affected]
 ```
 
 **Thinking depth** — add only when needed, delete otherwise:
-- Hard multi-step task: `"Think carefully and step-by-step before starting."`
+- Hard multi-step task: `"Think carefully before starting."` (never "step-by-step" — banned wording on Opus 4.x, see the Claude profile)
 - Simple targeted change: `"Prioritize responding quickly. This is a scoped change."`
 - Default: say nothing — adaptive thinking calibrates itself.
 
@@ -597,7 +599,7 @@ For each verdict, include an evidence field citing the exact output line / file:
 - **Multi-step** — sequenced steps + checkpoints. Use when sub-tasks have ordering/dependencies.
 - **Long-horizon** — orchestrator + sub-agents + handoffs + loop contract. Use only when scope genuinely needs delegation.
 
-**Sourced guardrails** *(Anthropic "Building effective agents" / context-engineering / long-running harnesses; OpenAI harness-engineering & guardrails; OWASP AI Agent Security — see docs/sources.md):*
+**Sourced guardrails** *(Anthropic "Building effective agents" / context-engineering / long-running harnesses; OpenAI harness-engineering & guardrails; OWASP AI Agent Security — sources list: `docs/sources.md` in the repo, https://github.com/azagreev/prompt-master-za — not shipped inside the installed skill):*
 - **Packet contract — every delegated unit has all 7:** single purpose · explicit inputs · narrow tool permissions · result schema · timeout + budget · evidence requirement · no hidden cross-packet dependency.
 - **Worker context isolation:** give a sub-agent only `{objective, inputs, allowed tools, output schema, trust boundaries, budget, forbidden actions, evidence rules}` — NOT the full parent history, every tool, or secrets. Pass a compact result back, not raw reasoning.
 - **Independent verification (choose by cost/value):** the verifier gets findings + source access, NOT the worker's reasoning. Pick one — independent review · sampling (a subset) · cross-check (two independent outputs) · replay (deterministic rerun) · tests (mechanical).

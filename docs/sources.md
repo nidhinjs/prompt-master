@@ -130,13 +130,13 @@ Full extracted fact-sheets live in the repo `docs/` research files (`image_video
 
 - **Midjourney V8.1** (`--oref`/`--ow` replaces `--cref`; `--hd`=2K; `--sref`/`--sw`) — https://docs.midjourney.com (Version · Parameter List · Omni Reference)
 - **GPT-image `gpt-image-2`** (DALL·E retired 2026-05-12; `gpt-image-1.5`/mini/`chatgpt-image-latest` shutdown 2026-12-01; base64-only; edit ≤16 refs) — https://developers.openai.com/api/docs/guides/image-generation · /api/docs/deprecations
-- **Stable Diffusion 3.5** (`sd3.5-large`/`-turbo`/`-medium`/`-flash`; cfg 1–10; edit/Control endpoints) — https://platform.stability.ai/docs/api-reference
+- **Stable Diffusion 3.5** (`sd3.5-large`/`-turbo`/`-medium`/`-flash`; cfg typical 1–20, negative_prompt optional; edit/Control endpoints) — https://platform.stability.ai/docs/api-reference
 - **FLUX.2** (klein/pro/flex/max/dev; guidance 1.5–10; steps 1–50; multi-ref ≤8–10) — https://docs.bfl.ml/flux_2/flux2_overview
 - **SeeDream 5.0** (`seedream-5-0-260128`/`-lite`; size 1K–4K; negative-prompt undocumented) — https://docs.byteplus.com/en/docs/ModelArk/1541523
 - **Google Nano Banana 2 / Omni Flash** (`gemini-3.1-flash-image`/`-lite-image`/`gemini-3-pro-image`; `gemini-omni-flash-preview`; SynthID; Lite = no char-consistency) — https://ai.google.dev/gemini-api/docs/image-generation · /docs/omni · /docs/pricing
 - **Veo 3.1** (`veo-3.1-generate-preview`; GA `veo-3.1-generate-001`; Veo 2/3 shutdown 2026-06-30) — https://ai.google.dev/gemini-api/docs/video · docs.cloud.google.com Veo 3.1
 - **Runway** (`gen4.5` + `aleph2`; ⚠️ `gen4_aleph` sunset 2026-07-30; ratio 7 values) — https://docs.dev.runwayml.com/api/ · /guides/models/ · /api-details/api_changelog/
-- **Kling 3.0 / Omni** (`kling-v3`/`kling-v3-omni`; cfg 0–1; mode std/pro/4k; extension via legacy `/v1/videos/video-extend`) — https://kling.ai/document-api/
+- **Kling 3.0 / Omni** (`kling-v3`/`kling-v3-omni`; cfg 0–1; mode std/pro (4k в API-схеме, продукт-гайдом не подтверждён); extension via legacy `/v1/videos/video-extend`) — https://kling.ai/document-api/
 - **LTX-2** (checkpoints `ltx-2.3-22b-*`; 4K@50fps + audio ≤10s) — https://github.com/Lightricks/LTX-2
 - **Luma Ray** (`ray-3.2`; video/edit/reframe; pose `precise`/`coarse`) — https://docs.agents.lumalabs.ai/guides/videos/generation/
 - **Seedance 2.0** (`dreamina-seedance-2-0-260128` + Fast/Mini; 4–15s; 4K only standard) — https://docs.byteplus.com/en/docs/ModelArk/1520757

@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Синхронно поднимает версию Prompt Master во всех источниках правды.
 
@@ -69,7 +69,9 @@ foreach ($f in @($pluginJson, $skillMd)) {
 }
 
 # --- Текущая версия (канон = plugin.json) ---
-$pluginText = Get-Content -Raw -LiteralPath $pluginJson
+# -Encoding UTF8 обязателен: PS 5.1 без него читает UTF-8 (без BOM) как ANSI и
+# при записи обратно корёжит кириллицу в description.
+$pluginText = Get-Content -Raw -LiteralPath $pluginJson -Encoding UTF8
 if ($pluginText -notmatch '"version"\s*:\s*"(\d+)\.(\d+)\.(\d+)"') {
     Fail "Не удалось прочитать version из plugin.json"
 }
@@ -111,22 +113,30 @@ if ($DryRun) {
     exit 0
 }
 
+# Запись строго UTF-8 БЕЗ BOM: Set-Content -Encoding utf8 в Windows PowerShell 5.1
+# пишет BOM (EF BB BF), который ломает строгие JSON-парсеры plugin.json.
+$utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+
 # --- 1. plugin.json ---
 $pluginText = $pluginText -replace '("version"\s*:\s*")(\d+\.\d+\.\d+)(")', "`${1}$new`${3}"
-Set-Content -LiteralPath $pluginJson -Value $pluginText -NoNewline -Encoding utf8
+[System.IO.File]::WriteAllText($pluginJson, $pluginText, $utf8NoBom)
 Write-Host "  ok plugin.json" -ForegroundColor Green
 
 # --- 2. SKILL.md frontmatter (только первое вхождение version: в шапке) ---
-$skillText = Get-Content -Raw -LiteralPath $skillMd
+# Именно instance-метод Regex.Replace с count: у статического [regex]::Replace
+# четвёртый int-аргумент трактуется как RegexOptions (1 = IgnoreCase) и
+# заменяет ВСЕ вхождения без учёта регистра.
+$skillText = Get-Content -Raw -LiteralPath $skillMd -Encoding UTF8
 if ($skillText -notmatch '(?m)^version:\s*\S+') { Fail "В SKILL.md нет frontmatter 'version:'" }
-$skillText = [regex]::Replace($skillText, '(?m)^version:\s*\S+', "version: $new", 1)
-Set-Content -LiteralPath $skillMd -Value $skillText -NoNewline -Encoding utf8
+$versionRx = [regex]'(?m)^version:\s*\S+'
+$skillText = $versionRx.Replace($skillText, "version: $new", 1)
+[System.IO.File]::WriteAllText($skillMd, $skillText, $utf8NoBom)
 Write-Host "  ok SKILL.md" -ForegroundColor Green
 
 # --- 3. CHANGELOG.md: дата-стаб секции + footer-ссылка на GitHub release ---
 if (-not $NoChangelog) {
     if (Test-Path $changelogMd) {
-        $clText = Get-Content -Raw -LiteralPath $changelogMd
+        $clText = Get-Content -Raw -LiteralPath $changelogMd -Encoding UTF8
         if ($clText -match "(?m)^##\s*\[$([regex]::Escape($new))\]") {
             Write-Host "  -- CHANGELOG: секция [$new] уже есть, пропуск" -ForegroundColor DarkYellow
         }
@@ -153,7 +163,7 @@ if (-not $NoChangelog) {
                 Write-Host "  -- remote.origin.url не найден, footer-ссылка пропущена" -ForegroundColor DarkYellow
             }
 
-            Set-Content -LiteralPath $changelogMd -Value $clText -NoNewline -Encoding utf8
+            [System.IO.File]::WriteAllText($changelogMd, $clText, $utf8NoBom)
             Write-Host "  ok CHANGELOG.md (заполни секцию [$new])" -ForegroundColor Green
         }
     }
