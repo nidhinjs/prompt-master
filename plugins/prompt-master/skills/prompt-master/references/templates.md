@@ -431,7 +431,7 @@ Run these in order. Each output feeds the next.
 
 ## Template M — Opus 4.7 / 4.8 Task Brief
 
-*Use for any complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 — claude.ai, API, or Claude Code. Both read prompts literally and produce narrow output when context is missing. This template front-loads everything so the first turn is the only turn. (Opus 4.8 is the current Claude Code default; Fable 5 is suspended since 2026-06-12 — see models.md.)*
+*Use for any complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 — claude.ai, API, or Claude Code. Both read prompts literally and produce narrow output when context is missing. This template front-loads everything so the first turn is the only turn. (Opus 4.8 is the current Claude Code default; Fable 5 is currently suspended — status in models.md.)*
 
 ```
 ## Objective

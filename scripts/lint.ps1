@@ -382,6 +382,115 @@ if ($profText) {
 }
 
 # ---------------------------------------------------------------------------
+# 12. models.md staleness — last-verified older than 60 days (WARN)
+# ---------------------------------------------------------------------------
+Write-Host "Checking models.md last-verified staleness..." -ForegroundColor Cyan
+
+$modelsMd = Join-Path $repoRoot 'plugins/prompt-master/skills/prompt-master/references/models.md'
+$modelsText = Read-File $modelsMd
+if ($modelsText) {
+    $today = Get-Date
+    $section = 'top'
+    foreach ($line in ($modelsText -split "`n")) {
+        if ($line -match '^##\s+(.+?)\s*$') { $section = $Matches[1] }
+        if ($line -match 'last-verified:\s*(\d{4}-\d{2}-\d{2})') {
+            $age = ($today - [datetime]::ParseExact($Matches[1], 'yyyy-MM-dd', $null)).Days
+            if ($age -gt 60) {
+                Add-Warning "models.md section '$section': last-verified $($Matches[1]) is $age days old (>60) — re-verify per the refresh protocol"
+            }
+        }
+    }
+}
+
+# ---------------------------------------------------------------------------
+# 13. Volatile status facts live ONLY in models.md (single source)
+# ---------------------------------------------------------------------------
+Write-Host "Checking single-source status facts..." -ForegroundColor Cyan
+
+# The Fable/Mythos suspension date must not be duplicated outside models.md —
+# other files carry only "suspended, see models.md".
+foreach ($kv in $skillFiles.GetEnumerator()) {
+    if (-not $kv.Value) { continue }
+    if ($kv.Value -match '2026-06-12') {
+        Add-Error "$($kv.Key): suspension date 2026-06-12 duplicated outside models.md — reference models.md instead"
+    }
+}
+
+# ---------------------------------------------------------------------------
+# 14. Traits lines in tool-profiles.md
+# ---------------------------------------------------------------------------
+Write-Host "Checking profile Traits..." -ForegroundColor Cyan
+
+if ($profText -and $skillText) {
+    # Split profiles: header = a '**...' line, body = until next header/'---'
+    $profiles = @{}
+    $curHeader = $null
+    $curBody = [System.Text.StringBuilder]::new()
+    foreach ($line in ($profText -split "`n")) {
+        if ($line -match '^\*\*(.+?)\*\*') {
+            if ($curHeader) { $profiles[$curHeader] = $curBody.ToString() }
+            $curHeader = $Matches[1]
+            $curBody = [System.Text.StringBuilder]::new()
+        } elseif ($curHeader) {
+            [void]$curBody.AppendLine($line)
+        }
+    }
+    if ($curHeader) { $profiles[$curHeader] = $curBody.ToString() }
+
+    function Find-Profile([string]$namePart) {
+        foreach ($h in $profiles.Keys) {
+            if ($h -like "*$namePart*") { return $h }
+        }
+        return $null
+    }
+
+    # a) Every knob-tool from the SKILL.md hard-rule enumeration has a 'knobs' trait
+    if ($skillText -match 'settings-as-knobs tools \(([^)]+)\)') {
+        $knobToolMap = @{
+            'Gamma'      = 'Gamma'
+            'Perplexity' = 'Perplexity'
+            'Grok'       = 'Grok (xAI'
+            'image-AI'   = 'Image AI — Generation'
+            'video-AI'   = 'Video AI'
+        }
+        foreach ($tool in ($Matches[1] -split ',' | ForEach-Object { $_.Trim() })) {
+            if (-not $knobToolMap.ContainsKey($tool)) {
+                Add-Error "lint's knob-tool map has no profile mapping for '$tool' — extend knobToolMap in lint.ps1"
+                continue
+            }
+            $h = Find-Profile $knobToolMap[$tool]
+            if (-not $h) {
+                Add-Error "knob-tool '$tool': no profile found in tool-profiles.md (looked for '$($knobToolMap[$tool])')"
+            } elseif ($profiles[$h] -notmatch '(?m)^\*Traits:.*knobs') {
+                Add-Error "knob-tool '$tool': profile '$h' has no '*Traits: … knobs …*' line"
+            }
+        }
+    } else {
+        Add-Error "SKILL.md: cannot find the 'settings-as-knobs tools (…)' enumeration"
+    }
+
+    # b) Every model on the canonical no-CoT list is covered by a reasoning-native profile
+    if ($skillText -match '(?m)Canonical no-CoT list[^:]*:\**\s*(.+)$') {
+        $listPart = ($Matches[1] -split '\.\s+Also')[0]
+        $reasoningProfiles = $profiles.GetEnumerator() | Where-Object {
+            $_.Value -match '(?m)^\*Traits:.*reasoning-native'
+        }
+        foreach ($m in ($listPart -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })) {
+            $key = ($m -split '[\s/]')[0]   # vendor key: o3, o4-mini, DeepSeek, Qwen3, Grok, Kimi, MiniMax
+            $covered = $false
+            foreach ($rp in $reasoningProfiles) {
+                if ($rp.Key -match [regex]::Escape($key) -or $rp.Value -match [regex]::Escape($key)) {
+                    $covered = $true; break
+                }
+            }
+            if (-not $covered) {
+                Add-Error "no-CoT model '$m': no profile with a reasoning-native Traits line mentions '$key'"
+            }
+        }
+    }
+}
+
+# ---------------------------------------------------------------------------
 # Summary
 # ---------------------------------------------------------------------------
 Write-Host ""

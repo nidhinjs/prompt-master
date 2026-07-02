@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Hook fixture tests
+        run: node scripts/test-hook.js
+
+      - name: Skill consistency lint
+        shell: pwsh
+        run: ./scripts/lint.ps1

@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.26.0] - 2026-07-02
+
+Усиление инфраструктуры качества: CI, поведенческие golden-тесты, трейты профилей, диета always-loaded слоя.
+
+### Added
+- **CI (GitHub Actions):** `node scripts/test-hook.js` + `pwsh scripts/lint.ps1` на каждый push/PR — все guards стали принудительными.
+- **Golden-сценарии поведения:** `tests/golden/scenarios.json` (12 фикстур) + `scripts/run-golden.js` — headless-прогон запросов через `claude -p` с SKILL.md как системным промптом и проверкой инвариантов (no-CoT для reasoning-моделей, `Assumed settings:` для video, вырезание credentials, stop conditions для агентов, флаг sunset у Sora и т.д.). Запуск ручной (реальные вызовы модели); 12/12 зелёные на sonnet.
+- **Трейты профилей:** строка `*Traits: …*` (reasoning-native / knobs) под заголовками 12 профилей в tool-profiles.md; линт сверяет их с каноническим no-CoT списком и knob-перечнем hard rules — новая модель без трейта не пройдёт CI.
+- **lint.ps1:** WARN на секции models.md со `last-verified` старше 60 дней (протокол re-verify перестал быть ручным); ERROR на дублирование suspension-даты вне models.md.
+
+### Changed
+- **Gotchas-читшит на диете:** строки DeepSeek/Grok/Kimi/Gamma ужаты с мини-профилей (~100+ слов) до 1–2 строк «главные грабли + указатель в профиль» — двухслойный дрейф сведён к минимуму, ~350 слов контекста освобождено.
+- **Статус Fable 5/Mythos 5 — один источник:** дата и причина suspension остались только в models.md; остальные 7 мест (SKILL.md, tool-profiles.md, templates.md) несут короткий статус + ссылку (единственность даты контролирует линт).
+- `docs/REFRESH_CHECKLIST.md` дополнен разделами про трейты и golden-прогон.
+
 ## [1.25.0] - 2026-07-02
 
 Консистентность-релиз по итогам хеликоптер-ревью (26 подтверждённых расхождений): устранён дрейф между слоями (SKILL.md ↔ профили ↔ шаблоны ↔ доки), закрыты дыры роутинга, добавлены защитные линт-проверки и тесты хука.
@@ -376,6 +391,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.26.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.0
 [1.25.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.25.0
 [1.24.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.24.0
 [1.23.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.23.0

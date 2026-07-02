@@ -28,6 +28,16 @@
 
 - `node scripts/test-hook.js` — fixtures хука зелёные.
 - `./scripts/lint.ps1` (pwsh или powershell.exe) — версия/счётчики/ToC/cross-refs/no-CoT
-  списки согласованы.
+  списки/трейты/single-source статусы согласованы (то же гоняет CI на push/PR).
+- `node scripts/run-golden.js` — поведенческие golden-сценарии (реальные вызовы модели,
+  запускать вручную перед релизом; FAIL = сигнал для разбора, не слепой правки).
 - `./scripts/bump-version.ps1 -Bump minor|patch` — синхронный подъём версии.
 - Заполни секцию в `CHANGELOG.md`.
+
+## Трейты профилей
+
+У профилей с особым поведением в tool-profiles.md есть строка `*Traits: …*` сразу под
+заголовком: `reasoning-native` (модель из канонического no-CoT списка) и/или `knobs (…)`
+(тул из перечня settings-as-knobs). Линт сверяет: каждый knob-тул из hard rule → профиль
+с трейтом `knobs`; каждая модель из канонического no-CoT списка → покрыта профилем с
+трейтом `reasoning-native`. Добавляя тул/модель — добавь и трейт.

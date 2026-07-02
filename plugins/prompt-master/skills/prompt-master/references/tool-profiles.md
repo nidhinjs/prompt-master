@@ -15,7 +15,7 @@ Pick the row that matches the user's tool, then open only that profile below.
 | Tool | Handles | When to route |
 |---|---|---|
 | **Claude Opus 4.8 / 4.7** | Default Claude; literal execution, heavy reasoning, 1M context, agentic | Any "Claude" request without a version |
-| **Claude Fable 5 / Mythos 5** | (frontier) — ⚠️ **suspended since 2026-06-12, unavailable** | Do not route here until access is restored (see models.md) |
+| **Claude Fable 5 / Mythos 5** | (frontier) — ⚠️ **suspended, unavailable** | Do not route here until access is restored (status in models.md) |
 | **GPT-5.x / ChatGPT** | Long-context synthesis, tone adherence, persona framing | User is on OpenAI or ChatGPT |
 | **o3 / o4-mini / OpenAI reasoning** | Deep reasoning tasks where process must not be dictated | User names o3/o4-mini or an OpenAI reasoning model |
 | **Grok 4.3 / xAI** | Reasoning-native chat/coding; realtime X + web search; native multi-agent research | User names Grok or xAI |
@@ -53,8 +53,9 @@ Pick the row that matches the user's tool, then open only that profile below.
 ---
 
 **Claude (claude.ai, Claude API, Claude 4.x)**
+*Traits: adaptive-thinking (never "think step by step" — depth via "Think carefully before responding")*
 
-Current default is **Claude Opus 4.8** (4.7 selectable) — assume Opus 4.8 unless the user names a specific model. ⚠️ **Claude Fable 5 / Mythos 5 are suspended/unavailable since 2026-06-12** (US export-control directive — see [models.md](models.md)); do NOT route to them until access is restored. The Fable 5 block below is retained for that case but is currently inactive.
+Current default is **Claude Opus 4.8** (4.7 selectable) — assume Opus 4.8 unless the user names a specific model. ⚠️ **Claude Fable 5 / Mythos 5 are currently suspended/unavailable** (status + details in [models.md](models.md)); do NOT route to them until access is restored. The Fable 5 block below is retained for that case but is currently inactive.
 
 *Durable across Claude 4.x (4.6 / 4.7 / 4.8):*
 - Be explicit and specific — Claude 4.x follows instructions literally. It does exactly what you say, nothing more. Missing context = narrow literal output, not a smart guess.
@@ -78,7 +79,7 @@ Current default is **Claude Opus 4.8** (4.7 selectable) — assume Opus 4.8 unle
 
 **Claude Fable 5 / Mythos 5 (newest, most capable — for hard, long-horizon, ambiguous work)**
 
-> ⚠️ **SUSPENDED / UNAVAILABLE since 2026-06-12** (US export-control directive; see [models.md](models.md)). Do NOT route here — route "Claude" to **Opus 4.8** instead. This block is retained for if/when access is restored.
+> ⚠️ **SUSPENDED / UNAVAILABLE** (current status + details in [models.md](models.md)). Do NOT route here — route "Claude" to **Opus 4.8** instead. This block is retained for if/when access is restored.
 
 Fable 5 takes on problems too complex, long-running, or ambiguous for prior models — end-to-end work measured in hours to days. Prompt it differently from Opus 4.x: **steer with brief intent, not enumerated rules.** Instruction-following is strong enough that one short instruction replaces a long checklist.
 
@@ -122,6 +123,7 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 ---
 
 **o3 / o4-mini / OpenAI reasoning models**
+*Traits: reasoning-native (no CoT)*
 - SHORT clean instructions ONLY — these models reason across thousands of internal tokens
 - NEVER add CoT, "think step by step", or reasoning scaffolding — it actively degrades output
 - Prefer zero-shot first — add few-shot only if strictly needed and tightly aligned
@@ -131,6 +133,7 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 ---
 
 **Grok (xAI — grok-4.3, realtime X/web search, native multi-agent research)**
+*Traits: reasoning-native (no CoT) · knobs (`reasoning_effort`, search filters, output format)*
 
 - **grok-4.3 is reasoning-native** — it thinks internally before answering. Do NOT add "think step by step" / CoT scaffolding; control depth with the `reasoning_effort` setting (`none` / `low` default / `medium` / `high`) — raise to `high` for hard math, logic, or multi-step work. Do NOT set `stop`, `presencePenalty`, or `frequencyPenalty` — they error on reasoning models.
 - **No realtime knowledge** — Grok has a training cutoff and does not know current events unless server-side search is enabled. For any "today / latest / current" task, instruct enabling **Web Search** and/or **X Search**; without it, Grok answers from stale training data (or guesses).
@@ -155,6 +158,7 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 ---
 
 **Kimi (Moonshot AI — K2.x dual-mode, agentic; Agent Swarm)**
+*Traits: reasoning-native (no CoT in thinking mode)*
 
 For volatile model IDs/defaults see [models.md](models.md) (Moonshot — Kimi). Reasoning-native; OpenAI- and Anthropic-compatible (`base_url=https://api.moonshot.ai/v1`) → GPT/Claude prompts transfer.
 
@@ -189,6 +193,7 @@ For volatile model IDs/defaults see [models.md](models.md) (Moonshot — Kimi). 
 ---
 
 **Qwen3 (thinking mode)**
+*Traits: reasoning-native (no CoT in thinking mode)*
 - Two modes: thinking mode (/think or enable_thinking=True) and non-thinking mode
 - Thinking mode: treat exactly like o3 — short clean instructions, no CoT, no scaffolding
 - Non-thinking mode: treat like Qwen2.5 instruct — full structure, explicit format, role assignment
@@ -213,6 +218,7 @@ For volatile model IDs/defaults see [models.md](models.md) (Moonshot — Kimi). 
 ---
 
 **DeepSeek (V4 — `deepseek-v4-pro` / `deepseek-v4-flash`, dual-mode)**
+*Traits: reasoning-native (no CoT in thinking mode)*
 
 Current models are `deepseek-v4-pro` and `deepseek-v4-flash` (1M context; OpenAI-compatible at `base_url=https://api.deepseek.com`, also Anthropic-compatible). Each is one model with a per-request **Thinking / Non-Thinking** toggle. Legacy `deepseek-chat` / `deepseek-reasoner` are discontinued 2026-07-24 — don't target them without noting the date.
 
@@ -231,6 +237,7 @@ Current models are `deepseek-v4-pro` and `deepseek-v4-flash` (1M context; OpenAI
 ---
 
 **MiniMax (M3 / M2.7)**
+*Traits: reasoning-native (M3 emits `<think>` reasoning — no CoT scaffolding)*
 - OpenAI-compatible API — prompts that work with GPT models transfer directly
 - Strong at instruction following, structured output, and long-context synthesis — 1M context window on M2.7
 - M2.7-highspeed is optimized for speed — use for latency-sensitive tasks
@@ -246,7 +253,7 @@ Current models are `deepseek-v4-pro` and `deepseek-v4-flash` (1M context; OpenAI
 - Agentic — runs tools, edits files, executes commands autonomously
 - Starting state + target state + allowed actions + forbidden actions + stop conditions + checkpoints
 - Stop conditions are MANDATORY — runaway loops are the biggest credit killer
-- **Default recommended model is Claude Opus 4.8** (4.7 selectable) — Fable 5 / Mythos 5 are suspended/unavailable since 2026-06-12 (see models.md), so do NOT recommend them. The model is ultimately harness/config-selected — recommend it, don't hardcode it. Effort and thinking depth are harness/adaptive-managed — do NOT hardcode an effort level or thinking budget.
+- **Default recommended model is Claude Opus 4.8** (4.7 selectable) — Fable 5 / Mythos 5 are currently suspended (status in models.md), so do NOT recommend them. The model is ultimately harness/config-selected — recommend it, don't hardcode it. Effort and thinking depth are harness/adaptive-managed — do NOT hardcode an effort level or thinking budget.
 - **Match orchestration to task size — token economy first.** A single scoped change → one focused pass at the right effort, no subagents (cheapest; over-orchestration costs more than it saves). A large multi-part job → an orchestrator (Opus 4.8) that plans and delegates independent subtasks to subagents, keeping mechanical steps lean. Per-subagent model is set by harness/config, not the prompt body — steer economy through effort + delegation, not by naming a model per agent. Don't spawn agents for a one-module task.
 - The literalism caveats below apply to Opus 4.x (the current default): be explicit, front-load context.
 - Opus 4.7 and 4.8 are more literal than 4.6 — vague first turns produce narrower results. Front-load everything: intent, file scope, constraints, acceptance criteria, session strategy.
@@ -320,6 +327,7 @@ Current models are `deepseek-v4-pro` and `deepseek-v4-flash` (1M context; OpenAI
 ---
 
 **Gamma (AI presentations — text-to-deck; app + Generate API)**
+*Traits: knobs (card count, text density, image source, tone, format)*
 
 Gamma turns text into **cards** (not classic slides). For volatile facts (params, defaults, credits) see [models.md](models.md). Route the deck's structure to **Template O**.
 
@@ -341,6 +349,7 @@ Gamma turns text into **cards** (not classic slides). For volatile facts (params
 ---
 
 **Perplexity (Agent API — recommended default — + Sonar API / Deep Research)**
+*Traits: knobs (`search_domain_filter`, `search_recency_filter`, model choice)*
 
 Two surfaces — see [models.md](models.md) for current model IDs. Pick by task:
 - **Agent API** (`/v1/agent`, `client.responses.create`) is Perplexity's **recommended default for new apps**: an agent loop with custom tools, presets (incl. `deep-research`), output-control, and direct multi-provider model access (Perplexity Sonar + Anthropic/OpenAI/Google/xAI/NVIDIA). Reach for it when the user is building a research agent or app, wants custom tools, or wants to pick a specific underlying model.
@@ -373,6 +382,7 @@ Two surfaces — see [models.md](models.md) for current model IDs. Pick by task:
 ---
 
 **Image AI — Generation** (Midjourney, GPT-image, Stable Diffusion, FLUX.2, SeeDream, Google Nano Banana, Grok Imagine)
+*Traits: knobs (aspect ratio, cfg/guidance, steps, quality, resolution)*
 First detect: generation from scratch or editing an existing image?
 
 - **Midjourney (V8.1)**: Comma-separated descriptors, not prose. Subject first, then style, mood, lighting, composition. Parameters at end: `--ar 16:9 --v 8.1 --s 100`. Character/object consistency via `--oref [url] --ow 100` (Omni Reference — replaces the retired `--cref`); style via `--sref [url] --sw 100`. Also `--chaos 0–100`, negatives `--no a, b`, `--hd` for native 2K, `--raw` for stricter adherence. *Syntax: comma-descriptor list + `--` flags; no full sentences.*
@@ -394,6 +404,7 @@ Read templates.md Template J for the full reference editing template.
 ---
 
 **ComfyUI**
+*Traits: knobs (CFG, sampler, steps, resolution)*
 Node-based workflow — not a single prompt box. Ask which checkpoint model is loaded before writing.
 Always output two separate blocks: Positive Prompt and Negative Prompt. Never merge them.
 *Syntax: two labelled blocks — `Positive:` and `Negative:` — wired to separate conditioning nodes; merging them breaks the graph.*
@@ -420,6 +431,7 @@ Read templates.md Template K for the full ComfyUI template.
 ---
 
 **Video AI** (Veo 3.1, Kling 3.0, Runway Gen-4.5, Sora, LTX-2, Luma Ray, Seedance 2.0, Grok Imagine, Omni Flash)
+*Traits: knobs (duration, resolution, aspect ratio, mode/quality tier)*
 - **Veo 3.1** (Google; `veo-3.1-generate-preview`, GA `veo-3.1-generate-001`): text- or image-to-video with synced audio; up to 3 subject reference images; clips 4/6/8s; 720p/1080p/4K (4K not on the Lite tier); first/last-frame, extend, insert/remove objects. Veo 2.0/3.0 are deprecated — migrate to 3.1.
 - **Kling 3.0 / 3.0 Omni** (`kling-v3` / `kling-v3-omni`): strong realistic motion — describe body movement, camera angle, shot type. Multi-shot (`Shot 1 (3s): …`), native audio, element/voice references via Omni tags `<<<element_1>>>` / `<<<image_1>>>`. Duration 3–15s; `mode` std (720p) / pro (1080p) — ⚠️ a `4k` value appears in the API schema but the product guide lists only 720p/1080p; verify before recommending it; `cfg_scale` 0–1. Extension via legacy `/v1/videos/video-extend`.
 - **Runway** (`gen4.5` generate; `aleph2` video-to-video edit): cinematic language, reference film styles. `ratio` (`1280:720` / `720:1280` / `1104:832` / `832:1104` / `960:960` / `1584:672` / `672:1584`), `duration` 2–10s, `seed`; aleph2 takes up to 5 keyframes. ⚠️ `gen4_aleph` retired 2026-07-30 → use `aleph2`. Runway also hosts Veo 3.1 / Seedance 2.0 / Omni Flash.

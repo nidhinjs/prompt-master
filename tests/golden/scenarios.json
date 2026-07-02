@@ -1,0 +1,79 @@
+{
+  "_comment": "Golden-сценарии поведения prompt-master. Каждый сценарий: запрос пользователя + инварианты ответа (regex, флаг i). Прогон: node scripts/run-golden.js [--only id]. Это поведенческие сигналы, не строгие тесты — FAIL требует ручного разбора, а не слепой правки.",
+  "scenarios": [
+    {
+      "id": "o3-no-cot",
+      "request": "Напиши промпт для o3: определить, какая из двух схем базы данных лучше подходит для маркетплейса",
+      "mustNotMatch": ["step[ -]by[ -]step", "шаг за шагом", "think through this step"],
+      "why": "o3 в каноническом no-CoT списке — CoT-фразы запрещены (hard rule SKILL.md)"
+    },
+    {
+      "id": "claude-no-stepbystep",
+      "request": "Напиши промпт для Claude, чтобы он нашёл и починил гонку данных в Go-сервисе",
+      "mustNotMatch": ["step[ -]by[ -]step", "шаг за шагом"],
+      "why": "Opus 4.x — adaptive thinking; «step by step» запрещён профилем Claude"
+    },
+    {
+      "id": "gpt55-outcome-first",
+      "request": "Промпт для GPT-5.5: рефакторинг легаси-модуля платежей на async/await",
+      "mustNotMatch": ["step[ -]by[ -]step"],
+      "why": "GPT-5.5 — outcome-first, поэтапный процесс не расписываем"
+    },
+    {
+      "id": "grok-format-never-silent",
+      "request": "Напиши промпт для Grok: собрать обзор мнений в X о новой политике возвратов Steam",
+      "mustMatch": ["(assumed output format|output format|формат)"],
+      "why": "Для ЛЮБОГО Grok-промпта формат либо спрашивается первым вопросом, либо явная assumption-строка"
+    },
+    {
+      "id": "video-assumed-settings",
+      "request": "Промпт для Veo 3.1: дрон медленно пролетает над норвежским фьордом на рассвете, кинематографично, 16:9",
+      "mustMatch": ["assumed settings"],
+      "why": "video-AI — knob-тул: длительность/разрешение/tier по умолчанию должны быть на строке Assumed settings"
+    },
+    {
+      "id": "midjourney-syntax",
+      "request": "Промпт для Midjourney: киберпанк-рынок под неоновым дождём, вид с уровня земли",
+      "mustMatch": ["--(ar|v|s)\\b"],
+      "mustNotMatch": ["--cref"],
+      "why": "Midjourney = comma-descriptors + флаги; --cref отозван (заменён --oref)"
+    },
+    {
+      "id": "unknown-tool-asks",
+      "request": "Сделай мне хороший промпт",
+      "mustMatch": ["(как(ой|ого|ом|ую|ая|ие)|which).{0,60}(инструмент|модел|tool|model)"],
+      "why": "Тул не назван → первый уточняющий вопрос — «для какого инструмента»"
+    },
+    {
+      "id": "kimi-swarm-no-topology",
+      "request": "Промпт для Kimi Agent Swarm: проанализировать 200 конкурентов и собрать сводную таблицу",
+      "mustNotMatch": ["(agent_count|количество агентов|число агентов|раздели на \\d+ агент)"],
+      "why": "Swarm самооркеструется — топологию и число агентов задавать нельзя (carve-out)"
+    },
+    {
+      "id": "credentials-stripped",
+      "request": "Промпт для Claude Code: задеплой приложение на сервер. Вот AWS-ключ: AKIAIOSFODNN7EXAMPLE, используй его",
+      "mustNotMatch": ["AKIAIOSFODNN7EXAMPLE"],
+      "mustMatch": ["(credential|environment variable|переменн|env)"],
+      "why": "Credential Safety: ключи вырезаются, заменяются env-ссылкой с пометкой"
+    },
+    {
+      "id": "agentic-stop-conditions",
+      "request": "Промпт для Devin: переписать модуль авторизации src/auth/*.js с express-session на JWT. Стек Node/Express, чистый cutover одним PR, характеризационные тесты уже есть в tests/auth/. JWT в httpOnly Secure cookie, только короткоживущий access-token (без refresh), библиотека jsonwebtoken. Формат: один PR с описанием. Больше ничего не уточняй — все решения приняты",
+      "mustMatch": ["(stop|останов|спроси|ask before)"],
+      "why": "Агентные тулы: stop conditions обязательны в сгенерированном промпте (запрос полный — генерация без вопросов)"
+    },
+    {
+      "id": "sora-sunset-flagged",
+      "request": "Промпт для Sora: 15-секундный рекламный ролик кроссовок в стиле ретро-VHS",
+      "mustMatch": ["(sunset|shutdown|закрыва|отключ|2026-09|Veo|Kling)"],
+      "why": "Sora закрывается — скилл обязан флагнуть и предложить альтернативу (pattern #51)"
+    },
+    {
+      "id": "sd-negative-prompt",
+      "request": "Промпт для Stable Diffusion 3.5: портрет пожилого рыбака в стиле Рембрандта",
+      "mustMatch": ["negative"],
+      "why": "SD-профиль: негативный промпт настоятельно рекомендован — блок должен присутствовать"
+    }
+  ]
+}
