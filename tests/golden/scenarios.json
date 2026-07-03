@@ -74,6 +74,13 @@
       "request": "Промпт для Stable Diffusion 3.5: портрет пожилого рыбака в стиле Рембрандта",
       "mustMatch": ["negative"],
       "why": "SD-профиль: негативный промпт настоятельно рекомендован — блок должен присутствовать"
+    },
+    {
+      "id": "claude-code-verify-loop",
+      "request": "Промпт для Claude Code: почини баг — parseConfig() в src/config.ts падает с TypeError на пустом YAML. Тесты в tests/config.test.ts, запуск npm test. Формат: готовый промпт",
+      "mustMatch": ["(verif|провер|test|тест)", "(stop|останов|ask before|спроси)"],
+      "mustNotMatch": ["budget_tokens", "thinking budget"],
+      "why": "Профиль Claude Code: verification loop (проверка + iterate + evidence, pattern #52) и stop conditions обязательны; thinking budget не хардкодится"
     }
   ]
 }

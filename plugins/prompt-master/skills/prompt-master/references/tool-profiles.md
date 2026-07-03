@@ -15,7 +15,7 @@ Pick the row that matches the user's tool, then open only that profile below.
 | Tool | Handles | When to route |
 |---|---|---|
 | **Claude Opus 4.8 / 4.7** | Default Claude; literal execution, heavy reasoning, 1M context, agentic | Any "Claude" request without a version |
-| **Claude Fable 5 / Mythos 5** | (frontier) — ⚠️ **suspended, unavailable** | Do not route here until access is restored (status in models.md) |
+| **Claude Fable 5 / Mythos 5** | Frontier — hardest, long-horizon, ambiguous work | Only when the user explicitly names Fable 5 / Mythos 5 (NOT the default; billing terms in models.md) |
 | **GPT-5.x / ChatGPT** | Long-context synthesis, tone adherence, persona framing | User is on OpenAI or ChatGPT |
 | **o3 / o4-mini / OpenAI reasoning** | Deep reasoning tasks where process must not be dictated | User names o3/o4-mini or an OpenAI reasoning model |
 | **Grok 4.3 / xAI** | Reasoning-native chat/coding; realtime X + web search; native multi-agent research | User names Grok or xAI |
@@ -55,7 +55,7 @@ Pick the row that matches the user's tool, then open only that profile below.
 **Claude (claude.ai, Claude API, Claude 4.x)**
 *Traits: adaptive-thinking (never "think step by step" — depth via "Think carefully before responding")*
 
-Current default is **Claude Opus 4.8** (4.7 selectable) — assume Opus 4.8 unless the user names a specific model. ⚠️ **Claude Fable 5 / Mythos 5 are currently suspended/unavailable** (status + details in [models.md](models.md)); do NOT route to them until access is restored. The Fable 5 block below is retained for that case but is currently inactive.
+Current default is **Claude Opus 4.8** (4.7 selectable) — assume Opus 4.8 unless the user names a specific model. **Claude Fable 5 is available again but NOT the default** (usage-credit billing terms in [models.md](models.md)); route to the Fable 5 block below only when the user explicitly asks for it. Mythos 5 — US-orgs-only.
 
 *Durable across Claude 4.x (4.6 / 4.7 / 4.8):*
 - Be explicit and specific — Claude 4.x follows instructions literally. It does exactly what you say, nothing more. Missing context = narrow literal output, not a smart guess.
@@ -79,7 +79,7 @@ Current default is **Claude Opus 4.8** (4.7 selectable) — assume Opus 4.8 unle
 
 **Claude Fable 5 / Mythos 5 (newest, most capable — for hard, long-horizon, ambiguous work)**
 
-> ⚠️ **SUSPENDED / UNAVAILABLE** (current status + details in [models.md](models.md)). Do NOT route here — route "Claude" to **Opus 4.8** instead. This block is retained for if/when access is restored.
+> Available (redeployed — availability + billing terms in [models.md](models.md)), but **not the default**: bare "Claude" routes to **Opus 4.8**. Use this block only when the user explicitly targets Fable 5 / Mythos 5.
 
 Fable 5 takes on problems too complex, long-running, or ambiguous for prior models — end-to-end work measured in hours to days. Prompt it differently from Opus 4.x: **steer with brief intent, not enumerated rules.** Instruction-following is strong enough that one short instruction replaces a long checklist.
 
@@ -253,16 +253,21 @@ Current models are `deepseek-v4-pro` and `deepseek-v4-flash` (1M context; OpenAI
 - Agentic — runs tools, edits files, executes commands autonomously
 - Starting state + target state + allowed actions + forbidden actions + stop conditions + checkpoints
 - Stop conditions are MANDATORY — runaway loops are the biggest credit killer
-- **Default recommended model is Claude Opus 4.8** (4.7 selectable) — Fable 5 / Mythos 5 are currently suspended (status in models.md), so do NOT recommend them. The model is ultimately harness/config-selected — recommend it, don't hardcode it. Effort and thinking depth are harness/adaptive-managed — do NOT hardcode an effort level or thinking budget.
+- **Verification loop — practice #1 (pattern #52):** always give a check the agent can run (tests, build exit code, linter, screenshot-vs-design diff) + "iterate until it passes" + require evidence, not assertion (paste test output / command result). Escalate by stakes: in-prompt → `/goal` condition (re-checked every turn) → Stop-hook gate → fresh verification subagent ("flag only correctness gaps, not style" — pattern #55).
+- **Default recommended model is Claude Opus 4.8** (4.7 selectable) — Fable 5 is available again (redeployed 2026-07-01; usage-credit terms in models.md) but is NOT the default recommendation; Mythos 5 is US-orgs-only. The model is ultimately harness/config-selected — recommend, don't hardcode. Effort and thinking depth are harness/adaptive-managed — do NOT hardcode an effort level or thinking budget.
 - **Match orchestration to task size — token economy first.** A single scoped change → one focused pass at the right effort, no subagents (cheapest; over-orchestration costs more than it saves). A large multi-part job → an orchestrator (Opus 4.8) that plans and delegates independent subtasks to subagents, keeping mechanical steps lean. Per-subagent model is set by harness/config, not the prompt body — steer economy through effort + delegation, not by naming a model per agent. Don't spawn agents for a one-module task.
+- **Plan mode for multi-file / unfamiliar work:** explore → plan → implement → commit (`Shift+Tab`; `Ctrl+G` edits the plan before execution). Skip it when the diff fits in one sentence — plan mode adds overhead on trivial fixes.
 - The literalism caveats below apply to Opus 4.x (the current default): be explicit, front-load context.
 - Opus 4.7 and 4.8 are more literal than 4.6 — vague first turns produce narrower results. Front-load everything: intent, file scope, constraints, acceptance criteria, session strategy.
 - Opus 4.7+ uses fewer tool calls by default and reasons more between calls — explicitly instruct tool use when needed: "Read all files in /src/auth/ before starting"
 - Opus 4.7+ spawns fewer subagents by default — explicitly request when needed: "Use a subagent to investigate X so it stays out of main context"
 - Claude Opus 4.x over-engineers — add "Only make changes directly requested. Do not add extra files, abstractions, or features."
 - Always scope to specific files and directories — never give a global instruction without a path anchor
+- Attach artifacts, don't describe them (pattern #53): `@file` / `@dir` / `@server:resource` (MCP), paste errors/screenshots verbatim, pipe logs in. Name an exemplar to match (pattern #54): "look at how X is implemented in `<file>`, follow that pattern."
 - Human review triggers required: "Stop and ask before deleting any file, adding any dependency, or affecting the database schema"
-- Session hygiene matters: new task = new session. Use /rewind instead of correcting mid-conversation. /compact at ~50% context, not 90%.
+- Session hygiene: new task = new session or `/clear`; **>2 failed corrections on the same issue → `/clear` and restart with a better prompt incorporating what you learned** (a clean session beats an accumulated one). `/rewind` instead of correcting mid-conversation; `/compact <focus instructions>` at ~50% context, not 90%; `/btw` for side questions that shouldn't enter context. A repeated correction → a CLAUDE.md rule ("you keep X — add a rule to CLAUDE.md"); keep CLAUDE.md pruned (test per line: "would removing this cause mistakes?" — a bloated file gets ignored).
+- Headless / batch (`claude -p`): make the outcome machine-checkable ("Return OK or FAIL"), scope with `--allowedTools`; scheduled/autonomous prompts must be self-contained — explicit success criteria + what to do with results (no clarifying questions possible). Fresh-context Writer/Reviewer split (one session implements, another reviews) beats self-review.
+- `/code-review` reviews the current diff in-session (target: file, PR#, branch, `main...feature`); effort level trades coverage for confidence (low = fewer, higher-confidence findings). For review *prompts*, apply the Review-request knobs fragment (templates.md).
 - For complex tasks: use Template M. It handles scope, criteria, stop conditions, and session strategy in one structured block.
 
 ---

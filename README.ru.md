@@ -191,7 +191,7 @@ Done When:
 | Инструмент / категория | Что закрывает | Когда роутить |
 |---|---|---|
 | **Claude Opus 4.8 / 4.7** | Дефолтный текст, тяжёлое рассуждение, 1M контекст | Любой запрос «Claude» без версии |
-| **Claude Fable 5 / Mythos 5** | ⚠️ Приостановлены с 2026-06-12 (недоступны) | Не роутить, пока доступ не вернут |
+| **Claude Fable 5 / Mythos 5** | Frontier — снова доступны, но НЕ дефолт | Роутить только когда юзер явно называет Fable 5 / Mythos 5 (условия в models.md) |
 | **ChatGPT / GPT-5.x** | Outcome-first генерация, тон, персона | Юзер называет ChatGPT или GPT |
 | **o3 / o4-mini** | Reasoning-native модели | Никакого CoT — думают внутри |
 | **Grok 4.3 / xAI** | Reasoning-native; realtime X/web search; multi-agent research | Юзер называет Grok или xAI |
@@ -225,7 +225,7 @@ Done When:
 | Инструмент | Категория | Что чинит Prompt Master |
 |------|----------|--------------------------|
 | **Claude (Opus 4.8 / 4.7)** (дефолт) | Reasoning LLM | Убирает воду, добавляет XML-структуру, задаёт длину, фронт-лоадит scope |
-| **Claude Fable 5 / Mythos 5** | Frontier LLM — ⚠️ приостановлены с 2026-06-12 | Outcome-first + краткое намерение, effort-рулёжка, без reasoning-эха — применимо, если вернут |
+| **Claude Fable 5 / Mythos 5** | Frontier LLM — redeployed 2026-07-01, opt-in (не дефолт) | Outcome-first + краткое намерение, effort-рулёжка, без reasoning-эха |
 | **ChatGPT / GPT-5.5 / GPT-5.x** | Reasoning LLM | Outcome-first, `text.verbosity`, тюнинг reasoning-effort, преамбулы, бюджеты на retrieval |
 | **Grok 4.3 (xAI)** | Reasoning LLM + realtime search | Reasoning-native (без CoT; `reasoning_effort`); Web/X Search для свежих данных; `grok-4.20-multi-agent` для deep research; спрашивает/выносит формат вывода; inline-цитаты при включённом поиске |
 | **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode LLM | Модель + режим по задаче; thinking reasoning-native (без CoT, `reasoning_effort` high/max, без temp/penalty); non-thinking берёт system prompt + few-shot; сохранять `reasoning_content` при tool calls; легаси-имена отключаются 2026-07-24 |
@@ -322,9 +322,9 @@ Prompt Master использует только техники с надёжны
 
 ---
 
-## 🚫 51 паттернов-«убийц кредитов»
+## 🚫 55 паттернов-«убийц кредитов»
 
-Prompt Master сверяет каждую сырую идею с 51 известными паттернами провалов и чинит их молча. Репрезентативная выборка:
+Prompt Master сверяет каждую сырую идею с 55 известными паттернами провалов и чинит их молча. Репрезентативная выборка:
 
 <details>
 <summary><b>Задача / Контекст / Формат / Scope (выборка)</b></summary>
@@ -361,6 +361,10 @@ Prompt Master сверяет каждую сырую идею с 51 извест
 | 49 | Задача на character-consistency на тире, который так не умеет | бренд-маскот / один и тот же персонаж в Nano Banana 2 Lite → роутить на Nano Banana 2·Pro, FLUX.2 multi-ref или Midjourney `--oref` |
 | 50 | Правка видео целым переописанием вместо запертой дельты | длинное переописание в Omni Flash / Grok → короткая дельта + «Keep everything else the same» + теги `<FIRST_FRAME>`/`<IMAGE_REF_n>` |
 | 51 | Дефолт на закрывающуюся / снятую медиа-модель | таргет на Sora (2026-09-24) / Veo 2·3 / Runway `gen4_aleph` как на актуальные → флаг + роутинг на Veo 3.1 / Kling 3.0 / `aleph2` |
+| 52 | У агента нет запускаемой самопроверки | «сделай X» без проверки → дать check (тесты/билд/скриншот-диф) + «итерируй до зелёного» + evidence, не assertion |
+| 53 | Артефакт пересказан вместо приложенного | пересказ ошибки/дизайна своими словами → вставить verbatim или сослаться (`@file`, URL, pipe лога) |
+| 54 | Не назван образец для «сделай как у нас в кодбейсе» | «добавь calendar widget» → «посмотри, как сделан X в `<file>`, повтори паттерн» |
+| 55 | Ревью-запрос без ограничений | «найди все проблемы» → планка severity + кап на nits + evidence `file:line` + правило сходимости на re-review |
 
 </details>
 
@@ -387,7 +391,7 @@ Prompt Master сверяет каждую сырую идею с 51 извест
 
 ## ℹ️ История версий
 
-Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.24.0** (рефреш image+video профиля — 14 инструментов актуализировано/добавлено, model-facts с датами и timeline дедлайнов).
+Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.26.1** (рефреш профиля Claude Code — петля самопроверки, plan mode, гигиена контекста, review-request knobs; паттерны #52–55).
 
 ## 📄 Лицензия
 

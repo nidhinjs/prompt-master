@@ -268,6 +268,12 @@ Pause and ask for human review when:
 - An error cannot be resolved in 2 attempts
 - The task requires changes outside the stated scope
 
+Verification:
+Run [test suite / build / linter / screenshot-vs-design diff] after each milestone
+and iterate until it passes. Report evidence, not assertions: paste the check's
+actual output (test results, exit code, command output) — never claim "done"
+without it. Fix root causes; do not suppress the error to make the check pass.
+
 Checkpoints:
 After each major step, output: ✅ [what was completed]
 At the end, output a full summary of every file changed.
@@ -431,7 +437,7 @@ Run these in order. Each output feeds the next.
 
 ## Template M — Opus 4.7 / 4.8 Task Brief
 
-*Use for any complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 — claude.ai, API, or Claude Code. Both read prompts literally and produce narrow output when context is missing. This template front-loads everything so the first turn is the only turn. (Opus 4.8 is the current Claude Code default; Fable 5 is currently suspended — status in models.md.)*
+*Use for any complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 — claude.ai, API, or Claude Code. Both read prompts literally and produce narrow output when context is missing. This template front-loads everything so the first turn is the only turn. (Opus 4.8 is the current Claude Code default recommendation; Fable 5 is available again but not the default — status in models.md.)*
 
 ```
 ## Objective
@@ -455,6 +461,8 @@ Run these in order. Each output feeds the next.
 - [ ] [Binary check 1]
 - [ ] [Binary check 2]
 - [ ] [Binary check 3]
+Run [tests / build / linter] to verify each criterion and iterate until green.
+Show the check's output as evidence — do not assert completion without it.
 
 ## Stop Conditions
 Stop and ask before:
@@ -476,10 +484,13 @@ After each completed step: ✅ [what was done] — [file(s) affected]
 ```
 ## Session Strategy
 [Pick one:]
-- New session — unrelated to prior context, start fresh
+- New session — unrelated to prior context, start fresh (or `claude --from-pr <n>` to resume a PR's session)
 - Continue — prior context still needed
+- Plan mode first — multi-file or unfamiliar change: Shift+Tab, review/edit the plan (Ctrl+G), then execute. Skip if the diff fits in one sentence.
 - Subagent — spin off for [file-heavy research / verification] so intermediate output stays out of main context
 - Compact first — run /compact [focus on X] then begin
+Mid-session rule: >2 failed corrections on the same issue → /clear and restart
+with a better prompt; /btw for side questions that shouldn't enter context.
 ```
 
 **Refactor / migration safety net — add for any behavior-preserving change:**
@@ -598,6 +609,30 @@ For each verdict, include an evidence field citing the exact output line / file:
 - **Single-shot** — one pass, no scaffolding. Default for bounded tasks.
 - **Multi-step** — sequenced steps + checkpoints. Use when sub-tasks have ordering/dependencies.
 - **Long-horizon** — orchestrator + sub-agents + handoffs + loop contract. Use only when scope genuinely needs delegation.
+
+**#55 Review-request knobs** *(for any prompt that asks an AI to review code/docs — Claude Code `/code-review`, a review subagent, or a standalone reviewer. An unconstrained "find all issues" reviewer always finds some → nit-noise and over-engineering; calibrate it):*
+```
+Severity: Important = [what would break behavior / leak data / block rollback
+in THIS repo — e.g. incorrect logic, unscoped queries, PII in logs]. Style,
+naming, refactoring ideas = Nit at most.
+Nit cap: report at most [5] nits; state the rest as "plus N similar items".
+Skip: [generated files, lockfiles, vendored deps, anything CI already enforces].
+Evidence bar: behavior claims need a file:line citation from the source, not
+an inference from naming.
+Convergence: on re-review, report new Important findings only — no new nits.
+Summary shape: open with a one-line tally ("N factual, M style"); lead with
+"no factual issues" when true.
+```
+
+**Spec-by-interview** *(Claude Code / any AskUserQuestion-capable agent — for a large feature, have the agent interview the user instead of guessing the spec):*
+```
+I want to build [brief description]. Interview me in detail using the
+AskUserQuestion tool. Ask about technical implementation, UI/UX, edge cases,
+concerns, and tradeoffs. Don't ask obvious questions — dig into the hard parts
+I might not have considered. Keep interviewing until we've covered everything,
+then write a complete spec to SPEC.md.
+```
+Note for the user (outside the prompt block): execute the spec in a **fresh session** (clean context + written spec beats a long mixed one). A good spec is self-contained: names the files/interfaces involved, states what is out of scope, and ends with an end-to-end verification step.
 
 **Sourced guardrails** *(Anthropic "Building effective agents" / context-engineering / long-running harnesses; OpenAI harness-engineering & guardrails; OWASP AI Agent Security — sources list: `docs/sources.md` in the repo, https://github.com/azagreev/prompt-master-za — not shipped inside the installed skill):*
 - **Packet contract — every delegated unit has all 7:** single purpose · explicit inputs · narrow tool permissions · result schema · timeout + budget · evidence requirement · no hidden cross-packet dependency.

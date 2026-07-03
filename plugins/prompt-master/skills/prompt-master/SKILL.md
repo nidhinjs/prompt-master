@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.26.0
+version: 1.26.1
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -26,7 +26,7 @@ Keep internal analysis terse and silent — do not narrate the extraction, routi
   - **Universal Self-Consistency** -- requires independent sampling passes
   - **Prompt chaining as a layered technique** -- compounds fabrication risk across longer chains
 - Do not add Chain of Thought to reasoning-native models — they think internally, CoT degrades output. **Canonical no-CoT list (the single source — other sections reference it, do not restate it):** o3, o4-mini, DeepSeek thinking mode / R1, Qwen3 thinking mode, Grok grok-4.3, Kimi K2.x thinking, MiniMax M3. Also never add "think step by step" to Claude Opus 4.x (adaptive thinking — see the Claude profile) or GPT-5.5 (outcome-first)
-- Do not instruct Claude Fable 5 / Mythos 5 to echo, transcribe, reproduce, or "show your reasoning/thinking" in the response — this triggers a `reasoning_extraction` refusal (applies if/when Fable 5 / Mythos 5 are available — currently suspended; the status, date, and details live ONLY in models.md). For visible progress on long runs, use a send-to-user tool instead
+- Do not instruct Claude Fable 5 / Mythos 5 to echo, transcribe, reproduce, or "show your reasoning/thinking" in the response — this triggers a `reasoning_extraction` refusal (availability status and billing terms live ONLY in models.md). For visible progress on long runs, use a send-to-user tool instead
 - Do not ask more than 3 clarifying questions before producing a prompt
 - Do not pad output with explanations the user did not request
 - **Never ship a silently-derived output format for a research/report prompt or ANY Grok prompt.** When the user has not stated the answer's format, ask it as your **first clarifying question**; only when the question cap is already spent (or questions go unanswered) state the assumed format on its own explicit line in the note ("Assumed output format: … — change if needed"). A baked-in format with no question and no assumption-line is a defect — this overrides "fix silently" and Template N's structure defaults. **Likewise for settings-as-knobs tools (Gamma, Perplexity, Grok, image-AI, video-AI): surface every knob you defaulted on an `Assumed settings:` note line — list ONLY the knobs the user did NOT specify (omit any they already set — never restate a user-given value), each with its value + where to change it — never an extra clarifying question. A silently-baked knob is the same defect; skip the line only when the tool has no knobs (or the user already set them all).**
@@ -91,14 +91,14 @@ Model IDs, current defaults, and version-tied params are volatile — confirm th
 Catch these before generating; open the full profile in [references/tool-profiles.md](references/tool-profiles.md) when the task needs more. For settings-as-knobs tools (Gamma, Perplexity, Grok, image-AI, video-AI), surface defaulted knobs as an `Assumed settings:` note line (see Hard rule above).
 
 - **Claude Opus 4.8** (default for "Claude" when unspecified) over-engineers — add "Only make changes directly requested. No extra features, files, or refactors." Front-load intent, file scope, constraints, acceptance criteria (4.7/4.8 read literally).
-- **Claude Fable 5 / Mythos 5** — ⚠️ **suspended/unavailable** (status + details in models.md). Do NOT route here. If restored: never ask it to show/echo its reasoning (`reasoning_extraction` refusal); steer with brief intent + `effort`.
+- **Claude Fable 5 / Mythos 5** — Fable 5 available again but **NOT the default** (billing terms in models.md; Mythos 5 US-orgs-only). Route only on explicit request; never ask it to show/echo its reasoning (`reasoning_extraction` refusal); steer with brief intent + `effort`.
 - **GPT-5.5** — outcome-first, not step-by-step; avoid absolutes (ALWAYS / NEVER) for non-invariants; control length via `text.verbosity`, not prose.
 - **Reasoning-native models** (canonical no-CoT list — see Hard rules above) — NEVER add CoT or "think step by step"; short clean instructions only.
 - **DeepSeek (V4)** — dual-mode; thinking = reasoning-native (no CoT; `temperature`/penalties ignored). Legacy IDs retiring — check models.md. Full rules → DeepSeek profile.
 - **Grok (xAI)** — reasoning-native (no CoT); no realtime knowledge without **Web/X Search**; search filters are request parameters, not prose; ALWAYS pin the output format (ask first or surface the assumption — never silently derive). Full rules → Grok profile.
 - **Kimi (Moonshot AI)** — reasoning-native (no CoT); keep sampling defaults; `$web_search` requires thinking OFF; Agent Swarm self-orchestrates — don't set agent counts or script sub-agents; paid features are tier-gated (surface as prerequisite). Full rules → Kimi profile.
 - **Gemini** — prone to hallucinated citations: add "Cite only sources you are certain of. If uncertain, say [uncertain]."
-- **Agentic tools** (Claude Code, Devin, Cursor, Cline, SWE-agent) — stop conditions are MANDATORY; always scope to explicit files/paths; add human-review triggers for destructive actions.
+- **Agentic tools** (Claude Code, Devin, Cursor, Cline, SWE-agent) — stop conditions are MANDATORY; always scope to explicit files/paths; add human-review triggers for destructive actions; give a runnable check + require evidence, not assertion (pattern #52); for review prompts, constrain the reviewer — severity bar, nit cap, `file:line` evidence (pattern #55, Review-request knobs in templates.md).
 - **Multi-agent / orchestrator prompt request** (user asks for a prompt for an orchestrator, fan-out, sub-agents, or an agent team) — load the **Agentic Prompt Fragments** in [references/templates.md](references/templates.md); default to a single loop, add orchestration only when the task hits the "when to orchestrate" criteria there. **Exception — a vendor-managed swarm (e.g. Kimi Agent Swarm): the model self-orchestrates, so do NOT design a topology or script sub-agents** — give one decomposable task + final artifact (see the Kimi carve-out there).
 - **Research tools** (Perplexity, Gemini/GPT Deep Research) — prompt as a research brief (Template N) with a required Data-gaps/confidence section and **inline citations** (cite only retrieved sources; never fabricate). **Perplexity: Agent API (`/v1/agent`, `responses.create`) is the recommended default for new apps; Sonar API (`sonar`/`sonar-pro`/`sonar-deep-research`) for direct search-grounded answers.** Sonar search is driven by the user message (system prompt isn't seen by search); set domain/recency limits as request parameters, not prose; UI Focus/Spaces ≠ API; "Search as Code" is a blog concept, not a callable feature.
 - **Local / open-weight** (Ollama, Llama, Mistral) — ask which model is running; keep prompts short and flat, no deep nesting; always include a system-prompt role.
@@ -165,7 +165,7 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - "Show/echo/reproduce your reasoning" sent to Claude Fable 5/Mythos 5 → REMOVE IT (triggers reasoning_extraction refusal); use a send-to-user tool for visible progress instead
 - New prompt contradicts prior session decisions → flag, resolve, include memory block
 
-**Model-fit failures (current-gen models; Fable 5 items apply only if/when it is restored — see Hard rules)**
+**Model-fit failures (current-gen models)**
 - Step-by-step process over-specified for GPT-5.5 or Fable 5 → strip it, switch to outcome-first (goal + success criteria + constraints + stop rules); let the model choose the path
 - Absolutes (ALWAYS/NEVER/MUST/ONLY) used for non-invariants on GPT-5.5 → soften to plain instructions; reserve absolutes for true safety/policy/invariant constraints
 - In-prompt verbosity caps for GPT-5.x API context → replace with the `text.verbosity` parameter where applicable
@@ -178,6 +178,7 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - Silent agent → add "After each step output: ✅ [what was completed]"
 - Unrestricted filesystem → add scope lock on which files and directories are touchable
 - No human review trigger → add "Stop and ask before: [list destructive actions]"
+- No runnable self-check → give the agent a check it can run (tests/build/screenshot-diff) + "iterate until it passes" + evidence, not assertion (pattern #52)
 - Gate only irreversible/high-blast-radius actions → too many gates cause rubber-stamping theater; reserve human review for what's truly unrecoverable (full taxonomy in templates.md)
 
 ---
@@ -250,4 +251,4 @@ Read only when the task requires it. Load only the one section/file you need —
 | [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target tool — read only that tool's profile for full routing guidance |
 | [references/models.md](references/models.md) | You need a volatile model fact (ID, current default, version-tied param) — honor the 60-day re-verify protocol |
 | [references/templates.md](references/templates.md) | You need the full template structure for any tool category |
-| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 51-pattern reference |
+| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 55-pattern reference |

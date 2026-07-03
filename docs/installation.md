@@ -103,5 +103,5 @@ rm -rf ~/.claude/skills/prompt-master
 
 - `plugins/prompt-master/skills/prompt-master/SKILL.md` — полная логика навыка
 - `plugins/prompt-master/skills/prompt-master/references/templates.md` — шаблоны промптов
-- `plugins/prompt-master/skills/prompt-master/references/patterns.md` — 51 паттернов-фиксов
+- `plugins/prompt-master/skills/prompt-master/references/patterns.md` — 55 паттернов-фиксов
 - [CHANGELOG.md](../CHANGELOG.md) — история версий

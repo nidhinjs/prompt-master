@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.26.1] - 2026-07-03
+
+Рефреш профиля Claude Code по обновлённым 2026-07-02 докам code.claude.com (prompt-library, best-practices, code-review, common-workflows) + актуализация статуса Fable 5. Главный пробел закрыт: петля самопроверки (тройно подтверждена независимыми источниками Anthropic).
+
+### Added
+- **Паттерны #52–55** (счётчик 51→55): #52 no runnable self-check (проверка + iterate-until-pass + evidence, не assertion; лестница in-prompt → `/goal` → Stop-hook → verify-субагент); #53 artifact described instead of attached (`@file`/verbatim paste вместо пересказа); #54 no exemplar named (указать образец из кодбейса); #55 unbounded review request (severity bar + nit cap + `file:line` evidence + convergence). Нюанс-исключение к #1: осознанно-вагусный exploration-промпт легитимен.
+- **Template H:** блок `Verification:` (какой check гонять, iterate до зелёного, показывать вывод, чинить root cause).
+- **Agentic Prompt Fragments:** «#55 Review-request knobs» (severity/nit-cap/skip/evidence-bar/convergence/summary shape — из REVIEW.md-доки Code Review) и «Spec-by-interview» (интервью через AskUserQuestion → SPEC.md → исполнение в свежей сессии).
+- **Golden-сценарий `claude-code-verify-loop`** (13-й): промпт для Claude Code обязан содержать verification + stop conditions.
+- **docs/**: снапшоты 4 страниц доков Claude Code (2026-07-03) + секция в sources.md.
+
+### Changed
+- **Профиль Claude Code:** verification loop как практика №1; plan mode (Shift+Tab/Ctrl+G; «diff в одно предложение → пропусти план»); гранулярная гигиена контекста (`/clear` между задачами и после >2 неудачных правок, `/compact <focus>`, `/btw`); CLAUDE.md-правила (correction→rule, критерий строки); артефакты `@file`/`@server:resource`/pipe; headless `claude -p` («Return OK or FAIL», `--allowedTools`, Writer/Reviewer); `/code-review` (effort semantics, targets).
+- **Fable 5 — redeployed 2026-07-01** (models.md, `last-verified: 2026-07-03`): до 07-07 в лимитах (≤50% weekly Pro/Max/Team/select Enterprise), после — usage credits; Mythos 5 — только US-организации. **Дефолт-рекомендация не меняется — Opus 4.8**; Fable 5 — по явному запросу. Снят «suspended»-статус в SKILL.md/tool-profiles/templates/манифестах.
+- Template M: Session Strategy дополнен (plan mode, `--from-pr`, правило >2 правок, `/btw`); Acceptance Criteria требуют verify + evidence.
+- README ×2, installation.md, plugin.json, marketplace.json: счётчик 55, версия v1.26.1, строки #52–55, Fable 5 статус.
+
 ## [1.26.0] - 2026-07-02
 
 Усиление инфраструктуры качества: CI, поведенческие golden-тесты, трейты профилей, диета always-loaded слоя.
@@ -391,6 +408,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.26.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.1
 [1.26.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.0
 [1.25.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.25.0
 [1.24.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.24.0

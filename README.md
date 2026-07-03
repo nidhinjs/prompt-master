@@ -191,7 +191,7 @@ When you name a tool, Prompt Master silently routes to its profile and applies i
 | Tool / Category | Handles | When to route |
 |---|---|---|
 | **Claude Opus 4.8 / 4.7** | Default text, heavy reasoning, 1M context | Any "Claude" request without a version |
-| **Claude Fable 5 / Mythos 5** | ⚠️ Suspended since 2026-06-12 (unavailable) | Do not route here until access is restored |
+| **Claude Fable 5 / Mythos 5** | Frontier — available again, NOT the default | Route only when the user explicitly names Fable 5 / Mythos 5 (terms in models.md) |
 | **ChatGPT / GPT-5.x** | Outcome-first generation, tone, persona | User names ChatGPT or GPT |
 | **o3 / o4-mini** | Reasoning-native models | Never add CoT — they think internally |
 | **Grok 4.3 / xAI** | Reasoning-native; realtime X/web search; multi-agent research | User names Grok or xAI |
@@ -225,7 +225,7 @@ For anything not profiled, Prompt Master falls back to a **Universal Fingerprint
 | Tool | Category | What Prompt Master fixes |
 |------|----------|--------------------------|
 | **Claude (Opus 4.8 / 4.7)** (default) | Reasoning LLM | Removes padding, adds XML structure, specifies length, front-loads scope |
-| **Claude Fable 5 / Mythos 5** | Frontier LLM — ⚠️ suspended since 2026-06-12 | Outcome-first + brief intent, effort-based steering, no reasoning-echo — applies if/when restored |
+| **Claude Fable 5 / Mythos 5** | Frontier LLM — redeployed 2026-07-01, opt-in (not the default) | Outcome-first + brief intent, effort-based steering, no reasoning-echo |
 | **ChatGPT / GPT-5.5 / GPT-5.x** | Reasoning LLM | Outcome-first structure, `text.verbosity`, reasoning-effort tuning, preambles, retrieval budgets |
 | **Grok 4.3 (xAI)** | Reasoning LLM + realtime search | Reasoning-native (no CoT; `reasoning_effort`); Web/X Search for current data; `grok-4.20-multi-agent` for deep research; asks/surfaces output format; inline citations when search is on |
 | **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode LLM | Model + mode by task; thinking is reasoning-native (no CoT, `reasoning_effort` high/max, no temp/penalties); non-thinking takes system prompt + few-shot; preserve `reasoning_content` with tool calls; legacy names retire 2026-07-24 |
@@ -322,9 +322,9 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 
 ---
 
-## 🚫 51 Credit-Killing Patterns Detected
+## 🚫 55 Credit-Killing Patterns Detected
 
-Prompt Master scans every rough idea against 51 known failure patterns and fixes them silently. A representative selection:
+Prompt Master scans every rough idea against 55 known failure patterns and fixes them silently. A representative selection:
 
 <details>
 <summary><b>Task / Context / Format / Scope (representative)</b></summary>
@@ -361,6 +361,10 @@ Prompt Master scans every rough idea against 51 known failure patterns and fixes
 | 49 | Character-consistency task on a tier that can't do it | brand mascot / same character sent to Nano Banana 2 Lite → route to Nano Banana 2·Pro, FLUX.2 multi-ref, or Midjourney `--oref` |
 | 50 | Video edit as a full re-description instead of a locked delta | long re-description to Omni Flash / Grok → short delta + "Keep everything else the same" + `<FIRST_FRAME>`/`<IMAGE_REF_n>` tags |
 | 51 | Defaulting to a sunsetting / deprecated media model | targeting Sora (2026-09-24) / Veo 2·3 / Runway `gen4_aleph` as if current → flag + route to Veo 3.1 / Kling 3.0 / `aleph2` |
+| 52 | No runnable self-check for the agent | "implement X" with nothing to verify against → give a check (tests/build/screenshot-diff) + "iterate until it passes" + evidence, not assertion |
+| 53 | Artifact described instead of attached | paraphrasing the error/design → paste it verbatim or reference it (`@file`, URL, piped log) |
+| 54 | No exemplar named for match-the-codebase work | "add a calendar widget" → "look at how X is implemented in `<file>`, follow that pattern" |
+| 55 | Unbounded review request | "find all issues" → severity bar + nit cap + `file:line` evidence + re-review convergence rule |
 
 </details>
 
@@ -387,7 +391,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.24.0** (image + video profile refresh — 14 tools actualized/added, model-facts dated with a deprecation timeline).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.26.1** (Claude Code profile refresh — self-verification loop, plan mode, context hygiene, review-request knobs; patterns #52–55).
 
 ## 📄 License
 
