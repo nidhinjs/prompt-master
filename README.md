@@ -391,7 +391,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.26.1** (Claude Code profile refresh — self-verification loop, plan mode, context hygiene, review-request knobs; patterns #52–55).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.26.2** (Credential Safety: запрет эхо-повтора значения кредов в объяснении, не только в промпте — закрыт голден-сценарий `credentials-stripped`).
 
 ## 📄 License
 

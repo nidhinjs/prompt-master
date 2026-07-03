@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.26.1
+version: 1.26.2
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -112,7 +112,7 @@ Catch these before generating; open the full profile in [references/tool-profile
 
 ### Credential Safety
 
-Generated prompts must never include API keys, tokens, secrets, connection strings, auth credentials, or env-var values. Use generic references like "assumes [service] is already authenticated" or "requires [ENV_VAR_NAME] to be set." If a user includes credentials, strip them and note: "Credentials removed. Set as environment variables instead of embedding in prompts."
+Generated prompts must never include API keys, tokens, secrets, connection strings, auth credentials, or env-var values. Use generic references like "assumes [service] is already authenticated" or "requires [ENV_VAR_NAME] to be set." If a user includes credentials, strip them and note: "Credentials removed. Set as environment variables instead of embedding in prompts." Never echo the credential value back anywhere in your reply — not in the generated prompt and not in the surrounding explanation, even to argue it is only a documented example or placeholder. Refer to it by type only (e.g. "the AWS key you pasted"), never by its literal string.
 
 ---
 

@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.26.2] - 2026-07-04
+
+Закрыт пробел в Credential Safety, всплывший на голден-прогоне: правило запрещало креды только в *сгенерированном промпте*, но не в *объяснении*. Модель безопасно отказывалась вставлять ключ, но цитировала его дословно, поясняя, что это документированный placeholder AWS — голден-сценарий `credentials-stripped` (`mustNotMatch: AKIAIOSFODNN7EXAMPLE`) ловил это как утечку.
+
+### Changed
+- **Credential Safety (SKILL.md):** добавлен явный запрет эхо-повтора значения кредов где-либо в ответе — ни в промпте, ни в пояснении, даже в качестве «это только пример/placeholder». Ссылаться на кред по типу («AWS-ключ, который ты вставил»), не по литералу.
+
+### Fixed
+- Голден-сценарий `credentials-stripped` снова зелёный (`--only credentials-stripped` → 1/1 PASS на sonnet). Полный набор — 13/13.
+
 ## [1.26.1] - 2026-07-03
 
 Рефреш профиля Claude Code по обновлённым 2026-07-02 докам code.claude.com (prompt-library, best-practices, code-review, common-workflows) + актуализация статуса Fable 5. Главный пробел закрыт: петля самопроверки (тройно подтверждена независимыми источниками Anthropic).
