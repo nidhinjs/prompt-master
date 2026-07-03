@@ -418,6 +418,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.26.2]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.2
 [1.26.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.1
 [1.26.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.0
 [1.25.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.25.0
