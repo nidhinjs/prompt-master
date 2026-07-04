@@ -274,6 +274,12 @@ and iterate until it passes. Report evidence, not assertions: paste the check's
 actual output (test results, exit code, command output) — never claim "done"
 without it. Fix root causes; do not suppress the error to make the check pass.
 
+Deviations:
+If an edge case forces you off the plan, pick the CONSERVATIVE option, log it under
+a "## Deviations" heading (what you found / what the plan said / what you did
+instead / why), and keep going — do not stall waiting for input. Stop-and-ask stays
+reserved for the irreversible actions listed above.
+
 Checkpoints:
 After each major step, output: ✅ [what was completed]
 At the end, output a full summary of every file changed.
@@ -473,6 +479,8 @@ Stop and ask before:
 
 ## Progress
 After each completed step: ✅ [what was done] — [file(s) affected]
+If forced off-plan on a reversible choice: pick the conservative option, log it
+under "## Deviations", and keep going — reserve stop-and-ask for the irreversible.
 ```
 
 **Thinking depth** — add only when needed, delete otherwise:
@@ -633,6 +641,23 @@ I might not have considered. Keep interviewing until we've covered everything,
 then write a complete spec to SPEC.md.
 ```
 Note for the user (outside the prompt block): execute the spec in a **fresh session** (clean context + written spec beats a long mixed one). A good spec is self-contained: names the files/interfaces involved, states what is out of scope, and ends with an end-to-end verification step.
+
+**#56 Prototype-first** *(taste-based / "I'll know it when I see it" criteria — visual/UX/scope-shaping work the user can only recognize, not specify. A throwaway mock costs nothing and drains the unknown cheaply; wiring the real app first makes a wrong guess expensive to revert):*
+```
+Before wiring anything up, make a single self-contained HTML file with fake data
+showing [N, e.g. 4] genuinely different directions for [the thing] — not
+variations of one idea. No backend, routes, or state. I'll react and pick.
+```
+Note for the user (outside the prompt block): the mock is throwaway — do not let its code leak into the real app; it exists to react to, then rebuild properly.
+
+**Blindspot pass** *(new domain or unfamiliar codebase area — the user doesn't yet know what to ask. Converts unknown unknowns into known unknowns before any build):*
+```
+I need to [task] but I'm new to [domain / this part of the codebase]. Do a
+blindspot pass: surface my unknown unknowns — (a) questions I didn't know to
+ask, (b) what "good" looks like here, (c) prior art already in the codebase,
+(d) potholes to avoid. Then I'll re-prompt you with a real task.
+```
+Verify: the user can restate the task with at least 3 newly-surfaced constraints or questions. (Distinct from Spec-by-interview, which drains *known* unknowns, and from naming an exemplar (#54), which supplies a reference the user already has.)
 
 **Sourced guardrails** *(Anthropic "Building effective agents" / context-engineering / long-running harnesses; OpenAI harness-engineering & guardrails; OWASP AI Agent Security — sources list: `docs/sources.md` in the repo, https://github.com/azagreev/prompt-master-za — not shipped inside the installed skill):*
 - **Packet contract — every delegated unit has all 7:** single purpose · explicit inputs · narrow tool permissions · result schema · timeout + budget · evidence requirement · no hidden cross-packet dependency.

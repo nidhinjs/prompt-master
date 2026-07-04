@@ -1,6 +1,6 @@
 # Credit-Killing Patterns Reference
 
-55 patterns that waste tokens and cause re-prompts. Read this file when the user pastes a bad prompt and asks you to fix it, or when diagnosing why a prompt is underperforming.
+57 patterns that waste tokens and cause re-prompts. Read this file when the user pastes a bad prompt and asks you to fix it, or when diagnosing why a prompt is underperforming.
 
 ---
 
@@ -15,6 +15,7 @@
 | 5 | **Emotional task description** | "it's totally broken, fix everything" | "Throws uncaught TypeError on line 43 when `user` is null" |
 | 6 | **Build-the-whole-thing** | "build my entire app" | Break into Prompt 1 (scaffold), Prompt 2 (core feature), Prompt 3 (polish) |
 | 7 | **Implicit reference** | "now add the other thing we discussed" | Always restate the full task — never reference "the thing we discussed" |
+| 56 | **Taste-based or new-domain unknown drained like a normal question** | "make it look premium" / "a beautiful dashboard" one-shot into a build; OR the skill burns a clarifying question the operator can't answer in the abstract ("I'll know it when I see it"); OR the operator is new to the domain and doesn't know what to ask | A question doesn't drain these. **Taste / "recognize-not-specify" → prototype-first**: emit a prompt for a throwaway self-contained mock (fake data, N genuinely divergent directions, no backend/state wiring) to react to before building. **New domain / unfamiliar codebase → blindspot pass**: emit a prompt that surfaces the operator's unknown unknowns (questions they didn't know to ask, what "good" looks like, prior art, potholes) so they can re-prompt. Flag the move in the note; don't spend a clarifying question on it. |
 
 ---
 
@@ -88,6 +89,7 @@
 | 42 | **Unhandled agentic failure mode** (consolidated) | Prompt ignores silent failure (output looks correct but is wrong) and context failure (agent ignores instructions when context is overloaded) | Add a schema/validation step after each output stage (catches silent failure); trim instructions to the minimum required and pass evolving state in a structured object, not inline prose (counters context failure) |
 | 52 | **No runnable self-check for the agent** | "implement email validation" — nothing the agent can run to verify itself, so "looks done" is the stop signal and the human becomes the verification loop | Give the agent a check that returns pass/fail (tests, build exit code, linter, screenshot-vs-design diff) + "run the check and iterate until it passes" + require **evidence, not assertion** (paste the test output / command result). On Claude Code, escalate by stakes: in-prompt → `/goal` condition → Stop-hook gate → fresh verification subagent. |
 | 55 | **Unbounded review request** | "review this and find all issues" — a reviewer told to find gaps always finds some → nit-noise, over-engineering fixes, endless re-review rounds | Constrain the reviewer: define what counts as Important for this repo (correctness/security, not style); cap nits ("max 5, mention the rest as a count"); set the evidence bar ("behavior claims need a `file:line` citation, not an inference from naming"); add a convergence rule ("on re-review, report Important findings only"); ask for a one-line tally up front ("2 factual, 4 style"). |
+| 57 | **Plan deviation unhandled — agent stalls or silently drifts** | A long agentic prompt gives a plan but no rule for mid-run edge cases → the agent either waits on the human for a reversible choice, or improvises off-plan leaving no trace | Add a deviation rule: on a forced departure from the plan, **pick the conservative option, log it under `## Deviations`** (what was found / what the plan said / what was done instead / why), **and continue** — don't stall. Keep `Stop-and-ask` reserved for the irreversible actions only (complements #35; stop conditions are not weakened). |
 
 ---
 

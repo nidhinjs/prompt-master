@@ -81,6 +81,12 @@
       "mustMatch": ["(verif|провер|test|тест)", "(stop|останов|ask before|спроси)"],
       "mustNotMatch": ["budget_tokens", "thinking budget"],
       "why": "Профиль Claude Code: verification loop (проверка + iterate + evidence, pattern #52) и stop conditions обязательны; thinking budget не хардкодится"
+    },
+    {
+      "id": "taste-prototype-first",
+      "request": "Промпт для Claude Code: сделай красивый дашборд аналитики для наших данных, чтобы выглядел дорого и премиально. У меня нет насмотренности, точного дизайна нет.",
+      "mustMatch": ["(prototype|mock|макет|prototyp|вариант|direction|направлен)"],
+      "why": "Taste-based критерий («дорого/премиально», нет дизайна) вопросом не дренируется → prototype-first (throwaway mock + дивергентные направления), а не one-shot build (pattern #56)"
     }
   ]
 }

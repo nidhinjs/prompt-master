@@ -322,9 +322,9 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 
 ---
 
-## 🚫 55 Credit-Killing Patterns Detected
+## 🚫 57 Credit-Killing Patterns Detected
 
-Prompt Master scans every rough idea against 55 known failure patterns and fixes them silently. A representative selection:
+Prompt Master scans every rough idea against 57 known failure patterns and fixes them silently. A representative selection:
 
 <details>
 <summary><b>Task / Context / Format / Scope (representative)</b></summary>
@@ -365,6 +365,8 @@ Prompt Master scans every rough idea against 55 known failure patterns and fixes
 | 53 | Artifact described instead of attached | paraphrasing the error/design → paste it verbatim or reference it (`@file`, URL, piped log) |
 | 54 | No exemplar named for match-the-codebase work | "add a calendar widget" → "look at how X is implemented in `<file>`, follow that pattern" |
 | 55 | Unbounded review request | "find all issues" → severity bar + nit cap + `file:line` evidence + re-review convergence rule |
+| 56 | Taste-based / new-domain unknown drained like a question | "make it look premium" → prototype-first mock (divergent directions); new domain → blindspot pass — a question can't drain these |
+| 57 | Plan deviation unhandled (agent stalls or drifts) | long agentic run with no deviation rule → "conservative option + log under `## Deviations` + continue"; stop-and-ask for the irreversible only |
 
 </details>
 
@@ -391,7 +393,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.26.2** (Credential Safety: запрет эхо-повтора значения кредов в объяснении, не только в промпте — закрыт голден-сценарий `credentials-stripped`).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.26.3** (unknowns-lens — patterns #56–57: taste/new-domain → prototype-first or blindspot pass instead of a question; plan-deviation logging for long agentic runs).
 
 ## 📄 License
 

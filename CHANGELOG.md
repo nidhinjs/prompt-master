@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.26.3] - 2026-07-04
+
+«Unknowns-lens» — операционализация Fable-гайда «Finding Your Unknowns» (Thariq/Anthropic, снапшот в `docs/`). Закрыт пробел: readiness-gate дренировал только *known unknowns* (вопросом), но taste-критерии («пойму, когда увижу») и незнакомый домен вопросом не гасятся.
+
+### Added
+- **Паттерны #56–57** (55→57): #56 (Task) — taste-based / new-domain unknown, дренируемый вопросом → **prototype-first** (throwaway mock, дивергентные направления) или **blindspot pass** (вскрыть unknown unknowns) вместо вопроса/one-shot-билда; #57 (Agentic) — plan deviation unhandled → **conservative option + лог `## Deviations` + continue**, stop-and-ask только на необратимом.
+- **templates.md**: Template H блок `Deviations:`; Template M `## Progress` off-plan строка; два фрагмента в Agentic Prompt Fragments — **Prototype-first** (#56, taste) и **Blindspot pass** (new domain), явно отделённые от Spec-by-interview (known unknowns) и #54 (exemplar).
+- **SKILL.md**: в Intent Extraction — **question-drainability check** (не тратить вопрос на недренируемое); в Diagnostic → Agentic failures — строки #56/#57.
+- **Golden-сценарий `taste-prototype-first`** (14-й).
+
+### Changed
+- Профиль Claude Code: буллет «unknowns first» (#56/#57) перед Template M.
+- README ×2 / plugin.json / marketplace.json / installation.md: счётчик 57, строки #56–57, version-line v1.26.3.
+- SKILL.md net-zero к бюджету (body 249/250): уплотнены Format- и Model-fit-строки Diagnostic.
+
+**Не взято из гайда (осознанно):** весь 8-фазный аппарат как процесс, W7 Pitch, «HTML-артефакт на всё» — противоречит токен-минимализму (ср. sources.md «Deliberately NOT adopted»). Взяты линза + отдельные клаузы.
+
 ## [1.26.2] - 2026-07-04
 
 Закрыт пробел в Credential Safety, всплывший на голден-прогоне: правило запрещало креды только в *сгенерированном промпте*, но не в *объяснении*. Модель безопасно отказывалась вставлять ключ, но цитировала его дословно, поясняя, что это документированный placeholder AWS — голден-сценарий `credentials-stripped` (`mustNotMatch: AKIAIOSFODNN7EXAMPLE`) ловил это как утечку.
@@ -418,6 +435,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.26.3]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.3
 [1.26.2]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.2
 [1.26.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.1
 [1.26.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.0

@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.26.2
+version: 1.26.3
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -69,6 +69,7 @@ After extracting, gauge readiness **internally** on the critical dimensions (Tas
 - **NEEDS REVISION** → ask only the questions that supply the missing evidence, ranked by impact (most decisive first). Phrase them as concrete questions or A/B forks ("REST or GraphQL?"), never as a number. If a recalled memory already answers a question, count it resolved and do NOT spend it against the cap. **Hard cap: 3 questions total — never ask a 4th.**
 - Still ambiguous after 3 questions (or they go unanswered) → deliver a **best-effort prompt with the assumptions baked in explicitly**, and append the assumptions/open-questions note from the Output format above. Do not stall.
 - **Output format is never silently derived:** if the answer's format isn't specified and it shapes the deliverable (research/report, or any Grok prompt), make it your first question — or, if the cap is spent, state the assumed format in the open-questions note. A derived format is an assumption to surface, not a silent fix.
+- **Question-drainability check:** a clarifying question only helps for *known unknowns*. If the missing critical info is taste-based ("premium", "like X", "I'll know it when I see it") or the user is new to the domain/codebase, a question won't drain it — don't spend the cap. Instead generate a **prototype-first** prompt (throwaway mock, divergent directions) or a **blindspot pass** prompt (surface unknown unknowns), and flag the move in the note (pattern #56).
 
 **Placeholders vs open decision forks — do not confuse them.** A *placeholder* is a fill-in value the user drops in without changing the approach (a path, version, name → leave `[like this]`). An *open fork* is an unresolved decision that changes the prompt's shape or the work's outcome (migrate from→to which library? keep backwards-compat? sync or async? does the token/output format change?). A fork must NOT be buried as a placeholder: the single most decisive fork becomes your first question, and **every fork still open at generation time is listed explicitly in the assumptions/open-questions note** — never silently defaulted.
 
@@ -148,9 +149,8 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 **Format failures**
 - No output format or tool settings specified → derive from task type, but **surface the derived format AND any defaulted knobs (Gamma/Perplexity/Grok/image-AI/video-AI) as explicit assumption lines** in the note (never silently); if the format materially shapes the answer (research/report task, or any Grok prompt) → **ask format as the first clarifying question**, falling back to the assumption line only when the cap is spent (knobs are always surfaced, never asked)
 - Factual / research / report prompt for a retrieval-capable tool (Grok + Web/X Search, Perplexity, deep-research modes, DeepSeek app) with no citation requirement → add the **citation contract**: inline source link per non-obvious claim + a closing sources list + "cite only sources you actually retrieved, never fabricate a citation or URL; mark unsourced claims [uncertain]". Do NOT add it for creative, code, transform, or no-retrieval tasks — forcing citations there invites fabricated sources
-- Implicit length ("write a summary") → add word or sentence count
+- Implicit length or vague aesthetic ("write a summary" / "make it professional") → add a measurable spec (word/sentence count; concrete visual specs)
 - No role assignment for complex tasks → add domain-specific expert identity
-- Vague aesthetic ("make it professional") → translate to concrete measurable specs
 
 **Scope failures**
 - No file or function boundaries for IDE AI → add explicit scope lock
@@ -166,11 +166,9 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - New prompt contradicts prior session decisions → flag, resolve, include memory block
 
 **Model-fit failures (current-gen models)**
-- Step-by-step process over-specified for GPT-5.5 or Fable 5 → strip it, switch to outcome-first (goal + success criteria + constraints + stop rules); let the model choose the path
-- Absolutes (ALWAYS/NEVER/MUST/ONLY) used for non-invariants on GPT-5.5 → soften to plain instructions; reserve absolutes for true safety/policy/invariant constraints
-- In-prompt verbosity caps for GPT-5.x API context → replace with the `text.verbosity` parameter where applicable
+- Step-by-step process or a legacy prescriptive stack over-specified for GPT-5.5 or Fable 5 → strip inherited lines, switch to outcome-first (goal + success criteria + constraints + stop rules); shorter, less prescriptive prompts perform better on current-gen
+- Absolutes (ALWAYS/NEVER/MUST/ONLY) for non-invariants on GPT-5.5 → soften to plain instructions (reserve for true safety/policy/invariants); in-prompt verbosity caps for GPT-5.x API → use the `text.verbosity` parameter instead
 - Hardcoded effort/thinking budget for Opus 4.x, Fable 5, or Claude Code → REMOVE IT (harness/adaptive-managed); on Fable 5 steer via the `effort` setting, not the prompt body
-- Legacy instruction stack carried over to GPT-5.5 or Fable 5 → prune inherited lines; shorter, less prescriptive prompts perform better on current-gen models
 
 **Agentic failures**
 - No starting state → add current project state description
@@ -179,6 +177,8 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - Unrestricted filesystem → add scope lock on which files and directories are touchable
 - No human review trigger → add "Stop and ask before: [list destructive actions]"
 - No runnable self-check → give the agent a check it can run (tests/build/screenshot-diff) + "iterate until it passes" + evidence, not assertion (pattern #52)
+- No plan-deviation rule for a long run → add "on a forced departure from the plan: pick the conservative option, log it under `## Deviations`, and continue"; keeps stop-and-ask for the irreversible only (pattern #57)
+- Taste-based or new-domain ask (see Intent Extraction drainability check) → route to a prototype-first or blindspot-pass prompt instead of a one-shot build (pattern #56)
 - Gate only irreversible/high-blast-radius actions → too many gates cause rubber-stamping theater; reserve human review for what's truly unrecoverable (full taxonomy in templates.md)
 
 ---
@@ -251,4 +251,4 @@ Read only when the task requires it. Load only the one section/file you need —
 | [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target tool — read only that tool's profile for full routing guidance |
 | [references/models.md](references/models.md) | You need a volatile model fact (ID, current default, version-tied param) — honor the 60-day re-verify protocol |
 | [references/templates.md](references/templates.md) | You need the full template structure for any tool category |
-| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 55-pattern reference |
+| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 57-pattern reference |
