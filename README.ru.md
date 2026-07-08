@@ -393,7 +393,7 @@ Prompt Master сверяет каждую сырую идею с 57 извест
 
 ## ℹ️ История версий
 
-Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.26.3** (unknowns-lens — паттерны #56–57: taste/новый-домен → prototype-first или blindspot pass вместо вопроса; логирование отклонений от плана в длинных агентных прогонах).
+Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.27.0** (quality gates — Node lint в CI, стабильные hook fixtures, расширенные golden-сценарии и обновлённые факты Fable 5 promotional access).
 
 ## 📄 Лицензия
 

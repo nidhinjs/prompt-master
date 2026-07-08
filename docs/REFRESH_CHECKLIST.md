@@ -27,8 +27,9 @@
 ## После правок
 
 - `node scripts/test-hook.js` — fixtures хука зелёные.
-- `./scripts/lint.ps1` (pwsh или powershell.exe) — версия/счётчики/ToC/cross-refs/no-CoT
-  списки/трейты/single-source статусы согласованы (то же гоняет CI на push/PR).
+- `node scripts/lint.js` — версия/счётчики/ToC/cross-refs/no-CoT
+  списки/трейты/single-source статусы/Fable promo-факты согласованы (то же гоняет CI на push/PR).
+- `./scripts/lint.ps1` (pwsh или powershell.exe) — legacy helper, не основной CI gate.
 - `node scripts/run-golden.js` — поведенческие golden-сценарии (реальные вызовы модели,
   запускать вручную перед релизом; FAIL = сигнал для разбора, не слепой правки).
 - `./scripts/bump-version.ps1 -Bump minor|patch` — синхронный подъём версии.

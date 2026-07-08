@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.27.0] - 2026-07-08
+
+Quality-gates release: стабилизация deterministic checks, перенос CI lint на Node, расширение golden-покрытия и актуализация Fable 5 promotional access по Anthropic Help Center.
+
+### Added
+- **`scripts/lint.js`** — канонический cross-platform release gate без зависимости от `pwsh`: version drift, pattern count, frontmatter, CRLF, templates ToC/cross-ref drift, no-CoT drift, knob traits, stale `models.md`, single-source status facts и Fable promo guard.
+- **Fable promo guard** в lint: `models.md` обязан содержать deadline `2026-07-12 11:59:59 PM PT`, 50% weekly subscription limits, API exclusion/separate billing и Claude Code `2.1.170+`; stale current-claim `2026-07-07` в Anthropic section запрещён.
+- **Golden-сценарии**: ambiguous target assumption, Gamma assumed settings, pasted prompt injection inertness, research format not silent, two-task split, unknown-tool fallback, destructive agent stop conditions.
+
+### Changed
+- **CI:** GitHub Actions теперь гоняет `node scripts/test-hook.js` + `node scripts/lint.js`; PowerShell lint остаётся legacy helper.
+- **Hook runtime:** stdin-чтение `multi-agent-detect.js` переведено на event-based `process.stdin`, чтобы child-process fixture tests не зависали.
+- **`scripts/test-hook.js`:** добавлен timeout на fixture, чтобы поломанный hook падал ошибкой вместо бесконечного ожидания.
+- **`scripts/run-golden.js`:** отчёт показывает scenario id, model, elapsed time, failed regex и первый excerpt ответа.
+- **Fable 5 facts:** Anthropic section обновлён: promo extended through **2026-07-12 11:59:59 PM PT**; eligible Pro/Max/Team + premium seat-based Enterprise; Free/standard Enterprise/usage-based Enterprise/API excluded; API billed separately; Claude Code requires `2.1.170+`; Cowork requires latest Claude Desktop.
+
+### Notes
+- Источник Fable promo terms: Anthropic Help Center article “Claude Fable 5 promotional access”, checked `2026-07-08`.
+- Default routing unchanged: bare `Claude` still targets **Opus 4.8**; Fable 5 remains opt-in/selectable.
+
 ## [1.26.3] - 2026-07-04
 
 «Unknowns-lens» — операционализация Fable-гайда «Finding Your Unknowns» (Thariq/Anthropic, снапшот в `docs/`). Закрыт пробел: readiness-gate дренировал только *known unknowns* (вопросом), но taste-критерии («пойму, когда увижу») и незнакомый домен вопросом не гасятся.
@@ -435,6 +455,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.27.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.27.0
 [1.26.3]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.3
 [1.26.2]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.2
 [1.26.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.1

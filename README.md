@@ -393,7 +393,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.26.3** (unknowns-lens — patterns #56–57: taste/new-domain → prototype-first or blindspot pass instead of a question; plan-deviation logging for long agentic runs).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.27.0** (quality gates — Node lint in CI, stable hook fixtures, expanded golden scenarios, and refreshed Fable 5 promotional access facts).
 
 ## 📄 License
 

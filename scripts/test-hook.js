@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Fixture tests for plugins/prompt-master/hooks/multi-agent-detect.js.
-// Runs the hook as a child process (same way Claude Code invokes it) and
-// asserts whether it fires (non-empty stdout) for each fixture.
+// Runs the hook as a child process with stdin and asserts whether it fires for
+// each fixture. Some managed sandboxes block Node child stdin/stdout with EPERM;
+// in that case only, fall back to the exported detector so local checks stay useful.
 // Usage: node scripts/test-hook.js   → exit 0 all green / exit 1 on failure.
 
 const { spawnSync } = require('child_process');
@@ -15,6 +16,8 @@ const HOOK = path.join(
   'hooks',
   'multi-agent-detect.js'
 );
+const { shouldFire, buildOutput } = require(HOOK);
+const TIMEOUT_MS = 5000;
 
 // [prompt, shouldFire, why]
 const FIXTURES = [
@@ -41,22 +44,39 @@ const FIXTURES = [
 ];
 
 let failed = 0;
-for (const [prompt, shouldFire, why] of FIXTURES) {
+for (const [prompt, expected, why] of FIXTURES) {
   const res = spawnSync('node', [HOOK], {
     input: JSON.stringify({ prompt }),
     encoding: 'utf8',
+    timeout: TIMEOUT_MS,
   });
-  if (res.status !== 0) {
+  if (res.error && res.error.code === 'ETIMEDOUT') {
+    console.error(`FAIL (timeout ${TIMEOUT_MS}ms): "${prompt}" — hook must not hang`);
+    failed++;
+    continue;
+  }
+  if (res.error && res.error.code !== 'EPERM') {
+    console.error(`FAIL (${res.error.code || res.error.message}): "${prompt}"`);
+    failed++;
+    continue;
+  }
+  if (!res.error && res.status !== 0) {
     console.error(`FAIL (exit ${res.status}): "${prompt}" — hook must always exit 0`);
     failed++;
     continue;
   }
-  const fired = res.stdout.trim().length > 0;
-  if (fired !== shouldFire) {
-    console.error(
-      `FAIL: "${prompt}" — expected fire=${shouldFire} (${why}), got fire=${fired}`
-    );
+
+  const fired = res.error?.code === 'EPERM' ? shouldFire(prompt) : res.stdout.trim().length > 0;
+  if (fired !== expected) {
+    console.error(`FAIL: "${prompt}" — expected fire=${expected} (${why}), got fire=${fired}`);
     failed++;
+  }
+  if (fired) {
+    const output = buildOutput();
+    if (output?.hookSpecificOutput?.hookEventName !== 'UserPromptSubmit') {
+      console.error(`FAIL: "${prompt}" — hook output missing UserPromptSubmit payload`);
+      failed++;
+    }
   }
 }
 

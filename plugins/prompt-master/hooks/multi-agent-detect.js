@@ -11,25 +11,18 @@
 // Layer 1 (the in-skill trigger in SKILL.md/templates.md) carries the recall;
 // this hook is a precision-first convenience and is safe to remove.
 
-const fs = require('fs');
-
 function readStdin() {
-  try {
-    return fs.readFileSync(0, 'utf8');
-  } catch (_) {
-    return '';
-  }
+  return new Promise((resolve) => {
+    let data = '';
+    process.stdin.setEncoding('utf8');
+    process.stdin.on('data', (chunk) => {
+      data += chunk;
+    });
+    process.stdin.on('end', () => resolve(data));
+    process.stdin.on('error', () => resolve(''));
+    process.stdin.resume();
+  });
 }
-
-let prompt = '';
-try {
-  const data = JSON.parse(readStdin() || '{}');
-  if (data && typeof data.prompt === 'string') prompt = data.prompt;
-} catch (_) {
-  prompt = '';
-}
-
-const p = prompt.toLowerCase();
 
 // Class A — intent to author/modify a prompt (EN + RU).
 // EN needs a word boundary: bare /prompt/ also matches "promptly"/"prompted".
@@ -52,9 +45,29 @@ const B = [
   /(?:^|[^а-яё])(?:ро(?:й|я|ю|ем|е)|команд(?:[аыуое]й?|ами|ах)?)\s+\S*агент/,
 ];
 
-const fire = A.test(p) && B.some((r) => r.test(p));
+async function main() {
+  let prompt = '';
+  try {
+    const raw = (await readStdin()) || process.env.PROMPT_MASTER_HOOK_INPUT || '{}';
+    const data = JSON.parse(raw);
+    if (data && typeof data.prompt === 'string') prompt = data.prompt;
+  } catch (_) {
+    prompt = '';
+  }
 
-if (fire) {
+  const fire = shouldFire(prompt);
+
+  if (fire) {
+    process.stdout.write(JSON.stringify(buildOutput()));
+  }
+}
+
+function shouldFire(prompt) {
+  const p = String(prompt || '').toLowerCase();
+  return A.test(p) && B.some((r) => r.test(p));
+}
+
+function buildOutput() {
   const note =
     'The user appears to want a prompt targeting a multi-agent runtime ' +
     '(orchestrator / fan-out / sub-agents). If you are generating this prompt with ' +
@@ -65,14 +78,18 @@ if (fire) {
     'model self-orchestrates, so do NOT design a topology or script sub-agents; ' +
     'give one decomposable task + final artifact (see the Kimi carve-out). ' +
     'If prompt-master is not in use, ignore this note.';
-  process.stdout.write(
-    JSON.stringify({
-      hookSpecificOutput: {
-        hookEventName: 'UserPromptSubmit',
-        additionalContext: note,
-      },
-    })
-  );
+  return {
+    hookSpecificOutput: {
+      hookEventName: 'UserPromptSubmit',
+      additionalContext: note,
+    },
+  };
 }
 
-process.exit(0);
+module.exports = { shouldFire, buildOutput };
+
+if (require.main === module) {
+  main().catch(() => {
+    process.exitCode = 0;
+  });
+}

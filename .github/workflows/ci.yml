@@ -15,5 +15,4 @@ jobs:
         run: node scripts/test-hook.js
 
       - name: Skill consistency lint
-        shell: pwsh
-        run: ./scripts/lint.ps1
+        run: node scripts/lint.js

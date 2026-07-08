@@ -45,14 +45,16 @@ console.log(`Running ${toRun.length} golden scenario(s), model=${model}\n`);
 
 let failed = 0;
 for (const s of toRun) {
-  process.stdout.write(`— ${s.id} … `);
+  const started = Date.now();
+  process.stdout.write(`— ${s.id} (${model}) … `);
   const res = spawnSync(
     'claude',
     ['-p', s.request, '--append-system-prompt', skill, '--model', model],
     { encoding: 'utf8', timeout: 300000, maxBuffer: 10 * 1024 * 1024 }
   );
+  const elapsed = Date.now() - started;
   if (res.error || res.status !== 0) {
-    console.log(`ERROR (claude exit ${res.status}): ${res.error || res.stderr}`);
+    console.log(`ERROR after ${elapsed}ms (claude exit ${res.status}): ${res.error || res.stderr}`);
     failed++;
     continue;
   }
@@ -66,7 +68,9 @@ for (const s of toRun) {
   }
   if (problems.length) {
     failed++;
-    console.log('FAIL');
+    console.log(`FAIL after ${elapsed}ms`);
+    console.log(`    id: ${s.id}`);
+    console.log(`    model: ${model}`);
     console.log(`    why: ${s.why}`);
     for (const p of problems) console.log(`    ${p}`);
     console.log(`    --- output (first 500 chars) ---`);
@@ -78,7 +82,7 @@ for (const s of toRun) {
         .join('\n')
     );
   } else {
-    console.log('PASS');
+    console.log(`PASS (${elapsed}ms)`);
   }
 }
 
