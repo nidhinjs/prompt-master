@@ -8,7 +8,7 @@
 **Зачем:** каждый расплывчатый промпт — это слитый кредит. Prompt Master извлекает намерение, выбирает правильную архитектуру и вычищает каждое слово, которое не меняет результат.
 **Как начать:** установи через маркетплейс плагинов (см. ниже) и скажи: `Напиши промпт для [инструмент], чтобы [задача]` — или вставь плохой промпт и попроси исправить.
 
-**Работает с:** Claude (Opus 4.8 — дефолт), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Gamma, Midjourney, GPT-image, Stable Diffusion, FLUX.2, ComfyUI, Google Nano Banana, Grok Imagine, Veo 3.1, Kling, Runway, Sora, Seedance, LTX-2, ElevenLabs, Zapier, Make — и любым AI-инструментом, который подкинешь.
+**Работает с:** Claude (Opus 4.8 — дефолт), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), GLM (Z.AI / BigModel), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Gamma, Midjourney, GPT-image, Stable Diffusion, FLUX.2, ComfyUI, Google Nano Banana, Grok Imagine, Veo 3.1, Kling, Runway, Sora, Seedance, LTX-2, ElevenLabs, Zapier, Make — и любым AI-инструментом, который подкинешь.
 
 ---
 
@@ -197,6 +197,7 @@ Done When:
 | **Grok 4.3 / xAI** | Reasoning-native; realtime X/web search; multi-agent research | Юзер называет Grok или xAI |
 | **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode (Thinking / Non-Thinking) | Модель + режим по задаче; без CoT в thinking |
 | **Kimi / Moonshot AI** (`kimi-k2.6` / `k2.7-code` / `k2.5`) | Reasoning-native dual-mode; агентность/кодинг; Agent Swarm (app) | Юзер называет Kimi или Moonshot |
+| **GLM / Z.AI / BigModel** (`glm-5.2`) | Reasoning-native thinking mode; 1M long-context для кода/агентов | Юзер называет GLM, Z.AI, Zhipu, BigModel, chat.z.ai или ZCode |
 | **Gemini 2.x / 3 Pro** | Grounded, мультимодальная генерация | Нужны citation/grounding-якоря |
 | **Qwen 2.5 / Qwen3** | Структурный вывод, JSON; у Qwen3 есть thinking | Юзер называет Qwen или модель Alibaba |
 | **Local / open-weight** (Ollama, Llama, Mistral) | Короткие, плоские промпты | Юзер крутит локальную модель |
@@ -230,6 +231,7 @@ Done When:
 | **Grok 4.3 (xAI)** | Reasoning LLM + realtime search | Reasoning-native (без CoT; `reasoning_effort`); Web/X Search для свежих данных; `grok-4.20-multi-agent` для deep research; спрашивает/выносит формат вывода; inline-цитаты при включённом поиске |
 | **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode LLM | Модель + режим по задаче; thinking reasoning-native (без CoT, `reasoning_effort` high/max, без temp/penalty); non-thinking берёт system prompt + few-shot; сохранять `reasoning_content` при tool calls; легаси-имена отключаются 2026-07-24 |
 | **Kimi (Moonshot AI)** (`kimi-k2.6` / `k2.7-code` / `k2.5`) | Dual-mode + агентная LLM | Reasoning-native (без CoT; держать дефолты — не тюнить temp на K2.x); `tool_choice` auto/none при thinking; инструменты через `tools`, не в system prompt; сохранять `reasoning_content`; `$web_search` требует thinking off; multi-agent = **Agent Swarm** (app, само-оркестрация — без ручного числа агентов) ≠ одно-агентный **Kimi-Researcher**; tier-gated фичи; `kimi-latest` deprecated 2026-01-28 |
+| **GLM (Z.AI / BigModel)** (`glm-5.2`) | Long-context + агентная LLM | Reasoning-native thinking mode (без CoT); GLM-5.2 — дефолт для GLM; thinking on/off по задаче, `reasoning_effort` high/max; сохранять `reasoning_content` в tool-loop; streaming tools требуют `stream=true` + `tool_stream=true`; JSON через `response_format`; не смешивать general API и Coding Plan/ZCode endpoints |
 | **Gemini 2.x / 3 Pro** | Reasoning LLM | Grounding-якоря, правила цитирования, формат-локи |
 | **o3 / o4-mini** | Thinking LLM | Только короткие чистые инструкции — никакого CoT |
 | **Qwen 2.5 / Qwen3** | Open-weight LLM | Chat-шаблон, детект thinking vs non-thinking |
@@ -271,6 +273,7 @@ Prompt Master **умеет** генерировать мультиагентны
 | **Perplexity / Manus** | Мультиагентные оркестраторы веб-ресёрча | Описывай конечный результат, а не шаги — они декомпозируют сами |
 | **Claude Code / Cline / Devin / SWE-agent** | Топологию проектируешь ты (оркестратор + sub-агенты) | Agentic Prompt Fragments: fan-out + синтезатор, evaluator-петля, handoff-контракты, human-in-the-loop гейты |
 | **DeepSeek V4** | Нет нативного мультиагентного агента | «Deep research» = thinking (high/max) + retrieval + citation-контракт, либо свой tool-loop |
+| **GLM (Z.AI / BigModel)** | Нет подтвержденной нативной cloud fallback-таблицы | GLM-5.2 thinking + tool-loop / Coding Plan profile; сохранять `reasoning_content`, добавлять stop conditions и verification как для других агентных инструментов |
 
 Два стиля оркестрации, и Prompt Master сам выбирает нужный: **оркеструет модель** (Kimi Agent Swarm, Grok multi-agent — ты только формулируешь цель) vs **проектируешь ты** (Claude Code, Devin — явная топология, которую ты задаёшь). Для vendor-managed swarm вроде Kimi он **не** будет вручную прописывать sub-агентов; для оркестратора Claude Code — будет.
 
@@ -317,7 +320,7 @@ Prompt Master использует только техники с надёжны
 | **Few-Shot примеры** | Добавляет 2–5 примеров, когда формат важнее инструкций |
 | **XML-теги структуры** | Оборачивает секции в XML для Claude-инструментов, которые их надёжно парсят |
 | **Grounding-якоря** | Анти-галлюцинационные правила для фактических и citation-задач |
-| **Chain of Thought** | Пошаговое рассуждение для логики — никогда на reasoning-native моделях (o3/o4-mini/Grok/DeepSeek-thinking/Kimi-thinking) |
+| **Chain of Thought** | Пошаговое рассуждение для логики — никогда на reasoning-native моделях (o3/o4-mini/Grok/DeepSeek-thinking/Kimi-thinking/GLM-thinking) |
 | **Ссылки на источники** | Для фактических/research-промптов на retrieval-инструментах — inline-ссылки на источник по каждому утверждению; цитировать только реально полученное, не выдумывать |
 
 ---
@@ -397,7 +400,7 @@ Prompt Master сверяет каждую сырую идею с 61 извест
 
 ## ℹ️ История версий
 
-Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.28.0** (Claude Advisor Tool + Managed Agents / Plan Big Execute Small, паттерны #58–#61 и новое lint/golden-покрытие).
+Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.29.0** (поддержка GLM/Z.AI, роутинг GLM-5.2, guards для thinking/tool-loop и новое lint/golden-покрытие).
 
 ## 📄 Лицензия
 

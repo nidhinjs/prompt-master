@@ -327,6 +327,59 @@ if (noCotLine) {
   }
 }
 
+log('GLM / Z.AI coverage');
+const glmModels = section(modelsText, '## Z.AI / BigModel — GLM');
+const glmHeader = findProfile('GLM');
+if (!glmModels) {
+  errors.push("models.md: missing '## Z.AI / BigModel — GLM' volatile-facts section");
+} else {
+  for (const rx of [
+    /last-verified:\s*\d{4}-\d{2}-\d{2}/,
+    /\bglm-5\.2\b/i,
+    /\b1M\b/i,
+    /\b128K\b/i,
+    /reasoning_effort/i,
+    /reasoning_content/i,
+    /Preserved Thinking|clear_thinking/i,
+    /tool_stream/i,
+    /response_format/i,
+    /OpenAI-compatible|base_url=https:\/\/api\.z\.ai\/api\/paas\/v4/i,
+    /\/api\/coding\/paas\/v4/i,
+  ]) {
+    if (!rx.test(glmModels)) errors.push(`models.md Z.AI / BigModel — GLM section missing fact matching ${rx}`);
+  }
+}
+if (!/^\| \*\*Z\.AI \/ BigModel GLM\*\* \|.*(?:GLM|Z\.AI|Zhipu|BigModel).* \|.*(?:GLM|Z\.AI|Zhipu|BigModel)/m.test(profText)) {
+  errors.push("tool-profiles.md: Routing Index missing 'Z.AI / BigModel GLM' row");
+}
+if (!glmHeader) {
+  errors.push('tool-profiles.md: missing GLM profile');
+} else {
+  const body = profiles[glmHeader];
+  for (const rx of [
+    /^\*Traits:.*reasoning-native.*thinking/m,
+    /Do NOT add.*(?:CoT|think step by step)|no CoT/i,
+    /thinking[\s\S]{0,120}(enabled|disabled)/i,
+    /reasoning_content/i,
+    /Preserved Thinking|clear_thinking/i,
+    /OpenAI-style.*tool|tools array|function schema/i,
+    /tool_stream/i,
+    /response_format/i,
+    /\/api\/coding\/paas\/v4/i,
+  ]) {
+    if (!rx.test(body)) errors.push(`GLM profile missing guard matching ${rx}`);
+  }
+}
+if (!/Canonical no-CoT list[^\n]*GLM thinking mode/i.test(skillText)) {
+  errors.push("SKILL.md: canonical no-CoT list must include 'GLM thinking mode'");
+}
+if (!/GLM thinking mode/i.test(tplText)) {
+  errors.push('templates.md Template E: no-CoT caveat must mention GLM thinking mode');
+}
+if (/settings-as-knobs tools \([^)]*\bGLM\b/i.test(skillText)) {
+  errors.push('SKILL.md: do not add GLM to global settings-as-knobs list; handle thinking/search in the GLM profile');
+}
+
 log('Advisor / Managed Agents model facts');
 if (/\bAdvisor Tool\b/i.test(profText)) {
   for (const id of ['advisor-tool-2026-03-01', 'advisor_20260301']) {
@@ -374,6 +427,12 @@ try {
     'worker-contract-mirror',
     'delegation-granularity',
     'thread-usage-telemetry',
+    'glm-thinking-no-cot',
+    'glm-preserved-thinking-tool-loop',
+    'glm-low-latency-non-thinking',
+    'glm-agentic-stop-conditions',
+    'glm-zhipu-alias-routing',
+    'glm-web-search-citations',
   ]) {
     if (!ids.includes(id)) errors.push(`Missing golden scenario: ${id}`);
   }

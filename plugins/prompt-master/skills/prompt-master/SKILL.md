@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.28.0
+version: 1.29.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -25,7 +25,7 @@ Keep internal analysis terse and silent — do not narrate the extraction, routi
   - **Graph of Thought** -- requires an external graph engine not present in most tools
   - **Universal Self-Consistency** -- requires independent sampling passes
   - **Prompt chaining as a layered technique** -- compounds fabrication risk across longer chains
-- Do not add Chain of Thought to reasoning-native models — they think internally, CoT degrades output. **Canonical no-CoT list (the single source — other sections reference it, do not restate it):** o3, o4-mini, DeepSeek thinking mode / R1, Qwen3 thinking mode, Grok grok-4.3, Kimi K2.x thinking, MiniMax M3. Also never add "think step by step" to Claude Opus 4.x (adaptive thinking — see the Claude profile) or GPT-5.5 (outcome-first)
+- Do not add Chain of Thought to reasoning-native models — they think internally, CoT degrades output. **Canonical no-CoT list (the single source — other sections reference it, do not restate it):** o3, o4-mini, DeepSeek thinking mode / R1, Qwen3 thinking mode, Grok grok-4.3, Kimi K2.x thinking, GLM thinking mode, MiniMax M3. Also never add "think step by step" to Claude Opus 4.x (adaptive thinking — see the Claude profile) or GPT-5.5 (outcome-first)
 - Do not instruct Claude Fable 5 / Mythos 5 to echo, transcribe, reproduce, or "show your reasoning/thinking" in the response — this triggers a `reasoning_extraction` refusal (availability status and billing terms live ONLY in models.md). For visible progress on long runs, use a send-to-user tool instead
 - Do not ask more than 3 clarifying questions before producing a prompt
 - Do not pad output with explanations the user did not request
@@ -98,6 +98,7 @@ Catch these before generating; open the full profile in [references/tool-profile
 - **DeepSeek (V4)** — dual-mode; thinking = reasoning-native (no CoT; `temperature`/penalties ignored). Legacy IDs retiring — check models.md. Full rules → DeepSeek profile.
 - **Grok (xAI)** — reasoning-native (no CoT); no realtime knowledge without **Web/X Search**; search filters are request parameters, not prose; ALWAYS pin the output format (ask first or surface the assumption — never silently derive). Full rules → Grok profile.
 - **Kimi (Moonshot AI)** — reasoning-native (no CoT); keep sampling defaults; `$web_search` requires thinking OFF; Agent Swarm self-orchestrates — don't set agent counts or script sub-agents; paid features are tier-gated (surface as prerequisite). Full rules → Kimi profile.
+- **GLM (Z.AI / BigModel)** — thinking mode is reasoning-native (no CoT); GLM-5.2 is the default GLM target; preserve `reasoning_content` exactly in tool loops, use `stream=true` + `tool_stream=true` for streaming tool calls, and don't mix general `/api/paas/v4` with Coding Plan `/api/coding/paas/v4`. Full rules → GLM profile.
 - **Gemini** — prone to hallucinated citations: add "Cite only sources you are certain of. If uncertain, say [uncertain]."
 - **Agentic tools** (Claude Code, Devin, Cursor, Cline, SWE-agent) — stop conditions are MANDATORY; always scope to explicit files/paths; add human-review triggers for destructive actions; give a runnable check + require evidence, not assertion (pattern #52); for review prompts, constrain the reviewer — severity bar, nit cap, `file:line` evidence (pattern #55, Review-request knobs in templates.md).
 - **Multi-agent / orchestrator prompt request** (user asks for a prompt for an orchestrator, fan-out, sub-agents, or an agent team) — load the **Agentic Prompt Fragments** in [references/templates.md](references/templates.md); default to a single loop, add orchestration only when the task hits the "when to orchestrate" criteria there. **Exception — a vendor-managed swarm (e.g. Kimi Agent Swarm): the model self-orchestrates, so do NOT design a topology or script sub-agents** — give one decomposable task + final artifact (see the Kimi carve-out there).
@@ -225,7 +226,6 @@ For prompts targeting agentic tools (Claude Code, Devin, Cursor, Windsurf, Cline
 "This prompt is for an agentic tool with real system access. Review the scope locks, forbidden actions, and stop conditions before pasting. Confirm file paths, directories, and permissions match the actual project."
 
 ---
-
 ## RECENCY ZONE — Self-Critique and Success Lock
 
 Before delivering, run ONE structured self-critique pass over these fixed dimensions. Single pass, internal only — do not show the critique, do not split into multiple personas, do not loop. Default verdict is NEEDS REVISION; upgrade to READY only with cited evidence per dimension — never shown to the user. Fix issues silently, then deliver.

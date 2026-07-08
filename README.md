@@ -8,7 +8,7 @@
 **Why:** Every vague prompt is a wasted credit. Prompt Master extracts intent, picks the right architecture, and strips every word that doesn't change the output.
 **How to start:** Install via the plugin marketplace (see below), then say: `Write me a prompt for [tool] to [task]` — or paste a bad prompt and ask to fix it.
 
-**Works with:** Claude (Opus 4.8 default), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Gamma, Midjourney, GPT-image, Stable Diffusion, FLUX.2, ComfyUI, Google Nano Banana, Grok Imagine, Veo 3.1, Kling, Runway, Sora, Seedance, LTX-2, ElevenLabs, Zapier, Make — and any AI tool you throw at it.
+**Works with:** Claude (Opus 4.8 default), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), GLM (Z.AI / BigModel), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Gamma, Midjourney, GPT-image, Stable Diffusion, FLUX.2, ComfyUI, Google Nano Banana, Grok Imagine, Veo 3.1, Kling, Runway, Sora, Seedance, LTX-2, ElevenLabs, Zapier, Make — and any AI tool you throw at it.
 
 ---
 
@@ -197,6 +197,7 @@ When you name a tool, Prompt Master silently routes to its profile and applies i
 | **Grok 4.3 / xAI** | Reasoning-native; realtime X/web search; multi-agent research | User names Grok or xAI |
 | **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode (Thinking / Non-Thinking) | Pick model + mode by task; no CoT in thinking |
 | **Kimi / Moonshot AI** (`kimi-k2.6` / `k2.7-code` / `k2.5`) | Reasoning-native dual-mode; agentic/coding; Agent Swarm (app) | User names Kimi or Moonshot |
+| **GLM / Z.AI / BigModel** (`glm-5.2`) | Reasoning-native thinking mode; 1M long-context coding/agent tasks | User names GLM, Z.AI, Zhipu, BigModel, chat.z.ai, or ZCode |
 | **Gemini 2.x / 3 Pro** | Grounded, multimodal generation | Needs citation/grounding anchors |
 | **Qwen 2.5 / Qwen3** | Structured output, JSON; Qwen3 adds thinking mode | User names Qwen or an Alibaba model |
 | **Local / open-weight** (Ollama, Llama, Mistral) | Short, flat prompts | User runs a local model |
@@ -230,6 +231,7 @@ For anything not profiled, Prompt Master falls back to a **Universal Fingerprint
 | **Grok 4.3 (xAI)** | Reasoning LLM + realtime search | Reasoning-native (no CoT; `reasoning_effort`); Web/X Search for current data; `grok-4.20-multi-agent` for deep research; asks/surfaces output format; inline citations when search is on |
 | **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode LLM | Model + mode by task; thinking is reasoning-native (no CoT, `reasoning_effort` high/max, no temp/penalties); non-thinking takes system prompt + few-shot; preserve `reasoning_content` with tool calls; legacy names retire 2026-07-24 |
 | **Kimi (Moonshot AI)** (`kimi-k2.6` / `k2.7-code` / `k2.5`) | Dual-mode + agentic LLM | Reasoning-native (no CoT; keep defaults — don't tune temp on K2.x); `tool_choice` auto/none with thinking; tools via `tools` not system prompt; preserve `reasoning_content`; `$web_search` needs thinking off; multi-agent = **Agent Swarm** (app, self-orchestrated — no manual agent count) vs single-agent **Kimi-Researcher**; tier-gated features; `kimi-latest` deprecated 2026-01-28 |
+| **GLM (Z.AI / BigModel)** (`glm-5.2`) | Long-context + agentic LLM | Reasoning-native thinking mode (no CoT); GLM-5.2 default for GLM; thinking on/off by task, `reasoning_effort` high/max; preserve `reasoning_content` in tool loops; streaming tools need `stream=true` + `tool_stream=true`; JSON via `response_format`; keep general API and Coding Plan/ZCode endpoints separate |
 | **Gemini 2.x / 3 Pro** | Reasoning LLM | Grounding anchors, citation rules, format locks |
 | **o3 / o4-mini** | Thinking LLM | Short clean instructions only — never adds CoT |
 | **Qwen 2.5 / Qwen3** | Open-weight LLM | Chat template, thinking vs non-thinking detection |
@@ -271,6 +273,7 @@ Native multi-agent support by target:
 | **Perplexity / Manus** | Multi-agent web-research orchestrators | Describe the end deliverable, not the steps — they decompose internally |
 | **Claude Code / Cline / Devin / SWE-agent** | You design the orchestration (orchestrator + sub-agents) | Agentic Prompt Fragments: fan-out + synthesizer, evaluator loop, handoff contracts, human-in-the-loop gates |
 | **DeepSeek V4** | No native multi-agent agent | "Deep research" = thinking (high/max) + retrieval + citation contract, or a DIY tool-loop |
+| **GLM (Z.AI / BigModel)** | No confirmed native multi-agent cloud fallback table | Use GLM-5.2 thinking + tool loop / Coding Plan profile; preserve `reasoning_content`, add stop conditions and verification like other agentic tools |
 
 Two orchestration styles, and Prompt Master picks the right one automatically: **model-orchestrated** (Kimi Agent Swarm, Grok multi-agent — you just frame the goal) vs **you-design-it** (Claude Code, Devin — an explicit topology you specify). For a vendor-managed swarm like Kimi it will *not* hand-script sub-agents; for a Claude Code orchestrator it will.
 
@@ -317,7 +320,7 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 | **Few-Shot Examples** | Adds 2–5 examples when format consistency matters more than instructions |
 | **XML Structural Tags** | Wraps sections in XML for Claude-based tools that parse it reliably |
 | **Grounding Anchors** | Adds anti-hallucination rules for factual and citation tasks |
-| **Chain of Thought** | Step-by-step reasoning for logic tasks — never applied to reasoning-native models (o3/o4-mini/Grok/DeepSeek-thinking/Kimi-thinking) |
+| **Chain of Thought** | Step-by-step reasoning for logic tasks — never applied to reasoning-native models (o3/o4-mini/Grok/DeepSeek-thinking/Kimi-thinking/GLM-thinking) |
 | **Source Citations** | For factual/research prompts on retrieval-capable tools — inline source links per claim; cite only retrieved sources, never fabricate |
 
 ---
@@ -397,7 +400,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.28.0** (Claude Advisor Tool + Managed Agents / Plan Big Execute Small support, patterns #58–#61, and new lint/golden coverage).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.29.0** (GLM/Z.AI support, GLM-5.2 routing, thinking/tool-loop guards, and new lint/golden coverage).
 
 ## 📄 License
 

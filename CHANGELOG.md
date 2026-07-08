@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.29.0] - 2026-07-09
+
+GLM/Z.AI release: добавлен first-class routing для GLM-5.2 / Z.AI / BigModel с reasoning-native thinking mode, tool-loop runtime rules и release-gate покрытием.
+
+### Added
+- **Z.AI / BigModel GLM model facts:** `models.md` теперь содержит датированный раздел для GLM-5.2 (`glm-5.2`), GLM-4.6, GLM-V/Z1 соседних вариантов, 1M context, 128K output, `reasoning_effort`, `reasoning_content`, Preserved Thinking / `clear_thinking`, `tool_stream`, `response_format` и endpoint split.
+- **GLM tool profile:** `tool-profiles.md` получил routing row + профиль для GLM, Z.AI, Zhipu, BigModel, chat.z.ai, GLM Coding Plan и ZCode. Bare `GLM` роутится в GLM-5.2.
+- **Runtime no-CoT coverage:** canonical no-CoT list и Template E теперь включают `GLM thinking mode`; SKILL Gotcha добавляет short-form guard для GLM tool loops и endpoint hygiene.
+- **Regression coverage:** `scripts/lint.js` получил GLM coverage guard; golden suite расширен 6 GLM-сценариями: no-CoT, preserved-thinking tool-loop, low-latency non-thinking, agentic stop conditions, Zhipu alias routing и Web Search citations.
+- **Sources/rationale:** `docs/sources.md` фиксирует официальные Z.AI/BigModel источники, принятые факты и неподтвержденные пробелы (fallback matrix, rate limits, Web Search citation payloads).
+
+### Changed
+- README EN/RU, plugin manifest и marketplace metadata теперь перечисляют GLM (Z.AI / BigModel) как поддерживаемый профиль.
+- Release packaging flow verified: `scripts/package-skill.ps1` produces `dist/prompt-master-1.29.0.zip` with `SKILL.md` + `references/` at archive root.
+
 ## [1.28.0] - 2026-07-08
 
 Claude Advisor Tool + Managed Agents release: добавлен Claude-specific multi-agent routing для Advisor Tool, Managed Agents и Plan Big Execute Small без смешивания с Kimi Agent Swarm.
@@ -469,6 +484,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.29.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.29.0
 [1.28.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.28.0
 [1.27.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.27.0
 [1.26.3]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.3

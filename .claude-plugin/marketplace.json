@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "prompt-master",
-  "description": "Prompt Master — навык-плагин для Claude Code: генерирует точные, готовые к вставке промпты для любого AI-инструмента (Claude, GPT-5.x, Gemini, Grok, Kimi, DeepSeek, Cursor, Claude Code, Midjourney и др.) без лишних токенов. Routing под конкретную модель, anti-fabrication протокол, 61 паттерн-фикс.",
+  "description": "Prompt Master — навык-плагин для Claude Code: генерирует точные, готовые к вставке промпты для любого AI-инструмента (Claude, GPT-5.x, Gemini, Grok, Kimi, DeepSeek, GLM/Z.AI, Cursor, Claude Code, Midjourney и др.) без лишних токенов. Routing под конкретную модель, anti-fabrication протокол, 61 паттерн-фикс.",
   "owner": {
     "name": "Andrey Zagreev",
     "url": "https://github.com/azagreev"
@@ -10,7 +10,7 @@
     {
       "name": "prompt-master",
       "source": "./plugins/prompt-master",
-      "description": "Генератор оптимизированных промптов под конкретный AI-инструмент. Активируется по запросам «напиши/исправь/улучши/адаптируй промпт для …». Routing под Claude (Opus 4.8 — дефолт; Fable 5 — по запросу), GPT-5.5, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), reasoning-модели, агентные IDE, image/video/voice AI.",
+      "description": "Генератор оптимизированных промптов под конкретный AI-инструмент. Активируется по запросам «напиши/исправь/улучши/адаптируй промпт для …». Routing под Claude (Opus 4.8 — дефолт; Fable 5 — по запросу), GPT-5.5, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), GLM (Z.AI / BigModel), reasoning-модели, агентные IDE, image/video/voice AI.",
       "category": "productivity"
     }
   ]

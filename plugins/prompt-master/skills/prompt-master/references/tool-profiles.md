@@ -23,6 +23,7 @@ Pick the row that matches the user's tool, then open only that profile below.
 | **Grok 4.3 / xAI** | Reasoning-native chat/coding; realtime X + web search; native multi-agent research | User names Grok or xAI |
 | **Gemini 2.x / 3 Pro** | Multimodal, large-document, Google ecosystem | User is on Google AI Studio, Vertex, or Gemini |
 | **Kimi / Moonshot AI** | Reasoning-native dual-mode; agentic/coding; Agent Swarm (app); long-context | User names Kimi or Moonshot |
+| **Z.AI / BigModel GLM** | Reasoning-native thinking mode; long-context GLM-5.2; OpenAI-compatible API; coding profiles | User names GLM, Z.AI, Zhipu, BigModel, chat.z.ai, GLM Coding Plan, or ZCode |
 | **Qwen 2.5 / Qwen3** | Structured output, JSON, instruct; Qwen3 adds thinking mode | User names Qwen or an Alibaba model |
 | **Ollama** | Local model deployment (Llama, Mistral, Qwen, CodeLlama …) | User running models locally via Ollama |
 | **Llama / Mistral / open-weight** | General open-weight; weaker instruction following | User names a Llama or Mistral variant |
@@ -218,6 +219,30 @@ For volatile model IDs/defaults see [models.md](models.md) (Moonshot — Kimi). 
 - **App modes (kimi.com):** Instant (quick) · Thinking (hard questions) · Agent (research/slides/docs/sheets) · Agent Swarm (large-scale/long-form/batch) · Kimi Work (desktop agent). On the API there are no modes — only thinking/non-thinking + tools.
 - **Tier-gated:** Agent Swarm, sub-agent concurrency, Kimi Claw, Kimi Code credits depend on the user's plan (free Adagio has no Swarm) — surface as a **prerequisite/assumption**, never assume availability; don't hardcode quotas or prices.
 - **Output format is never silently derived** (Hard rule) — ask it or surface it as an explicit assumption.
+
+---
+
+**Z.AI / BigModel GLM**
+*Traits: reasoning-native thinking mode (no CoT) · OpenAI-compatible tools/JSON · coding-agent profiles*
+
+For volatile model IDs/defaults see [models.md](models.md) (Z.AI / BigModel — GLM). Route aliases: GLM, Z.AI, Z.ai, Zhipu, BigModel, chat.z.ai, GLM Coding Plan, ZCode. Bare "GLM" routes to `glm-5.2` unless the user names another GLM variant.
+
+*Pick mode and effort:*
+- **Thinking enabled** for coding, debugging, hard reasoning, agentic tool loops, or long-horizon analysis. GLM thinking mode is reasoning-native: **no CoT**, no "think step by step", no `<thinking>` blocks, and do NOT add instructions to reveal reasoning. Use `reasoning_effort=max` for hard coding/agent tasks; use `high` when quality matters but cost/latency matters too.
+- **Thinking disabled** for simple classification, extraction, formatting, chat, and latency-sensitive JSON tasks. For simple low-latency work, explicitly recommend `thinking: {"type":"disabled"}` and keep the prompt direct.
+- Keep sampling defaults unless measured otherwise; if tuning, change either temperature or top_p, not both.
+
+*Tools / agent loops:*
+- Use OpenAI-style `tools` array / function schema; prompts can transfer from GPT-style APIs, but setup notes should name GLM-specific runtime knobs where needed.
+- Streaming tool calls require `stream=true` plus `tool_stream=true`; buffer `reasoning_content`, final content, and tool-call argument deltas separately.
+- For multi-turn tool loops, preserve the assistant's `reasoning_content` exactly. If the client enables Preserved Thinking with `clear_thinking=false`, never summarize, edit, or drop historical reasoning content before the next request.
+- Agentic GLM prompts still need the normal agent guardrails: explicit scope, stop conditions before destructive actions, runnable verification, and evidence in the final report. GLM routing does not bypass Template H/M safety.
+
+*Structured output / search / endpoints:*
+- For JSON, use `response_format: {"type":"json_object"}` plus an explicit schema/contract in the prompt; validate externally. Do not rely on prose-only "return JSON".
+- For factual Web Search tasks, add the citation contract: cite retrieved sources inline, end with sources, never fabricate a citation, mark unsourced claims `[uncertain]`. Search capability and citation fields are volatile — tell the user to verify the active GLM/Z.AI surface.
+- General OpenAI-compatible API uses `base_url=https://api.z.ai/api/paas/v4/`; Coding Plan / ZCode uses `/api/coding/paas/v4`. Do not mix these endpoints or promise fallback routing between them unless the user's account/config confirms it.
+- Multimodal GLM-V models are separate choices; do not route text-only GLM-5.2 prompts to V models unless image input or visual grounding is required.
 
 ---
 

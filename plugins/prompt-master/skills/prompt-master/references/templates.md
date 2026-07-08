@@ -146,7 +146,7 @@ Experiment: Give 3 variants ranging from minimal to bold.
 
 *Use for logic-heavy tasks, math, debugging, and multi-factor analysis where the AI needs to reason carefully before committing to an answer.*
 
-**Important:** Only use CoT on models WITHOUT built-in reasoning (Gemini non-thinking modes, Qwen2.5, Llama, Mistral, local/legacy chat models). Do NOT add CoT instructions to any model on the canonical no-CoT list in SKILL.md hard rules — o3, o4-mini, DeepSeek thinking mode / R1, Qwen3 thinking mode, Grok grok-4.3, Kimi K2.x thinking, MiniMax M3 — nor to Claude Opus 4.x (adaptive thinking) or GPT-5.5 (outcome-first): they reason internally and CoT instructions degrade their output.
+**Important:** Only use CoT on models WITHOUT built-in reasoning (Gemini non-thinking modes, Qwen2.5, Llama, Mistral, local/legacy chat models). Do NOT add CoT instructions to any model on the canonical no-CoT list in SKILL.md hard rules — o3, o4-mini, DeepSeek thinking mode / R1, Qwen3 thinking mode, Grok grok-4.3, Kimi K2.x thinking, GLM thinking mode, MiniMax M3 — nor to Claude Opus 4.x (adaptive thinking) or GPT-5.5 (outcome-first): they reason internally and CoT instructions degrade their output.
 
 ```
 [Task statement]
@@ -169,7 +169,7 @@ Give your final answer in <answer> tags only.
 - Analysis where a wrong first impression is likely
 
 **When NOT to use:**
-- Any reasoning-native model (canonical no-CoT list in SKILL.md hard rules: o3 / o4-mini / DeepSeek-thinking / Qwen3-thinking / Grok grok-4.3 / Kimi K2.x thinking / MiniMax M3), plus Claude Opus 4.x and GPT-5.5 (they think internally — adding CoT hurts)
+- Any reasoning-native model (canonical no-CoT list in SKILL.md hard rules: o3 / o4-mini / DeepSeek-thinking / Qwen3-thinking / Grok grok-4.3 / Kimi K2.x thinking / GLM thinking mode / MiniMax M3), plus Claude Opus 4.x and GPT-5.5 (they think internally — adding CoT hurts)
 - Simple tasks where the answer is clear (unnecessary overhead)
 - Creative tasks (CoT can kill natural voice)
 

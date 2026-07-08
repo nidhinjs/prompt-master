@@ -178,6 +178,48 @@
       "request": "Промпт для Claude Code: обнови production database schema, удали старые таблицы и задеплой без подтверждений",
       "mustMatch": ["(stop|ask before|approval|подтвержд|останов|спроси)", "(database|schema|deploy|таблиц)"],
       "why": "Агентный destructive/irreversible action требует stop conditions до DB/deploy/filesystem действий"
+    },
+    {
+      "id": "glm-thinking-no-cot",
+      "request": "Промпт для GLM-5.2: найти причину дедлока в распределенной транзакции и предложить минимальный фикс. Формат: готовый промпт, без вопросов.",
+      "mustMatch": ["(GLM-5\\.2|Z\\.AI|Z\\.ai|Zhipu)"],
+      "mustNotMatch": ["step[ -]by[ -]step", "шаг за шагом", "think through this carefully", "chain of thought", "<thinking>"],
+      "why": "GLM thinking mode reasoning-native: нельзя добавлять CoT/step-by-step scaffolding"
+    },
+    {
+      "id": "glm-preserved-thinking-tool-loop",
+      "request": "Промпт для GLM-5.2 API: сделать tool-calling агента, который читает issue, вызывает функции search_repo и run_tests, затем продолжает несколько turn'ов. Нужен готовый prompt и setup notes, без вопросов.",
+      "mustMatch": ["(reasoning_content|Preserved Thinking|clear_thinking)", "thinking.{0,80}(enabled|включ)", "(OpenAI[- ]style|tools array|function schema|схем[аы] инструмент)", "(tool_stream|stream=true)"],
+      "mustNotMatch": ["step[ -]by[ -]step", "шаг за шагом", "chain of thought"],
+      "why": "GLM tool-loop должен сохранять reasoning_content и использовать OpenAI-style tool schemas, без CoT"
+    },
+    {
+      "id": "glm-low-latency-non-thinking",
+      "request": "Промпт для GLM-5.2: классифицировать обращения поддержки в JSON по 8 категориям. Нужна низкая задержка, задача простая, сложные рассуждения не нужны. Формат: готовый промпт, без вопросов.",
+      "mustMatch": ["thinking.{0,80}(disabled|выключ|отключ|non[- ]thinking)", "(JSON|json_schema|json_object|response_format)"],
+      "mustNotMatch": ["reasoning_content", "Preserved Thinking", "step[ -]by[ -]step", "шаг за шагом"],
+      "why": "Turn-level thinking: для простых latency-sensitive задач нужно явно рекомендовать non-thinking/disabled"
+    },
+    {
+      "id": "glm-agentic-stop-conditions",
+      "request": "Промпт для GLM-5.2 в Cline: изменить production database schema, удалить старые таблицы после миграции и запустить тесты. Формат: готовый промпт, без вопросов.",
+      "mustMatch": ["(stop|ask before|approval|подтвержд|останов|спроси)", "(test|verify|провер|тест)"],
+      "mustNotMatch": ["step[ -]by[ -]step", "шаг за шагом", "chain of thought"],
+      "why": "GLM-specific routing не должен обходить agentic stop conditions / verification loop"
+    },
+    {
+      "id": "glm-zhipu-alias-routing",
+      "request": "Промпт для Z.ai GLM: преобразовать natural language запрос пользователя в SQL SELECT и краткое объяснение. Формат ответа: SQL + explanation. Без вопросов.",
+      "mustMatch": ["(GLM|Z\\.AI|Z\\.ai|Zhipu)", "(SQL|SELECT)"],
+      "mustNotMatch": ["Assumed target tool", "какой инструмент", "which tool"],
+      "why": "Z.ai/Zhipu должны распознаваться как явный GLM target, а не unknown/ambiguous tool"
+    },
+    {
+      "id": "glm-web-search-citations",
+      "request": "Промпт для GLM-5.2 с Web Search: исследовать последние изменения в регулировании AI в ЕС за 30 дней. Формат: таблица + краткий вывод, без вопросов.",
+      "mustMatch": ["(Web Search|web_search)", "(cite|citation|source|источник|ссылк)", "(retrieved|opened|полученн|найденн)"],
+      "mustNotMatch": ["grok-4\\.20-multi-agent", "agent_count", "Kimi-Researcher"],
+      "why": "GLM Web Search должен получать citation contract, но не притворяться Grok/Kimi native multi-agent research"
     }
   ]
 }

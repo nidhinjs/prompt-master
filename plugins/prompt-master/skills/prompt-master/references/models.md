@@ -99,6 +99,22 @@ All facts that go stale fast — model IDs, current defaults, version-tied param
 - **API:** OpenAI- **and** Anthropic-compatible, `base_url=https://api.moonshot.ai/v1`. `response_format`: `text` / `json_object` / `json_schema`. `stop` ≤5 strings. Partial Mode (prefix-completion).
 - ⚠️ verify: max output tokens, knowledge cutoff, whether `$web_search` returns inline citations, API availability of Agent Swarm / Claw Groups / Kimi-Researcher / Kimi Work, exact K2.7 architecture. Prices are per-model and volatile — do not hardcode.
 
+## Z.AI / BigModel — GLM
+
+`last-verified: 2026-07-09`
+
+- **Default GLM routing target:** `glm-5.2` — flagship foundation model for long-horizon/coding-agent tasks. Text in/out, **1M context**, **128K max output**. Public architecture claim from Z.AI docs / `zai-org/GLM-5` line: **744B total / 40B active**; treat architecture numbers as descriptive, not a prompt requirement.
+- **Nearby current models:** `glm-5.1`, `glm-5`, `glm-5-turbo`, `glm-4.7`, `glm-4.6`, `glm-4.6V`, `glm-4.5V`, `GLM-Z1` variants. GLM-4.6 = strong text/coding with 200K context + 128K output. GLM-4.6V max output 32K; GLM-4.5V max output 16K. Use V models only when image input/visual grounding is actually required.
+- **Thinking mode:** GLM-5.2 has thinking enabled by default. `thinking: {"type":"enabled"}` lets GLM-5.2 auto-decide whether to think; `"disabled"` is the low-latency/simple-task path. Thinking output appears as `reasoning_content` plus final `content` — do **not** ask the model to reveal/format its reasoning as the final answer.
+- **Reasoning effort:** GLM-5.2 supports `reasoning_effort: "high" | "max"`; default is `max`. OpenAI-compat compatibility maps `low`/`medium` → `high`, `xhigh` → `max`, and `none`/`minimal` to no thinking.
+- **Preserved Thinking / tool loops:** standard API defaults to clearing thinking; enable preserved thinking with `clear_thinking=false` when continuing a multi-turn tool loop. Return historical `reasoning_content` **exactly unmodified** on subsequent turns; changing, summarizing, or omitting it can break continuation.
+- **Tools:** OpenAI-style `tools` / function schemas. Streaming tool calls require `stream=true` **and** `tool_stream=true`; clients must separately buffer `delta.reasoning_content`, `delta.content`, and `delta.tool_calls[*].function.arguments`, concatenating tool-call argument deltas.
+- **Structured output:** `response_format: {"type":"json_object"}` plus an explicit JSON/schema contract in messages; validate externally. Do not rely on prompt prose alone for parseability.
+- **Sampling defaults:** `temperature=1.0`, `top_p=0.95`; tune at most one, and prefer defaults unless there is a measured need.
+- **Endpoints / profiles:** general API is OpenAI-compatible at `base_url=https://api.z.ai/api/paas/v4/` (chat completions path under that surface). Coding Plan / ZCode uses `https://api.z.ai/api/coding/paas/v4`; do not treat the two endpoints as interchangeable. Claude Code/Cline profiles may expose GLM-5.2 through adapter env/config rather than raw prompt text.
+- **Pricing (volatile):** official docs list GLM-5.2 per-1M token pricing as input `$1.4`, cached input `$0.26`, output `$4.4` at verification time; prices and cached-storage promos are volatile — do not hardcode them into runtime prompts.
+- **Known gaps / verify before asserting:** no official universal GLM prompt cookbook; no confirmed public cloud fallback table across GLM-5.2/4.6/Z1/V models; rate-limit/quota behavior is account/endpoint-specific; Web Search citation payload details and MCP availability should be checked against current docs before promising exact output fields.
+
 ## Perplexity
 
 `last-verified: 2026-06-17`
