@@ -16,6 +16,8 @@ Pick the row that matches the user's tool, then open only that profile below.
 |---|---|---|
 | **Claude Opus 4.8 / 4.7** | Default Claude; literal execution, heavy reasoning, 1M context, agentic | Any "Claude" request without a version |
 | **Claude Fable 5 / Mythos 5** | Frontier — hardest, long-horizon, ambiguous work | Only when the user explicitly names Fable 5 / Mythos 5 (NOT the default; billing terms in models.md) |
+| **Claude Advisor Tool** | Server-side advisory/review/diagnostic helper for a Claude executor | User explicitly asks for Claude Advisor/advisor tool or wants a bounded Opus/Fable-style checkpoint inside a Claude API request |
+| **Claude Managed Agents** | Hosted Claude agent harness; coordinator/worker multi-agent sessions | User explicitly names Claude Managed Agents / CMA / Anthropic Managed Agents or asks for Plan Big Execute Small on Claude |
 | **GPT-5.x / ChatGPT** | Long-context synthesis, tone adherence, persona framing | User is on OpenAI or ChatGPT |
 | **o3 / o4-mini / OpenAI reasoning** | Deep reasoning tasks where process must not be dictated | User names o3/o4-mini or an OpenAI reasoning model |
 | **Grok 4.3 / xAI** | Reasoning-native chat/coding; realtime X + web search; native multi-agent research | User names Grok or xAI |
@@ -96,6 +98,41 @@ Fable 5 takes on problems too complex, long-running, or ambiguous for prior mode
 - ⚠️ **NEVER instruct it to reproduce / echo / show its reasoning in the response** — triggers a `reasoning_extraction` refusal and fallback to Opus 4.8. For visible progress, use a send-to-user tool (renders the message verbatim without ending the turn).
 - **Give the reason, not just the request:** "I'm working on [larger task] for [who]. They need [what the output enables]. With that in mind: [request]."
 - Not for offensive-cybersecurity or biology/life-sciences work — those return a refusal; route the user to Opus 4.8 for benign cases in those domains.
+
+---
+
+**Claude Advisor Tool**
+*Traits: bounded advisory/review/diagnostic helper inside a Claude API request*
+
+Use this only when the user explicitly asks for Claude's Advisor Tool, or when they are designing a Claude API agent where a cheaper/faster executor should occasionally consult a higher-capability model. Do **not** route generic "multi-agent" or Kimi Agent Swarm requests here; Kimi Swarm self-orchestrates in the Kimi app and has the opposite prompting shape.
+
+- **Role split:** executor owns the task and tools; advisor supplies strategy, critique, diagnosis, or course correction. Frame the advisor as a bounded helper, not a second executor.
+- **Good fits:** long-horizon coding agents, computer-use loops, multi-step research pipelines, architecture review, test-failure diagnosis, or final quality review where most work is mechanical but a high-quality plan matters.
+- **Weak fits:** single-turn Q&A, pass-through model pickers, or tasks where every turn needs the advisor model's full capability - use the stronger model directly.
+- **Early checkpoint after orientation:** tell the executor to consult the advisor after it has read enough context to state the problem, constraints, candidate plan, and uncertainty. This avoids asking the advisor before the executor has evidence.
+- **Optional final review:** for high-stakes changes, allow one final advisor call after implementation and before final answer/commit: "Ask the advisor to review only correctness, missed requirements, and evidence gaps; do not ask for style preferences."
+- **Review knobs:** require evidence-backed findings: "Advisor review must cite the transcript/tool result/file path that supports each concern; mark speculation as uncertain; do not invent missing evidence." For code review, ask for severity and a concrete failing scenario.
+- **Cost controls are setup guidance, not `Assumed settings:` prose:** expose the advisor call limit, per-call response budget, and caching choice as setup knobs; keep exact beta parameter names in [models.md](models.md). Also track conversation-level call limits client-side if needed.
+- **Conversation hygiene:** round-trip advisor result blocks verbatim on follow-up turns, keep the advisor tool and beta header present while those blocks remain in history, and strip advisor result blocks if you later remove the tool.
+- **Prompt shape for the executor:** "Do the task yourself. Use the advisor only at the named checkpoint(s), and continue without advisor help if the advisor errors or the use cap is reached."
+
+---
+
+**Claude Managed Agents (CMA / Plan Big Execute Small)**
+*Traits: hosted agent harness; coordinator/worker multi-agent sessions; scoped workers*
+
+Use this only when the user explicitly targets Claude Managed Agents, CMA, Anthropic Managed Agents, or a Claude "Plan Big Execute Small" pattern. Do **not** map Kimi Agent Swarm here: Kimi Swarm is app-native self-orchestration where you should not script agent counts/subagents; CMA is explicit coordinator/worker orchestration with agent definitions, tool scopes, and session threads.
+
+- **Plan Big Execute Small:** the coordinator first builds a high-level plan, verifies premises, identifies independent work packages, and then delegates only bounded tasks. Workers execute small, scoped assignments and return concise results for synthesis.
+- **Premise verification before fan-out:** before spawning workers, require the coordinator to validate repo paths, data availability, credentials/tool access, user constraints, and whether subtasks are actually independent. If a premise is unverified, the coordinator should run a cheap local check or ask for the missing input before parallelizing.
+- **Coordinator contract:** owns decomposition, worker selection, dependency ordering, integration, conflict resolution, final verification, and the final user-facing answer. It should not offload vague ownership ("figure out everything about X") to a worker.
+- **Worker contract:** each worker gets a task, scope boundaries, allowed tools/resources, expected output schema, stop condition, and what evidence to return. Mirror the worker's capabilities in the assignment; do not ask a file-only worker to browse, or a research worker to edit code.
+- **Scoped workers:** give each worker the minimum tool/MCP/file/resource access it needs. Separate research, code edit, test, review, and documentation roles when their permissions differ.
+- **Fan-out discipline:** delegate independent tasks in parallel; keep sequential dependencies in the coordinator. Cap the number of live workers to what the result can actually synthesize.
+- **Result discipline:** workers return findings, changed artifacts, commands run, evidence, unresolved risks, and a clear `done/blocked` status. The coordinator should verify important claims against worker evidence before acting on them.
+- **Review pattern:** for risky work, reserve one worker or late pass for review/diagnostics rather than letting each worker self-certify.
+- **Platform model:** CMA sessions are stateful and hosted; agents can have separate model, system prompt, tools, MCP servers, and skills. Session threads isolate conversation history while sharing the session sandbox/filesystem and credentials.
+- **Tool names/availability are beta facts:** see [models.md](models.md) for current headers and built-in coordinator/worker tool names. Recommend CMA only when the user's platform/account has access.
 
 ---
 

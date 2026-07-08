@@ -32,6 +32,9 @@ const FIXTURES = [
   ['prompt for a team of agents doing research', true, 'EN team of agents'],
   ['сделай промпт: рой агентов сканирует логи', true, 'RU рой агентов'],
   ['prompt with sub-agents and fan-out', true, 'EN sub-agents'],
+  ['write a prompt for Claude Managed Agents to coordinate repo analysis workers', true, 'Claude Managed Agents'],
+  ['create a prompt for coordinator-workers that audit separate packages', true, 'coordinator-workers'],
+  ['prompt for plan-big-execute-small with a premise worker before fan-out', true, 'plan-big-execute-small'],
   // --- negatives: must stay silent ---
   ['напиши промпт: настрой агента поддержки', false, 'наст-рой is a verb, single agent'],
   ['улучши промпт — построй агента для тикетов', false, 'пост-рой is a verb'],
@@ -39,6 +42,10 @@ const FIXTURES = [
   ['respond promptly to agentic workflow questions', false, 'promptly again'],
   ['напиши промпт для агента поддержки', false, 'bare агент is excluded by design'],
   ['help me write a prompt for Midjourney', false, 'no multi-agent signal'],
+  ['изучи advisor docs и расскажи, что там важно', false, 'Advisor docs mention, no prompt-authoring intent'],
+  ['добавь advisor tool в API клиент', false, 'Advisor API mention, no prompt-authoring intent'],
+  ['read the Claude Managed Agents docs before coding', false, 'Managed Agents docs mention, no prompt-authoring intent'],
+  ['add plan-big-execute-small support to the API client', false, 'plan-big-execute-small API mention, no prompt-authoring intent'],
   ['configure the user agent header for this request', false, 'no prompt-authoring intent'],
   ['our team of agents needs new laptops', false, 'agents but no prompt intent'],
 ];

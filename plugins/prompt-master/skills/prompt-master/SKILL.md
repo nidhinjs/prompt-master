@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.27.0
+version: 1.28.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -251,4 +251,4 @@ Read only when the task requires it. Load only the one section/file you need —
 | [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target tool — read only that tool's profile for full routing guidance |
 | [references/models.md](references/models.md) | You need a volatile model fact (ID, current default, version-tied param) — honor the 60-day re-verify protocol |
 | [references/templates.md](references/templates.md) | You need the full template structure for any tool category |
-| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 57-pattern reference |
+| [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 61-pattern reference |

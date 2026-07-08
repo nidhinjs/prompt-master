@@ -563,6 +563,38 @@ working heuristic). Output a task ledger:
 | sub-task | delegated to | status | result summary |
 ```
 
+**Plan Big, Execute Small** *(Claude Code / managed-agent builds — keep the global shape visible, but make execution boring and verifiable):*
+```
+First build the full plan: target state, out-of-scope items, risks,
+dependencies, and global acceptance criteria. Then execute in small slices.
+Each slice must have: files touched, exact change, verification command/result,
+and whether the global acceptance criteria still hold. Do not collapse the
+remaining plan just because the current slice is small.
+```
+
+**Managed Agents worker contract** *(for runtimes where the coordinator creates isolated workers):*
+```
+For every worker, create an isolated packet:
+- Task: [one bounded job]
+- Scope: [allowed files/records/systems]
+- Allowed tools: [read/search/test/etc.; no extras]
+- Stop condition: [when to stop or hand back]
+- Deliverable: [schema/artifact the coordinator can merge]
+- Evidence/tests: [file:line, command output, source citation, or artifact]
+
+Mirror these worker constraints in the visible coordinator plan so the user can
+see the same scope, permissions, stop condition, and expected deliverable that
+the hidden worker receives.
+```
+
+**Premise verification before fan-out** *(cheap guard before expensive parallel work):*
+```
+Before broad fan-out, assign one small worker to verify the decomposition
+premise: relevant files/APIs/data shape, whether sub-tasks are independent, and
+the cheapest verification path. If the premise is wrong, revise the plan before
+creating parallel workers.
+```
+
 **#20/#21 Loop-termination contract** *(runtime behavior — a real agent acting across genuine separate passes, NOT "internally try 3 times," and NOT for our single-pass self-critique)*
 ```
 Retry cap: after 3 failed attempts at a sub-task (each a real, separate
@@ -630,6 +662,28 @@ an inference from naming.
 Convergence: on re-review, report new Important findings only — no new nits.
 Summary shape: open with a one-line tally ("N factual, M style"); lead with
 "no factual issues" when true.
+```
+
+**Claude Advisor checkpoint / review** *(use as a bounded quality gate, not an always-on critic):*
+```
+After orientation and before substantive work, run one Advisor checkpoint if the
+task is high-impact, ambiguous, or likely to decompose poorly. Advisor scope:
+review the proposed plan, assumptions, risks, and acceptance criteria only.
+Report Important findings only unless explicitly asked for nits. Each finding
+must cite file:line / output line / artifact evidence; no evidence, no finding.
+
+Optional final Advisor review: run only when risk is high or the plan changed
+materially. Scope it to changed files/artifacts and global acceptance criteria.
+No unbounded nitpicking; no new style-only findings on re-review.
+```
+
+**Thread usage telemetry / rigor-matched control** *(surface cost knobs without turning every task into a ceremony):*
+```
+At each checkpoint, report: current phase, worker count, tool-call count (if
+available), remaining major risks, and whether rigor is still matched to stakes.
+If rigor is too high, collapse back to a single loop. If rigor is too low for
+the risk, add the lightest gate: premise check, Advisor checkpoint, or focused
+verification worker.
 ```
 
 **Spec-by-interview** *(Claude Code / any AskUserQuestion-capable agent — for a large feature, have the agent interview the user instead of guessing the spec):*

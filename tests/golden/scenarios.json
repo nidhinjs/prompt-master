@@ -83,6 +83,54 @@
       "why": "Профиль Claude Code: verification loop (проверка + iterate + evidence, pattern #52) и stop conditions обязательны; thinking budget не хардкодится"
     },
     {
+      "id": "advisor-before-substantive-work",
+      "request": "Промпт для Claude Managed Agents + Advisor Tool: обновить платежный модуль после аудита архитектуры. Advisor должен дать совет до того, как воркеры начнут менять код. Формат: готовый промпт, без вопросов.",
+      "mustMatch": ["Advisor Tool", "(before|до).{0,80}(substantive|meaningful|основн|существен).{0,80}(work|change|работ|измен)"],
+      "why": "Advisor Tool должен запускаться до содержательной работы, а не после fan-out или кода"
+    },
+    {
+      "id": "advisor-cost-knobs",
+      "request": "Промпт для Claude Managed Agents с Advisor Tool: провести ревью монорепозитория. Бюджеты и стоимость я не указал. Формат: готовый промпт, без вопросов.",
+      "mustMatch": ["Advisor Tool", "(Assumed settings|cost knobs|budget|cost|бюджет|стоим)", "(max_cost|max_parallel_workers|max_model_turns|max_tool_calls|max_wall_time)"],
+      "why": "Advisor / Managed Agents промпт должен явно вынести дефолтные cost/budget knobs, а не зашить их молча"
+    },
+    {
+      "id": "advisor-transcript-hygiene",
+      "request": "Промпт для Advisor Tool в Claude Managed Agents: advisor видит summary предыдущей работы и должен помочь решить, продолжать ли fan-out. Не передавай полный transcript воркеров. Формат: готовый промпт, без вопросов.",
+      "mustMatch": ["Advisor Tool", "(do not|never|не).{0,100}(raw transcript|full transcript|parent history|reasoning|полный транскрипт|рассужд)"],
+      "why": "Advisor получает компактный summary/evidence, но не сырой transcript, parent history или скрытые рассуждения воркеров"
+    },
+    {
+      "id": "plan-big-execute-small",
+      "request": "Промпт для Claude Managed Agents: применить Plan Big, Execute Small к миграции billing: сначала широкий план, затем маленькие проверяемые изменения. Формат: готовый промпт, без вопросов.",
+      "mustMatch": ["(Plan[- ]Big[,;:]? Execute[- ]Small|plan[- ]big[- ]execute[- ]small)", "(small|мал).{0,80}(slice|diff|change|batch|step|шаг|измен)"],
+      "why": "Plan Big Execute Small должен сохранять широкий upfront-план, но исполняться маленькими проверяемыми порциями"
+    },
+    {
+      "id": "premise-worker-before-fanout",
+      "request": "Промпт для coordinator-workers: перед fan-out по пакетам кода сначала отдельный premise worker должен проверить предпосылки и риски. Формат: готовый промпт, без вопросов.",
+      "mustMatch": ["(premise|assumption|гипотез|предпосыл).{0,80}(worker|agent|воркер|агент)", "(before|до).{0,80}(fan[- ]?out|parallel|паралл)"],
+      "why": "Premise worker должен идти до массового fan-out, чтобы не размножать неверную гипотезу по воркерам"
+    },
+    {
+      "id": "worker-contract-mirror",
+      "request": "Промпт для Managed Agents: coordinator раздает 6 воркерам ревью разных пакетов, а потом синтезирует результат. Контракт воркера должен зеркалиться в контракт синтезатора. Формат: готовый промпт, без вопросов.",
+      "mustMatch": ["(mirror|same contract|identical contract|зеркал|тот же контракт)", "(objective|inputs|allowed tools|output schema|result schema|budget|evidence)", "(evidence|доказ|file:line|source)"],
+      "why": "Worker output schema должен напрямую совпадать с тем, что ожидает синтезатор; иначе merge становится невалидируемым"
+    },
+    {
+      "id": "delegation-granularity",
+      "request": "Промпт для Claude Managed Agents: распараллелить ревью большого репозитория. Нужно выбрать правильную гранулярность делегирования, не создавать агента на каждый файл. Формат: готовый промпт, без вопросов.",
+      "mustMatch": ["(single purpose|one job|one package|одна задач|один пакет)", "(max_parallel_workers|max_packets|packet|пакет|parallel workers)", "(do not|never|не).{0,80}(every file|each file|каждый файл)"],
+      "why": "Делегирование должно быть по осмысленным packet'ам, а не сверхмелким агентам на каждый файл"
+    },
+    {
+      "id": "thread-usage-telemetry",
+      "request": "Промпт для Managed Agents: после каждого worker thread нужно вернуть usage telemetry для контроля бюджета и отладки. Формат: готовый промпт, без вопросов.",
+      "mustMatch": ["(thread usage|usage telemetry|telemetry|метрик)", "(tokens|cost|tool calls|model turns|wall time|токен|стоим)"],
+      "why": "Managed Agents должны возвращать telemetry по thread usage: токены, стоимость, tool/model turns или wall time"
+    },
+    {
       "id": "taste-prototype-first",
       "request": "Промпт для Claude Code: сделай красивый дашборд аналитики для наших данных, чтобы выглядел дорого и премиально. У меня нет насмотренности, точного дизайна нет.",
       "mustMatch": ["(prototype|mock|макет|prototyp|вариант|direction|направлен)"],

@@ -19,6 +19,7 @@ const files = {
   templatesMd: p('plugins/prompt-master/skills/prompt-master/references/templates.md'),
   toolProfilesMd: p('plugins/prompt-master/skills/prompt-master/references/tool-profiles.md'),
   modelsMd: p('plugins/prompt-master/skills/prompt-master/references/models.md'),
+  goldenJson: p('tests/golden/scenarios.json'),
 };
 
 const errors = [];
@@ -87,6 +88,7 @@ const installText = read(files.installMd);
 const tplText = read(files.templatesMd);
 const profText = read(files.toolProfilesMd);
 const modelsText = read(files.modelsMd);
+const goldenText = read(files.goldenJson);
 
 log('version consistency');
 const pluginVersion = pluginText.match(/"version"\s*:\s*"(\d+\.\d+\.\d+)"/)?.[1];
@@ -302,6 +304,8 @@ if (!knobList) {
     Gamma: 'Gamma',
     Perplexity: 'Perplexity',
     Grok: 'Grok (xAI',
+    Advisor: 'Advisor Tool',
+    'Advisor Tool': 'Advisor Tool',
     'image-AI': 'Image AI',
     'video-AI': 'Video AI',
   };
@@ -321,6 +325,60 @@ if (noCotLine) {
     const covered = reasoningProfiles.some(([header, body]) => header.includes(key) || body.includes(key));
     if (!covered) errors.push(`no-CoT model '${model}': no profile with a reasoning-native Traits line mentions '${key}'`);
   }
+}
+
+log('Advisor / Managed Agents model facts');
+if (/\bAdvisor Tool\b/i.test(profText)) {
+  for (const id of ['advisor-tool-2026-03-01', 'advisor_20260301']) {
+    if (!modelsText.includes(id)) {
+      errors.push(`tool-profiles.md mentions Advisor Tool but models.md is missing '${id}'`);
+    }
+  }
+}
+if (/\bManaged Agents\b/i.test(profText)) {
+  if (!modelsText.includes('managed-agents-2026-04-01')) {
+    errors.push("tool-profiles.md mentions Managed Agents but models.md is missing 'managed-agents-2026-04-01'");
+  }
+}
+
+const advisorHeader = findProfile('Advisor Tool');
+if (advisorHeader) {
+  const body = profiles[advisorHeader];
+  for (const rx of [/bounded|advisory|diagnostic/i, /evidence|file:line|cite/i, /not a second executor|Do the task yourself/i]) {
+    if (!rx.test(body)) errors.push(`Advisor Tool profile missing guard matching ${rx}`);
+  }
+  if (/iterate until it passes/i.test(body)) errors.push('Advisor Tool profile must not frame Advisor as an autonomous executor');
+}
+
+const managedHeader = findProfile('Managed Agents');
+if (managedHeader) {
+  const body = profiles[managedHeader];
+  for (const rx of [/Plan Big Execute Small/i, /worker contract|task ledger|handoff/i, /evidence|verification/i, /stop condition|human-review|approval/i]) {
+    if (!rx.test(body)) errors.push(`Managed Agents profile missing guard matching ${rx}`);
+  }
+  if (/budget_tokens|thinking budget/i.test(body)) errors.push('Managed Agents profile must not hardcode thinking budgets');
+}
+
+log('golden scenario coverage');
+try {
+  const golden = JSON.parse(goldenText);
+  const ids = (golden.scenarios || []).map((s) => s.id);
+  const dupes = ids.filter((id, idx) => ids.indexOf(id) !== idx);
+  for (const id of unique(dupes)) errors.push(`Duplicate golden scenario id: ${id}`);
+  for (const id of [
+    'advisor-before-substantive-work',
+    'advisor-cost-knobs',
+    'advisor-transcript-hygiene',
+    'plan-big-execute-small',
+    'premise-worker-before-fanout',
+    'worker-contract-mirror',
+    'delegation-granularity',
+    'thread-usage-telemetry',
+  ]) {
+    if (!ids.includes(id)) errors.push(`Missing golden scenario: ${id}`);
+  }
+} catch (e) {
+  errors.push(`Cannot parse tests/golden/scenarios.json: ${e.message}`);
 }
 
 console.log('');

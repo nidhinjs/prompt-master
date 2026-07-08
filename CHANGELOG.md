@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.28.0] - 2026-07-08
+
+Claude Advisor Tool + Managed Agents release: добавлен Claude-specific multi-agent routing для Advisor Tool, Managed Agents и Plan Big Execute Small без смешивания с Kimi Agent Swarm.
+
+### Added
+- **Claude Advisor Tool / Managed Agents profiles:** routing rows and profiles in `tool-profiles.md`, with Advisor framed as bounded advisory/review/diagnostic support rather than an autonomous executor.
+- **Anthropic beta facts:** `models.md` now carries Advisor Tool and Managed Agents beta headers/tool names/availability caveats as volatile facts.
+- **Agentic Prompt Fragments:** Plan Big Execute Small, Managed Agents worker contract, premise verification before fan-out, Advisor checkpoint/review, and thread usage telemetry / rigor-matched control.
+- **Patterns #58–#61** (57→61): premise/decomposition verification before fan-out; coordinator/worker contract drift; Advisor misuse / silent cost knobs; overdelegation / bad granularity.
+- **Regression coverage:** hook fixtures for Managed Agents / coordinator-workers / plan-big-execute-small, lint guards for Advisor/Managed Agents facts and profile shape, and 8 golden scenarios covering Advisor timing/cost/transcript hygiene plus worker contract, granularity, and telemetry.
+
+### Changed
+- README ×2 / plugin.json / marketplace.json / installation.md / SKILL reference table: pattern count synchronized to 61.
+
 ## [1.27.0] - 2026-07-08
 
 Quality-gates release: стабилизация deterministic checks, перенос CI lint на Node, расширение golden-покрытия и актуализация Fable 5 promotional access по Anthropic Help Center.
@@ -455,6 +469,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.28.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.28.0
 [1.27.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.27.0
 [1.26.3]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.3
 [1.26.2]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.26.2

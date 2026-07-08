@@ -322,9 +322,9 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 
 ---
 
-## 🚫 57 Credit-Killing Patterns Detected
+## 🚫 61 Credit-Killing Patterns Detected
 
-Prompt Master scans every rough idea against 57 known failure patterns and fixes them silently. A representative selection:
+Prompt Master scans every rough idea against 61 known failure patterns and fixes them silently. A representative selection:
 
 <details>
 <summary><b>Task / Context / Format / Scope (representative)</b></summary>
@@ -367,6 +367,10 @@ Prompt Master scans every rough idea against 57 known failure patterns and fixes
 | 55 | Unbounded review request | "find all issues" → severity bar + nit cap + `file:line` evidence + re-review convergence rule |
 | 56 | Taste-based / new-domain unknown drained like a question | "make it look premium" → prototype-first mock (divergent directions); new domain → blindspot pass — a question can't drain these |
 | 57 | Plan deviation unhandled (agent stalls or drifts) | long agentic run with no deviation rule → "conservative option + log under `## Deviations` + continue"; stop-and-ask for the irreversible only |
+| 58 | Premise/decomposition not verified before fan-out | broad worker launch from an assumed file map → cheap premise worker verifies files/APIs/data shape first |
+| 59 | Coordinator/worker contract drift | visible plan says narrow/read-only, hidden packets are broad → mirror scope, tools, stop condition, deliverable, evidence |
+| 60 | Advisor misuse / silent cost knobs | Advisor on every minor step or never surfaced → bounded checkpoint + evidence + explicit cost/depth knobs |
+| 61 | Overdelegation / bad granularity | agent per file or one huge worker → single loop by default; delegate bounded packets; Plan Big, Execute Small |
 
 </details>
 
@@ -393,7 +397,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.27.0** (quality gates — Node lint in CI, stable hook fixtures, expanded golden scenarios, and refreshed Fable 5 promotional access facts).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.28.0** (Claude Advisor Tool + Managed Agents / Plan Big Execute Small support, patterns #58–#61, and new lint/golden coverage).
 
 ## 📄 License
 
