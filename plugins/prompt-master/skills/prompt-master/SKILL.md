@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.29.0
+version: 1.30.0
 description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
 ---
 
@@ -77,7 +77,7 @@ After extracting, gauge readiness **internally** on the critical dimensions (Tas
 
 ### Tool Routing
 
-Identify the target tool first, then read **only its matching profile** from [references/tool-profiles.md](references/tool-profiles.md) — load just the one category you need, not the whole file. That profile points to the full template structure in [references/templates.md](references/templates.md); read only the template you need.
+Identify the target tool first, then read **only its matching profile** from [references/tool-profiles.md](references/tool-profiles.md) — load just the one category you need, not the whole file. For prompts targeting tools that edit files, run commands, browse, transact, delegate, or operate asynchronously, read [references/agentic.md](references/agentic.md) before choosing Template H/M or Agentic Prompt Fragments; keep one agent by default unless the risk/intent justifies escalation. The profile points to the full template structure in [references/templates.md](references/templates.md); read only the template you need.
 
 The Gotchas cheat-sheet below catches the most common per-tool mistakes without loading a profile — use it for quick routing, and open the full profile when the task needs more depth.
 
@@ -100,8 +100,8 @@ Catch these before generating; open the full profile in [references/tool-profile
 - **Kimi (Moonshot AI)** — reasoning-native (no CoT); keep sampling defaults; `$web_search` requires thinking OFF; Agent Swarm self-orchestrates — don't set agent counts or script sub-agents; paid features are tier-gated (surface as prerequisite). Full rules → Kimi profile.
 - **GLM (Z.AI / BigModel)** — thinking mode is reasoning-native (no CoT); GLM-5.2 is the default GLM target; preserve `reasoning_content` exactly in tool loops, use `stream=true` + `tool_stream=true` for streaming tool calls, and don't mix general `/api/paas/v4` with Coding Plan `/api/coding/paas/v4`. Full rules → GLM profile.
 - **Gemini** — prone to hallucinated citations: add "Cite only sources you are certain of. If uncertain, say [uncertain]."
-- **Agentic tools** (Claude Code, Devin, Cursor, Cline, SWE-agent) — stop conditions are MANDATORY; always scope to explicit files/paths; add human-review triggers for destructive actions; give a runnable check + require evidence, not assertion (pattern #52); for review prompts, constrain the reviewer — severity bar, nit cap, `file:line` evidence (pattern #55, Review-request knobs in templates.md).
-- **Multi-agent / orchestrator prompt request** (user asks for a prompt for an orchestrator, fan-out, sub-agents, or an agent team) — load the **Agentic Prompt Fragments** in [references/templates.md](references/templates.md); default to a single loop, add orchestration only when the task hits the "when to orchestrate" criteria there. **Exception — a vendor-managed swarm (e.g. Kimi Agent Swarm): the model self-orchestrates, so do NOT design a topology or script sub-agents** — give one decomposable task + final artifact (see the Kimi carve-out there).
+- **Agentic tools** (Claude Code, Devin, Cursor, Cline, SWE-agent) — load [references/agentic.md](references/agentic.md) for risk tier/flags, preview-draft-commit gates, and approval boundaries; then apply Template H/M stop conditions, scope locks, runnable verification, and evidence (pattern #52).
+- **Multi-agent / orchestrator prompt request** (user asks for an orchestrator, fan-out, sub-agents, or an agent team) — load [references/agentic.md](references/agentic.md) plus the **Agentic Prompt Fragments** in [references/templates.md](references/templates.md); default to a single loop unless the orchestration criteria are met. **Exception — a vendor-managed swarm (e.g. Kimi Agent Swarm): the model self-orchestrates, so do NOT design a topology or script sub-agents** — give one decomposable task + final artifact (see the Kimi carve-out there).
 - **Research tools** (Perplexity, Gemini/GPT Deep Research) — prompt as a research brief (Template N) with a required Data-gaps/confidence section and **inline citations** (cite only retrieved sources; never fabricate). **Perplexity: Agent API (`/v1/agent`, `responses.create`) is the recommended default for new apps; Sonar API (`sonar`/`sonar-pro`/`sonar-deep-research`) for direct search-grounded answers.** Sonar search is driven by the user message (system prompt isn't seen by search); set domain/recency limits as request parameters, not prose; UI Focus/Spaces ≠ API; "Search as Code" is a blog concept, not a callable feature.
 - **Local / open-weight** (Ollama, Llama, Mistral) — ask which model is running; keep prompts short and flat, no deep nesting; always include a system-prompt role.
 - **Image generation** — Midjourney V8.1 wants comma descriptors + `--oref` (not the retired `--cref`); SD/ComfyUI: always include a negative prompt (optional in the API but strongly recommended; ComfyUI: separate Positive / Negative blocks); DALL·E is retired → GPT-image (`gpt-image-2`); **character-consistency / brand → Nano Banana 2 or Pro, FLUX.2 multi-ref, or `--oref` — never a fast/Lite tier**.
@@ -245,10 +245,10 @@ The user pastes the prompt into their target tool. It works on the first try. Ze
 
 ## Reference Files
 Read only when the task requires it. Load only the one section/file you need — do not load everything at once.
-
 | File | Read When |
 |------|-----------|
 | [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target tool — read only that tool's profile for full routing guidance |
 | [references/models.md](references/models.md) | You need a volatile model fact (ID, current default, version-tied param) — honor the 60-day re-verify protocol |
+| [references/agentic.md](references/agentic.md) | Prompt targets a tool that edits, executes, delegates, browses, transacts, or has async/runtime side effects |
 | [references/templates.md](references/templates.md) | You need the full template structure for any tool category |
 | [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 61-pattern reference |

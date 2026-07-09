@@ -16,6 +16,7 @@ const files = {
   readmeMd: p('README.md'),
   readmeRuMd: p('README.ru.md'),
   installMd: p('docs/installation.md'),
+  agenticMd: p('plugins/prompt-master/skills/prompt-master/references/agentic.md'),
   templatesMd: p('plugins/prompt-master/skills/prompt-master/references/templates.md'),
   toolProfilesMd: p('plugins/prompt-master/skills/prompt-master/references/tool-profiles.md'),
   modelsMd: p('plugins/prompt-master/skills/prompt-master/references/models.md'),
@@ -85,6 +86,7 @@ const marketText = read(files.marketplaceJson);
 const readmeText = read(files.readmeMd);
 const readmeRuText = read(files.readmeRuMd);
 const installText = read(files.installMd);
+const agenticText = read(files.agenticMd);
 const tplText = read(files.templatesMd);
 const profText = read(files.toolProfilesMd);
 const modelsText = read(files.modelsMd);
@@ -139,7 +141,7 @@ log('CRLF line endings in tracked *.md and *.ps1');
 function collectTextFiles(dir) {
   const out = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (entry.name === '.git' || entry.name === 'dist' || entry.name === 'node_modules') continue;
+    if (entry.name === '.git' || entry.name === 'dist' || entry.name === 'external' || entry.name === 'node_modules') continue;
     const abs = path.join(dir, entry.name);
     if (entry.isDirectory()) out.push(...collectTextFiles(abs));
     else if (/\.(md|ps1)$/i.test(entry.name)) out.push(abs);
@@ -201,6 +203,7 @@ for (const anchor of h2Anchors) {
 log('Template / pattern cross-references');
 const skillFiles = {
   'SKILL.md': skillText,
+  'agentic.md': agenticText,
   'tool-profiles.md': profText,
   'templates.md': tplText,
   'patterns.md': patText,
@@ -380,6 +383,38 @@ if (/settings-as-knobs tools \([^)]*\bGLM\b/i.test(skillText)) {
   errors.push('SKILL.md: do not add GLM to global settings-as-knobs list; handle thinking/search in the GLM profile');
 }
 
+log('agentic runtime safety');
+if (!/\[references\/agentic\.md\]\(references\/agentic\.md\)/.test(skillText)) {
+  errors.push('SKILL.md: missing routing/reference link to references/agentic.md');
+}
+for (const heading of [
+  '# Agentic Runtime Safety',
+  '## Risk Ladder',
+  '## Intent Flags',
+  '## Preview/Draft/Commit',
+  '## Policy/Owner Reviewer',
+  '## No Model Self-Approval',
+  '## Single-Agent Default',
+  '## Routing Map',
+]) {
+  const rx = new RegExp(`^${heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`, 'm');
+  if (!rx.test(agenticText)) errors.push(`agentic.md missing heading: ${heading}`);
+}
+for (const [name, rx] of [
+  ['risk ladder R0-R6', /\bR0\b[\s\S]*\bR6\b/],
+  ['intent flag: delete', /\b(delete|destructive)\b/i],
+  ['intent flag: deploy', /\bdeploy\b/i],
+  ['intent flag: prod/sensitive data', /\b(prod|production data|sensitive_data)\b/i],
+  ['preview/draft/commit split', /\bpreview\b[\s\S]{0,200}\bdraft\b[\s\S]{0,200}\bcommit\b/i],
+  ['policy reviewer evidence', /\bPolicy\/Owner Reviewer\b[\s\S]{0,500}\bevidence\b/i],
+  ['external approval boundary', /\b(human|harness|owner|external)\b[\s\S]{0,300}\bapproval\b/i],
+  ['no self approval', /\b(No Model Self-Approval|self-approval|self-approve)\b[\s\S]{0,500}\b(cannot|must not|never)\b/i],
+  ['single-agent default', /\bsingle-agent default\b/i],
+  ['narrow tool preference', /\bnarrow\w*\b[\s\S]{0,200}\bbroad\b/i],
+]) {
+  if (!rx.test(agenticText)) errors.push(`agentic.md missing ${name} guard`);
+}
+
 log('Advisor / Managed Agents model facts');
 if (/\bAdvisor Tool\b/i.test(profText)) {
   for (const id of ['advisor-tool-2026-03-01', 'advisor_20260301']) {
@@ -433,6 +468,11 @@ try {
     'glm-agentic-stop-conditions',
     'glm-zhipu-alias-routing',
     'glm-web-search-citations',
+    'agentic-risk-prod-delete-noquestions',
+    'agentic-partial-preview-before-db-drop',
+    'agentic-policy-reviewer-before-execution',
+    'agentic-no-model-self-approval',
+    'agentic-draft-commit-split',
   ]) {
     if (!ids.includes(id)) errors.push(`Missing golden scenario: ${id}`);
   }

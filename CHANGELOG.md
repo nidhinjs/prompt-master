@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.0] - 2026-07-09
+
+Agentic runtime safety release: вынесен отдельный decision layer для риск-классификации, approval boundaries и multi-agent escalation без раздувания `SKILL.md`.
+
+### Added
+- **Agentic runtime safety reference:** новый `references/agentic.md` задает Risk Ladder R0-R6, Intent Flags, Preview/Draft/Commit split, Policy/Owner Reviewer, No Model Self-Approval, Single-Agent Default и Routing Map.
+- **Runtime routing hook:** `SKILL.md` теперь направляет tool-using / side-effect / delegation / async prompts в `references/agentic.md`, оставляя `SKILL.md` компактным router layer.
+- **Regression coverage:** `scripts/lint.js` проверяет `agentic.md`, обязательные headings/core anchors, ссылку из `SKILL.md` и новые golden IDs. Golden suite расширен 5 agentic-сценариями: prod delete/no questions, DB preview before drop, policy reviewer before execution, no model self-approval и draft/commit split.
+- **Research traceability:** `docs/prompt-master-agentic-architecture-research.md` фиксирует implementation roadmap v1/v2/v3, а `docs/sources.md` объясняет отделение runtime safety layer от prompt templates.
+
+### Changed
+- **Repo hygiene:** `external/` добавлен в `.gitignore` и исключен из recursive text lint, чтобы локальные research clones не попадали в staging/lint/release scope.
+- **Release packaging verified:** `scripts/package-skill.ps1` включает новый `references/agentic.md` в `dist/prompt-master-1.30.0.zip` вместе с остальными shipped references.
+
 ## [1.29.0] - 2026-07-09
 
 GLM/Z.AI release: добавлен first-class routing для GLM-5.2 / Z.AI / BigModel с reasoning-native thinking mode, tool-loop runtime rules и release-gate покрытием.
@@ -484,6 +498,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.30.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.30.0
 [1.29.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.29.0
 [1.28.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.28.0
 [1.27.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.27.0
