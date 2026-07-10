@@ -52,7 +52,7 @@ function makeFakeClaude() {
     fake,
     [
       '#!/bin/sh',
-      'printf "%s\\n" "$*" >> "$FAKE_CLAUDE_MARKER"',
+      'printf "call\\n" >> "$FAKE_CLAUDE_MARKER"',
       'if [ "$1" = "--version" ]; then echo "fake claude"; exit 0; fi',
       'case "$FAKE_CLAUDE_MODE" in',
       '  not-logged) echo "Not logged in · Please run /login" >&2; exit 1 ;;',
