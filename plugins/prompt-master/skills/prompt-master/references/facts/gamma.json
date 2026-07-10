@@ -1,0 +1,49 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "gamma",
+  "records": [
+    {
+      "id": "gamma.gamma-app.app",
+      "vendor": "gamma",
+      "model_id": "gamma-app",
+      "surface": "app",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["app"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["presentation_generation"],
+      "routing_default_for": [],
+      "prompting_constraints": ["surface_specific"],
+      "claims": [
+        { "key": "card_modes", "value": ["Generate", "Paste in text", "Import"] },
+        { "key": "ui_text_amount_values", "value": ["Minimal", "Concise", "Detailed"] },
+        { "key": "card_split", "value": "standalone \\n---\\n boundary in Paste in text" },
+        { "key": "prompt_boundaries", "value": ["exact layout and spacing", "exact data or figures", "brand lock uses Theme", "animation and transitions use Gamma Agent"] }
+      ],
+      "last_verified": "2026-06-17",
+      "source": [{ "url": "https://gamma.app/products/presentations", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.card_modes", "claims.ui_text_amount_values", "claims.card_split", "claims.prompt_boundaries"] }]
+    },
+    {
+      "id": "gamma.generate-api.generate-api",
+      "vendor": "gamma",
+      "model_id": "generate-api",
+      "surface": "generate-api",
+      "channel": "production",
+      "availability": { "status": "account_gated", "scope": ["generate-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["presentation_generation"],
+      "routing_default_for": [],
+      "prompting_constraints": ["surface_specific"],
+      "claims": [
+        { "key": "endpoint", "value": "/generations" },
+        { "key": "api_method", "value": "POST" },
+        { "key": "num_cards_default", "value": 10 },
+        { "key": "num_cards_range", "value": { "standard": [1, 60], "ultra_max": 75 } },
+        { "key": "api_text_amount_values", "value": ["brief", "medium", "detailed", "extensive"] },
+        { "key": "card_split", "value": { "value": "inputTextBreaks", "delimiter": "\\n---\\n" } },
+        { "key": "dimensions", "value": ["16x9", "4x3", "fluid"] },
+        { "key": "knobs", "value": ["numCards", "textOptions.amount", "cardSplit", "cardOptions.dimensions", "themeId", "image options"] }
+      ],
+      "last_verified": "2026-06-17",
+      "source": [{ "url": "https://developers.gamma.app", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.endpoint", "claims.api_method", "claims.num_cards_default", "claims.num_cards_range", "claims.api_text_amount_values", "claims.card_split", "claims.dimensions", "claims.knobs"] }]
+    }
+  ]
+}

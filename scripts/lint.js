@@ -3,6 +3,8 @@
 
 const fs = require('fs');
 const path = require('path');
+const { validateRegistry } = require('./validate-registry');
+const { validateRuntimeInventory } = require('./validate-runtime-inventory');
 
 const repoRoot = path.join(__dirname, '..');
 const p = (...parts) => path.join(repoRoot, ...parts);
@@ -29,6 +31,7 @@ const files = {
 const errors = [];
 const warnings = [];
 const SKILL_BODY_BUDGET = 250;
+const profileDir = p('plugins/prompt-master/skills/prompt-master/references/profiles');
 
 function rel(abs) {
   return path.relative(repoRoot, abs).replace(/\\/g, '/');
@@ -97,6 +100,33 @@ const goldenText = read(files.goldenJson);
 const safeTestText = read(files.safeTestJs);
 const contractsTestText = read(files.contractsTestJs);
 const refreshChecklistText = read(files.refreshChecklistMd);
+const profileTexts = {};
+if (!fs.existsSync(profileDir)) {
+  errors.push('Required profile directory not found: references/profiles');
+} else {
+  for (const name of fs.readdirSync(profileDir).filter((entry) => entry.endsWith('.md')).sort()) {
+    profileTexts[name] = read(path.join(profileDir, name));
+  }
+}
+const profileText = Object.entries(profileTexts).map(([name, text]) => `\n<!-- ${name} -->\n${text}`).join('\n');
+
+function registryDocuments() {
+  const factsDir = p('plugins/prompt-master/skills/prompt-master/references/facts');
+  const indexFile = path.join(factsDir, 'index.json');
+  if (!fs.existsSync(indexFile)) return { index: null, records: [] };
+  try {
+    const index = JSON.parse(fs.readFileSync(indexFile, 'utf8'));
+    const records = [];
+    for (const shard of index.shards || []) {
+      const file = path.join(factsDir, shard.path);
+      if (fs.existsSync(file)) records.push(...(JSON.parse(fs.readFileSync(file, 'utf8')).records || []));
+    }
+    return { index, records };
+  } catch (error) {
+    return { index: null, records: [] };
+  }
+}
+const registry = registryDocuments();
 
 log('version consistency');
 const pluginVersion = pluginText.match(/"version"\s*:\s*"(\d+\.\d+\.\d+)"/)?.[1];
@@ -223,6 +253,7 @@ const skillFiles = {
   'tool-profiles.md': profText,
   'templates.md': tplText,
   'patterns.md': patText,
+  ...Object.fromEntries(Object.entries(profileTexts).map(([name, text]) => [`profiles/${name}`, text])),
 };
 const definedTemplates = matches(tplText, /^##\s+Template\s+([A-Z])\b/gm);
 for (const [name, text] of Object.entries(skillFiles)) {
@@ -230,7 +261,7 @@ for (const [name, text] of Object.entries(skillFiles)) {
     if (!definedTemplates.includes(ref)) errors.push(`${name} references 'Template ${ref}' but templates.md has no such section`);
   }
 }
-const outsideRefs = getTemplateRefs([skillText, profText, patText].join('\n'));
+const outsideRefs = getTemplateRefs([skillText, profText, profileText, patText].join('\n'));
 for (const template of definedTemplates) {
   if (template >= 'G' && !outsideRefs.includes(template)) {
     warnings.push(`templates.md 'Template ${template}' is never referenced from SKILL.md / tool-profiles.md / patterns.md`);
@@ -243,16 +274,51 @@ for (const [name, text] of Object.entries(skillFiles)) {
   }
 }
 
-log('no-CoT list consistency');
-const noCotLine = skillText.match(/^.*Canonical no-CoT list[^:]*:\**\s*(.+)$/m)?.[1];
-if (!noCotLine) {
-  errors.push("SKILL.md: cannot find the 'Canonical no-CoT list' hard rule");
-} else {
-  const models = noCotLine.split(/\.\s+Also/)[0].split(',').map((s) => s.trim()).filter(Boolean);
-  for (const model of models) {
-    if (!tplText.includes(model)) errors.push(`no-CoT drift: '${model}' is in SKILL.md but missing from templates.md (Template E)`);
+log('canonical registry and routing graph');
+const registryResult = validateRegistry();
+for (const error of registryResult.errors) errors.push(`registry: ${error}`);
+if (registryResult.ok) {
+  console.log(`  shards=${registryResult.counts.shards} records=${registryResult.counts.records} routes=${registryResult.counts.routes} profiles=${registryResult.counts.profiles}`);
+}
+
+log('tracked runtime inventory');
+const inventoryResult = validateRuntimeInventory();
+for (const error of inventoryResult.errors) errors.push(`runtime inventory: ${error}`);
+if (inventoryResult.ok) console.log(`  files=${inventoryResult.files.length}`);
+
+log('registry-only volatile facts');
+const evergreenConsumers = {
+  'SKILL.md': skillText,
+  'templates.md': tplText,
+  'patterns.md': patText,
+  ...Object.fromEntries(Object.entries(profileTexts).map(([name, text]) => [`profiles/${name}`, text])),
+};
+for (const record of registry.records) {
+  if (!record.model_id || record.model_id.length < 3) continue;
+  for (const [name, text] of Object.entries(evergreenConsumers)) {
+    if (text.includes(record.model_id)) errors.push(`${name}: registry model_id '${record.model_id}' duplicated outside facts/**`);
   }
-  console.log(`  canonical no-CoT list: ${models.length} models`);
+}
+for (const [name, text] of Object.entries({ 'SKILL.md': skillText, 'templates.md': tplText, 'patterns.md': patText })) {
+  if (/Canonical no-CoT list/i.test(text)) errors.push(`${name}: enumerated no-CoT membership is forbidden; use prompting_constraints.no_cot`);
+}
+for (const [label, rx] of [
+  ['ComfyUI checkpoint/version examples', /\b(?:SD\s*1\.5|SDXL|SD\s*3\.5|FLUX\.2)\b/i],
+  ['ComfyUI token/settings defaults', /\b75 tokens\b|Euler a|CFG(?: SCALE)?\s*:?\s*7|steps?\s*:?\s*20\s*[-–]\s*30|divisible by 64/i],
+  ['Gamma mode/density enums', /Paste[- ]in[- ]text|Minimal\s*\/\s*Concise\s*\/\s*Detailed/i],
+  ['Gamma delimiter/default examples', /\\n---\\n|Stock recommended|10 cards\s*[·|]/i],
+]) {
+  if (rx.test(tplText)) errors.push(`templates.md duplicates volatile ${label}; use registry/local capability placeholders`);
+}
+for (const [name, rx] of [
+  ['generic registry lookup', /resolve (?:the target|candidates|candidates\/default|candidates and any default)[\s\S]{0,240}facts\/index\.json/i],
+  ['one primary bundle', /exactly[^\n]{0,80}one primary profile bundle/i],
+  ['one composite add-on', /explicit composite[\s\S]{0,80}at most one add-on bundle/i],
+  ['no-CoT registry constraint', /prompting_constraints[\s\S]{0,120}no_cot/i],
+  ['latest public production', /`latest` means public production unless[\s\S]{0,80}preview/i],
+  ['fail-closed registry fallback', /Missing, ambiguous, stale, orphaned, or ineligible registry data fails closed/i],
+]) {
+  if (!rx.test(skillText)) errors.push(`SKILL.md missing routing contract: ${name}`);
 }
 
 log('knob-tool enumerations');
@@ -267,133 +333,44 @@ if ((profText.match(/^\|.*Comet.*\|$/gm) || []).length >= 2 && !/tie-?break/i.te
   errors.push("tool-profiles.md: 'Comet' appears in multiple routing rows but no tie-break note exists");
 }
 
-log('models.md last-verified staleness');
-const today = new Date();
-let currentSection = 'top';
-for (const line of modelsText.split('\n')) {
-  const h = line.match(/^##\s+(.+?)\s*$/);
-  if (h) currentSection = h[1];
-  const v = line.match(/last-verified:\s*(\d{4}-\d{2}-\d{2})/);
-  if (v) {
-    const age = Math.floor((today - new Date(`${v[1]}T00:00:00Z`)) / 86400000);
-    if (age > 60) warnings.push(`models.md section '${currentSection}': last-verified ${v[1]} is ${age} days old (>60)`);
-  }
-}
-
-log('single-source status facts');
-for (const [name, text] of Object.entries(skillFiles)) {
-  if (text.includes('2026-06-12')) {
-    errors.push(`${name}: suspension date 2026-06-12 duplicated outside models.md - reference models.md instead`);
-  }
-}
-
-log('Fable promotional access facts');
-const anthropic = section(modelsText, '## Anthropic — Claude');
-if (!/2026-07-12|July 12, 2026/.test(anthropic) || !/11:59:59 PM PT|23:59:59 PT/.test(anthropic)) {
-  errors.push('models.md Anthropic section: Fable promo deadline must be July 12, 2026, 11:59:59 PM PT');
-}
-if (/2026-07-07|07-07/.test(anthropic)) {
-  errors.push('models.md Anthropic section: stale Fable promo deadline 2026-07-07/07-07 is still presented as current');
-}
-for (const rx of [/API usage.*separately|API.*standard API rates/i, /Claude Code.*2\.1\.170/i, /50%.*weekly/i]) {
-  if (!rx.test(anthropic)) errors.push(`models.md Anthropic section: missing Fable promo fact matching ${rx}`);
-}
-
-log('profile Traits');
-const profiles = {};
-let curHeader = null;
-let curBody = [];
-for (const line of profText.split('\n')) {
-  const h = line.match(/^\*\*(.+?)\*\*/);
-  if (h) {
-    if (curHeader) profiles[curHeader] = curBody.join('\n');
-    curHeader = h[1];
-    curBody = [];
-  } else if (curHeader) {
-    curBody.push(line);
-  }
-}
-if (curHeader) profiles[curHeader] = curBody.join('\n');
-const findProfile = (needle) => Object.keys(profiles).find((h) => h.includes(needle));
+log('split profile contracts');
 const knobList = skillText.match(/settings-as-knobs tools \(([^)]+)\)/)?.[1];
 if (!knobList) {
   errors.push("SKILL.md: cannot find the 'settings-as-knobs tools (...)' enumeration");
 } else {
-  const knobToolMap = {
-    Gamma: 'Gamma',
-    Perplexity: 'Perplexity',
-    Grok: 'Grok (xAI',
-    Advisor: 'Advisor Tool',
-    'Advisor Tool': 'Advisor Tool',
-    'image-AI': 'Image AI',
-    'video-AI': 'Video AI',
-  };
   for (const tool of knobList.split(',').map((s) => s.trim())) {
-    const needle = knobToolMap[tool];
-    const header = needle && findProfile(needle);
-    if (!needle) errors.push(`lint's knob-tool map has no profile mapping for '${tool}' - extend knobToolMap in lint.js`);
-    else if (!header) errors.push(`knob-tool '${tool}': no profile found in tool-profiles.md (looked for '${needle}')`);
-    else if (!/^\*Traits:.*knobs/m.test(profiles[header])) errors.push(`knob-tool '${tool}': profile '${header}' has no '*Traits: ... knobs ...*' line`);
+    const display = tool.replace('-AI', ' AI');
+    if (!new RegExp(display.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(`${profText}\n${profileText}`)) {
+      errors.push(`knob-tool '${tool}': no split-profile routing/guidance found`);
+    }
   }
-}
-if (noCotLine) {
-  const noCotModels = noCotLine.split(/\.\s+Also/)[0].split(',').map((s) => s.trim()).filter(Boolean);
-  const reasoningProfiles = Object.entries(profiles).filter(([, body]) => /^\*Traits:.*reasoning-native/m.test(body));
-  for (const model of noCotModels) {
-    const key = model.split(/[\s/]/)[0];
-    const covered = reasoningProfiles.some(([header, body]) => header.includes(key) || body.includes(key));
-    if (!covered) errors.push(`no-CoT model '${model}': no profile with a reasoning-native Traits line mentions '${key}'`);
-  }
+  if (!/Assumed settings:/i.test(profileText)) errors.push('split profiles must surface defaulted knobs with an Assumed settings note');
 }
 
 log('GLM / Z.AI coverage');
-const glmModels = section(modelsText, '## Z.AI / BigModel — GLM');
-const glmHeader = findProfile('GLM');
-if (!glmModels) {
-  errors.push("models.md: missing '## Z.AI / BigModel — GLM' volatile-facts section");
-} else {
-  for (const rx of [
-    /last-verified:\s*\d{4}-\d{2}-\d{2}/,
-    /\bglm-5\.2\b/i,
-    /\b1M\b/i,
-    /\b128K\b/i,
-    /reasoning_effort/i,
-    /reasoning_content/i,
-    /Preserved Thinking|clear_thinking/i,
-    /tool_stream/i,
-    /response_format/i,
-    /OpenAI-compatible|base_url=https:\/\/api\.z\.ai\/api\/paas\/v4/i,
-    /\/api\/coding\/paas\/v4/i,
-  ]) {
-    if (!rx.test(glmModels)) errors.push(`models.md Z.AI / BigModel — GLM section missing fact matching ${rx}`);
-  }
-}
-if (!/^\| \*\*Z\.AI \/ BigModel GLM\*\* \|.*(?:GLM|Z\.AI|Zhipu|BigModel).* \|.*(?:GLM|Z\.AI|Zhipu|BigModel)/m.test(profText)) {
+const glmRecords = registry.records.filter((record) => record.vendor === 'zai-bigmodel');
+if (!glmRecords.length) errors.push('facts registry: missing Z.AI / BigModel records');
+const glmProfile = section(profileTexts['hosted-text.md'] || '', '## Z.AI / BigModel GLM');
+if (!/^\| \*\*Z\.AI \/ BigModel GLM\*\* \|.*(?:GLM|Z\.AI|Zhipu|BigModel)/m.test(profText)) {
   errors.push("tool-profiles.md: Routing Index missing 'Z.AI / BigModel GLM' row");
 }
-if (!glmHeader) {
-  errors.push('tool-profiles.md: missing GLM profile');
-} else {
-  const body = profiles[glmHeader];
-  for (const rx of [
-    /^\*Traits:.*reasoning-native.*thinking/m,
-    /Do NOT add.*(?:CoT|think step by step)|no CoT/i,
-    /thinking[\s\S]{0,120}(enabled|disabled)/i,
-    /reasoning_content/i,
-    /Preserved Thinking|clear_thinking/i,
-    /OpenAI-style.*tool|tools array|function schema/i,
-    /tool_stream/i,
-    /response_format/i,
-    /\/api\/coding\/paas\/v4/i,
-  ]) {
-    if (!rx.test(body)) errors.push(`GLM profile missing guard matching ${rx}`);
-  }
+for (const rx of [
+  /model\/default resolution belongs to the registry/i,
+  /(?:Enable[\s\S]{0,80}reasoning mode|reasoning mode[\s\S]{0,40}enable)[\s\S]{0,160}disable/i,
+  /tool schemas/i,
+  /streaming reasoning[\s\S]{0,160}tool-call/i,
+  /Preserve provider-required state/i,
+  /structured-output control[\s\S]{0,100}schema[\s\S]{0,80}validation/i,
+  /Do not\s+mix general and coding endpoints/i,
+]) {
+  if (!rx.test(glmProfile)) errors.push(`hosted-text GLM profile missing guard matching ${rx}`);
 }
-if (!/Canonical no-CoT list[^\n]*GLM thinking mode/i.test(skillText)) {
-  errors.push("SKILL.md: canonical no-CoT list must include 'GLM thinking mode'");
+if (!glmRecords.some((record) => record.prompting_constraints?.includes('no_cot'))) errors.push('GLM fact records must encode no_cot membership');
+for (const constraint of ['preserve_reasoning_content', 'structured_output_requires_prompt_contract']) {
+  if (!glmRecords.some((record) => record.prompting_constraints?.includes(constraint))) errors.push(`GLM fact records missing ${constraint}`);
 }
-if (!/GLM thinking mode/i.test(tplText)) {
-  errors.push('templates.md Template E: no-CoT caveat must mention GLM thinking mode');
+for (const key of ['reasoning_effort_values', 'preserve_thinking', 'streaming_requirements', 'structured_output', 'endpoint']) {
+  if (!glmRecords.some((record) => record.claims?.some((claim) => claim.key === key))) errors.push(`GLM fact records missing claim ${key}`);
 }
 if (/settings-as-knobs tools \([^)]*\bGLM\b/i.test(skillText)) {
   errors.push('SKILL.md: do not add GLM to global settings-as-knobs list; handle thinking/search in the GLM profile');
@@ -438,6 +415,7 @@ const runtimeFiles = {
   'patterns.md': patText,
   'tool-profiles.md': profText,
   'agentic.md': agenticText,
+  ...Object.fromEntries(Object.entries(profileTexts).map(([name, text]) => [`profiles/${name}`, text])),
 };
 for (const [name, text] of Object.entries(runtimeFiles)) {
   if (/Verbalized Sampling/i.test(text)) errors.push(`${name}: runtime files must not expose Verbalized Sampling branding`);
@@ -513,37 +491,27 @@ for (const [name, text] of safeGateFiles) {
   }
 }
 
-log('Advisor / Managed Agents model facts');
-if (/\bAdvisor Tool\b/i.test(profText)) {
-  for (const id of ['advisor-tool-2026-03-01', 'advisor_20260301']) {
-    if (!modelsText.includes(id)) {
-      errors.push(`tool-profiles.md mentions Advisor Tool but models.md is missing '${id}'`);
-    }
-  }
-}
-if (/\bManaged Agents\b/i.test(profText)) {
-  if (!modelsText.includes('managed-agents-2026-04-01')) {
-    errors.push("tool-profiles.md mentions Managed Agents but models.md is missing 'managed-agents-2026-04-01'");
-  }
-}
+log('Advisor / Managed Agents registry and profiles');
+const advisorFacts = registry.records.filter((record) => record.claims?.some((claim) => claim.key === 'min_advisor_model'));
+const managedFacts = registry.records.filter((record) => record.claims?.some((claim) => claim.key === 'agent_tools'));
+if (/\bAdvisor Tool\b/i.test(profText) && !advisorFacts.length) errors.push('Advisor Tool route has no canonical registry fact record');
+if (/\bManaged Agents\b/i.test(profText) && !managedFacts.length) errors.push('Managed Agents route has no canonical registry fact record');
 
-const advisorHeader = findProfile('Advisor Tool');
-if (advisorHeader) {
-  const body = profiles[advisorHeader];
-  for (const rx of [/bounded|advisory|diagnostic/i, /evidence|file:line|cite/i, /not a second executor|Do the task yourself/i]) {
-    if (!rx.test(body)) errors.push(`Advisor Tool profile missing guard matching ${rx}`);
+const advisorBody = section(profileTexts['hosted-text.md'] || '', '## Claude Advisor Tool');
+if (advisorBody) {
+  for (const rx of [/bounded|advisory|diagnostic/i, /evidence|file:line|cite/i, /executor owns tools and delivery[\s\S]{0,100}advisor supplies/i]) {
+    if (!rx.test(advisorBody)) errors.push(`Advisor Tool profile missing guard matching ${rx}`);
   }
-  if (/iterate until it passes/i.test(body)) errors.push('Advisor Tool profile must not frame Advisor as an autonomous executor');
-}
+  if (/iterate until it passes/i.test(advisorBody)) errors.push('Advisor Tool profile must not frame Advisor as an autonomous executor');
+} else errors.push('hosted-text.md: missing Claude Advisor Tool profile');
 
-const managedHeader = findProfile('Managed Agents');
-if (managedHeader) {
-  const body = profiles[managedHeader];
-  for (const rx of [/Plan Big Execute Small/i, /worker contract|task ledger|handoff/i, /evidence|verification/i, /stop condition|human-review|approval/i]) {
-    if (!rx.test(body)) errors.push(`Managed Agents profile missing guard matching ${rx}`);
+const managedBody = section(profileTexts['hosted-text.md'] || '', '## Claude Managed Agents (CMA / Plan Big Execute Small)');
+if (managedBody) {
+  for (const rx of [/small bounded work packages/i, /Each worker receives[\s\S]{0,180}stop[\s\S]{0,80}evidence contract/i, /evidence|verification/i, /coordinator owns[\s\S]{0,160}integration[\s\S]{0,160}verification/i]) {
+    if (!rx.test(managedBody)) errors.push(`Managed Agents profile missing guard matching ${rx}`);
   }
-  if (/budget_tokens|thinking budget/i.test(body)) errors.push('Managed Agents profile must not hardcode thinking budgets');
-}
+  if (/budget_tokens|thinking budget/i.test(managedBody)) errors.push('Managed Agents profile must not hardcode thinking budgets');
+} else errors.push('hosted-text.md: missing Managed Agents profile');
 
 log('golden scenario coverage');
 try {
@@ -618,6 +586,12 @@ try {
 log('source contract test wiring');
 if (!/args:\s*\['scripts\/test-contracts\.js'\]/.test(safeTestText)) {
   errors.push('scripts/test-safe.js must include scripts/test-contracts.js in DEFAULT_CHECKS');
+}
+if (!/args:\s*\['scripts\/test-registry\.js'\]/.test(safeTestText)) {
+  errors.push('scripts/test-safe.js must include scripts/test-registry.js in DEFAULT_CHECKS');
+}
+if (!/args:\s*\['scripts\/test-runtime-inventory\.js'\]/.test(safeTestText)) {
+  errors.push('scripts/test-safe.js must include scripts/test-runtime-inventory.js in DEFAULT_CHECKS');
 }
 if (!/Canonical Trust Boundary/.test(contractsTestText) || !/Template L/.test(contractsTestText)) {
   errors.push('scripts/test-contracts.js must enforce trust-boundary and Template L contracts');

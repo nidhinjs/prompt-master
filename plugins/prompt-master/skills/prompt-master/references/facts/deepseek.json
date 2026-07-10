@@ -1,0 +1,90 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "deepseek",
+  "records": [
+    {
+      "id": "deepseek.deepseek-v4-pro.api",
+      "vendor": "deepseek",
+      "model_id": "deepseek-v4-pro",
+      "surface": "api",
+      "channel": "preview",
+      "availability": { "status": "limited", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "coding", "agentic", "long_context"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "preserve_reasoning_content", "sampling_unsupported_in_thinking", "preview_reverify"],
+      "claims": [
+        { "key": "context_window_tokens", "value": 1000000 },
+        { "key": "model_variants", "value": { "parameters": "1.6T", "active_parameters": "49B" } },
+        { "key": "thinking_mode", "value": ["thinking", "non-thinking"] },
+        { "key": "reasoning_effort_values", "value": ["high", "max"] },
+        { "key": "default_reasoning_effort", "value": "high" },
+        { "key": "ignored_parameters", "value": ["temperature", "top_p", "presence_penalty", "frequency_penalty"] },
+        { "key": "preserve_thinking", "value": "return reasoning_content after assistant tool calls" },
+        { "key": "base_url", "value": "https://api.deepseek.com" },
+        { "key": "structured_output", "value": "response_format json_object plus explicit JSON instruction" }
+      ],
+      "last_verified": "2026-07-10",
+      "source": [
+        { "url": "https://api-docs.deepseek.com/news/news260424", "kind": "official_announcement", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.context_window_tokens", "claims.model_variants", "claims.thinking_mode"] },
+        { "url": "https://api-docs.deepseek.com/guides/thinking_mode", "kind": "official_docs", "supports": ["prompting_constraints", "claims.reasoning_effort_values", "claims.default_reasoning_effort", "claims.ignored_parameters", "claims.preserve_thinking"] },
+        { "url": "https://api-docs.deepseek.com/api/create-chat-completion", "kind": "official_docs", "supports": ["claims.base_url", "claims.structured_output"] }
+      ]
+    },
+    {
+      "id": "deepseek.deepseek-v4-flash.api",
+      "vendor": "deepseek",
+      "model_id": "deepseek-v4-flash",
+      "surface": "api",
+      "channel": "preview",
+      "availability": { "status": "limited", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "coding", "fast", "economy", "long_context"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "preserve_reasoning_content", "sampling_unsupported_in_thinking", "preview_reverify"],
+      "claims": [
+        { "key": "context_window_tokens", "value": 1000000 },
+        { "key": "model_variants", "value": { "parameters": "284B", "active_parameters": "13B" } },
+        { "key": "thinking_mode", "value": ["thinking", "non-thinking"] },
+        { "key": "reasoning_effort_values", "value": ["high", "max"] },
+        { "key": "default_reasoning_effort", "value": "high" },
+        { "key": "ignored_parameters", "value": ["temperature", "top_p", "presence_penalty", "frequency_penalty"] },
+        { "key": "preserve_thinking", "value": "return reasoning_content after assistant tool calls" },
+        { "key": "base_url", "value": "https://api.deepseek.com" }
+      ],
+      "last_verified": "2026-07-10",
+      "source": [
+        { "url": "https://api-docs.deepseek.com/news/news260424", "kind": "official_announcement", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.context_window_tokens", "claims.model_variants", "claims.thinking_mode"] },
+        { "url": "https://api-docs.deepseek.com/guides/thinking_mode", "kind": "official_docs", "supports": ["prompting_constraints", "claims.reasoning_effort_values", "claims.default_reasoning_effort", "claims.ignored_parameters", "claims.preserve_thinking"] },
+        { "url": "https://api-docs.deepseek.com/api/create-chat-completion", "kind": "official_docs", "supports": ["claims.base_url"] }
+      ]
+    },
+    {
+      "id": "deepseek.deepseek-chat.api",
+      "vendor": "deepseek",
+      "model_id": "deepseek-chat",
+      "surface": "api",
+      "channel": "deprecated",
+      "availability": { "status": "sunset_scheduled", "scope": ["api"], "regions": ["global"], "sunset_on": "2026-07-24" },
+      "recommended_for": ["legacy_compatibility"],
+      "routing_default_for": [],
+      "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [{ "key": "model_variants", "value": "currently maps to deepseek-v4-flash non-thinking mode" }, { "key": "shutdown_on", "value": "2026-07-24" }],
+      "last_verified": "2026-06-15",
+      "source": [{ "url": "https://api-docs.deepseek.com/updates", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.model_variants", "claims.shutdown_on"] }]
+    },
+    {
+      "id": "deepseek.deepseek-reasoner.api",
+      "vendor": "deepseek",
+      "model_id": "deepseek-reasoner",
+      "surface": "api",
+      "channel": "deprecated",
+      "availability": { "status": "sunset_scheduled", "scope": ["api"], "regions": ["global"], "sunset_on": "2026-07-24" },
+      "recommended_for": ["legacy_compatibility"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "deprecated_do_not_default"],
+      "claims": [{ "key": "model_variants", "value": "currently maps to deepseek-v4-flash thinking mode" }, { "key": "shutdown_on", "value": "2026-07-24" }],
+      "last_verified": "2026-06-15",
+      "source": [{ "url": "https://api-docs.deepseek.com/updates", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.model_variants", "claims.shutdown_on"] }]
+    }
+  ]
+}

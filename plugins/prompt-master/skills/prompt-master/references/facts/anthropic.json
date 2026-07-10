@@ -1,0 +1,185 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "anthropic",
+  "records": [
+    {
+      "id": "anthropic.claude-fable-5.api",
+      "vendor": "anthropic",
+      "model_id": "claude-fable-5",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["frontier", "general", "long_context"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "adaptive_thinking", "fixed_thinking_budget_forbidden", "no_visible_reasoning"],
+      "claims": [
+        { "key": "redeployed_on", "value": "2026-07-01" },
+        { "key": "thinking_mode", "value": "summarized-only adaptive thinking" },
+        { "key": "effort_levels", "value": ["low", "medium", "high", "xhigh"] },
+        { "key": "excluded_access", "value": ["subscription weekly limits", "promotion; API billed separately"] },
+        { "key": "refusal_stop_reasons", "value": ["refusal", "reasoning_extraction"] },
+        { "key": "refusal_domains", "value": ["offensive cybersecurity", "biology and life sciences", "reasoning reproduction"] }
+      ],
+      "last_verified": "2026-07-08",
+      "source": [
+        { "url": "https://www.anthropic.com/news/redeploying-fable-5", "kind": "official_announcement", "supports": ["model_id", "channel", "availability", "claims.redeployed_on"] },
+        { "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5", "kind": "official_docs", "supports": ["prompting_constraints", "claims.thinking_mode", "claims.effort_levels", "claims.refusal_stop_reasons", "claims.refusal_domains"] },
+        { "url": "https://support.claude.com/en/articles/15424964-claude-fable-5-promotional-access", "kind": "official_support", "supports": ["claims.excluded_access"] }
+      ]
+    },
+    {
+      "id": "anthropic.claude-fable-5.app",
+      "vendor": "anthropic",
+      "model_id": "claude-fable-5",
+      "surface": "app",
+      "channel": "production",
+      "availability": { "status": "account_gated", "scope": ["app", "claude-ai", "claude-code", "cowork"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["frontier", "general", "long_context"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "adaptive_thinking", "fixed_thinking_budget_forbidden", "no_visible_reasoning"],
+      "claims": [
+        { "key": "redeployed_on", "value": "2026-07-01" },
+        { "key": "access_terms_until", "value": "2026-07-12T23:59:59-07:00" },
+        { "key": "subscription_limit_share_percent", "value": 50 },
+        { "key": "eligibility", "value": ["Pro", "Max", "Team", "premium seat-based Enterprise"] },
+        { "key": "excluded_access", "value": ["Free", "standard Enterprise seats", "usage-based Enterprise"] },
+        { "key": "minimum_client_version", "value": { "claude-code": "2.1.170", "cowork": "latest Claude Desktop" } }
+      ],
+      "last_verified": "2026-07-08",
+      "source": [
+        { "url": "https://www.anthropic.com/news/redeploying-fable-5", "kind": "official_announcement", "supports": ["model_id", "channel", "availability", "claims.redeployed_on"] },
+        { "url": "https://support.claude.com/en/articles/15424964-claude-fable-5-promotional-access", "kind": "official_support", "supports": ["availability", "claims.access_terms_until", "claims.subscription_limit_share_percent", "claims.eligibility", "claims.excluded_access", "claims.minimum_client_version"] }
+      ]
+    },
+    {
+      "id": "anthropic.claude-mythos-5.app",
+      "vendor": "anthropic",
+      "model_id": "claude-mythos-5",
+      "surface": "app",
+      "channel": "production",
+      "availability": { "status": "region_gated", "scope": ["app"], "regions": ["us-organizations"], "sunset_on": null },
+      "recommended_for": ["frontier", "general"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "adaptive_thinking", "fixed_thinking_budget_forbidden", "no_visible_reasoning"],
+      "claims": [
+        { "key": "redeployed_on", "value": "2026-07-01" },
+        { "key": "thinking_mode", "value": "summarized-only adaptive thinking" },
+        { "key": "refusal_stop_reasons", "value": ["refusal", "reasoning_extraction"] }
+      ],
+      "last_verified": "2026-07-08",
+      "source": [
+        { "url": "https://www.anthropic.com/news/redeploying-fable-5", "kind": "official_announcement", "supports": ["model_id", "channel", "availability", "claims.redeployed_on"] },
+        { "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5", "kind": "official_docs", "supports": ["prompting_constraints", "claims.thinking_mode", "claims.refusal_stop_reasons"] }
+      ]
+    },
+    {
+      "id": "anthropic.claude-opus-4-8.api",
+      "vendor": "anthropic",
+      "model_id": "claude-opus-4-8",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api", "claude-ai", "claude-code"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["frontier", "general", "coding", "long_context"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "adaptive_thinking", "fixed_thinking_budget_forbidden", "no_visible_reasoning"],
+      "claims": [
+        { "key": "context_window_tokens", "value": 1000000 },
+        { "key": "thinking_mode", "value": "adaptive thinking" },
+        { "key": "effort_levels", "value": ["low", "medium", "high", "xhigh"] }
+      ],
+      "last_verified": "2026-07-08",
+      "source": [
+        { "url": "https://www.anthropic.com/news/redeploying-fable-5", "kind": "official_announcement", "supports": ["model_id", "channel", "availability", "claims.context_window_tokens"] },
+        { "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5", "kind": "official_docs", "supports": ["prompting_constraints", "claims.thinking_mode", "claims.effort_levels"] }
+      ]
+    },
+    {
+      "id": "anthropic.claude-opus-4-7.api",
+      "vendor": "anthropic",
+      "model_id": "claude-opus-4-7",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api", "claude-ai"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["frontier", "general"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "adaptive_thinking", "fixed_thinking_budget_forbidden", "no_visible_reasoning"],
+      "claims": [{ "key": "thinking_mode", "value": "adaptive thinking" }],
+      "last_verified": "2026-07-08",
+      "source": [{ "url": "https://www.anthropic.com/news/redeploying-fable-5", "kind": "official_announcement", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.thinking_mode"] }]
+    },
+    {
+      "id": "anthropic.claude-sonnet-4-6.api",
+      "vendor": "anthropic",
+      "model_id": "claude-sonnet-4-6",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "coding", "agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "adaptive_thinking", "fixed_thinking_budget_forbidden"],
+      "claims": [],
+      "last_verified": "2026-07-08",
+      "source": [{ "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for"] }]
+    },
+    {
+      "id": "anthropic.claude-haiku-4-5-20251001.api",
+      "vendor": "anthropic",
+      "model_id": "claude-haiku-4-5-20251001",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "fast", "economy"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "adaptive_thinking", "fixed_thinking_budget_forbidden"],
+      "claims": [],
+      "last_verified": "2026-07-08",
+      "source": [{ "url": "https://www.anthropic.com/news/redeploying-fable-5", "kind": "official_announcement", "supports": ["model_id", "channel", "availability"] }]
+    },
+    {
+      "id": "anthropic.advisor-tool-2026-03-01.api",
+      "vendor": "anthropic",
+      "model_id": "advisor-tool-2026-03-01",
+      "surface": "api",
+      "channel": "beta",
+      "availability": { "status": "limited", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["surface_specific"],
+      "claims": [
+        { "key": "beta_header", "value": "advisor-tool-2026-03-01" },
+        { "key": "tool_type", "value": "advisor_20260301" },
+        { "key": "tool_name", "value": "advisor" },
+        { "key": "min_advisor_model", "value": "claude-sonnet-4-6" },
+        { "key": "min_max_tokens", "value": 1024 },
+        { "key": "knobs", "value": ["max_uses", "max_tokens", "caching"] },
+        { "key": "platforms_supported", "value": ["Claude API", "Claude Platform on AWS"] },
+        { "key": "platforms_unsupported", "value": ["Amazon Bedrock", "Google Cloud", "Microsoft Foundry"] }
+      ],
+      "last_verified": "2026-07-08",
+      "source": [{ "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.beta_header", "claims.tool_type", "claims.tool_name", "claims.min_advisor_model", "claims.min_max_tokens", "claims.knobs", "claims.platforms_supported", "claims.platforms_unsupported"] }]
+    },
+    {
+      "id": "anthropic.managed-agents-2026-04-01.api",
+      "vendor": "anthropic",
+      "model_id": "managed-agents-2026-04-01",
+      "surface": "api",
+      "channel": "beta",
+      "availability": { "status": "account_gated", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["surface_specific"],
+      "claims": [
+        { "key": "beta_header", "value": "managed-agents-2026-04-01" },
+        { "key": "tool_type", "value": "agent_toolset_20260401" },
+        { "key": "agent_tools", "value": { "coordinator": ["create_agent", "send_to_agent", "wait_for_agents", "list_agents"], "worker": ["submit_result", "send_to_parent"] } },
+        { "key": "platforms_supported", "value": ["Claude API", "Claude Platform on AWS"] }
+      ],
+      "last_verified": "2026-07-08",
+      "source": [
+        { "url": "https://platform.claude.com/docs/en/managed-agents/overview", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.beta_header", "claims.platforms_supported"] },
+        { "url": "https://platform.claude.com/docs/en/managed-agents/multi-agent", "kind": "official_docs", "supports": ["claims.tool_type", "claims.agent_tools"] }
+      ]
+    }
+  ]
+}

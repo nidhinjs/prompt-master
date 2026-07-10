@@ -1,0 +1,99 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "perplexity",
+  "records": [
+    {
+      "id": "perplexity.agent-api.agent-api",
+      "vendor": "perplexity",
+      "model_id": "agent-api",
+      "surface": "agent-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["agent-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["research", "deep_research", "agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["surface_specific"],
+      "claims": [
+        { "key": "endpoint", "value": "https://api.perplexity.ai/v1/agent" },
+        { "key": "api_method", "value": "POST" },
+        { "key": "preferred_api", "value": "recommended default for new applications" },
+        { "key": "model_variants", "value": ["perplexity/sonar", "anthropic/claude-opus-4-8", "anthropic/claude-opus-4-7", "anthropic/claude-opus-4-6", "anthropic/claude-opus-4-5", "anthropic/claude-sonnet-4-6", "anthropic/claude-haiku-4-5", "openai/gpt-5.5", "openai/gpt-5.4", "openai/gpt-5.4-mini", "openai/gpt-5.4-nano", "openai/gpt-5.x", "google/gemini-3.1-pro-preview", "google/gemini-3.5-flash", "google/gemini-3.1-flash-lite", "xai/grok-4.3", "xai/grok-4.20-*", "nvidia/nemotron-3-super-120b-a12b"] },
+        { "key": "presets", "value": ["deep-research"] },
+        { "key": "knobs", "value": ["custom tools", "output control", "model fallback", "image attachments"] }
+      ],
+      "last_verified": "2026-06-17",
+      "source": [{ "url": "https://docs.perplexity.ai/docs/agent-api/models", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.endpoint", "claims.api_method", "claims.preferred_api", "claims.model_variants", "claims.presets", "claims.knobs"] }]
+    },
+    {
+      "id": "perplexity.sonar.sonar-api",
+      "vendor": "perplexity",
+      "model_id": "sonar",
+      "surface": "sonar-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["sonar-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["research", "fast"],
+      "routing_default_for": [],
+      "prompting_constraints": ["request_parameters_for_search", "citation_fields_client_side"],
+      "claims": [
+        { "key": "search_driver", "value": "user message only; system prompt does not affect search" },
+        { "key": "filter_limits", "value": { "search_domain_filter": 20, "search_recency_filter": ["hour", "day", "week", "month", "year"] } },
+        { "key": "citation_fields", "value": ["citations", "search_results"] }
+      ],
+      "last_verified": "2026-06-17",
+      "source": [
+        { "url": "https://docs.perplexity.ai/docs/sonar/prompt-guide", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.search_driver", "claims.citation_fields"] },
+        { "url": "https://docs.perplexity.ai/docs/sonar/filters", "kind": "official_docs", "supports": ["claims.filter_limits"] }
+      ]
+    },
+    {
+      "id": "perplexity.sonar-pro.sonar-api",
+      "vendor": "perplexity",
+      "model_id": "sonar-pro",
+      "surface": "sonar-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["sonar-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["research"],
+      "routing_default_for": [],
+      "prompting_constraints": ["request_parameters_for_search", "citation_fields_client_side"],
+      "claims": [{ "key": "search_driver", "value": "user message only" }, { "key": "citation_fields", "value": ["citations", "search_results"] }],
+      "last_verified": "2026-06-17",
+      "source": [{ "url": "https://docs.perplexity.ai/docs/sonar/prompt-guide", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.search_driver", "claims.citation_fields"] }]
+    },
+    {
+      "id": "perplexity.sonar-reasoning-pro.sonar-api",
+      "vendor": "perplexity",
+      "model_id": "sonar-reasoning-pro",
+      "surface": "sonar-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["sonar-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["research"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "request_parameters_for_search", "citation_fields_client_side"],
+      "claims": [{ "key": "search_driver", "value": "user message only" }, { "key": "citation_fields", "value": ["citations", "search_results"] }],
+      "last_verified": "2026-06-17",
+      "source": [{ "url": "https://docs.perplexity.ai/docs/sonar/prompt-guide", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.search_driver", "claims.citation_fields"] }]
+    },
+    {
+      "id": "perplexity.sonar-deep-research.sonar-api",
+      "vendor": "perplexity",
+      "model_id": "sonar-deep-research",
+      "surface": "sonar-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["sonar-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["research", "deep_research", "long_context"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "request_parameters_for_search", "citation_fields_client_side"],
+      "claims": [
+        { "key": "context_window_tokens", "value": 128000 },
+        { "key": "search_driver", "value": "user message only" },
+        { "key": "citation_fields", "value": ["citations", "search_results"] },
+        { "key": "pricing_snapshot", "value": "reasoning, citation, and search-query tokens billed separately" }
+      ],
+      "last_verified": "2026-06-17",
+      "source": [
+        { "url": "https://docs.perplexity.ai/docs/sonar/models/sonar-deep-research", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "prompting_constraints", "claims.context_window_tokens", "claims.pricing_snapshot"] },
+        { "url": "https://docs.perplexity.ai/docs/sonar/prompt-guide", "kind": "official_docs", "supports": ["claims.search_driver", "claims.citation_fields"] }
+      ]
+    }
+  ]
+}

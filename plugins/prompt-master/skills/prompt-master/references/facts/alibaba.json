@@ -1,0 +1,35 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "alibaba",
+  "records": [
+    {
+      "id": "alibaba.qwen2-5-family.api",
+      "vendor": "alibaba",
+      "model_id": "qwen2.5-family",
+      "surface": "api",
+      "channel": "legacy",
+      "availability": { "status": "public", "scope": ["api", "open-weights"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["legacy_compatibility", "general", "structured_output"],
+      "routing_default_for": [],
+      "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [{ "key": "thinking_mode", "value": "non-thinking instruct variants" }, { "key": "structured_output", "value": "instruction-following and JSON-oriented variants" }],
+      "last_verified": "2026-07-10",
+      "source": [{ "url": "https://www.alibabacloud.com/help/en/model-studio/text-generation-model", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.thinking_mode", "claims.structured_output"] }]
+    },
+    {
+      "id": "alibaba.qwen3-family.api",
+      "vendor": "alibaba",
+      "model_id": "qwen3-family",
+      "surface": "api",
+      "channel": "legacy",
+      "availability": { "status": "public", "scope": ["api", "open-weights"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["legacy_compatibility", "general"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "deprecated_do_not_default"],
+      "claims": [{ "key": "thinking_mode", "value": ["thinking", "non-thinking"] }, { "key": "knobs", "value": ["enable_thinking", "/think", "/no_think"] }],
+      "last_verified": "2026-07-10",
+      "source": [{ "url": "https://www.alibabacloud.com/help/en/model-studio/deep-thinking", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.thinking_mode", "claims.knobs"] }]
+    }
+  ]
+}

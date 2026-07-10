@@ -1,0 +1,55 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "bytedance",
+  "records": [
+    {
+      "id": "bytedance.seedream-5-0-260128.modelark-api",
+      "vendor": "bytedance", "model_id": "seedream-5-0-260128", "surface": "modelark-api", "channel": "production",
+      "availability": { "status": "region_gated", "scope": ["modelark-api"], "regions": ["byteplus-regions"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing", "character_consistency"], "routing_default_for": [], "prompting_constraints": ["negative_prompt_unsupported"],
+      "claims": [{ "key": "endpoint", "value": "/api/v3/images/generations" }, { "key": "resolutions", "value": ["1K", "2K", "3K", "4K"] }, { "key": "image_capabilities", "value": ["unified generation and editing", "multi-image references", "grouped outputs"] }, { "key": "negative_prompt_support", "value": false }, { "key": "knobs", "value": ["model", "prompt", "size", "output_format", "watermark"] }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.byteplus.com/en/docs/ModelArk/1541523", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "prompting_constraints", "claims.endpoint", "claims.resolutions", "claims.image_capabilities", "claims.negative_prompt_support", "claims.knobs"] }]
+    },
+    {
+      "id": "bytedance.seedream-5-0-lite.modelark-api",
+      "vendor": "bytedance", "model_id": "seedream-5-0-lite", "surface": "modelark-api", "channel": "production",
+      "availability": { "status": "region_gated", "scope": ["modelark-api"], "regions": ["byteplus-regions"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing", "fast", "economy"], "routing_default_for": [], "prompting_constraints": ["negative_prompt_unsupported"],
+      "claims": [{ "key": "endpoint", "value": "/api/v3/images/generations" }, { "key": "resolutions", "value": ["1K", "2K", "3K", "4K"] }, { "key": "negative_prompt_support", "value": false }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.byteplus.com/en/docs/ModelArk/1541523", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "prompting_constraints", "claims.endpoint", "claims.resolutions", "claims.negative_prompt_support"] }]
+    },
+    {
+      "id": "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+      "vendor": "bytedance", "model_id": "dreamina-seedance-2-0-260128", "surface": "modelark-api", "channel": "production",
+      "availability": { "status": "region_gated", "scope": ["modelark-api"], "regions": ["byteplus-regions"], "sunset_on": null },
+      "recommended_for": ["video_generation", "video_editing", "audio_generation"], "routing_default_for": [], "prompting_constraints": ["surface_specific"],
+      "claims": [{ "key": "endpoint", "value": "/api/v3/contents/generations/tasks" }, { "key": "duration_range_seconds", "value": [4, 15] }, { "key": "resolutions", "value": ["480p", "720p", "1080p", "4K"] }, { "key": "request_content_roles", "value": ["reference_image", "reference_video", "reference_audio"] }, { "key": "audio_support", "value": "native generated audio" }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.byteplus.com/en/docs/ModelArk/1520757", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.endpoint", "claims.duration_range_seconds", "claims.resolutions", "claims.request_content_roles", "claims.audio_support"] }]
+    },
+    {
+      "id": "bytedance.doubao-seedance-2-0-260128.modelark-api",
+      "vendor": "bytedance", "model_id": "doubao-seedance-2-0-260128", "surface": "modelark-api", "channel": "production",
+      "availability": { "status": "region_gated", "scope": ["modelark-api"], "regions": ["volcengine-regions"], "sunset_on": null },
+      "recommended_for": ["video_generation", "video_editing", "audio_generation"], "routing_default_for": [], "prompting_constraints": ["surface_specific"],
+      "claims": [{ "key": "duration_range_seconds", "value": [4, 15] }, { "key": "resolutions", "value": ["480p", "720p", "1080p", "4K"] }, { "key": "audio_support", "value": "native generated audio" }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.byteplus.com/en/docs/ModelArk/1520757", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.duration_range_seconds", "claims.resolutions", "claims.audio_support"] }]
+    },
+    {
+      "id": "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+      "vendor": "bytedance", "model_id": "dreamina-seedance-2-0-fast-260128", "surface": "modelark-api", "channel": "production",
+      "availability": { "status": "region_gated", "scope": ["modelark-api"], "regions": ["byteplus-regions"], "sunset_on": null },
+      "recommended_for": ["video_generation", "fast"], "routing_default_for": [], "prompting_constraints": ["surface_specific"],
+      "claims": [{ "key": "duration_range_seconds", "value": [4, 15] }, { "key": "resolutions", "value": ["480p", "720p"] }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.byteplus.com/en/docs/ModelArk/1520757", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.duration_range_seconds", "claims.resolutions"] }]
+    },
+    {
+      "id": "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+      "vendor": "bytedance", "model_id": "dreamina-seedance-2-0-mini-260615", "surface": "modelark-api", "channel": "production",
+      "availability": { "status": "region_gated", "scope": ["modelark-api"], "regions": ["byteplus-regions"], "sunset_on": null },
+      "recommended_for": ["video_generation", "fast", "economy"], "routing_default_for": [], "prompting_constraints": ["surface_specific"],
+      "claims": [{ "key": "duration_range_seconds", "value": [4, 15] }, { "key": "resolutions", "value": ["480p", "720p"] }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.byteplus.com/en/docs/ModelArk/1520757", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.duration_range_seconds", "claims.resolutions"] }]
+    }
+  ]
+}

@@ -102,6 +102,10 @@ rm -rf ~/.claude/skills/prompt-master
 ## Дальше
 
 - `plugins/prompt-master/skills/prompt-master/SKILL.md` — полная логика навыка
+- `plugins/prompt-master/skills/prompt-master/references/tool-profiles.md` — компактный routing index
+- `plugins/prompt-master/skills/prompt-master/references/profiles/` — семь workflow-профилей
+- `plugins/prompt-master/skills/prompt-master/references/facts/` — канонический реестр provider/model facts
 - `plugins/prompt-master/skills/prompt-master/references/templates.md` — шаблоны промптов
 - `plugins/prompt-master/skills/prompt-master/references/patterns.md` — 61 паттерн-фикс
+- `plugins/prompt-master/runtime-manifest.json` — точный tracked inventory файлов release ZIP
 - [CHANGELOG.md](../CHANGELOG.md) — история версий

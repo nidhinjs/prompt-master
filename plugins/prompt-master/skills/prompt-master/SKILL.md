@@ -1,6 +1,6 @@
 ---
 name: prompt-master
-version: 1.32.0
+version: 1.33.0
 description: Generates and decompiles optimized prompts. Activates only when the user explicitly asks to write, fix, improve, adapt, break down, analyze, simplify, or split a prompt; a named target is optional for targetless Break down/Simplify/Split of an existing pasted prompt. Does not activate for general conversation, coding tasks, document writing, analysis of non-prompt content, or other non-prompt-engineering work.
 ---
 
@@ -25,8 +25,8 @@ Keep internal analysis terse and silent — do not narrate the extraction, routi
   - **Graph of Thought** -- requires an external graph engine not present in most tools
   - **Universal Self-Consistency** -- requires independent sampling passes
   - **Prompt chaining as a layered technique** -- compounds fabrication risk across longer chains
-- Do not add Chain of Thought to reasoning-native models — they think internally, CoT degrades output. **Canonical no-CoT list (the single source — other sections reference it, do not restate it):** o3, o4-mini, DeepSeek thinking mode / R1, Qwen3 thinking mode, Grok grok-4.3, Kimi K2.x thinking, GLM thinking mode, MiniMax M3. Also never add visible process-scaffold wording to Claude Opus 4.x (adaptive thinking — see the Claude profile) or GPT-5.5 (outcome-first)
-- Do not instruct Claude Fable 5 / Mythos 5 to echo, transcribe, reproduce, or "show your reasoning/thinking" in the response — this triggers a `reasoning_extraction` refusal (availability status and billing terms live ONLY in models.md). For visible progress on long runs, use a send-to-user tool instead
+- Never infer reasoning behavior from a model name. Resolve the selected registry record and apply its `prompting_constraints`; when it contains `no_cot`, omit Chain of Thought and visible process scaffolds. The registry is the only exact no-CoT membership source.
+- When the selected record carries `no_visible_reasoning`, never ask the target to echo, transcribe, reproduce, or show its reasoning. For visible progress on long runs, use a send-to-user tool instead.
 - Do not ask more than 3 clarifying questions before producing a prompt
 - Do not pad output with explanations the user did not request
 - For settings-as-knobs tools (Gamma, Perplexity, Grok, image-AI, video-AI), surface every knob you defaulted on an `Assumed settings:` note line: list only knobs the user did not specify, each with value + where to change it; never spend a question on a knob. For Gamma, default missing card count/density/visuals instead of asking.
@@ -80,38 +80,17 @@ After extracting, gauge readiness **internally** on the critical dimensions (Tas
 
 ### Tool Routing
 
-Identify the target tool first, then read **only its matching profile** from [references/tool-profiles.md](references/tool-profiles.md) — load just the one category you need, not the whole file. For prompts targeting tools that edit files, run commands, browse, transact, delegate, or operate asynchronously, read [references/agentic.md](references/agentic.md) before choosing Template H/M or Agentic Prompt Fragments; keep one agent by default unless the risk/intent justifies escalation. The profile points to the full template structure in [references/templates.md](references/templates.md); read only the template you need.
-
-The Gotchas cheat-sheet below catches the most common per-tool mistakes without loading a profile — use it for quick routing, and open the full profile when the task needs more depth.
+Identify the target first, then use [references/tool-profiles.md](references/tool-profiles.md) only as an index. Load exactly the row's one primary profile bundle and its one fact lookup through [references/facts/index.json](references/facts/index.json); do not load unrelated bundles or shards. An explicit composite task may load at most one add-on bundle. The selected bundle points to the template section it needs. For prompts that edit files, run commands, browse, transact, delegate, or operate asynchronously, also load [references/agentic.md](references/agentic.md); this security reference is not a profile add-on.
 
 If a required target is missing or ambiguous, follow the canonical target-first/no-questions fallback above. For an unknown named tool, keep its name and surface a `Capability fingerprint:` covering inputs/interfaces, output/schema, tools/actions/network, and constraints/knobs; use only verified or user-supplied capabilities and mark unknown compatibility `[unverified]`. If a required reference is missing/unreadable, say it is unavailable, mark the route `[unverified]`, and use the closest capability-safe fallback without claiming verification.
 
-Model IDs, current defaults, and version-tied params are volatile — confirm them against [references/models.md](references/models.md), and re-verify any section whose `last-verified` date is more than 60 days old before asserting it. Do not hardcode a retired model name or a dead parameter.
+For a named alias, resolve candidates and any default only from `facts/index.json`, then open only the indexed provider shard containing the selected record. A default must be production, not limited, unavailable, or sunset-scheduled, and not stale; `latest` means public production unless the user explicitly requests preview. Preview, beta, or limited records older than 14 days and production records older than 60 days are stale for routing. Missing, ambiguous, stale, orphaned, or ineligible registry data fails closed: do not invent an ID, default, channel, availability, parameter, or capability; surface the route as `[unverified]` and ask or use the capability-safe fallback.
 
 ---
 
-### Gotchas — quick per-tool cheat-sheet
+### Profile application
 
-Catch these before generating; open the full profile in [references/tool-profiles.md](references/tool-profiles.md) when the task needs more. For settings-as-knobs tools (Gamma, Perplexity, Grok, image-AI, video-AI), surface defaulted knobs as an `Assumed settings:` note line (see Hard rule above).
-
-- **Claude Opus 4.8** (default for "Claude" when unspecified) over-engineers — add "Only make changes directly requested. No extra features, files, or refactors." Front-load intent, file scope, constraints, acceptance criteria (4.7/4.8 read literally).
-- **Claude Fable 5 / Mythos 5** — Fable 5 available again but **NOT the default** (billing terms in models.md; Mythos 5 US-orgs-only). Route only on explicit request; never ask it to show/echo its reasoning (`reasoning_extraction` refusal); steer with brief intent + `effort`.
-- **GPT-5.5** — outcome-first, not process-scaffolded; avoid absolutes (ALWAYS / NEVER) for non-invariants; control length via `text.verbosity`, not prose.
-- **Reasoning-native models** (canonical no-CoT list — see Hard rules above) — NEVER add CoT or visible reasoning-process wording; use "do not reveal private reasoning" when a secrecy guard is needed; short clean instructions only.
-- **DeepSeek (V4)** — dual-mode; thinking = reasoning-native (no CoT; `temperature`/penalties ignored). Legacy IDs retiring — check models.md. Full rules → DeepSeek profile.
-- **Grok (xAI)** — reasoning-native (no CoT); no realtime knowledge without **Web/X Search**; search filters are request parameters, not prose; ALWAYS pin the output format (ask first or surface the assumption — never silently derive). Full rules → Grok profile.
-- **Kimi (Moonshot AI)** — reasoning-native (no CoT); keep sampling defaults; `$web_search` requires thinking OFF; Agent Swarm self-orchestrates — don't set agent counts or script sub-agents; paid features are tier-gated (surface as prerequisite). Full rules → Kimi profile.
-- **GLM (Z.AI / BigModel)** — thinking mode is reasoning-native: no CoT and no visible reasoning-process wording; GLM-5.2 is the default GLM target. For GLM API/tool loops, add setup: `OpenAI-style tools array / function schema; stream=true + tool_stream=true; preserve reasoning_content`. For GLM Web Search, state citations use `retrieved/opened sources`. Don't mix general `/api/paas/v4` with Coding Plan `/api/coding/paas/v4`.
-- **Gemini** — prone to hallucinated citations: add "Cite only sources you are certain of. If uncertain, say [uncertain]."
-- **Agentic tools** (Claude Code, Devin, Cursor, Cline, SWE-agent) — load [references/agentic.md](references/agentic.md) for risk tier/flags, preview-draft-commit gates, and approval boundaries; then apply Template H/M stop conditions, scope locks, runnable verification, and evidence (pattern #52).
-- **Multi-agent / orchestrator prompt request** (or Claude Managed Agents / Advisor Tool) — for delegation granularity, include exact guard: `Do not delegate every file; delegate one package/one job per worker.` For Advisor, include exact lines: `Advisor Tool checkpoint: before substantive work.` and `Do not pass raw transcript, full transcript, parent history, or reasoning to Advisor Tool.` Load [references/agentic.md](references/agentic.md) plus Agentic Prompt Fragments; default to a single loop unless criteria are met. **Vendor-managed swarm exception:** Kimi self-orchestrates; don't design topology or agent count.
-- **Research tools** (Perplexity, Gemini/GPT Deep Research) — prompt as a research brief (Template N) with a required Data-gaps/confidence section; use provider-supported citation behavior for generic research tools. **Perplexity: Agent API (`/v1/agent`, `responses.create`) is the recommended default for new apps; Sonar API (`sonar`/`sonar-pro`/`sonar-deep-research`) for direct search-grounded answers.** Sonar exception: do not ask for inline URLs or a prose sources list; the client reads top-level `citations` and `search_results`. Sonar search is driven by the user message (system prompt isn't seen by search); set domain/recency limits as request parameters, not prose; UI Focus/Spaces ≠ API; "Search as Code" is a blog concept, not a callable feature.
-- **Local / open-weight** (Ollama, Llama, Mistral) — ask which model is running; keep prompts short and flat, no deep nesting; always include a system-prompt role.
-- **Image generation** — Midjourney ordinary generation uses V8.1 + comma descriptors; `--oref`/`--ow` are V7 Omni Reference only, so any such route must use `--v 7`, never V8.1. For V8.1 consistency needs, switch to V7 Omni or a supported alternative (Nano Banana 2/Pro or FLUX.2 multi-ref). SD/ComfyUI: include a negative prompt (ComfyUI: separate Positive/Negative blocks). Grok Imagine: never output a Negative Prompt field/block; express exclusions as positive preservation instructions. DALL·E is retired → GPT-image (`gpt-image-2`).
-- **Video generation** — current: Veo 3.1 / Kling 3.0 / Runway Gen-4.5 / Seedance 2.0 / LTX-2 / Luma ray-3.2. ⚠️ **flag and don't default to sunsetting models — Sora (2026-09-24), Runway `gen4_aleph` (2026-07-30), Veo 2/3 (retired)**; surface defaulted duration/resolution/aspect/mode on the `Assumed settings:` line (Hard rule above); conversational edit (Omni Flash, Grok) → short delta + "Keep everything else the same" + `<FIRST_FRAME>` / `<IMAGE_REF_n>` tags — full structure in the **Conversational video editing** section of [references/templates.md](references/templates.md).
-- **Full-stack generators** (Bolt, v0, Lovable, Figma Make, Stitch) — scope down hard; specify stack + what NOT to scaffold to prevent boilerplate bloat.
-- **Gamma (AI presentations / text-to-deck)** — structured deck brief (Template O) with an **explicit card count**; if missing, set `Assumed settings: 10 cards · concise density · stock visuals` rather than asking. **Provide real data or explicit [placeholder]s — Gamma fabricates figures**; brand/layout/animations are post-gen (Theme / Gamma Agent), not prompt-controllable.
-- **Stale model facts** — model IDs, defaults, and version-tied params drift; confirm against [references/models.md](references/models.md) and re-verify any section older than 60 days before asserting (pattern #38).
+Apply evergreen syntax, routing guards, and tool behavior from the single selected profile bundle. Apply IDs, channels, availability, defaults, constraint membership, and version-tied claims only from its selected fact record. For settings-as-knobs tools, surface defaulted knobs as an `Assumed settings:` note line. For agentic routes, preserve scope locks, approval boundaries, runnable verification, and evidence. For research routes, use the provider-native citation contract. For media routes, use the provider-native negative/preservation and reference-input mechanisms. Never promote a fact-record value into this core file or a template.
 
 ---
 
@@ -161,15 +140,15 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - Behavior-preserving refactor/migration assumes tests exist → require confirming or establishing characterization tests first ("0 failed" with 0 tests is false confidence); on a migration, behavioral assertions stay green but test plumbing (mocks, imports) may change — never write "tests pass unchanged" next to a migration
 
 **Reasoning failures**
-- Logic or analysis task with no private scratchpad cue, on a target that is NOT reasoning-native (canonical no-CoT list in Hard rules) and not Opus 4.x / GPT-5.5 → add a brief private-work cue before answering
-- CoT added to a model on the canonical no-CoT list — including softer visible-process phrasings → REMOVE IT
-- "Show/echo/reproduce your reasoning" sent to Claude Fable 5/Mythos 5 → REMOVE IT (triggers reasoning_extraction refusal); use a send-to-user tool for visible progress instead
+- Logic or analysis task with no private scratchpad cue, and the selected record has no reasoning constraint → add a brief private-work cue before answering
+- CoT or visible-process wording added when the selected record contains `no_cot` → REMOVE IT
+- Reasoning echo/reproduction requested when the selected record contains `no_visible_reasoning` → REMOVE IT; use a send-to-user tool for visible progress instead
 - New prompt contradicts prior session decisions → flag, resolve, include memory block
 
-**Model-fit failures (current-gen models)**
-- Step-by-step process or a legacy prescriptive stack over-specified for GPT-5.5 or Fable 5 → strip inherited lines, switch to outcome-first (goal + success criteria + constraints + stop rules); shorter, less prescriptive prompts perform better on current-gen
-- Absolutes (ALWAYS/NEVER/MUST/ONLY) for non-invariants on GPT-5.5 → soften to plain instructions (reserve for true safety/policy/invariants); in-prompt verbosity caps for GPT-5.x API → use the `text.verbosity` parameter instead
-- Hardcoded effort/thinking budget for Opus 4.x, Fable 5, or Claude Code → REMOVE IT (harness/adaptive-managed); on Fable 5 steer via the `effort` setting, not the prompt body
+**Model-fit failures**
+- Selected record carries `outcome_first` → strip inherited process scaffolds and use goal + success criteria + constraints + stop rules
+- Selected record carries `fixed_thinking_budget_forbidden` → remove fixed thinking budgets and use only a registry-supported depth control
+- Prompt conflicts with any selected record constraint → the registry constraint wins; remove the incompatible wording
 
 **Agentic failures**
 - No starting state → add current project state description
@@ -213,9 +192,9 @@ When the user's request references prior work, decisions, or session history —
 
 **Source citations** — for factual / research / report prompts targeting retrieval, use provider-supported attribution. For non-Sonar tools that support prompt-controlled citations, add: "Cite each non-obvious factual claim inline with a link to the source you actually opened; end with a sources list; never fabricate a citation or URL; if a claim can't be sourced, mark it [uncertain]." For Sonar API, omit prompt-level URL/source-list instructions and read top-level `citations` and `search_results` client-side. Apply citation instructions only when the tool supports them and the task is factual.
 
-**Chain of Thought** — for logic, math, and debugging ONLY on models WITHOUT built-in reasoning (Gemini non-thinking modes, Qwen2.5, Llama, Mistral, other local/legacy chat models).
+**Chain of Thought** — for logic, math, and debugging only when the selected registry record does not carry `no_cot`, `adaptive_thinking`, `outcome_first`, or `no_visible_reasoning`.
 "Use private scratch work before answering; output only the final answer."
-Never on the canonical no-CoT list (Hard rules above), never on Claude Opus 4.x (adaptive thinking — the sanctioned depth lever is "Think carefully before responding", see the Claude profile), never on GPT-5.5 (outcome-first).
+Exact constraint membership comes only from the selected fact record; never maintain a model list here.
 
 ---
 
@@ -233,7 +212,7 @@ Before delivering, run ONE structured self-critique pass over these fixed dimens
 1. **Clarity & Scope** — one unambiguous operation; scope bounded; no two-tasks-in-one; the most critical constraints sit in the first 30%; instructions use the strongest signal word (MUST over should, NEVER over avoid).
 2. **Output Contract & Parseability** — format and length are explicit; if the output is structured (JSON, code, table), its shape is unambiguous and parseable.
 3. **Token Efficiency** — every sentence is load-bearing; no vague adjectives, no padding, no restated instructions. Scope self-check: does each constraint exist because the task requires it? Delete the rest. **Surface, don't smuggle** — out-of-scope observations go in a note AFTER the prompt (like the Output-format notes), never inside the prompt body.
-4. **Model-Aware Fit** — matches the target tool's syntax and rules; no fabricated or banned technique; no anti-pattern for that model (no CoT on reasoning-native models, no reasoning-echo on Fable 5, etc.).
+4. **Model-Aware Fit** — matches the selected profile and fact-record constraints; no fabricated capability, stale route, incompatible technique, visible reasoning when forbidden, or CoT when `no_cot` applies.
 5. **Completeness** — nothing missing that would force a re-prompt; would produce the right output on the first attempt.
 
 One pass is enough — do not iterate or simulate multiple critics.
@@ -247,8 +226,9 @@ The user pastes the prompt into their target tool. It works on the first try. Ze
 Read only when the task requires it. Load only the one section/file you need — do not load everything at once.
 | File | Read When |
 |------|-----------|
-| [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target tool — read only that tool's profile for full routing guidance |
-| [references/models.md](references/models.md) | You need a volatile model fact (ID, current default, version-tied param) — honor the 60-day re-verify protocol |
+| [references/tool-profiles.md](references/tool-profiles.md) | After identifying the target — select one primary profile and its fact-route alias; explicit composites may add one bundle |
+| [references/facts/index.json](references/facts/index.json) | Resolve candidates/default and open only the indexed shard containing the selected record |
+| [references/models.md](references/models.md) | Compatibility/navigation policy only; never use it as a duplicate fact source |
 | [references/agentic.md](references/agentic.md) | Prompt targets a tool that edits, executes, delegates, browses, transacts, or has async/runtime side effects |
 | [references/templates.md](references/templates.md) | You need the full template structure for any tool category |
 | [references/patterns.md](references/patterns.md) | User pastes a bad prompt to fix, or you need the complete 61-pattern reference |

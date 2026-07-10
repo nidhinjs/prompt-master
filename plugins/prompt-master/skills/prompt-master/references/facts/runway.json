@@ -1,0 +1,31 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "runway",
+  "records": [
+    {
+      "id": "runway.gen4-5.video-api",
+      "vendor": "runway", "model_id": "gen4.5", "surface": "video-api", "channel": "production",
+      "availability": { "status": "public", "scope": ["video-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "endpoint", "value": ["/v1/text_to_video", "/v1/image_to_video"] }, { "key": "ratio_values", "value": ["1280:720", "720:1280", "1104:832", "832:1104", "960:960", "1584:672", "672:1584"] }, { "key": "duration_range_seconds", "value": [2, 10] }, { "key": "knobs", "value": ["ratio", "duration", "seed"] }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.dev.runwayml.com/api/", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.endpoint", "claims.ratio_values", "claims.duration_range_seconds", "claims.knobs"] }]
+    },
+    {
+      "id": "runway.aleph2.video-api",
+      "vendor": "runway", "model_id": "aleph2", "surface": "video-api", "channel": "production",
+      "availability": { "status": "public", "scope": ["video-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_editing"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "endpoint", "value": "/v1/video_to_video" }, { "key": "keyframe_limit", "value": 5 }, { "key": "duration_range_seconds", "value": [2, 10] }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.dev.runwayml.com/api/", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.endpoint", "claims.keyframe_limit", "claims.duration_range_seconds"] }]
+    },
+    {
+      "id": "runway.gen4-aleph.video-api",
+      "vendor": "runway", "model_id": "gen4_aleph", "surface": "video-api", "channel": "deprecated",
+      "availability": { "status": "sunset_scheduled", "scope": ["video-api"], "regions": ["global"], "sunset_on": "2026-07-30" },
+      "recommended_for": ["legacy_compatibility"], "routing_default_for": [], "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [{ "key": "shutdown_on", "value": "2026-07-30" }, { "key": "model_variants", "value": "migrate to aleph2" }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.dev.runwayml.com/api/", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.shutdown_on", "claims.model_variants"] }]
+    }
+  ]
+}

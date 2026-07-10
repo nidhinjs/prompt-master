@@ -1,0 +1,295 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prompt-master.local/facts/schema.json",
+  "title": "Prompt Master canonical facts registry",
+  "description": "Self-contained schema for the registry index and populated provider-family shards.",
+  "oneOf": [
+    { "$ref": "#/$defs/registry_index" },
+    { "$ref": "#/$defs/provider_shard" }
+  ],
+  "$defs": {
+    "provider_family": {
+      "enum": [
+        "anthropic", "openai", "google", "xai", "deepseek", "minimax",
+        "alibaba", "moonshot-ai", "zai-bigmodel", "perplexity", "gamma",
+        "meta", "mistral-ai", "ollama", "midjourney", "stability-ai",
+        "black-forest-labs", "bytedance", "runway", "kling-ai",
+        "lightricks", "luma-ai", "elevenlabs", "snowflake", "github",
+        "cursor", "windsurf", "cline", "vercel", "bolt", "lovable",
+        "figma", "devin", "manus", "zapier", "make", "n8n", "meshy",
+        "tripo", "rodin", "comfyui"
+      ]
+    },
+    "surface": {
+      "enum": [
+        "api", "app", "claude-ai", "claude-code", "cowork",
+        "agent-api", "sonar-api", "generate-api", "images-api",
+        "video-api", "variations-api", "interactions-api", "modelark-api",
+        "coding-plan-api", "open-weights"
+      ]
+    },
+    "channel": {
+      "enum": ["production", "preview", "beta", "legacy", "deprecated", "retired"]
+    },
+    "availability_status": {
+      "enum": [
+        "public", "limited", "account_gated", "region_gated", "unavailable",
+        "sunset_scheduled"
+      ]
+    },
+    "recommendation_tag": {
+      "enum": [
+        "general", "frontier", "coding", "fast", "economy", "long_context",
+        "multimodal", "research", "deep_research", "image_generation",
+        "image_editing", "video_generation", "video_editing",
+        "presentation_generation", "structured_output", "agentic",
+        "legacy_compatibility", "character_consistency", "typography",
+        "photorealism", "audio_generation"
+      ]
+    },
+    "prompting_constraint_tag": {
+      "enum": [
+        "no_cot", "adaptive_thinking", "outcome_first",
+        "fixed_thinking_budget_forbidden", "no_visible_reasoning",
+        "preserve_reasoning_content", "sampling_unsupported_in_thinking",
+        "temperature_fixed", "full_sampling_legacy_only", "thinking_required",
+        "thinking_disabled_for_web_search",
+        "system_prompt_tool_descriptions_forbidden",
+        "structured_output_requires_prompt_contract",
+        "request_parameters_for_search", "citation_fields_client_side",
+        "negative_prompt_unsupported", "positive_constraints_only",
+        "deprecated_do_not_default", "preview_reverify", "surface_specific"
+      ]
+    },
+    "claim_key": {
+      "enum": [
+        "context_window_tokens", "max_output_tokens", "modalities",
+        "redeployed_on", "access_terms_until", "subscription_limit_share_percent",
+        "eligibility", "excluded_access", "minimum_client_version",
+        "thinking_mode", "effort_levels", "refusal_stop_reasons",
+        "refusal_domains", "beta_header", "tool_type", "tool_name",
+        "min_advisor_model", "min_max_tokens", "knobs", "platforms_supported",
+        "platforms_unsupported", "agent_tools", "temperature_range",
+        "default_temperature", "default_top_p", "default_max_tokens",
+        "default_n", "reasoning_effort_values", "default_reasoning_effort",
+        "unsupported_parameters", "ignored_parameters", "knowledge_cutoff",
+        "search_filters", "response_retention_days", "preferred_api", "base_url",
+        "structured_output", "agent_count_values", "builtin_tools",
+        "full_sampling_parameters", "tool_choice_values", "preserve_thinking",
+        "web_search_function", "web_search_requires_thinking_disabled",
+        "agent_swarm_limits", "app_modes", "subscription_gated",
+        "response_formats", "stop_max", "architecture",
+        "streaming_requirements", "endpoint", "pricing_snapshot",
+        "api_method", "presets", "search_driver",
+        "filter_limits", "citation_fields", "card_modes",
+        "ui_text_amount_values", "api_text_amount_values", "num_cards_default",
+        "num_cards_range", "card_split", "dimensions", "prompt_boundaries",
+        "version", "version_released_on", "style_reference", "omni_reference",
+        "edit_engine_fallback", "output_delivery", "reference_image_limit",
+        "size_constraints", "quality_values", "negative_prompt_support",
+        "cfg_scale_range", "style_preset_count", "edit_operations",
+        "guidance_range", "steps_range", "safety_tolerance_range",
+        "max_megapixels", "model_variants", "image_capabilities",
+        "aspect_ratios", "watermark", "clip_durations", "resolutions",
+        "reference_subject_limit", "audio_support", "video_operations",
+        "mode_values", "cfg_scale_default", "extension_endpoint",
+        "ratio_values", "duration_range_seconds", "keyframe_limit",
+        "shutdown_on", "extension_limit_seconds", "character_limit",
+        "checkpoint_variants", "max_fps", "default_resolution",
+        "edit_source_limit_seconds", "request_content_roles",
+        "preview_reverify_required"
+      ]
+    },
+    "claim_value": {
+      "anyOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "number" },
+        { "type": "integer" },
+        { "type": "boolean" },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "anyOf": [
+              { "type": "string", "minLength": 1 },
+              { "type": "number" },
+              { "type": "integer" },
+              { "type": "boolean" }
+            ]
+          }
+        },
+        { "type": "object", "minProperties": 1 }
+      ]
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "value"],
+      "properties": {
+        "key": { "$ref": "#/$defs/claim_key" },
+        "value": { "$ref": "#/$defs/claim_value" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "kind", "supports"],
+      "properties": {
+        "url": { "type": "string", "pattern": "^https://" },
+        "kind": {
+          "enum": [
+            "official_docs", "official_announcement", "official_support",
+            "official_repository", "official_model_card"
+          ]
+        },
+        "supports": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(model_id|surface|channel|availability|recommended_for|prompting_constraints|claims\\.[a-z0-9_]+)$"
+          }
+        }
+      }
+    },
+    "availability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "scope", "regions", "sunset_on"],
+      "properties": {
+        "status": { "$ref": "#/$defs/availability_status" },
+        "scope": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/surface" }
+        },
+        "regions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+        },
+        "sunset_on": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "format": "date" }
+          ]
+        }
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "vendor", "model_id", "surface", "channel", "availability",
+        "recommended_for", "routing_default_for", "prompting_constraints",
+        "claims", "last_verified", "source"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "vendor": { "$ref": "#/$defs/provider_family" },
+        "model_id": { "type": "string", "minLength": 1 },
+        "surface": { "$ref": "#/$defs/surface" },
+        "channel": { "$ref": "#/$defs/channel" },
+        "availability": { "$ref": "#/$defs/availability" },
+        "recommended_for": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/recommendation_tag" }
+        },
+        "routing_default_for": {
+          "description": "Compatibility-only shape. Canonical defaults live only in index.json.",
+          "type": "array",
+          "maxItems": 0
+        },
+        "prompting_constraints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/prompting_constraint_tag" }
+        },
+        "claims": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/claim" }
+        },
+        "last_verified": { "type": "string", "format": "date" },
+        "source": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/source" }
+        }
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alias", "candidate_record_ids"],
+      "properties": {
+        "alias": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:[ .+/_-][a-z0-9]+)*$"
+        },
+        "default_record_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "candidate_record_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        }
+      }
+    },
+    "registry_index": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["document_type", "schema_version", "shards", "routing"],
+      "properties": {
+        "$schema": { "type": "string", "const": "./schema.json" },
+        "document_type": { "const": "registry_index" },
+        "schema_version": { "type": "string", "const": "1.0.0" },
+        "shards": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["provider_family", "path"],
+            "properties": {
+              "provider_family": { "$ref": "#/$defs/provider_family" },
+              "path": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.json$" }
+            }
+          }
+        },
+        "routing": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/route" }
+        }
+      }
+    },
+    "provider_shard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["document_type", "provider_family", "records"],
+      "properties": {
+        "$schema": { "type": "string", "const": "./schema.json" },
+        "document_type": { "const": "provider_shard" },
+        "provider_family": { "$ref": "#/$defs/provider_family" },
+        "records": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/record" }
+        }
+      }
+    }
+  }
+}

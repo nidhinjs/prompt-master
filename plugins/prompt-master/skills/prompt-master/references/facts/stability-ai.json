@@ -1,0 +1,47 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "stability-ai",
+  "records": [
+    {
+      "id": "stability-ai.sd3-5-large.api",
+      "vendor": "stability-ai", "model_id": "sd3.5-large", "surface": "api", "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing", "photorealism"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "cfg_scale_range", "value": [1, 20] }, { "key": "negative_prompt_support", "value": true }, { "key": "style_preset_count", "value": 17 }, { "key": "edit_operations", "value": ["inpaint", "outpaint", "search-and-replace", "erase", "structure control", "style transfer"] }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://platform.stability.ai/docs/api-reference", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.cfg_scale_range", "claims.negative_prompt_support", "claims.style_preset_count", "claims.edit_operations"] }]
+    },
+    {
+      "id": "stability-ai.sd3-5-large-turbo.api",
+      "vendor": "stability-ai", "model_id": "sd3.5-large-turbo", "surface": "api", "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "fast"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "cfg_scale_range", "value": [1, 20] }, { "key": "negative_prompt_support", "value": true }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://platform.stability.ai/docs/api-reference", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.cfg_scale_range", "claims.negative_prompt_support"] }]
+    },
+    {
+      "id": "stability-ai.sd3-5-medium.api",
+      "vendor": "stability-ai", "model_id": "sd3.5-medium", "surface": "api", "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "economy"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "cfg_scale_range", "value": [1, 20] }, { "key": "negative_prompt_support", "value": true }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://platform.stability.ai/docs/api-reference", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.cfg_scale_range", "claims.negative_prompt_support"] }]
+    },
+    {
+      "id": "stability-ai.sd3-5-flash.api",
+      "vendor": "stability-ai", "model_id": "sd3.5-flash", "surface": "api", "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "fast", "economy"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "cfg_scale_range", "value": [1, 20] }, { "key": "negative_prompt_support", "value": true }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://platform.stability.ai/docs/api-reference", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.cfg_scale_range", "claims.negative_prompt_support"] }]
+    },
+    {
+      "id": "stability-ai.sd3-0-family.api",
+      "vendor": "stability-ai", "model_id": "sd3.0-family", "surface": "api", "channel": "deprecated",
+      "availability": { "status": "limited", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["legacy_compatibility"], "routing_default_for": [], "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [{ "key": "model_variants", "value": "deprecated 2025-04-17 and auto-routed to SD 3.5" }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://platform.stability.ai/docs/api-reference", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.model_variants"] }]
+    }
+  ]
+}

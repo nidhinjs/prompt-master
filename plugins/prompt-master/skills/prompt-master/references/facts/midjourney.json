@@ -1,0 +1,45 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "midjourney",
+  "records": [
+    {
+      "id": "midjourney.v8-1.app",
+      "vendor": "midjourney",
+      "model_id": "v8.1",
+      "surface": "app",
+      "channel": "production",
+      "availability": { "status": "account_gated", "scope": ["app"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation"],
+      "routing_default_for": [],
+      "prompting_constraints": ["surface_specific"],
+      "claims": [
+        { "key": "version_released_on", "value": "2026-06-10" },
+        { "key": "style_reference", "value": { "flags": ["--sref", "--sw"], "sw_range": [0, 1000], "sw_default": 100 } },
+        { "key": "knobs", "value": ["--chaos 0-100", "--no", "--hd native 2K", "--raw"] },
+        { "key": "edit_engine_fallback", "value": "Vary Region and Pan may use V6.1" }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://docs.midjourney.com", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.version_released_on", "claims.style_reference", "claims.knobs", "claims.edit_engine_fallback"] }]
+    },
+    {
+      "id": "midjourney.v7.app",
+      "vendor": "midjourney",
+      "model_id": "v7",
+      "surface": "app",
+      "channel": "legacy",
+      "availability": { "status": "public", "scope": ["app"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "character_consistency", "legacy_compatibility"],
+      "routing_default_for": [],
+      "prompting_constraints": ["surface_specific"],
+      "claims": [
+        { "key": "omni_reference", "value": { "flags": ["--oref", "--ow"], "ow_range": [1, 1000], "ow_default": 100, "replaces": "--cref" } }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [
+        { "url": "https://docs.midjourney.com/hc/en-us/articles/36285124473997-Omni-Reference", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.omni_reference"] },
+        { "url": "https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version", "kind": "official_docs", "supports": ["channel", "availability"] }
+      ]
+    }
+  ]
+}

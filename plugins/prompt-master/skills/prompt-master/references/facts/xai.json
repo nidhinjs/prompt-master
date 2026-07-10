@@ -1,0 +1,127 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "xai",
+  "records": [
+    {
+      "id": "xai.grok-4-5.api",
+      "vendor": "xai",
+      "model_id": "grok-4.5",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "coding", "frontier", "long_context", "structured_output"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "request_parameters_for_search"],
+      "claims": [
+        { "key": "context_window_tokens", "value": 500000 },
+        { "key": "reasoning_effort_values", "value": ["none", "low", "medium", "high"] },
+        { "key": "default_reasoning_effort", "value": "low" },
+        { "key": "unsupported_parameters", "value": ["stop", "presencePenalty", "frequencyPenalty"] },
+        { "key": "knowledge_cutoff", "value": "2024-11" },
+        { "key": "search_filters", "value": { "x": ["allowed_x_handles", "excluded_x_handles", "from_date", "to_date"], "web": ["allowed_domains", "excluded_domains"] } },
+        { "key": "preferred_api", "value": "Responses API" },
+        { "key": "base_url", "value": "https://api.x.ai/v1" },
+        { "key": "structured_output", "value": "JSON Schema" }
+      ],
+      "last_verified": "2026-07-10",
+      "source": [
+        { "url": "https://docs.x.ai/developers/models", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.context_window_tokens", "claims.knowledge_cutoff", "claims.preferred_api", "claims.base_url", "claims.structured_output"] },
+        { "url": "https://docs.x.ai/developers/model-capabilities/text/reasoning", "kind": "official_docs", "supports": ["prompting_constraints", "claims.reasoning_effort_values", "claims.default_reasoning_effort", "claims.unsupported_parameters"] },
+        { "url": "https://docs.x.ai/developers/tools/web-search", "kind": "official_docs", "supports": ["claims.search_filters"] },
+        { "url": "https://docs.x.ai/developers/tools/x-search", "kind": "official_docs", "supports": ["claims.search_filters"] }
+      ]
+    },
+    {
+      "id": "xai.grok-4-20-multi-agent.api",
+      "vendor": "xai",
+      "model_id": "grok-4.20-multi-agent",
+      "surface": "api",
+      "channel": "beta",
+      "availability": { "status": "limited", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["research", "deep_research", "agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "surface_specific"],
+      "claims": [
+        { "key": "agent_count_values", "value": [4, 16] },
+        { "key": "effort_levels", "value": ["low", "medium", "high", "xhigh"] },
+        { "key": "builtin_tools", "value": ["web", "x", "code", "collections", "remote MCP"] },
+        { "key": "unsupported_parameters", "value": ["custom function calling", "Chat Completions API", "max_tokens"] }
+      ],
+      "last_verified": "2026-07-10",
+      "source": [{ "url": "https://docs.x.ai/developers/model-capabilities/text/multi-agent", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "prompting_constraints", "claims.agent_count_values", "claims.effort_levels", "claims.builtin_tools", "claims.unsupported_parameters"] }]
+    },
+    {
+      "id": "xai.grok-imagine-image.images-api",
+      "vendor": "xai",
+      "model_id": "grok-imagine-image",
+      "surface": "images-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["images-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing", "fast"],
+      "routing_default_for": [],
+      "prompting_constraints": ["negative_prompt_unsupported", "positive_constraints_only"],
+      "claims": [
+        { "key": "negative_prompt_support", "value": false },
+        { "key": "aspect_ratios", "value": ["19.5:9", "20:9", "standard image ratios"] },
+        { "key": "resolutions", "value": ["1k", "2k"] },
+        { "key": "reference_image_limit", "value": 3 },
+        { "key": "base_url", "value": "https://api.x.ai/v1" }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://docs.x.ai/developers/model-capabilities/imagine", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "prompting_constraints", "claims.negative_prompt_support", "claims.aspect_ratios", "claims.resolutions", "claims.reference_image_limit", "claims.base_url"] }]
+    },
+    {
+      "id": "xai.grok-imagine-image-quality.images-api",
+      "vendor": "xai",
+      "model_id": "grok-imagine-image-quality",
+      "surface": "images-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["images-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing"],
+      "routing_default_for": [],
+      "prompting_constraints": ["negative_prompt_unsupported", "positive_constraints_only"],
+      "claims": [{ "key": "negative_prompt_support", "value": false }, { "key": "resolutions", "value": ["1k", "2k"] }],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://docs.x.ai/developers/model-capabilities/imagine", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "prompting_constraints", "claims.negative_prompt_support", "claims.resolutions"] }]
+    },
+    {
+      "id": "xai.grok-imagine-video-1-5.video-api",
+      "vendor": "xai",
+      "model_id": "grok-imagine-video-1.5",
+      "surface": "video-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["video-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "video_editing"],
+      "routing_default_for": [],
+      "prompting_constraints": ["negative_prompt_unsupported", "positive_constraints_only"],
+      "claims": [
+        { "key": "negative_prompt_support", "value": false },
+        { "key": "video_operations", "value": ["text-to-video", "image-to-video", "edit", "extend"] },
+        { "key": "duration_range_seconds", "value": [1, 15] },
+        { "key": "resolutions", "value": ["480p", "720p", "1080p"] }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://docs.x.ai/developers/model-capabilities/imagine", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.negative_prompt_support", "claims.video_operations", "claims.duration_range_seconds", "claims.resolutions"] }]
+    },
+    {
+      "id": "xai.grok-imagine-video.video-api",
+      "vendor": "xai",
+      "model_id": "grok-imagine-video",
+      "surface": "video-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["video-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "video_editing"],
+      "routing_default_for": [],
+      "prompting_constraints": ["negative_prompt_unsupported", "positive_constraints_only"],
+      "claims": [
+        { "key": "negative_prompt_support", "value": false },
+        { "key": "video_operations", "value": ["reference-to-video", "edit", "extend"] },
+        { "key": "duration_range_seconds", "value": [1, 15] },
+        { "key": "resolutions", "value": ["480p", "720p"] }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://docs.x.ai/developers/model-capabilities/imagine", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.negative_prompt_support", "claims.video_operations", "claims.duration_range_seconds", "claims.resolutions"] }]
+    }
+  ]
+}

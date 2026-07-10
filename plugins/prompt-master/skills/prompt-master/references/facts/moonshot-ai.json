@@ -1,0 +1,168 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "moonshot-ai",
+  "records": [
+    {
+      "id": "moonshot-ai.kimi-k2-6.api",
+      "vendor": "moonshot-ai",
+      "model_id": "kimi-k2.6",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "multimodal", "long_context", "agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "temperature_fixed", "preserve_reasoning_content", "thinking_disabled_for_web_search", "system_prompt_tool_descriptions_forbidden"],
+      "claims": [
+        { "key": "context_window_tokens", "value": 256000 },
+        { "key": "modalities", "value": ["text", "image", "video"] },
+        { "key": "thinking_mode", "value": ["thinking", "non-thinking"] },
+        { "key": "preserve_thinking", "value": "thinking.keep=all" },
+        { "key": "default_temperature", "value": 1.0 },
+        { "key": "default_top_p", "value": 0.95 },
+        { "key": "default_max_tokens", "value": 32768 },
+        { "key": "default_n", "value": 1 },
+        { "key": "tool_choice_values", "value": ["auto", "none"] },
+        { "key": "web_search_function", "value": "$web_search" },
+        { "key": "web_search_requires_thinking_disabled", "value": true },
+        { "key": "base_url", "value": "https://api.moonshot.ai/v1" },
+        { "key": "response_formats", "value": ["text", "json_object", "json_schema"] },
+        { "key": "stop_max", "value": 5 }
+      ],
+      "last_verified": "2026-06-17",
+      "source": [
+        { "url": "https://platform.kimi.ai/docs/models.md", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.context_window_tokens", "claims.modalities", "claims.thinking_mode", "claims.base_url", "claims.response_formats", "claims.stop_max"] },
+        { "url": "https://platform.kimi.ai/docs/guide/benchmark-best-practice", "kind": "official_docs", "supports": ["prompting_constraints", "claims.default_temperature", "claims.default_top_p", "claims.default_max_tokens", "claims.default_n", "claims.tool_choice_values"] },
+        { "url": "https://platform.kimi.ai/docs/guide/use-kimi-k2-thinking-model", "kind": "official_docs", "supports": ["claims.preserve_thinking"] },
+        { "url": "https://platform.kimi.ai/docs/guide/use-web-search", "kind": "official_docs", "supports": ["claims.web_search_function", "claims.web_search_requires_thinking_disabled"] }
+      ]
+    },
+    {
+      "id": "moonshot-ai.kimi-k2-7-code.api",
+      "vendor": "moonshot-ai",
+      "model_id": "kimi-k2.7-code",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api", "open-weights"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["coding", "multimodal", "long_context", "agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "thinking_required", "temperature_fixed", "preserve_reasoning_content", "system_prompt_tool_descriptions_forbidden"],
+      "claims": [
+        { "key": "context_window_tokens", "value": 256000 },
+        { "key": "thinking_mode", "value": "forced thinking and forced preserved thinking" },
+        { "key": "modalities", "value": ["text", "image", "experimental video"] },
+        { "key": "default_temperature", "value": 1.0 },
+        { "key": "default_top_p", "value": 0.95 },
+        { "key": "default_max_tokens", "value": 32768 },
+        { "key": "default_n", "value": 1 }
+      ],
+      "last_verified": "2026-06-17",
+      "source": [
+        { "url": "https://platform.kimi.ai/docs/models.md", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.context_window_tokens", "claims.modalities"] },
+        { "url": "https://platform.kimi.ai/docs/guide/use-kimi-k2-thinking-model", "kind": "official_docs", "supports": ["prompting_constraints", "claims.thinking_mode"] },
+        { "url": "https://platform.kimi.ai/docs/guide/benchmark-best-practice", "kind": "official_docs", "supports": ["claims.default_temperature", "claims.default_top_p", "claims.default_max_tokens", "claims.default_n"] }
+      ]
+    },
+    {
+      "id": "moonshot-ai.kimi-k2-7-code-highspeed.api",
+      "vendor": "moonshot-ai",
+      "model_id": "kimi-k2.7-code-highspeed",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["coding", "fast", "long_context"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "thinking_required", "temperature_fixed", "preserve_reasoning_content"],
+      "claims": [{ "key": "context_window_tokens", "value": 256000 }, { "key": "thinking_mode", "value": "forced thinking and forced preserved thinking" }],
+      "last_verified": "2026-06-17",
+      "source": [{ "url": "https://platform.kimi.ai/docs/models.md", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "prompting_constraints", "claims.context_window_tokens", "claims.thinking_mode"] }]
+    },
+    {
+      "id": "moonshot-ai.kimi-k2-5.api",
+      "vendor": "moonshot-ai",
+      "model_id": "kimi-k2.5",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "long_context"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot", "temperature_fixed"],
+      "claims": [{ "key": "context_window_tokens", "value": 256000 }, { "key": "thinking_mode", "value": ["thinking", "non-thinking", "no preserved thinking"] }],
+      "last_verified": "2026-06-17",
+      "source": [{ "url": "https://platform.kimi.ai/docs/models.md", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.context_window_tokens", "claims.thinking_mode"] }]
+    },
+    {
+      "id": "moonshot-ai.moonshot-v1-8k.api",
+      "vendor": "moonshot-ai",
+      "model_id": "moonshot-v1-8k",
+      "surface": "api",
+      "channel": "legacy",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["legacy_compatibility", "general"],
+      "routing_default_for": [],
+      "prompting_constraints": ["full_sampling_legacy_only", "deprecated_do_not_default"],
+      "claims": [{ "key": "context_window_tokens", "value": 8000 }, { "key": "full_sampling_parameters", "value": ["temperature", "top_p", "n", "presence_penalty", "frequency_penalty"] }, { "key": "default_temperature", "value": 0 }],
+      "last_verified": "2026-06-17",
+      "source": [{ "url": "https://platform.kimi.ai/docs/models.md", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.context_window_tokens", "claims.full_sampling_parameters", "claims.default_temperature"] }]
+    },
+    {
+      "id": "moonshot-ai.moonshot-v1-32k.api",
+      "vendor": "moonshot-ai",
+      "model_id": "moonshot-v1-32k",
+      "surface": "api",
+      "channel": "legacy",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["legacy_compatibility", "general"],
+      "routing_default_for": [],
+      "prompting_constraints": ["full_sampling_legacy_only", "deprecated_do_not_default"],
+      "claims": [{ "key": "context_window_tokens", "value": 32000 }, { "key": "full_sampling_parameters", "value": ["temperature", "top_p", "n", "presence_penalty", "frequency_penalty"] }, { "key": "default_temperature", "value": 0 }],
+      "last_verified": "2026-06-17",
+      "source": [{ "url": "https://platform.kimi.ai/docs/models.md", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.context_window_tokens", "claims.full_sampling_parameters", "claims.default_temperature"] }]
+    },
+    {
+      "id": "moonshot-ai.moonshot-v1-128k.api",
+      "vendor": "moonshot-ai",
+      "model_id": "moonshot-v1-128k",
+      "surface": "api",
+      "channel": "legacy",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["legacy_compatibility", "general", "long_context"],
+      "routing_default_for": [],
+      "prompting_constraints": ["full_sampling_legacy_only", "deprecated_do_not_default"],
+      "claims": [{ "key": "context_window_tokens", "value": 128000 }, { "key": "full_sampling_parameters", "value": ["temperature", "top_p", "n", "presence_penalty", "frequency_penalty"] }, { "key": "default_temperature", "value": 0 }],
+      "last_verified": "2026-06-17",
+      "source": [{ "url": "https://platform.kimi.ai/docs/models.md", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.context_window_tokens", "claims.full_sampling_parameters", "claims.default_temperature"] }]
+    },
+    {
+      "id": "moonshot-ai.kimi-agent-swarm.app",
+      "vendor": "moonshot-ai",
+      "model_id": "kimi-agent-swarm",
+      "surface": "app",
+      "channel": "beta",
+      "availability": { "status": "account_gated", "scope": ["app"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["agentic", "research"],
+      "routing_default_for": [],
+      "prompting_constraints": ["surface_specific"],
+      "claims": [
+        { "key": "agent_swarm_limits", "value": { "kimi-k2.5": { "subagents": 100, "steps": 1500 } } },
+        { "key": "subscription_gated", "value": true }
+      ],
+      "last_verified": "2026-07-10",
+      "source": [{ "url": "https://www.kimi.com/blog/agent-swarm", "kind": "official_announcement", "supports": ["model_id", "channel", "availability", "claims.agent_swarm_limits", "claims.subscription_gated"] }]
+    },
+    {
+      "id": "moonshot-ai.kimi-researcher.app",
+      "vendor": "moonshot-ai",
+      "model_id": "kimi-researcher",
+      "surface": "app",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["app"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["research", "deep_research"],
+      "routing_default_for": [],
+      "prompting_constraints": ["surface_specific"],
+      "claims": [{ "key": "agent_count_values", "value": [1] }, { "key": "platforms_unsupported", "value": ["API"] }],
+      "last_verified": "2026-06-17",
+      "source": [{ "url": "https://moonshotai.github.io/Kimi-Researcher/", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.agent_count_values", "claims.platforms_unsupported"] }]
+    }
+  ]
+}

@@ -1,0 +1,229 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "google",
+  "records": [
+    {
+      "id": "google.gemini-3-pro.api",
+      "vendor": "google",
+      "model_id": "gemini-3-pro",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "multimodal", "long_context"],
+      "routing_default_for": [],
+      "prompting_constraints": [],
+      "claims": [
+        { "key": "modalities", "value": ["text", "image", "audio", "video"] },
+        { "key": "thinking_mode", "value": "thinking-level control; verify exact current minor ID before use" }
+      ],
+      "last_verified": "2026-06-11",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/models", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.modalities", "claims.thinking_mode"] }]
+    },
+    {
+      "id": "google.gemini-3-1-flash-image.images-api",
+      "vendor": "google",
+      "model_id": "gemini-3.1-flash-image",
+      "surface": "images-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["images-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing", "character_consistency"],
+      "routing_default_for": [],
+      "prompting_constraints": [],
+      "claims": [
+        { "key": "image_capabilities", "value": ["search grounding", "character consistency", "style references"] },
+        { "key": "watermark", "value": "SynthID by default" },
+        { "key": "aspect_ratios", "value": ["1:1", "3:2", "2:3", "3:4", "4:3", "4:5", "5:4", "9:16", "16:9", "21:9"] }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/image-generation", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.image_capabilities", "claims.watermark", "claims.aspect_ratios"] }]
+    },
+    {
+      "id": "google.gemini-3-1-flash-lite-image.images-api",
+      "vendor": "google",
+      "model_id": "gemini-3.1-flash-lite-image",
+      "surface": "images-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["images-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing", "fast", "economy"],
+      "routing_default_for": [],
+      "prompting_constraints": [],
+      "claims": [
+        { "key": "resolutions", "value": ["1K"] },
+        { "key": "reference_image_limit", "value": 14 },
+        { "key": "image_capabilities", "value": ["no grounding", "no character consistency", "no style references"] },
+        { "key": "watermark", "value": "SynthID by default" }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/image-generation", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.resolutions", "claims.reference_image_limit", "claims.image_capabilities", "claims.watermark"] }]
+    },
+    {
+      "id": "google.gemini-3-pro-image.images-api",
+      "vendor": "google",
+      "model_id": "gemini-3-pro-image",
+      "surface": "images-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["images-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing", "character_consistency"],
+      "routing_default_for": [],
+      "prompting_constraints": [],
+      "claims": [
+        { "key": "image_capabilities", "value": ["hard image-generation tasks", "character consistency", "style references"] },
+        { "key": "watermark", "value": "SynthID by default" }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/image-generation", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.image_capabilities", "claims.watermark"] }]
+    },
+    {
+      "id": "google.gemini-2-5-flash-image.images-api",
+      "vendor": "google",
+      "model_id": "gemini-2.5-flash-image",
+      "surface": "images-api",
+      "channel": "legacy",
+      "availability": { "status": "public", "scope": ["images-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["legacy_compatibility", "image_generation"],
+      "routing_default_for": [],
+      "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/image-generation", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints"] }]
+    },
+    {
+      "id": "google.gemini-omni-flash-preview.interactions-api",
+      "vendor": "google",
+      "model_id": "gemini-omni-flash-preview",
+      "surface": "interactions-api",
+      "channel": "preview",
+      "availability": { "status": "limited", "scope": ["interactions-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "video_editing"],
+      "routing_default_for": [],
+      "prompting_constraints": ["preview_reverify", "surface_specific"],
+      "claims": [
+        { "key": "video_operations", "value": ["conversational generation", "conversational editing"] },
+        { "key": "watermark", "value": "SynthID" },
+        { "key": "preview_reverify_required", "value": true }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/omni", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "prompting_constraints", "claims.video_operations", "claims.watermark", "claims.preview_reverify_required"] }]
+    },
+    {
+      "id": "google.veo-3-1-generate-preview.video-api",
+      "vendor": "google",
+      "model_id": "veo-3.1-generate-preview",
+      "surface": "video-api",
+      "channel": "preview",
+      "availability": { "status": "limited", "scope": ["video-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "audio_generation"],
+      "routing_default_for": [],
+      "prompting_constraints": ["preview_reverify"],
+      "claims": [
+        { "key": "clip_durations", "value": [4, 6, 8] },
+        { "key": "resolutions", "value": ["720p", "1080p", "4K"] },
+        { "key": "aspect_ratios", "value": ["16:9", "9:16"] },
+        { "key": "reference_subject_limit", "value": 3 },
+        { "key": "audio_support", "value": "synchronized audio" },
+        { "key": "video_operations", "value": ["extend", "insert objects", "remove objects"] }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/video", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.clip_durations", "claims.resolutions", "claims.aspect_ratios", "claims.reference_subject_limit", "claims.audio_support", "claims.video_operations"] }]
+    },
+    {
+      "id": "google.veo-3-1-fast-generate-preview.video-api",
+      "vendor": "google",
+      "model_id": "veo-3.1-fast-generate-preview",
+      "surface": "video-api",
+      "channel": "preview",
+      "availability": { "status": "limited", "scope": ["video-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "fast"],
+      "routing_default_for": [],
+      "prompting_constraints": ["preview_reverify"],
+      "claims": [{ "key": "clip_durations", "value": [4, 6, 8] }, { "key": "resolutions", "value": ["720p", "1080p", "4K"] }],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/video", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.clip_durations", "claims.resolutions"] }]
+    },
+    {
+      "id": "google.veo-3-1-lite-generate-preview.video-api",
+      "vendor": "google",
+      "model_id": "veo-3.1-lite-generate-preview",
+      "surface": "video-api",
+      "channel": "preview",
+      "availability": { "status": "limited", "scope": ["video-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "economy"],
+      "routing_default_for": [],
+      "prompting_constraints": ["preview_reverify"],
+      "claims": [{ "key": "clip_durations", "value": [4, 6, 8] }, { "key": "resolutions", "value": ["720p", "1080p"] }],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/video", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.clip_durations", "claims.resolutions"] }]
+    },
+    {
+      "id": "google.veo-3-1-generate-001.video-api",
+      "vendor": "google",
+      "model_id": "veo-3.1-generate-001",
+      "surface": "video-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["video-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "audio_generation"],
+      "routing_default_for": [],
+      "prompting_constraints": [],
+      "claims": [{ "key": "clip_durations", "value": [4, 6, 8] }, { "key": "resolutions", "value": ["720p", "1080p", "4K"] }],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/video", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.clip_durations", "claims.resolutions"] }]
+    },
+    {
+      "id": "google.veo-3-1-fast-generate-001.video-api",
+      "vendor": "google",
+      "model_id": "veo-3.1-fast-generate-001",
+      "surface": "video-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["video-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "fast"],
+      "routing_default_for": [],
+      "prompting_constraints": [],
+      "claims": [{ "key": "clip_durations", "value": [4, 6, 8] }, { "key": "resolutions", "value": ["720p", "1080p", "4K"] }],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/video", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.clip_durations", "claims.resolutions"] }]
+    },
+    {
+      "id": "google.veo-3-1-lite-generate-001.video-api",
+      "vendor": "google",
+      "model_id": "veo-3.1-lite-generate-001",
+      "surface": "video-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["video-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "economy"],
+      "routing_default_for": [],
+      "prompting_constraints": [],
+      "claims": [{ "key": "clip_durations", "value": [4, 6, 8] }, { "key": "resolutions", "value": ["720p", "1080p"] }],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/video", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.clip_durations", "claims.resolutions"] }]
+    },
+    {
+      "id": "google.veo-2-0-family.video-api",
+      "vendor": "google",
+      "model_id": "veo-2.0-family",
+      "surface": "video-api",
+      "channel": "retired",
+      "availability": { "status": "unavailable", "scope": ["video-api"], "regions": ["global"], "sunset_on": "2026-06-30" },
+      "recommended_for": ["legacy_compatibility"],
+      "routing_default_for": [],
+      "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [{ "key": "shutdown_on", "value": "2026-06-30" }],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/video", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.shutdown_on"] }]
+    },
+    {
+      "id": "google.veo-3-0-family.video-api",
+      "vendor": "google",
+      "model_id": "veo-3.0-family",
+      "surface": "video-api",
+      "channel": "retired",
+      "availability": { "status": "unavailable", "scope": ["video-api"], "regions": ["global"], "sunset_on": "2026-06-30" },
+      "recommended_for": ["legacy_compatibility"],
+      "routing_default_for": [],
+      "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [{ "key": "shutdown_on", "value": "2026-06-30" }],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://ai.google.dev/gemini-api/docs/video", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.shutdown_on"] }]
+    }
+  ]
+}

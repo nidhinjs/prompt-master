@@ -14,6 +14,8 @@ const LIVE_ENV_KEYS = [
 
 const DEFAULT_CHECKS = [
   { command: process.execPath, args: ['scripts/test-safe-self.js'] },
+  { command: process.execPath, args: ['scripts/test-registry.js'] },
+  { command: process.execPath, args: ['scripts/test-runtime-inventory.js'] },
   { command: process.execPath, args: ['scripts/test-contracts.js'] },
   { command: process.execPath, args: ['scripts/test-hook.js'] },
   { command: process.execPath, args: ['scripts/lint.js'] },

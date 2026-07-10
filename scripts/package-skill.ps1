@@ -43,6 +43,7 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot   = Split-Path -Parent $PSScriptRoot
 $pluginJson = Join-Path $repoRoot 'plugins/prompt-master/.claude-plugin/plugin.json'
+$runtimeManifest = Join-Path $repoRoot 'plugins/prompt-master/runtime-manifest.json'
 $skillDir   = Join-Path $repoRoot 'plugins/prompt-master/skills/prompt-master'
 $distDir    = Join-Path $repoRoot 'dist'
 
@@ -50,6 +51,7 @@ function Fail($m) { Write-Host "ERROR: $m" -ForegroundColor Red; exit 1 }
 
 if (-not (Test-Path $pluginJson)) { Fail "Не найден plugin.json: $pluginJson" }
 if (-not (Test-Path (Join-Path $skillDir 'SKILL.md'))) { Fail "Не найден SKILL.md в $skillDir" }
+if (-not (Test-Path $runtimeManifest -PathType Leaf)) { Fail "Не найден runtime manifest: $runtimeManifest" }
 
 # --- Версия (канон = plugin.json) ---
 $pluginText = Get-Content -Raw -LiteralPath $pluginJson -Encoding UTF8
@@ -62,17 +64,37 @@ $shaName = "$zipName.sha256"
 $shaPath = Join-Path $distDir $shaName
 $tag     = "v$version"
 
-# Release artifacts contain only this reviewed runtime surface. Adding a new
-# reference requires an explicit allowlist update instead of being picked up by
-# a wildcard archive.
-$runtimeFiles = @(
-    'SKILL.md',
-    'references/agentic.md',
-    'references/models.md',
-    'references/patterns.md',
-    'references/templates.md',
-    'references/tool-profiles.md'
-)
+# Release artifacts contain only the literal, reviewed paths in the tracked
+# manifest. The manifest itself stays outside the ZIP and wildcard entries are
+# forbidden.
+try {
+    $manifest = Get-Content -Raw -LiteralPath $runtimeManifest -Encoding UTF8 | ConvertFrom-Json
+} catch {
+    Fail "Runtime manifest не является валидным JSON: $($_.Exception.Message)"
+}
+$manifestKeys = @($manifest.PSObject.Properties.Name)
+if (@(Compare-Object -ReferenceObject @('schema_version', 'root', 'files') -DifferenceObject $manifestKeys).Count -gt 0) {
+    Fail "Runtime manifest должен содержать только schema_version, root, files"
+}
+if ($manifest.schema_version -ne '1.0.0') { Fail "Неподдерживаемая schema_version runtime manifest" }
+if ($manifest.root -ne 'plugins/prompt-master/skills/prompt-master') { Fail "Runtime manifest содержит неверный root" }
+$runtimeFiles = @($manifest.files)
+if ($runtimeFiles.Count -eq 0) { Fail "Runtime manifest не содержит files" }
+$safeRelativePath = '^[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$'
+foreach ($relativePath in $runtimeFiles) {
+    if ($relativePath -isnot [string] -or $relativePath -notmatch $safeRelativePath -or
+        $relativePath.Contains('..') -or $relativePath.Contains('*') -or $relativePath.Contains('?')) {
+        Fail "Runtime manifest содержит небезопасный или wildcard path: $relativePath"
+    }
+}
+if (@($runtimeFiles | Sort-Object -Unique).Count -ne $runtimeFiles.Count) { Fail "Runtime manifest содержит дубликаты" }
+$ordinalSorted = [System.Collections.Generic.List[string]]::new()
+foreach ($relativePath in $runtimeFiles) { $ordinalSorted.Add($relativePath) }
+$ordinalSorted.Sort([System.StringComparer]::Ordinal)
+$expectedFiles = @($ordinalSorted)
+if (($expectedFiles -join "`n") -cne ($runtimeFiles -join "`n")) {
+    Fail "Runtime manifest files должны быть отсортированы"
+}
 
 $actualFiles = @(
     Get-ChildItem -LiteralPath $skillDir -File -Recurse |
@@ -81,15 +103,15 @@ $actualFiles = @(
         } |
         Sort-Object
 )
-$expectedFiles = @($runtimeFiles | Sort-Object)
 $layoutDiff = @(Compare-Object -ReferenceObject $expectedFiles -DifferenceObject $actualFiles)
 if ($layoutDiff.Count -gt 0) {
     $details = ($layoutDiff | ForEach-Object { "$($_.SideIndicator) $($_.InputObject)" }) -join '; '
-    Fail "Runtime-файлы не совпадают с allowlist: $details"
+    Fail "Runtime-файлы не совпадают с tracked manifest: $details"
 }
 
 $skillPathspec = 'plugins/prompt-master/skills/prompt-master'
-$dirtyLines = @(& git -C $repoRoot status --porcelain=v1 --untracked-files=all -- $skillPathspec)
+$manifestPathspec = 'plugins/prompt-master/runtime-manifest.json'
+$dirtyLines = @(& git -C $repoRoot status --porcelain=v1 --untracked-files=all -- $skillPathspec $manifestPathspec)
 if ($LASTEXITCODE -ne 0) { Fail "Не удалось проверить git status для runtime-файлов" }
 $dirtyLines = @($dirtyLines | Where-Object { $_ })
 if ($Upload -and $AllowDirty) { Fail "-Upload несовместим с -AllowDirty" }
@@ -100,14 +122,14 @@ if ($dirtyLines.Count -gt 0 -and -not $AllowDirty) {
 Write-Host "Package: prompt-master $version -> dist/$zipName" -ForegroundColor Cyan
 
 if ($DryRun) {
-    Write-Host "`n[DryRun] Будет собрано по allowlist: $zipPath"
+    Write-Host "`n[DryRun] Будет собрано по tracked manifest ($($runtimeFiles.Count) files): $zipPath"
     Write-Host "[DryRun] Будет записана сумма: $shaPath"
     if ($dirtyLines.Count -gt 0) { Write-Host "[DryRun] Runtime-дерево dirty; разрешено явным -AllowDirty" -ForegroundColor DarkYellow }
     if ($Upload) { Write-Host "[DryRun] ZIP и SHA-256 будут приложены к релизу $tag" }
     exit 0
 }
 
-# --- Сборка ZIP из точного allowlist ---
+# --- Сборка ZIP из точного tracked manifest ---
 if (-not (Test-Path $distDir)) { New-Item -ItemType Directory -Path $distDir | Out-Null }
 if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
 if (Test-Path $shaPath) { Remove-Item $shaPath -Force }
@@ -140,15 +162,36 @@ finally {
 }
 Write-Host "  ok $zipPath" -ForegroundColor Green
 
-# --- Санити-проверка: ZIP содержит ровно allowlist ---
+# --- Санити-проверка: ZIP содержит ровно manifest и byte-identical sources ---
 # ZipArchive обязательно закрываем, иначе открытый handle живёт до конца
 # сессии и повторный запуск падает на Remove-Item ("file in use").
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $zip = [System.IO.Compression.ZipFile]::OpenRead($zipPath)
-try     { $entries = @($zip.Entries.FullName | Sort-Object) }
-finally { $zip.Dispose() }
-if (@(Compare-Object -ReferenceObject $expectedFiles -DifferenceObject $entries).Count -gt 0) {
-    Fail "Содержимое ZIP не совпадает с runtime allowlist"
+try {
+    $entries = @($zip.Entries.FullName | Sort-Object)
+    if (@(Compare-Object -ReferenceObject $expectedFiles -DifferenceObject $entries).Count -gt 0) {
+        Fail "Содержимое ZIP не совпадает с runtime manifest"
+    }
+    foreach ($relativePath in $runtimeFiles) {
+        $entry = $zip.GetEntry($relativePath)
+        if ($null -eq $entry) { Fail "ZIP entry не найден для parity check: $relativePath" }
+        $entryStream = $entry.Open()
+        $sourceStream = [System.IO.File]::OpenRead((Join-Path $skillDir ($relativePath -replace '/', [System.IO.Path]::DirectorySeparatorChar)))
+        $entryHasher = [System.Security.Cryptography.SHA256]::Create()
+        $sourceHasher = [System.Security.Cryptography.SHA256]::Create()
+        try {
+            $entryHash = -join ($entryHasher.ComputeHash($entryStream) | ForEach-Object { $_.ToString('x2') })
+            $sourceHash = -join ($sourceHasher.ComputeHash($sourceStream) | ForEach-Object { $_.ToString('x2') })
+            if ($entryHash -ne $sourceHash) { Fail "ZIP/source parity mismatch: $relativePath" }
+        } finally {
+            $entryHasher.Dispose()
+            $sourceHasher.Dispose()
+            $entryStream.Dispose()
+            $sourceStream.Dispose()
+        }
+    }
+} finally {
+    $zip.Dispose()
 }
 Write-Host "  верх архива: $(( $entries | Where-Object { $_ -notmatch '/' } ) -join ', ')" -ForegroundColor DarkGray
 

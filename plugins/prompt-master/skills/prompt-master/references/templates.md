@@ -6,7 +6,7 @@ Full template library for Prompt Master. Read the relevant template when the use
 
 | Template | Best For |
 |----------|----------|
-| [Canonical Prompt Structure](#canonical-prompt-structure-default-skeleton) | Default skeleton for any text-LLM prompt (Claude, GPT, Gemini, local) |
+| [Canonical Prompt Structure](#canonical-prompt-structure-default-skeleton) | Default skeleton for any text-LLM prompt |
 | [A — RTF](#template-a--rtf) | Simple one-shot tasks |
 | [B — CO-STAR](#template-b--co-star) | Professional documents, business writing |
 | [C — RISEN](#template-c--risen) | Complex multi-step projects |
@@ -15,13 +15,13 @@ Full template library for Prompt Master. Read the relevant template when the use
 | [F — Few-Shot](#template-f--few-shot) | Consistent structured output, pattern replication |
 | [G — File-Scope](#template-g--file-scope) | Cursor, Windsurf, Copilot — code editing AI |
 | [H — ReAct + Stop Conditions](#template-h--react--stop-conditions) | Claude Code, Devin — autonomous agents |
-| [I — Visual Descriptor](#template-i--visual-descriptor) | Midjourney, GPT-image, Stable Diffusion, FLUX.2, SeeDream, Nano Banana — any image or video generation tool |
-| [Conversational video editing](#conversational-video-editing-omni-flash--grok-imagine--runway-aleph2) | Iterative video edits (Omni Flash, Grok Imagine, Runway `aleph2`) |
+| [I — Visual Descriptor](#template-i--visual-descriptor) | Any image or video generation tool |
+| [Conversational video editing](#conversational-video-editing) | Iterative video edits |
 | [J — Reference Image Editing](#template-j--reference-image-editing) | Editing an existing image with a reference |
 | [K — ComfyUI](#template-k--comfyui) | ComfyUI node-based image workflows |
 | [L — Prompt Decompiler](#template-l--prompt-decompiler) | Breaking down, adapting, or splitting existing prompts |
-| [M — Opus 4.7 / 4.8 Task Brief](#template-m--opus-47--48-task-brief) | Complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 |
-| [N — Research Brief](#template-n--research-brief) | Deep-research / cited-report tools (Perplexity Deep Research, GPT/Gemini Deep Research, Sonar) |
+| [M — Agentic Task Brief](#template-m--agentic-task-brief) | Complex, multi-step, or agentic task |
+| [N — Research Brief](#template-n--research-brief) | Deep-research / cited-report tools |
 | [Agentic Prompt Fragments](#agentic-prompt-fragments) | Prompts for orchestrators, fan-out, sub-agents, agent teams |
 | [O — Deck / Presentation Brief](#template-o--deck--presentation-brief) | Text-to-deck tools (Gamma) |
 
@@ -29,7 +29,7 @@ Full template library for Prompt Master. Read the relevant template when the use
 
 ## Canonical Prompt Structure (default skeleton)
 
-*The default ordering for a rewritten or built-from-scratch prompt targeting a **text LLM** (Claude, GPT, Gemini, local / open-weight, reasoning models). NOT for image / video / voice / workflow tools — those follow their own profiles. Include only the parts the task needs; drop the rest. Order matters: critical content lives early, where attention is strongest.*
+*The default ordering for a rewritten or built-from-scratch prompt targeting a **text LLM**. NOT for image / video / voice / workflow tools — those follow their own profiles. Include only the parts the task needs; drop the rest. Order matters: critical content lives early, where attention is strongest.*
 
 1. **Role** — one line, only if it calibrates depth/vocabulary. Skip for trivial tasks.
 2. **Outcome + Success criteria** — what "done" looks like, stated up front. The single most load-bearing part.
@@ -39,7 +39,7 @@ Full template library for Prompt Master. Read the relevant template when the use
 6. **Conditional CoT / Few-shot** — add step-by-step ONLY for non-reasoning-native models on logic tasks; add 2–5 examples ONLY when the format is easier shown than told. Never on reasoning-native models.
 7. **Strict Output Contract** — exact format, length, and shape; if structured (JSON / table / code), make it unambiguous and parseable. Goes last so it is the freshest instruction before generation.
 
-Model-aware caveats override the skeleton: GPT-5.5 / Fable 5 → outcome-first, drop process scaffolding; reasoning-native models → omit the CoT in step 6. See the tool profile.
+The selected fact record overrides the skeleton: apply its `prompting_constraints` and omit step 6 whenever `no_cot`, `adaptive_thinking`, `outcome_first`, or `no_visible_reasoning` applies. Never infer constraint membership from a model name.
 
 ---
 
@@ -163,7 +163,7 @@ Do not include likelihood labels, score fields, private-process fields, or step-
 
 *Use for logic-heavy tasks, math, debugging, and multi-factor analysis where the AI needs to reason carefully before committing to an answer.*
 
-**Important:** Only use CoT on models WITHOUT built-in reasoning (Gemini non-thinking modes, Qwen2.5, Llama, Mistral, local/legacy chat models). Do NOT add CoT instructions to any model on the canonical no-CoT list in SKILL.md hard rules — o3, o4-mini, DeepSeek thinking mode / R1, Qwen3 thinking mode, Grok grok-4.3, Kimi K2.x thinking, GLM thinking mode, MiniMax M3 — nor to Claude Opus 4.x (adaptive thinking) or GPT-5.5 (outcome-first): they reason internally and CoT instructions degrade their output.
+**Important:** Use CoT only after resolving the target through `facts/index.json` and its selected shard. Do not add CoT when the record contains `no_cot`, `adaptive_thinking`, `outcome_first`, or `no_visible_reasoning`. Exact membership lives only in the registry.
 
 ```
 [Task statement]
@@ -186,7 +186,7 @@ Give your final answer in <answer> tags only.
 - Analysis where a wrong first impression is likely
 
 **When NOT to use:**
-- Any reasoning-native model (canonical no-CoT list in SKILL.md hard rules: o3 / o4-mini / DeepSeek-thinking / Qwen3-thinking / Grok grok-4.3 / Kimi K2.x thinking / GLM thinking mode / MiniMax M3), plus Claude Opus 4.x and GPT-5.5 (they think internally — adding CoT hurts)
+- Any record carrying `no_cot`, `adaptive_thinking`, `outcome_first`, or `no_visible_reasoning`
 - Simple tasks where the answer is clear (unnecessary overhead)
 - Creative tasks (CoT can kill natural voice)
 
@@ -319,7 +319,7 @@ At the end, output a full summary of every file changed.
 
 ## Template I — Visual Descriptor
 
-*Use for Midjourney, GPT-image, Stable Diffusion, FLUX.2, SeeDream, Google Nano Banana, and any image or video generation tool.*
+*Use for any image or video generation tool. Load the matching media profile and selected fact record before choosing provider syntax.*
 
 *5-layer skeleton — build outward from the subject. Drop layers the task doesn't need.*
 
@@ -332,15 +332,9 @@ At the end, output a full summary of every file changed.
 6. Exclusions / preservation: [state the desired preserved state in positive wording]
 ```
 
-**Tool-specific syntax:**
-- **Midjourney:** ordinary generation uses comma-separated descriptors with `--ar`, optional `--sref`, and `--v 8.1`. Character/object consistency via Omni Reference uses `--oref [image URL]`, optional `--ow`, and mandatory `--v 7`; never combine `--oref` or `--ow` with V8.1. If the user wants V8.1 consistency, switch to V7 Omni or a supported alternative.
-- **Stable Diffusion (3.5)**: Use `(word:1.3)` weight syntax. `cfg_scale` typical 1–20 (default varies by endpoint). Convert the exclusions into a separate Negative Prompt field; optional in the API but strongly recommended.
-- **GPT-image (`gpt-image-2`)**: Prose works well (DALL·E is retired). Add "do not include any text in the image" unless text is needed; set `size`/`quality` as request params.
-- **FLUX.2 / Nano Banana**: Natural language (FLUX.2 also takes JSON + hex colors). For Google, route character-consistency/brand to Nano Banana 2 or Pro, not the Lite tier.
-- **Grok Imagine:** use natural language and state exclusions as positive preservation constraints; never add a `Negative Prompt` field or block for image or video output.
-- **Video (Veo 3.1 / Kling / Runway / Sora)**: Add camera movement (slow dolly, static, crane up), duration in seconds, and cut style. ⚠️ Sora sunsets 2026-09-24 — prefer Veo 3.1 / Kling 3.0 for new work.
+**Tool-specific syntax:** use only the selected media profile's current grammar and the selected fact record's supported claims. If the profile requires a dedicated negative field, produce it separately; if it requires positive preservation, never invent a negative field. Resolve reference modes, parameters, dimensions, limits, and version compatibility through the registry instead of encoding them here.
 
-**Deliver an `Assumed settings:` note line** for tools with knobs the user didn't set (Midjourney ordinary generation `--ar 16:9 · --v 8.1 · --s 100`; Midjourney Omni `--oref [URL] · --v 7` with optional `--ow`; SD `cfg 7 · steps 20–30 · negative included`; FLUX.2 `guidance 5 · steps 30`; GPT-image `quality high · size auto`; video `duration · resolution · aspect`) — each overridable at the prompt tail / request params.
+**Deliver an `Assumed settings:` note line** for every supported knob the user did not set, with its selected value and where to change it. Values come from the selected fact record or an explicit user choice, never from this template.
 
 ---
 
@@ -351,11 +345,7 @@ At the end, output a full summary of every file changed.
 **Before writing the prompt, always tell the user:**
 "Attach your reference image to [tool name] before sending this prompt."
 
-**Detect the tool's editing capability:**
-- Midjourney: use `--oref [image URL] --v 7` for character/object reference (Omni Reference — replaces the retired `--cref`), with optional `--ow`; never combine `--oref`/`--ow` with V8.1. Use `--sref` for style.
-- GPT-image (`gpt-image-2`): use `/images/edits` (not generate) — up to 16 reference images + optional PNG mask for masked edits
-- Stable Diffusion (3.5): use img2img or the edit endpoints (inpaint / search-and-replace); denoising strength 0.3-0.6 to preserve the original
-- Google Nano Banana / Grok Imagine: pass the source image with the instruction; keep the delta small ("change X, keep everything else the same"). For Grok, express exclusions only as positive preservation instructions; never add a Negative Prompt field/block.
+**Detect the tool's editing capability:** resolve the selected fact record and media profile before emitting an edit endpoint, reference flag, mask, limit, or strength. Keep the delta small ("change X, keep everything else the same"). For Grok Imagine, express exclusions only as positive preservation instructions and never add a Negative Prompt field/block.
 
 ```
 Reference image: [attached / URL]
@@ -378,7 +368,7 @@ Exclusions (positive preservation): keep the existing elements, style, and backg
 
 ---
 
-### Conversational video editing (Omni Flash · Grok Imagine · Runway aleph2)
+### Conversational video editing
 For models that iterate on an existing video in natural language. Keep instructions short and direct — long re-descriptions cause drift.
 - Always add **"Keep everything else the same."** to lock the parts that must not change.
 - Reference inputs by role tag: `<FIRST_FRAME>` (starting frame), `<IMAGE_REF_n>` (reference, n from 0).
@@ -389,31 +379,28 @@ For models that iterate on an existing video in natural language. Keep instructi
 
 ## Template K — ComfyUI
 
-*Use for ComfyUI node-based workflows. Always output Positive and Negative prompts as separate blocks. Ask for the checkpoint model before writing — syntax and token limits differ per model.*
+*Use for ComfyUI node-based workflows. Always keep Positive and Negative conditioning as separate blocks. Resolve checkpoint syntax, token limits, sampler, guidance, steps, and resolution only from the user's loaded workflow or locally verified node capabilities; this route has no provider fact record.*
 
 **Ask first if not stated:**
-"Which checkpoint model are you using? (SD 1.5, SDXL, Flux, or other)"
+"Which checkpoint and workflow settings are loaded, and which controls should this prompt fill?"
 
-**Model-specific notes:**
-- SD 1.5: shorter prompts work better, under 75 tokens per block, use (word:weight) syntax
-- SDXL / SD 3.5: handle longer prompts, support natural language alongside weighted syntax
-- FLUX.2: natural language works well, less reliance on weighted syntax, very responsive to style descriptions and hex colors
+If the answer is unavailable or questions are forbidden, do not infer a checkpoint family or settings. Produce only capability-neutral Positive/Negative text, omit unverified setup values, and mark every missing control `[unverified — set in the loaded workflow]`.
 
 ```
 POSITIVE PROMPT:
-[subject], [style], [mood], [lighting], [composition], [quality boosters: highly detailed, sharp focus, 8k]
+[checkpoint-compatible positive description using only verified syntax]
 
 NEGATIVE PROMPT:
-[what to exclude: blurry, low quality, watermark, extra limbs, bad anatomy, distorted, oversaturated]
+[checkpoint-compatible exclusions using only verified syntax]
 
-CHECKPOINT: [model name]
-SAMPLER: Euler a (recommended starting point)
-CFG SCALE: 7 (increase for stricter prompt adherence)
-STEPS: 20-30
-RESOLUTION: [width x height — must be divisible by 64]
+CHECKPOINT: [user-supplied or locally verified checkpoint]
+SAMPLER: [user-supplied or locally verified sampler]
+GUIDANCE: [user-supplied or locally verified control/value]
+STEPS: [user-supplied or locally verified value]
+RESOLUTION: [user-supplied or locally verified dimensions/constraints]
 ```
 
-**Surface these as an `Assumed settings:` note line** (`CFG 7 · Euler a · steps 20–30 · resolution [W×H ÷64]`) so the user knows they're adjustable in the workflow nodes.
+**Surface only verified or user-supplied controls** in an `Assumed settings:` note line, naming the workflow node where each can be changed. Never invent a default; unresolved values stay `[unverified]` and outside the executable prompt.
 
 ---
 
@@ -488,9 +475,9 @@ Continue through Prompt N. Run them in order; pass an earlier output explicitly 
 ```
 ---
 
-## Template M — Opus 4.7 / 4.8 Task Brief
+## Template M — Agentic Task Brief
 
-*Use for any complex, multi-step, or agentic task on Claude Opus 4.7 or 4.8 — claude.ai, API, or Claude Code. Both read prompts literally and produce narrow output when context is missing. This template front-loads everything so the first turn is the only turn. (Opus 4.8 is the current Claude Code default recommendation; Fable 5 is available again but not the default — status in models.md.)*
+*Use for any complex, multi-step, or agentic task whose selected profile calls for a literal, outcome-focused task brief. This template front-loads everything so the first turn can be sufficient.*
 
 ```
 ## Objective
@@ -535,10 +522,7 @@ For an agentic/tool-enabled Template M prompt, insert Template H's `Trust
 Boundary` block. If network access is enabled, also insert its `Network Access`
 block with concrete destinations and purposes; otherwise keep network disabled.
 
-**Thinking depth** — add only when needed, delete otherwise:
-- Hard multi-step task: `"Think carefully before starting."` (never "step-by-step" — banned wording on Opus 4.x, see the Claude profile)
-- Simple targeted change: `"Prioritize responding quickly. This is a scoped change."`
-- Default: say nothing — adaptive thinking calibrates itself.
+**Thinking depth** — obey the selected fact record. If it forbids fixed budgets or visible reasoning, do not add them. When compatible, a hard multi-step task may use `"Think carefully before starting."`; a simple targeted change may use `"Prioritize responding quickly. This is a scoped change."`; otherwise say nothing.
 
 **Claude Code only — add Session Strategy block when relevant.** This is setup advice for the human, not an instruction to the agent — put it in the note below the prompt, not inside the copyable prompt block:
 ```
@@ -559,13 +543,13 @@ with a better prompt; /btw for side questions that shouldn't enter context.
 - Security-sensitive target (auth, crypto, payments)? Add a security-equivalence invariant: signing algorithm, hash cost, constant-time comparison, and token/secret format must not weaken.
 - Two operations bundled (refactor + migrate)? Prefer sequencing — land the refactor green, then migrate — so a regression is bisectable.
 
-**When to use:** Opus 4.7 or 4.8 on any surface — claude.ai, API, Claude Code — when the task is complex, multi-file, ambiguous, or agentic. Not needed for simple one-shot tasks.
+**When to use:** the selected coding/agentic profile routes here and the task is complex, multi-file, ambiguous, or agentic. Not needed for simple one-shot tasks.
 
 ---
 
 ## Template N — Research Brief
 
-*Use for deep-research / multi-source cited-report tools (Perplexity Deep Research, GPT/Gemini Deep Research, Sonar API, Grok `grok-4.20-multi-agent`). Prompt the research as an ASSIGNMENT, not a question.*
+*Use for deep-research / multi-source cited-report tools. Prompt the research as an ASSIGNMENT, not a question.*
 
 ```
 Role + Goal: [expert role + what decision this report informs]
@@ -578,12 +562,7 @@ Source priorities + freshness: [primary vs secondary; date horizon]
 Data gaps & confidence: [REQUIRED closing section — what could not be found, confidence per key claim, and the date/freshness of the data]
 ```
 
-**Tool-aware (official Perplexity Sonar guidance):**
-- **Perplexity surfaces:** for new apps Perplexity recommends the **Agent API** (`/v1/agent`, `responses.create` — agent loop + custom tools + presets incl. `deep-research`); use **Sonar API** for direct search-grounded answers, with **`sonar-deep-research`** (128K) for exhaustive cited reports. For Sonar, omit inline-URL and prose-sources-list instructions from the prompt; the client reads top-level `citations` and `search_results`. **Sonar search is driven by the user message only** — the system prompt is not seen by search (use it for tone/grounding); put the concrete, specific question in the user message. Set hard constraints as **request parameters, not prose**: `search_domain_filter` (≤20 domains, allow / deny with `-`), `search_recency_filter` (hour/day/week/month/year). "Search only on X" in prose is ignored. Keep Data gaps & confidence, cap lists (top-N), and avoid few-shot. "Search as Code" is a blog concept, not a callable feature.
-- **UI Deep Research:** pick the Focus/source filter in the selector before running; for iterative work use a Space (persistent system prompt + curated sources + files) with in-thread follow-ups.
-- **Grok (xAI):** route deep research to `grok-4.20-multi-agent` (beta) and enable `web_search` + `x_search`. Choose agent count by depth — 4 (focused) or 16 (thorough), via `agent_count` or `reasoning.effort` (low/medium=4, high/xhigh=16). Set source limits as tool **parameters** (`allowed_x_handles`/`allowed_domains`, `from_date`/`to_date`), not prose. Grok has no realtime knowledge without these search tools enabled.
-- **Kimi (Moonshot AI):** split by surface. In the **app**: large decomposable jobs → `Agent Swarm` (K2.6 self-orchestrates — **do not set an agent count or script sub-agents**, unlike Grok); deep research → `Kimi-Researcher` (single-agent). Through the **API** there's no confirmed deep-research endpoint → build your own loop: retrieval is the built-in `$web_search` (`builtin_function`) which **requires thinking disabled**, so don't pack reasoning + live search into one call (pattern #46). Use Kimi's native research format — `[Source: Institution / Website: Page Title]`, credibility stars `*** / ** / *`, `Confirmed`/`Estimate`, verify 2+ sources, **no full URLs**, `【Insight】`, stages (Information Search → Data Analysis → Report Output → References). Don't list tools in the system prompt (pass via `tools`). Agent Swarm is subscription-tiered — surface as a prerequisite.
-- **Surface defaulted search knobs** — for Perplexity / Grok, deliver an `Assumed settings:` note line for the filters the user didn't set (domain / recency for Perplexity; `reasoning_effort` / search / handles / domains / dates for Grok), each overridable as request parameters — never an extra question.
+**Tool-aware:** load the matching research profile and selected fact record. Preserve the Sonar contract: do not request URLs or a prose sources list; the client consumes top-level `citations` and `search_results`, while the prompt retains Data gaps & confidence. Put provider-supported filters and search controls in request parameters rather than prose. For every supported search knob the user did not set, deliver an `Assumed settings:` note line with the chosen value and parameter location; never spend an extra question on it.
 
 ---
 
@@ -602,9 +581,9 @@ Data gaps & confidence: [REQUIRED closing section — what could not be found, c
 | Dependent, ordered stages | **Short chain + handoff block** |
 | Quality-critical, clear criteria | **Evaluator–optimizer** — independent verifier |
 | Long autonomous build, many steps | **Orchestrator-as-decomposer + task ledger** |
-| **Vendor-managed swarm** (e.g. Kimi Agent Swarm) | **Don't design a topology** — see carve-out below |
+| **Vendor-managed swarm** | **Don't design a topology** — see carve-out below |
 
-**Vendor-managed swarm carve-out (Kimi Agent Swarm & similar).** When the target self-orchestrates its own sub-agents (Kimi K2.6 Agent Swarm spins up to ~300 sub-agents "without predefined subagents"), do **NOT** apply #19 or hand-script roles/fan-out/agent counts — that fights the model. Instead give **one large, decomposable task + a clear final artifact + acceptance criteria**, and let the model decompose. It's an app feature and **subscription-tiered** (free tier has no Swarm) — surface availability as a prerequisite, don't assume it. This is the opposite of the orchestrator-as-decomposer pattern below, which is for runtimes *you* orchestrate.
+**Vendor-managed swarm carve-out.** When the selected profile says the target self-orchestrates its own workers, do **NOT** apply #19 or hand-script roles, fan-out, or worker counts. Give one large, decomposable task + a clear final artifact + acceptance criteria, and let the runtime decompose. Resolve availability and limits from the selected fact record and surface any prerequisite. This is the opposite of the orchestrator-as-decomposer pattern below, which is for runtimes *you* orchestrate.
 
 **#19 Orchestrator-as-decomposer**
 ```
@@ -806,13 +785,11 @@ Sections (one card each unless noted):
   2. [card 2 title + what it covers]
   3. [continue — name every card]
 Tone: [authoritative / energetic / plain — matches audience]
-Text density: [Minimal / Concise / Detailed — how much text per card]
+Text density: [registry-supported value for the selected surface]
 Visuals: [specific direction per section — charts, product shots, diagrams; avoid generic AI art / stock handshakes / abstract gradients]
 Exclusions: [topics, claims, or sections to leave out]
 Language: [output language]
 Data: [supply real figures, OR instruct explicit [placeholder]s — do not let Gamma fabricate numbers]
 ```
 
-**Paste-in-text mode:** when feeding existing notes/markdown via Paste-in-text (or the Generate API), separate cards with a line containing only `---` (i.e. `\n---\n`) to hint card boundaries.
-
-**Settings are knobs — set both.** Density (Text Content), visuals (Image Source — Stock recommended), and tone/audience are **Advanced settings** in Gamma, not just prose. Set them in the UI/API *and* state them in the brief above so intent is unambiguous. Layout, brand (→ Theme), and animations (→ Gamma Agent post-gen) are not controllable from the prompt. Deliver them to the user as an `Assumed settings:` note line (e.g. `10 cards · Concise density · Stock visuals · [tone]`) — list ONLY knobs they did NOT specify (drop any already given), all overridable.
+**Surface setup:** resolve mode, card-boundary mechanism, card-count range/default, density values, dimensions, visuals, theme, and other controls from the selected Gamma fact record. Use only claims supported for that exact app/API surface; do not transfer an enum or delimiter between surfaces. Put controls in the UI/request setup and state intent in the brief. Deliver an `Assumed settings:` note listing only supported knobs the user did not specify, each with its registry-selected value and change location. If the record or claim is missing/stale, leave the control `[unverified]` and do not invent a default.

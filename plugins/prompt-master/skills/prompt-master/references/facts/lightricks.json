@@ -1,0 +1,30 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "lightricks",
+  "records": [
+    {
+      "id": "lightricks.ltx-2-3-22b-dev.open-weights",
+      "vendor": "lightricks", "model_id": "ltx-2.3-22b-dev", "surface": "open-weights", "channel": "production",
+      "availability": { "status": "public", "scope": ["open-weights"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "video_editing", "audio_generation"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "resolutions", "value": ["up to 4K"] }, { "key": "max_fps", "value": 50 }, { "key": "audio_support", "value": "synchronized audio up to 10 seconds" }, { "key": "guidance_range", "value": [3, 3.5] }, { "key": "steps_range", "value": [20, 40] }, { "key": "video_operations", "value": ["text-to-video", "image-to-video", "video-to-video", "extend", "interpolate"] }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://github.com/Lightricks/LTX-2", "kind": "official_repository", "supports": ["model_id", "channel", "availability", "claims.resolutions", "claims.max_fps", "claims.audio_support", "claims.guidance_range", "claims.steps_range", "claims.video_operations"] }]
+    },
+    {
+      "id": "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+      "vendor": "lightricks", "model_id": "ltx-2.3-22b-distilled-1.1", "surface": "open-weights", "channel": "production",
+      "availability": { "status": "public", "scope": ["open-weights"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "video_editing", "fast", "audio_generation"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "resolutions", "value": ["up to 4K"] }, { "key": "max_fps", "value": 50 }, { "key": "audio_support", "value": "synchronized audio up to 10 seconds" }, { "key": "steps_range", "value": [4, 8] }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://github.com/Lightricks/LTX-2", "kind": "official_repository", "supports": ["model_id", "channel", "availability", "claims.resolutions", "claims.max_fps", "claims.audio_support", "claims.steps_range"] }]
+    },
+    {
+      "id": "lightricks.ltxv-0-9-8.open-weights",
+      "vendor": "lightricks", "model_id": "LTXV-0.9.8", "surface": "open-weights", "channel": "legacy",
+      "availability": { "status": "public", "scope": ["open-weights"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["legacy_compatibility"], "routing_default_for": [], "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [], "last_verified": "2026-07-01", "source": [{ "url": "https://github.com/Lightricks/LTX-2", "kind": "official_repository", "supports": ["model_id", "channel", "availability"] }]
+    }
+  ]
+}

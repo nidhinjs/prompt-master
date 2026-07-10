@@ -1,0 +1,47 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "black-forest-labs",
+  "records": [
+    {
+      "id": "black-forest-labs.flux-2-klein.api",
+      "vendor": "black-forest-labs", "model_id": "flux-2-klein", "surface": "api", "channel": "production",
+      "availability": { "status": "public", "scope": ["api", "open-weights"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing", "fast"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "guidance_range", "value": [1.5, 10] }, { "key": "steps_range", "value": [1, 50] }, { "key": "reference_image_limit", "value": 8 }, { "key": "max_megapixels", "value": 4 }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.bfl.ml/flux_2/flux2_overview", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.guidance_range", "claims.steps_range", "claims.reference_image_limit", "claims.max_megapixels"] }]
+    },
+    {
+      "id": "black-forest-labs.flux-2-pro.api",
+      "vendor": "black-forest-labs", "model_id": "flux-2-pro", "surface": "api", "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "guidance_range", "value": [1.5, 10] }, { "key": "steps_range", "value": [1, 50] }, { "key": "reference_image_limit", "value": 8 }, { "key": "max_megapixels", "value": 4 }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.bfl.ml/flux_2/flux2_overview", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.guidance_range", "claims.steps_range", "claims.reference_image_limit", "claims.max_megapixels"] }]
+    },
+    {
+      "id": "black-forest-labs.flux-2-flex.api",
+      "vendor": "black-forest-labs", "model_id": "flux-2-flex", "surface": "api", "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing", "typography"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "guidance_range", "value": [1.5, 10] }, { "key": "steps_range", "value": [1, 50] }, { "key": "safety_tolerance_range", "value": [0, 5] }, { "key": "reference_image_limit", "value": 8 }, { "key": "max_megapixels", "value": 4 }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.bfl.ml/flux_2/flux2_overview", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.guidance_range", "claims.steps_range", "claims.safety_tolerance_range", "claims.reference_image_limit", "claims.max_megapixels"] }]
+    },
+    {
+      "id": "black-forest-labs.flux-2-max.api",
+      "vendor": "black-forest-labs", "model_id": "flux-2-max", "surface": "api", "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing", "photorealism"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "image_capabilities", "value": ["grounding"] }, { "key": "guidance_range", "value": [1.5, 10] }, { "key": "steps_range", "value": [1, 50] }, { "key": "reference_image_limit", "value": 8 }, { "key": "max_megapixels", "value": 4 }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.bfl.ml/flux_2/flux2_overview", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.image_capabilities", "claims.guidance_range", "claims.steps_range", "claims.reference_image_limit", "claims.max_megapixels"] }]
+    },
+    {
+      "id": "black-forest-labs.flux-2-dev.api",
+      "vendor": "black-forest-labs", "model_id": "flux-2-dev", "surface": "api", "channel": "production",
+      "availability": { "status": "public", "scope": ["api", "open-weights"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "guidance_range", "value": [1.5, 10] }, { "key": "steps_range", "value": [1, 50] }, { "key": "reference_image_limit", "value": 8 }, { "key": "max_megapixels", "value": 4 }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://docs.bfl.ml/flux_2/flux2_overview", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.guidance_range", "claims.steps_range", "claims.reference_image_limit", "claims.max_megapixels"] }]
+    }
+  ]
+}

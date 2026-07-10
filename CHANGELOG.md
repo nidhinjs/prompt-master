@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.33.0] - 2026-07-10
+
+Canonical-facts and progressive-disclosure release: volatile provider/model
+claims now live in one validated registry, while prompt guidance is routed
+through seven bounded workflow profiles instead of one monolithic catalog.
+
+### Added
+- **Canonical facts registry:** a frozen JSON schema, one routing/default index,
+  18 populated provider shards, 98 sourced records, and explicit production,
+  preview, beta, legacy, deprecated, retired, and availability states.
+- **Profile sharding:** seven self-contained bundles cover hosted/local text,
+  coding agents, research/browser work, builders/workflows, media, and
+  decompiler/fallback routing.
+- **Fail-closed validation:** registry mutation tests cover malformed enums,
+  duplicate IDs/defaults, stale gated records, invalid production/latest
+  selection, orphan routes/shards/records, link and reachability failures, and
+  tracked runtime inventory drift.
+- **Migration evidence:** every legacy `models.md` line and every volatile
+  `tool-profiles.md` line is classified against a registry record, route,
+  replacement, or explicit unsupported removal.
+
+### Changed
+- **Progressive disclosure:** a simple request loads one primary workflow
+  profile and the selected provider shard; only explicit composite work may
+  load one add-on profile.
+- **Compatibility indexes:** `models.md` and `tool-profiles.md` now preserve
+  navigation and routing policy without duplicating active IDs, defaults,
+  channel/availability assertions, status dates, or the exact no-CoT set.
+- **Tracked packaging:** the release ZIP is built from an exact runtime manifest
+  rather than a hardcoded six-file list, while preserving normalized timestamps,
+  source parity, deterministic SHA-256 output, and safe dirty-tree behavior.
+- **Freshness corrections:** stale or unsupported provider claims are removed or
+  replaced only after official-source verification; unsupported facts are not
+  converted into fabricated registry entries.
+
+### Security
+- Safe CI remains fully offline and now includes registry/migration adversarial
+  tests. No live Claude execution is enabled by this release.
+
 ## [1.32.0] - 2026-07-10
 
 Deterministic routing and fallback release: conflicting question, output, variant, split, and retry rules now resolve through one precedence contract, while unknown tools and missing references fail safely without invented provider capabilities.
@@ -560,6 +599,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.33.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.33.0
 [1.32.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.32.0
 [1.31.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.31.1
 [1.31.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.31.0

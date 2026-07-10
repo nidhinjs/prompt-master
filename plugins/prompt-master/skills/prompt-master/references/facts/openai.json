@@ -1,0 +1,166 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "openai",
+  "records": [
+    {
+      "id": "openai.gpt-5-5.api",
+      "vendor": "openai",
+      "model_id": "gpt-5.5",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "frontier", "coding", "structured_output"],
+      "routing_default_for": [],
+      "prompting_constraints": ["outcome_first", "no_cot"],
+      "claims": [
+        { "key": "effort_levels", "value": ["low", "medium", "high"] },
+        { "key": "knobs", "value": { "text.verbosity": ["low", "medium", "high"] } }
+      ],
+      "last_verified": "2026-06-11",
+      "source": [{ "url": "https://developers.openai.com/api/docs/guides/prompt-guidance", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "prompting_constraints", "claims.effort_levels", "claims.knobs"] }]
+    },
+    {
+      "id": "openai.o3.api",
+      "vendor": "openai",
+      "model_id": "o3",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot"],
+      "claims": [],
+      "last_verified": "2026-06-11",
+      "source": [{ "url": "https://developers.openai.com/api/docs/models", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints"] }]
+    },
+    {
+      "id": "openai.o4-mini.api",
+      "vendor": "openai",
+      "model_id": "o4-mini",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "fast", "economy"],
+      "routing_default_for": [],
+      "prompting_constraints": ["no_cot"],
+      "claims": [],
+      "last_verified": "2026-06-11",
+      "source": [{ "url": "https://developers.openai.com/api/docs/models", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints"] }]
+    },
+    {
+      "id": "openai.gpt-image-2.images-api",
+      "vendor": "openai",
+      "model_id": "gpt-image-2",
+      "surface": "images-api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["images-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["image_generation", "image_editing"],
+      "routing_default_for": [],
+      "prompting_constraints": [],
+      "claims": [
+        { "key": "output_delivery", "value": "base64 only" },
+        { "key": "reference_image_limit", "value": 16 },
+        { "key": "size_constraints", "value": { "edge_multiple": 16, "max_aspect_ratio": "3:1", "max_edge_px": 3840 } },
+        { "key": "quality_values", "value": ["low", "medium", "high"] },
+        { "key": "knobs", "value": ["size", "quality", "n", "background", "output_format", "moderation"] }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://developers.openai.com/api/docs/guides/image-generation", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "recommended_for", "claims.output_delivery", "claims.reference_image_limit", "claims.size_constraints", "claims.quality_values", "claims.knobs"] }]
+    },
+    {
+      "id": "openai.gpt-image-1-5.images-api",
+      "vendor": "openai",
+      "model_id": "gpt-image-1.5",
+      "surface": "images-api",
+      "channel": "deprecated",
+      "availability": { "status": "sunset_scheduled", "scope": ["images-api"], "regions": ["global"], "sunset_on": "2026-12-01" },
+      "recommended_for": ["legacy_compatibility"],
+      "routing_default_for": [],
+      "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [{ "key": "shutdown_on", "value": "2026-12-01" }],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://developers.openai.com/api/docs/guides/image-generation", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.shutdown_on"] }]
+    },
+    {
+      "id": "openai.gpt-image-1-mini.images-api",
+      "vendor": "openai",
+      "model_id": "gpt-image-1-mini",
+      "surface": "images-api",
+      "channel": "deprecated",
+      "availability": { "status": "sunset_scheduled", "scope": ["images-api"], "regions": ["global"], "sunset_on": "2026-12-01" },
+      "recommended_for": ["legacy_compatibility"],
+      "routing_default_for": [],
+      "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [{ "key": "shutdown_on", "value": "2026-12-01" }],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://developers.openai.com/api/docs/guides/image-generation", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.shutdown_on"] }]
+    },
+    {
+      "id": "openai.chatgpt-image-latest.images-api",
+      "vendor": "openai",
+      "model_id": "chatgpt-image-latest",
+      "surface": "images-api",
+      "channel": "deprecated",
+      "availability": { "status": "sunset_scheduled", "scope": ["images-api"], "regions": ["global"], "sunset_on": "2026-12-01" },
+      "recommended_for": ["legacy_compatibility"],
+      "routing_default_for": [],
+      "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [{ "key": "shutdown_on", "value": "2026-12-01" }],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://developers.openai.com/api/docs/guides/image-generation", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.shutdown_on"] }]
+    },
+    {
+      "id": "openai.dall-e-2.variations-api",
+      "vendor": "openai",
+      "model_id": "dall-e-2",
+      "surface": "variations-api",
+      "channel": "legacy",
+      "availability": { "status": "limited", "scope": ["variations-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["legacy_compatibility"],
+      "routing_default_for": [],
+      "prompting_constraints": ["deprecated_do_not_default", "surface_specific"],
+      "claims": [{ "key": "shutdown_on", "value": "primary DALL-E service retired 2026-05-12; variations endpoint remains" }],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://developers.openai.com/api/docs/guides/image-generation", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "prompting_constraints", "claims.shutdown_on"] }]
+    },
+    {
+      "id": "openai.sora-2.video-api",
+      "vendor": "openai",
+      "model_id": "sora-2",
+      "surface": "video-api",
+      "channel": "deprecated",
+      "availability": { "status": "sunset_scheduled", "scope": ["video-api"], "regions": ["global"], "sunset_on": "2026-09-24" },
+      "recommended_for": ["video_generation", "legacy_compatibility"],
+      "routing_default_for": [],
+      "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [
+        { "key": "shutdown_on", "value": "2026-09-24" },
+        { "key": "duration_range_seconds", "value": [1, 20] },
+        { "key": "extension_limit_seconds", "value": 120 },
+        { "key": "character_limit", "value": 2 }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://developers.openai.com/api/docs/models", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.shutdown_on", "claims.duration_range_seconds", "claims.extension_limit_seconds", "claims.character_limit"] }]
+    },
+    {
+      "id": "openai.sora-2-pro.video-api",
+      "vendor": "openai",
+      "model_id": "sora-2-pro",
+      "surface": "video-api",
+      "channel": "deprecated",
+      "availability": { "status": "sunset_scheduled", "scope": ["video-api"], "regions": ["global"], "sunset_on": "2026-09-24" },
+      "recommended_for": ["video_generation", "legacy_compatibility"],
+      "routing_default_for": [],
+      "prompting_constraints": ["deprecated_do_not_default"],
+      "claims": [
+        { "key": "shutdown_on", "value": "2026-09-24" },
+        { "key": "duration_range_seconds", "value": [1, 20] },
+        { "key": "extension_limit_seconds", "value": 120 },
+        { "key": "resolutions", "value": ["up to 1080p"] }
+      ],
+      "last_verified": "2026-07-01",
+      "source": [{ "url": "https://developers.openai.com/api/docs/models", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.shutdown_on", "claims.duration_range_seconds", "claims.extension_limit_seconds", "claims.resolutions"] }]
+    }
+  ]
+}

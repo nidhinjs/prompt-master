@@ -8,7 +8,7 @@
 **Why:** Every vague prompt is a wasted credit. Prompt Master extracts intent, picks the right architecture, and strips every word that doesn't change the output.
 **How to start:** Install via the plugin marketplace (see below), then say: `Write me a prompt for [tool] to [task]` — or paste a bad prompt and ask to fix it.
 
-**Works with:** Claude (Opus 4.8 default), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), GLM (Z.AI / BigModel), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Gamma, Midjourney, GPT-image, Stable Diffusion, FLUX.2, ComfyUI, Google Nano Banana, Grok Imagine, Veo 3.1, Kling, Runway, Sora, Seedance, LTX-2, ElevenLabs, Zapier, Make — and any AI tool you throw at it.
+**Works with:** hosted and local text models, reasoning systems, coding agents and IDEs, research/browser agents, presentation and workflow builders, image/video/voice/3D tools — and unknown tools through a capability-safe fallback. Current provider/model selection comes from the validated facts registry, not this README.
 
 ---
 
@@ -187,77 +187,46 @@ Done When:
 
 ---
 
-## 🗺️ Routing Index
+## 🗺️ Routing Architecture
 
-When you name a tool, Prompt Master silently routes to its profile and applies its rules.
+When you name a tool, Prompt Master selects one workflow bundle and resolves the
+matching provider record from the canonical facts registry. An explicit
+composite request may load one add-on bundle; an ordinary request does not load
+the whole catalog.
 
-| Tool / Category | Handles | When to route |
+| Primary bundle | Typical routes | What it contributes |
 |---|---|---|
-| **Claude Opus 4.8 / 4.7** | Default text, heavy reasoning, 1M context | Any "Claude" request without a version |
-| **Claude Fable 5 / Mythos 5** | Frontier — available again, NOT the default | Route only when the user explicitly names Fable 5 / Mythos 5 (terms in models.md) |
-| **ChatGPT / GPT-5.x** | Outcome-first generation, tone, persona | User names ChatGPT or GPT |
-| **o3 / o4-mini** | Reasoning-native models | Never add CoT — they think internally |
-| **Grok 4.3 / xAI** | Reasoning-native; realtime X/web search; multi-agent research | User names Grok or xAI |
-| **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode (Thinking / Non-Thinking) | Pick model + mode by task; no CoT in thinking |
-| **Kimi / Moonshot AI** (`kimi-k2.6` / `k2.7-code` / `k2.5`) | Reasoning-native dual-mode; agentic/coding; Agent Swarm (app) | User names Kimi or Moonshot |
-| **GLM / Z.AI / BigModel** (`glm-5.2`) | Reasoning-native thinking mode; 1M long-context coding/agent tasks | User names GLM, Z.AI, Zhipu, BigModel, chat.z.ai, or ZCode |
-| **Gemini 2.x / 3 Pro** | Grounded, multimodal generation | Needs citation/grounding anchors |
-| **Qwen 2.5 / Qwen3** | Structured output, JSON; Qwen3 adds thinking mode | User names Qwen or an Alibaba model |
-| **Local / open-weight** (Ollama, Llama, Mistral) | Short, flat prompts | User runs a local model |
-| **Perplexity** (Agent API + Sonar) | Search-grounded research / agents | Cited multi-source research |
-| **Claude Code / Devin / Cline** | Agentic file + terminal | Stop conditions + scope locks mandatory |
-| **Cursor / Windsurf / Copilot** | IDE autocomplete/edit | File path + function name required |
-| **Bolt / v0 / Lovable / Figma Make** | Full-stack generation | Stack spec + what NOT to scaffold |
-| **Gamma** | AI presentations (text-to-deck) | Deck / slides / presentation request |
-| **Midjourney / GPT-image / Stable Diffusion / FLUX.2 / Nano Banana / Grok Imagine** | Image generation | Per-model syntax, negative prompt, consistency routing |
-| **Veo 3.1 / Kling / Runway / Seedance 2.0 / Sora / Omni Flash** | Video generation | Camera + duration; conversational edit; sunset-aware |
-| **ElevenLabs** | Voice AI | Emotion, pacing, speech rate |
-| **Zapier / Make / n8n** | Workflow automation | Trigger + action + field mapping |
-| **Unknown tool** | Universal Fingerprint | Asks → quality prompt for any tool |
+| **Hosted text** | Provider-hosted chat, reasoning, and agent APIs | Provider-neutral prompt grammar plus registry-selected constraints |
+| **Local text** | Local runtimes and open-weight models | Compact structure and capability verification without invented defaults |
+| **Coding agents** | Terminal/file agents and IDE assistants | Scope, approvals, stop conditions, checks, and evidence |
+| **Research/browser** | Search, research, and computer-use agents | Retrieval boundaries, citations, read-only defaults, and action gates |
+| **Builders/workflows** | UI/deck builders and automation tools | Deliverable shape, settings-as-knobs, field mapping, and safe execution |
+| **Media** | Image, video, voice, 3D, and node workflows | Media grammar and registry-selected capability/parameter constraints |
+| **Decompiler/fallback** | Existing prompts, missing references, unknown tools | Redacted analysis and a seven-field capability-safe fallback |
 
-Full per-tool rules live in [`references/tool-profiles.md`](plugins/prompt-master/skills/prompt-master/references/tool-profiles.md) — loaded on demand, not at startup.
+The compact [routing index](plugins/prompt-master/skills/prompt-master/references/tool-profiles.md)
+points to the seven [profile bundles](plugins/prompt-master/skills/prompt-master/references/profiles/);
+current IDs, defaults, channels, availability, and version-tied parameters live
+only in the [facts registry](plugins/prompt-master/skills/prompt-master/references/facts/index.json).
 
 ---
 
-## 🤝 Works With Any AI Tool (55+ tools across 30+ profiles)
+## 🤝 Works With Any AI Tool
 
-For anything not profiled, Prompt Master falls back to a **Universal Fingerprint** to write a quality prompt for a tool it has never seen.
+For anything not profiled, Prompt Master falls back to a **Universal
+Fingerprint**. It verifies seven capability fields and marks unknown provider
+behavior `[unverified]` instead of copying a neighboring tool's facts.
 
 <details>
-<summary><b>Click to view the full profile list</b></summary>
+<summary><b>Click to view the runtime layout</b></summary>
 
-| Tool | Category | What Prompt Master fixes |
-|------|----------|--------------------------|
-| **Claude (Opus 4.8 / 4.7)** (default) | Reasoning LLM | Removes padding, adds XML structure, specifies length, front-loads scope |
-| **Claude Fable 5 / Mythos 5** | Frontier LLM — redeployed 2026-07-01, opt-in (not the default) | Outcome-first + brief intent, effort-based steering, no reasoning-echo |
-| **ChatGPT / GPT-5.5 / GPT-5.x** | Reasoning LLM | Outcome-first structure, `text.verbosity`, reasoning-effort tuning, preambles, retrieval budgets |
-| **Grok 4.3 (xAI)** | Reasoning LLM + realtime search | Reasoning-native (no CoT; `reasoning_effort`); Web/X Search for current data; `grok-4.20-multi-agent` for deep research; asks/surfaces output format; inline citations when search is on |
-| **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode LLM | Model + mode by task; thinking is reasoning-native (no CoT, `reasoning_effort` high/max, no temp/penalties); non-thinking takes system prompt + few-shot; preserve `reasoning_content` with tool calls; legacy names retire 2026-07-24 |
-| **Kimi (Moonshot AI)** (`kimi-k2.6` / `k2.7-code` / `k2.5`) | Dual-mode + agentic LLM | Reasoning-native (no CoT; keep defaults — don't tune temp on K2.x); `tool_choice` auto/none with thinking; tools via `tools` not system prompt; preserve `reasoning_content`; `$web_search` needs thinking off; multi-agent = **Agent Swarm** (app, self-orchestrated — no manual agent count) vs single-agent **Kimi-Researcher**; tier-gated features; `kimi-latest` deprecated 2026-01-28 |
-| **GLM (Z.AI / BigModel)** (`glm-5.2`) | Long-context + agentic LLM | Reasoning-native thinking mode (no CoT); GLM-5.2 default for GLM; thinking on/off by task, `reasoning_effort` high/max; preserve `reasoning_content` in tool loops; streaming tools need `stream=true` + `tool_stream=true`; JSON via `response_format`; keep general API and Coding Plan/ZCode endpoints separate |
-| **Gemini 2.x / 3 Pro** | Reasoning LLM | Grounding anchors, citation rules, format locks |
-| **o3 / o4-mini** | Thinking LLM | Short clean instructions only — never adds CoT |
-| **Qwen 2.5 / Qwen3** | Open-weight LLM | Chat template, thinking vs non-thinking detection |
-| **Local models (Llama, Mistral, Ollama)** | Open-weight LLM | Shorter prompts, simpler structure, no deep nesting |
-| **MiniMax (M3 / M2.7)** | Reasoning LLM | Temperature clamping, thinking-tag control, structured output |
-| **Claude Code** | Agentic AI | Stop conditions, file scope, checkpoint output |
-| **Cortex Code** | Agentic AI (Snowflake) | Anti-over-engineering guard, `cortex ctx` step tracking, Snowflake-native tools |
-| **Cursor / Windsurf** | IDE AI | File path, function name, do-not-touch list |
-| **Cline** | Agentic IDE | File scope, approval gates, stop conditions |
-| **GitHub Copilot** | Autocomplete AI | Exact function contract as docstring |
-| **Antigravity** | Agentic IDE (Gemini 3 Pro) | Task-based prompting, Artifact verification, autonomy level |
-| **Bolt / v0 / Lovable / Figma Make / Google Stitch** | Full-stack generators | Stack spec, version, what NOT to scaffold |
-| **Devin / SWE-agent** | Autonomous agent | Starting state, target state, stop conditions |
-| **Manus** | Autonomous agent | Task-outcome focus, permission scope, memory anchors |
-| **Computer-Use / Browser agents** (Comet, Atlas, Claude in Chrome) | Computer-use agent | Outcome over navigation, scoped permissions, stop before irreversible actions |
-| **Perplexity** (Agent API + Sonar) | Research / agent AI | Agent API (`/v1/agent`) recommended for new apps; Sonar (`sonar`/`sonar-pro`/`sonar-deep-research` 128K) for search-grounded answers; research brief (Template N); filters-as-parameters; search driven by user message; Data-gaps/confidence + inline citations |
-| **Gamma** | AI presentations (text-to-deck) | App + Generate API; structured deck brief (role/audience/goal/N-cards/sections/tone/density/visuals); settings-as-knobs (Text Content, Image Source); provide data or [placeholder] (fabricates figures); brand via Theme + Gamma Agent post-gen, not the prompt |
-| **Midjourney V8.1 / GPT-image / Stable Diffusion 3.5 / FLUX.2 / SeeDream 5 / Google Nano Banana / Grok Imagine** | Image AI | Per-model syntax, negative prompts, edit-vs-generate detection, character-consistency routing |
-| **ComfyUI** | Image AI | Positive/negative node split, checkpoint syntax |
-| **Meshy / Tripo / Rodin / BlenderGPT / Unity AI** | 3D / Game AI | Style + export format + polygon budget + rig requirements |
-| **Veo 3.1 / Kling 3.0 / Runway Gen-4.5 / Sora / LTX-2 / Luma Ray / Seedance 2.0 / Grok Imagine / Omni Flash** | Video AI | Camera, duration, references; conversational edit; sunset-aware routing |
-| **ElevenLabs** | Voice AI | Emotion, pacing, emphasis, speech rate |
-| **Zapier / Make / n8n** | Workflow automation | Trigger app + event, action app + field mapping |
+| Layer | Canonical path | Responsibility |
+|---|---|---|
+| Core router | `SKILL.md` | Intent, precedence, output contract, and progressive disclosure |
+| Route index | `references/tool-profiles.md` | Legacy-compatible aliases → one primary bundle and fact route |
+| Workflow guidance | `references/profiles/*.md` | Seven bounded, evergreen profile bundles |
+| Volatile facts | `references/facts/*.json` | Sourced IDs, defaults, channels, availability, parameters, and constraints |
+| Compatibility policy | `references/models.md` | Refresh policy and old anchor navigation without duplicated facts |
 
 </details>
 
@@ -271,14 +240,17 @@ Native multi-agent support by target:
 
 | Target | Multi-agent capability | How Prompt Master frames it |
 |---|---|---|
-| **Grok (xAI)** | `grok-4.20-multi-agent` — native multi-agent research model | Research brief; pick **4** (focused) or **16** (thorough) agents; enable Web/X Search |
-| **Kimi (Moonshot AI)** | **Agent Swarm** — the model self-orchestrates up to **300 sub-agents** (app-only, plan-gated) | One large decomposable task + final artifact; it does **not** set an agent count or script sub-agents (the model orchestrates). Single-agent deep research = **Kimi-Researcher** |
+| **Grok / xAI** | Provider-managed research when the selected registry record/surface supports it | Research brief plus registry-selected search controls; never hardcode an agent count |
+| **Kimi / Moonshot AI** | App-native swarm only when the selected registry record confirms availability | One large decomposable task + final artifact; do not set or script a worker count |
 | **Perplexity / Manus** | Multi-agent web-research orchestrators | Describe the end deliverable, not the steps — they decompose internally |
 | **Claude Code / Cline / Devin / SWE-agent** | You design the orchestration (orchestrator + sub-agents) | Agentic Prompt Fragments: fan-out + synthesizer, evaluator loop, handoff contracts, human-in-the-loop gates |
-| **DeepSeek V4** | No native multi-agent agent | "Deep research" = thinking (high/max) + retrieval + citation contract, or a DIY tool-loop |
-| **GLM (Z.AI / BigModel)** | No confirmed native multi-agent cloud fallback table | Use GLM-5.2 thinking + tool loop / Coding Plan profile; preserve `reasoning_content`, add stop conditions and verification like other agentic tools |
+| **DeepSeek** | No registry-confirmed native swarm | Use the registry-selected reasoning/retrieval route or a bounded custom tool loop |
+| **GLM / Z.AI / BigModel** | No registry-confirmed native cloud fallback table | Use registry-selected thinking/tool-loop surfaces with stop conditions and evidence |
 
-Two orchestration styles, and Prompt Master picks the right one automatically: **model-orchestrated** (Kimi Agent Swarm, Grok multi-agent — you just frame the goal) vs **you-design-it** (Claude Code, Devin — an explicit topology you specify). For a vendor-managed swarm like Kimi it will *not* hand-script sub-agents; for a Claude Code orchestrator it will.
+Two orchestration styles remain distinct: **provider-managed**, where the
+selected registry record confirms the surface and the prompt only frames the
+goal; and **user-designed**, where a coding agent receives an explicit bounded
+topology. Prompt Master never invents availability or a worker count.
 
 ---
 
@@ -403,7 +375,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.32.0** (deterministic precedence, no-question fallbacks, exact variants/split/retry contracts, hardened offline oracle, and reproducible release packaging).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.33.0** (canonical provider/model facts registry, seven progressively loaded workflow profiles, fail-closed freshness/routing validation, and manifest-driven deterministic packaging).
 
 ## 📄 License
 

@@ -8,7 +8,7 @@
 **Зачем:** каждый расплывчатый промпт — это слитый кредит. Prompt Master извлекает намерение, выбирает правильную архитектуру и вычищает каждое слово, которое не меняет результат.
 **Как начать:** установи через маркетплейс плагинов (см. ниже) и скажи: `Напиши промпт для [инструмент], чтобы [задача]` — или вставь плохой промпт и попроси исправить.
 
-**Работает с:** Claude (Opus 4.8 — дефолт), ChatGPT / GPT-5.x, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), GLM (Z.AI / BigModel), o3/o4-mini, Qwen, MiniMax, Llama/Mistral, Cursor, Claude Code, Cortex Code, GitHub Copilot, Windsurf, Cline, Bolt, v0, Lovable, Devin, Perplexity, Gamma, Midjourney, GPT-image, Stable Diffusion, FLUX.2, ComfyUI, Google Nano Banana, Grok Imagine, Veo 3.1, Kling, Runway, Sora, Seedance, LTX-2, ElevenLabs, Zapier, Make — и любым AI-инструментом, который подкинешь.
+**Работает с:** hosted/local text-моделями, reasoning-системами, coding-агентами и IDE, research/browser-агентами, presentation/workflow builders, image/video/voice/3D-инструментами — и с неизвестными инструментами через capability-safe fallback. Текущий provider/model выбирается из валидируемого реестра фактов, а не из README.
 
 ---
 
@@ -187,77 +187,46 @@ Done When:
 
 ---
 
-## 🗺️ Индекс роутинга
+## 🗺️ Архитектура роутинга
 
-Когда ты называешь инструмент, Prompt Master молча роутит в его профиль и применяет правила.
+Когда ты называешь инструмент, Prompt Master выбирает один workflow-бандл и
+разрешает подходящую provider-запись через канонический реестр фактов. Явная
+composite-задача может загрузить один add-on; обычный запрос не грузит весь
+каталог.
 
-| Инструмент / категория | Что закрывает | Когда роутить |
+| Primary-бандл | Типичные маршруты | Что добавляет |
 |---|---|---|
-| **Claude Opus 4.8 / 4.7** | Дефолтный текст, тяжёлое рассуждение, 1M контекст | Любой запрос «Claude» без версии |
-| **Claude Fable 5 / Mythos 5** | Frontier — снова доступны, но НЕ дефолт | Роутить только когда юзер явно называет Fable 5 / Mythos 5 (условия в models.md) |
-| **ChatGPT / GPT-5.x** | Outcome-first генерация, тон, персона | Юзер называет ChatGPT или GPT |
-| **o3 / o4-mini** | Reasoning-native модели | Никакого CoT — думают внутри |
-| **Grok 4.3 / xAI** | Reasoning-native; realtime X/web search; multi-agent research | Юзер называет Grok или xAI |
-| **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode (Thinking / Non-Thinking) | Модель + режим по задаче; без CoT в thinking |
-| **Kimi / Moonshot AI** (`kimi-k2.6` / `k2.7-code` / `k2.5`) | Reasoning-native dual-mode; агентность/кодинг; Agent Swarm (app) | Юзер называет Kimi или Moonshot |
-| **GLM / Z.AI / BigModel** (`glm-5.2`) | Reasoning-native thinking mode; 1M long-context для кода/агентов | Юзер называет GLM, Z.AI, Zhipu, BigModel, chat.z.ai или ZCode |
-| **Gemini 2.x / 3 Pro** | Grounded, мультимодальная генерация | Нужны citation/grounding-якоря |
-| **Qwen 2.5 / Qwen3** | Структурный вывод, JSON; у Qwen3 есть thinking | Юзер называет Qwen или модель Alibaba |
-| **Local / open-weight** (Ollama, Llama, Mistral) | Короткие, плоские промпты | Юзер крутит локальную модель |
-| **Perplexity** (Agent API + Sonar) | Research с поиском / агенты | Многоисточниковый ресёрч с цитатами |
-| **Claude Code / Devin / Cline** | Агентный файл + терминал | Стоп-условия + scope-локи обязательны |
-| **Cursor / Windsurf / Copilot** | IDE-автокомплит/правки | Нужны путь к файлу + имя функции |
-| **Bolt / v0 / Lovable / Figma Make** | Full-stack генерация | Спека стека + что НЕ скаффолдить |
-| **Gamma** | AI-презентации (text-to-deck) | Запрос на deck / слайды / презентацию |
-| **Midjourney / GPT-image / Stable Diffusion / FLUX.2 / Nano Banana / Grok Imagine** | Генерация изображений | Синтаксис под модель, негатив, роутинг консистентности |
-| **Veo 3.1 / Kling / Runway / Seedance 2.0 / Sora / Omni Flash** | Генерация видео | Камера + длительность; разговорное редактирование; учёт sunset |
-| **ElevenLabs** | Voice AI | Эмоция, темп, скорость речи |
-| **Zapier / Make / n8n** | Автоматизация | Триггер + действие + маппинг полей |
-| **Неизвестный инструмент** | Universal Fingerprint | Спрашивает → качественный промпт под любой инструмент |
+| **Hosted text** | Provider-hosted chat, reasoning и agent API | Provider-neutral грамматика плюс ограничения из registry |
+| **Local text** | Локальные runtime и open-weight модели | Компактная структура и проверка capability без выдуманных defaults |
+| **Coding agents** | File/terminal agents и IDE-помощники | Scope, approvals, stop conditions, проверки и evidence |
+| **Research/browser** | Search, research и computer-use agents | Retrieval-границы, citations, read-only defaults и action gates |
+| **Builders/workflows** | UI/deck builders и автоматизация | Форма результата, settings-as-knobs, field mapping и safe execution |
+| **Media** | Image, video, voice, 3D и node workflows | Media-грамматика и выбранные через registry capability/parameters |
+| **Decompiler/fallback** | Готовые промпты, missing references, unknown tools | Redacted analysis и семипольный capability-safe fallback |
 
-Полные правила по каждому инструменту — в [`references/tool-profiles.md`](plugins/prompt-master/skills/prompt-master/references/tool-profiles.md), грузятся по требованию, не на старте.
+Компактный [routing index](plugins/prompt-master/skills/prompt-master/references/tool-profiles.md)
+ведёт в семь [profile-бандлов](plugins/prompt-master/skills/prompt-master/references/profiles/);
+текущие IDs, defaults, channels, availability и version-tied параметры живут
+только в [реестре фактов](plugins/prompt-master/skills/prompt-master/references/facts/index.json).
 
 ---
 
-## 🤝 Работает с любым AI-инструментом (55+ инструментов в 30+ профилях)
+## 🤝 Работает с любым AI-инструментом
 
-Для всего, чего нет в профилях, Prompt Master использует **Universal Fingerprint** — чтобы написать качественный промпт под незнакомый инструмент.
+Для всего, чего нет в профилях, Prompt Master использует **Universal
+Fingerprint**: проверяет семь capability-полей и помечает неизвестное поведение
+`[unverified]`, а не копирует факты соседнего инструмента.
 
 <details>
-<summary><b>Нажми, чтобы раскрыть полный список профилей</b></summary>
+<summary><b>Нажми, чтобы раскрыть runtime-layout</b></summary>
 
-| Инструмент | Категория | Что чинит Prompt Master |
-|------|----------|--------------------------|
-| **Claude (Opus 4.8 / 4.7)** (дефолт) | Reasoning LLM | Убирает воду, добавляет XML-структуру, задаёт длину, фронт-лоадит scope |
-| **Claude Fable 5 / Mythos 5** | Frontier LLM — redeployed 2026-07-01, opt-in (не дефолт) | Outcome-first + краткое намерение, effort-рулёжка, без reasoning-эха |
-| **ChatGPT / GPT-5.5 / GPT-5.x** | Reasoning LLM | Outcome-first, `text.verbosity`, тюнинг reasoning-effort, преамбулы, бюджеты на retrieval |
-| **Grok 4.3 (xAI)** | Reasoning LLM + realtime search | Reasoning-native (без CoT; `reasoning_effort`); Web/X Search для свежих данных; `grok-4.20-multi-agent` для deep research; спрашивает/выносит формат вывода; inline-цитаты при включённом поиске |
-| **DeepSeek V4** (`v4-pro` / `v4-flash`) | Dual-mode LLM | Модель + режим по задаче; thinking reasoning-native (без CoT, `reasoning_effort` high/max, без temp/penalty); non-thinking берёт system prompt + few-shot; сохранять `reasoning_content` при tool calls; легаси-имена отключаются 2026-07-24 |
-| **Kimi (Moonshot AI)** (`kimi-k2.6` / `k2.7-code` / `k2.5`) | Dual-mode + агентная LLM | Reasoning-native (без CoT; держать дефолты — не тюнить temp на K2.x); `tool_choice` auto/none при thinking; инструменты через `tools`, не в system prompt; сохранять `reasoning_content`; `$web_search` требует thinking off; multi-agent = **Agent Swarm** (app, само-оркестрация — без ручного числа агентов) ≠ одно-агентный **Kimi-Researcher**; tier-gated фичи; `kimi-latest` deprecated 2026-01-28 |
-| **GLM (Z.AI / BigModel)** (`glm-5.2`) | Long-context + агентная LLM | Reasoning-native thinking mode (без CoT); GLM-5.2 — дефолт для GLM; thinking on/off по задаче, `reasoning_effort` high/max; сохранять `reasoning_content` в tool-loop; streaming tools требуют `stream=true` + `tool_stream=true`; JSON через `response_format`; не смешивать general API и Coding Plan/ZCode endpoints |
-| **Gemini 2.x / 3 Pro** | Reasoning LLM | Grounding-якоря, правила цитирования, формат-локи |
-| **o3 / o4-mini** | Thinking LLM | Только короткие чистые инструкции — никакого CoT |
-| **Qwen 2.5 / Qwen3** | Open-weight LLM | Chat-шаблон, детект thinking vs non-thinking |
-| **Локальные (Llama, Mistral, Ollama)** | Open-weight LLM | Короче промпты, проще структура, без глубокой вложенности |
-| **MiniMax (M3 / M2.7)** | Reasoning LLM | Клампинг температуры, контроль think-тегов, структурный вывод |
-| **Claude Code** | Агентный AI | Стоп-условия, scope файлов, чекпойнт-вывод |
-| **Cortex Code** | Агентный AI (Snowflake) | Анти-оверинжиниринг, трекинг `cortex ctx`, Snowflake-нативные тулы |
-| **Cursor / Windsurf** | IDE AI | Путь к файлу, имя функции, do-not-touch список |
-| **Cline** | Агентный IDE | Scope файлов, гейты подтверждения, стоп-условия |
-| **GitHub Copilot** | Автокомплит AI | Точный контракт функции как docstring |
-| **Antigravity** | Агентный IDE (Gemini 3 Pro) | Task-based промптинг, верификация артефактов, уровень автономии |
-| **Bolt / v0 / Lovable / Figma Make / Google Stitch** | Full-stack генераторы | Спека стека, версия, что НЕ скаффолдить |
-| **Devin / SWE-agent** | Автономный агент | Стартовое состояние, целевое, стоп-условия |
-| **Manus** | Автономный агент | Фокус на результат, scope прав, memory-якоря |
-| **Computer-Use / браузер-агенты** (Comet, Atlas, Claude in Chrome) | Computer-use агент | Результат вместо навигации, ограниченные права, стоп перед необратимым |
-| **Perplexity** (Agent API + Sonar) | Research / agent AI | Agent API (`/v1/agent`) — дефолт для новых апп; Sonar (`sonar`/`sonar-pro`/`sonar-deep-research` 128K) для search-grounded ответов; research-бриф (Template N); фильтры-как-параметры; search по user-сообщению; Data-gaps/confidence + inline-цитаты |
-| **Gamma** | AI-презентации (text-to-deck) | App + Generate API; структурированный deck-бриф (роль/аудитория/цель/число-карточек/секции/тон/плотность/визуал); настройки-как-параметры (Text Content, Image Source); давать данные или [placeholder] (иначе инструмент выдумывает цифры); бренд — через Theme + Gamma Agent пост-ген, не в промпте |
-| **Midjourney V8.1 / GPT-image / Stable Diffusion 3.5 / FLUX.2 / SeeDream 5 / Google Nano Banana / Grok Imagine** | Image AI | Синтаксис под каждую модель, негатив-промпты, детект edit-vs-generate, роутинг character-consistency |
-| **ComfyUI** | Image AI | Раздельные ноды Positive/Negative, синтаксис чекпойнта |
-| **Meshy / Tripo / Rodin / BlenderGPT / Unity AI** | 3D / Game AI | Стиль + формат экспорта + полигон-бюджет + требования к ригу |
-| **Veo 3.1 / Kling 3.0 / Runway Gen-4.5 / Sora / LTX-2 / Luma Ray / Seedance 2.0 / Grok Imagine / Omni Flash** | Video AI | Камера, длительность, референсы; разговорное редактирование; sunset-aware роутинг |
-| **ElevenLabs** | Voice AI | Эмоция, темп, акценты, скорость речи |
-| **Zapier / Make / n8n** | Автоматизация | Триггер-приложение + событие, действие + маппинг полей |
+| Слой | Канонический путь | Ответственность |
+|---|---|---|
+| Core-router | `SKILL.md` | Intent, precedence, output contract и progressive disclosure |
+| Route index | `references/tool-profiles.md` | Legacy-compatible aliases → один primary-бандл и fact-route |
+| Workflow-guidance | `references/profiles/*.md` | Семь ограниченных evergreen profile-бандлов |
+| Volatile facts | `references/facts/*.json` | Sourced IDs, defaults, channels, availability, parameters и constraints |
+| Compatibility-policy | `references/models.md` | Refresh policy и старые anchors без дублирования фактов |
 
 </details>
 
@@ -271,14 +240,17 @@ Prompt Master **умеет** генерировать мультиагентны
 
 | Инструмент | Мультиагентная возможность | Как оформляет Prompt Master |
 |---|---|---|
-| **Grok (xAI)** | `grok-4.20-multi-agent` — нативная мультиагентная research-модель | Research-бриф; выбор **4** (сфокусированно) или **16** (тщательно) агентов; включает Web/X Search |
-| **Kimi (Moonshot AI)** | **Agent Swarm** — модель **сама** оркеструет до **300 sub-агентов** (только в приложении, зависит от тарифа) | Одна крупная декомпозируемая задача + финальный артефакт; **не** задаёт число агентов и не скриптует sub-агентов (оркеструет модель). Одно-агентный deep research = **Kimi-Researcher** |
+| **Grok / xAI** | Provider-managed research, только если выбранная registry-запись/поверхность это поддерживает | Research-бриф плюс выбранные через registry search controls; число агентов не хардкодится |
+| **Kimi / Moonshot AI** | App-native swarm, только когда выбранная registry-запись подтверждает доступность | Одна крупная декомпозируемая задача + финальный артефакт; число workers не задаётся и не скриптуется |
 | **Perplexity / Manus** | Мультиагентные оркестраторы веб-ресёрча | Описывай конечный результат, а не шаги — они декомпозируют сами |
 | **Claude Code / Cline / Devin / SWE-agent** | Топологию проектируешь ты (оркестратор + sub-агенты) | Agentic Prompt Fragments: fan-out + синтезатор, evaluator-петля, handoff-контракты, human-in-the-loop гейты |
-| **DeepSeek V4** | Нет нативного мультиагентного агента | «Deep research» = thinking (high/max) + retrieval + citation-контракт, либо свой tool-loop |
-| **GLM (Z.AI / BigModel)** | Нет подтвержденной нативной cloud fallback-таблицы | GLM-5.2 thinking + tool-loop / Coding Plan profile; сохранять `reasoning_content`, добавлять stop conditions и verification как для других агентных инструментов |
+| **DeepSeek** | Нет подтверждённого registry нативного swarm | Выбранный через registry reasoning/retrieval route или ограниченный собственный tool-loop |
+| **GLM / Z.AI / BigModel** | Нет подтверждённой registry cloud fallback-таблицы | Выбранные через registry thinking/tool-loop surfaces со stop conditions и evidence |
 
-Два стиля оркестрации, и Prompt Master сам выбирает нужный: **оркеструет модель** (Kimi Agent Swarm, Grok multi-agent — ты только формулируешь цель) vs **проектируешь ты** (Claude Code, Devin — явная топология, которую ты задаёшь). Для vendor-managed swarm вроде Kimi он **не** будет вручную прописывать sub-агентов; для оркестратора Claude Code — будет.
+Два стиля оркестрации остаются раздельными: **provider-managed**, где выбранная
+registry-запись подтверждает поверхность, а промпт только формулирует цель; и
+**user-designed**, где coding agent получает явную ограниченную топологию.
+Prompt Master не выдумывает availability или число workers.
 
 ---
 
@@ -403,7 +375,7 @@ Prompt Master сверяет каждую сырую идею с 61 извест
 
 ## ℹ️ История версий
 
-Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.32.0** (детерминированные приоритеты и fallback без вопросов, точные variants/split/retry-контракты, усиленный offline oracle и воспроизводимая упаковка релиза).
+Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.33.0** (канонический реестр provider/model facts, семь прогрессивно загружаемых workflow-профилей, fail-closed проверка freshness/роутинга и детерминированная упаковка по tracked manifest).
 
 ## 📄 Лицензия
 

@@ -1,0 +1,3971 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Reviewed migration map for the pre-v1.33 volatile fact sheet and every legacy tool-profile line containing an active model ID, default, channel, availability, or version-tied parameter claim.",
+  "classification_values": [
+    "policy_or_structure",
+    "profile_evergreen",
+    "record_metadata",
+    "registry_record",
+    "registry_route",
+    "registry_record_and_route",
+    "replaced_stale",
+    "removed_unverified",
+    "removed_stale_unverified"
+  ],
+  "sources": [
+    {
+      "source_file": "plugins/prompt-master/skills/prompt-master/references/models.md",
+      "source_sha256": "80b4d16ff030cb4be7d1db7111a0b97856374cf0ab492975d278735227670b9b",
+      "line_count": 177,
+      "coverage": "every legacy line exactly once",
+      "classifications": [
+        {
+          "line": 1,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 2,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 3,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 4,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 5,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 6,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 7,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 8,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 9,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 10,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 11,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 12,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 13,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 14,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 15,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 16,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 17,
+          "classification": "record_metadata",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 18,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 19,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 20,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api"
+          ],
+          "route_aliases": [
+            "claude"
+          ]
+        },
+        {
+          "line": 21,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 22,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 23,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-opus-4-8.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 24,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.advisor-tool-2026-03-01.api"
+          ],
+          "route_aliases": [
+            "advisor"
+          ]
+        },
+        {
+          "line": 25,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": [
+            "managed-agents"
+          ]
+        },
+        {
+          "line": 26,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 27,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 28,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 29,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 30,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 31,
+          "classification": "record_metadata",
+          "record_ids": [
+            "openai.gpt-5-5.api",
+            "openai.o3.api",
+            "openai.o4-mini.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 32,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 33,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": [
+            "gpt",
+            "openai"
+          ]
+        },
+        {
+          "line": 34,
+          "classification": "registry_record",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 35,
+          "classification": "registry_record",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 36,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "openai.o3.api",
+            "openai.o4-mini.api"
+          ],
+          "route_aliases": [
+            "openai-reasoning"
+          ]
+        },
+        {
+          "line": 37,
+          "classification": "registry_record",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 38,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 39,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 40,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 41,
+          "classification": "record_metadata",
+          "record_ids": [
+            "google.gemini-3-pro.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 42,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 43,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "google.gemini-3-pro.api"
+          ],
+          "route_aliases": [
+            "gemini"
+          ]
+        },
+        {
+          "line": 44,
+          "classification": "registry_record",
+          "record_ids": [
+            "google.gemini-3-pro.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 45,
+          "classification": "profile_evergreen",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 46,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 47,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 48,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 49,
+          "classification": "record_metadata",
+          "record_ids": [
+            "xai.grok-4-5.api",
+            "xai.grok-4-20-multi-agent.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 50,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 51,
+          "classification": "replaced_stale",
+          "record_ids": [
+            "xai.grok-4-5.api"
+          ],
+          "route_aliases": [
+            "grok",
+            "xai"
+          ],
+          "note": "Legacy default and IDs were replaced after an official 2026-07-10 recheck."
+        },
+        {
+          "line": 52,
+          "classification": "replaced_stale",
+          "record_ids": [
+            "xai.grok-4-5.api"
+          ],
+          "route_aliases": [
+            "grok"
+          ]
+        },
+        {
+          "line": 53,
+          "classification": "registry_record",
+          "record_ids": [
+            "xai.grok-4-20-multi-agent.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 54,
+          "classification": "registry_record",
+          "record_ids": [
+            "xai.grok-4-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 55,
+          "classification": "registry_record",
+          "record_ids": [
+            "xai.grok-4-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 56,
+          "classification": "registry_record",
+          "record_ids": [
+            "xai.grok-4-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 57,
+          "classification": "registry_record",
+          "record_ids": [
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 58,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 59,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 60,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 61,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 62,
+          "classification": "record_metadata",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 63,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 64,
+          "classification": "registry_record",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 65,
+          "classification": "registry_record",
+          "record_ids": [
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 66,
+          "classification": "registry_record",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 67,
+          "classification": "registry_record",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 68,
+          "classification": "registry_record",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 69,
+          "classification": "registry_record",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 70,
+          "classification": "registry_record",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 71,
+          "classification": "removed_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "Approximate output and final-GA claims were not admitted."
+        },
+        {
+          "line": 72,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 73,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 74,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 75,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No current official MiniMax source supported the former M3/M2.7 claims."
+        },
+        {
+          "line": 76,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 77,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No populated MiniMax shard: former claims failed current official verification."
+        },
+        {
+          "line": 78,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No populated MiniMax shard: former claims failed current official verification."
+        },
+        {
+          "line": 79,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No populated MiniMax shard: former claims failed current official verification."
+        },
+        {
+          "line": 80,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 81,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 82,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 83,
+          "classification": "record_metadata",
+          "record_ids": [
+            "alibaba.qwen2-5-family.api",
+            "alibaba.qwen3-family.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 84,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 85,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "alibaba.qwen2-5-family.api",
+            "alibaba.qwen3-family.api"
+          ],
+          "route_aliases": [
+            "qwen"
+          ]
+        },
+        {
+          "line": 86,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 87,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 88,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 89,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 90,
+          "classification": "record_metadata",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api",
+            "moonshot-ai.moonshot-v1-8k.api",
+            "moonshot-ai.moonshot-v1-32k.api",
+            "moonshot-ai.moonshot-v1-128k.api",
+            "moonshot-ai.kimi-agent-swarm.app",
+            "moonshot-ai.kimi-researcher.app"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 91,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 92,
+          "classification": "registry_record",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api",
+            "moonshot-ai.moonshot-v1-8k.api",
+            "moonshot-ai.moonshot-v1-32k.api",
+            "moonshot-ai.moonshot-v1-128k.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 93,
+          "classification": "registry_record",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 94,
+          "classification": "registry_record",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 95,
+          "classification": "registry_record",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 96,
+          "classification": "registry_record",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 97,
+          "classification": "registry_record",
+          "record_ids": [
+            "moonshot-ai.kimi-agent-swarm.app",
+            "moonshot-ai.kimi-researcher.app"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 98,
+          "classification": "registry_record",
+          "record_ids": [
+            "moonshot-ai.kimi-agent-swarm.app"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 99,
+          "classification": "registry_record",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 100,
+          "classification": "removed_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "Unconfirmed limits and product/API availability were not admitted."
+        },
+        {
+          "line": 101,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 102,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 103,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 104,
+          "classification": "record_metadata",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api",
+            "zai-bigmodel.glm-5-1.api",
+            "zai-bigmodel.glm-5.api",
+            "zai-bigmodel.glm-5-turbo.api",
+            "zai-bigmodel.glm-4-7.api",
+            "zai-bigmodel.glm-4-6.api",
+            "zai-bigmodel.glm-4-6v.api",
+            "zai-bigmodel.glm-4-5v.api",
+            "zai-bigmodel.glm-z1-family.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 105,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 106,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api"
+          ],
+          "route_aliases": [
+            "glm"
+          ]
+        },
+        {
+          "line": 107,
+          "classification": "registry_record",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api",
+            "zai-bigmodel.glm-5-1.api",
+            "zai-bigmodel.glm-5.api",
+            "zai-bigmodel.glm-5-turbo.api",
+            "zai-bigmodel.glm-4-7.api",
+            "zai-bigmodel.glm-4-6.api",
+            "zai-bigmodel.glm-4-6v.api",
+            "zai-bigmodel.glm-4-5v.api",
+            "zai-bigmodel.glm-z1-family.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 108,
+          "classification": "registry_record",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 109,
+          "classification": "registry_record",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 110,
+          "classification": "registry_record",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 111,
+          "classification": "registry_record",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 112,
+          "classification": "registry_record",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 113,
+          "classification": "registry_record",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 114,
+          "classification": "registry_record",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 115,
+          "classification": "registry_record",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 116,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 117,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 118,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 119,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 120,
+          "classification": "record_metadata",
+          "record_ids": [
+            "perplexity.agent-api.agent-api",
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 121,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 122,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 123,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "perplexity.agent-api.agent-api"
+          ],
+          "route_aliases": [
+            "perplexity"
+          ]
+        },
+        {
+          "line": 124,
+          "classification": "registry_record",
+          "record_ids": [
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 125,
+          "classification": "registry_record",
+          "record_ids": [
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 126,
+          "classification": "registry_record",
+          "record_ids": [
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 127,
+          "classification": "registry_record",
+          "record_ids": [
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 128,
+          "classification": "registry_record",
+          "record_ids": [
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 129,
+          "classification": "registry_record",
+          "record_ids": [
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 130,
+          "classification": "removed_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "Blog-only product concept was not admitted as API fact."
+        },
+        {
+          "line": 131,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 132,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 133,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 134,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 135,
+          "classification": "record_metadata",
+          "record_ids": [
+            "gamma.gamma-app.app",
+            "gamma.generate-api.generate-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 136,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 137,
+          "classification": "registry_record",
+          "record_ids": [
+            "gamma.gamma-app.app"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 138,
+          "classification": "registry_record",
+          "record_ids": [
+            "gamma.gamma-app.app"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 139,
+          "classification": "registry_record",
+          "record_ids": [
+            "gamma.generate-api.generate-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 140,
+          "classification": "registry_record",
+          "record_ids": [
+            "gamma.gamma-app.app"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 141,
+          "classification": "registry_record",
+          "record_ids": [
+            "gamma.gamma-app.app"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 142,
+          "classification": "removed_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "Unconfirmed credit and heuristic claims were not admitted."
+        },
+        {
+          "line": 143,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 144,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 145,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 146,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 147,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 148,
+          "classification": "record_metadata",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 149,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 150,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "midjourney.v8-1.app",
+            "midjourney.v7.app"
+          ],
+          "route_aliases": [
+            "midjourney"
+          ]
+        },
+        {
+          "line": 151,
+          "classification": "registry_record",
+          "record_ids": [
+            "midjourney.v8-1.app",
+            "midjourney.v7.app"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 152,
+          "classification": "registry_record",
+          "record_ids": [
+            "midjourney.v8-1.app",
+            "midjourney.v7.app"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 153,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "openai.gpt-image-2.images-api",
+            "openai.gpt-image-1-5.images-api",
+            "openai.gpt-image-1-mini.images-api",
+            "openai.chatgpt-image-latest.images-api",
+            "openai.dall-e-2.variations-api"
+          ],
+          "route_aliases": [
+            "gpt-image"
+          ]
+        },
+        {
+          "line": 154,
+          "classification": "registry_record",
+          "record_ids": [
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "stability-ai.sd3-0-family.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 155,
+          "classification": "registry_record",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 156,
+          "classification": "registry_record",
+          "record_ids": [
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 157,
+          "classification": "registry_record",
+          "record_ids": [
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 158,
+          "classification": "registry_record",
+          "record_ids": [
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 159,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 160,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 161,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 162,
+          "classification": "record_metadata",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 163,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 164,
+          "classification": "registry_record",
+          "record_ids": [
+            "google.veo-2-0-family.video-api",
+            "google.veo-3-0-family.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-aleph.video-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 165,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "google.veo-2-0-family.video-api",
+            "google.veo-3-0-family.video-api"
+          ],
+          "route_aliases": [
+            "veo"
+          ]
+        },
+        {
+          "line": 166,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api"
+          ],
+          "route_aliases": [
+            "kling"
+          ]
+        },
+        {
+          "line": 167,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "runway.gen4-5.video-api",
+            "runway.aleph2.video-api",
+            "runway.gen4-aleph.video-api"
+          ],
+          "route_aliases": [
+            "runway"
+          ]
+        },
+        {
+          "line": 168,
+          "classification": "registry_record",
+          "record_ids": [
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 169,
+          "classification": "registry_record",
+          "record_ids": [
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "lightricks.ltxv-0-9-8.open-weights"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 170,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "luma-ai.ray-3-2.video-api"
+          ],
+          "route_aliases": [
+            "luma"
+          ]
+        },
+        {
+          "line": 171,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api"
+          ],
+          "route_aliases": [
+            "seedance"
+          ]
+        },
+        {
+          "line": 172,
+          "classification": "registry_record",
+          "record_ids": [
+            "google.gemini-omni-flash-preview.interactions-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 173,
+          "classification": "registry_record",
+          "record_ids": [
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 174,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 175,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 176,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        },
+        {
+          "line": 177,
+          "classification": "policy_or_structure",
+          "record_ids": [],
+          "route_aliases": []
+        }
+      ]
+    },
+    {
+      "source_file": "plugins/prompt-master/skills/prompt-master/references/tool-profiles.md",
+      "source_sha256": "6a7efd14e4d44334ebfdd7109981a507e210ed9e9ff31559840bd08d52eb2222",
+      "line_count": 597,
+      "coverage": "all legacy lines containing volatile claims",
+      "classifications": [
+        {
+          "line": 17,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api"
+          ],
+          "route_aliases": [
+            "claude"
+          ]
+        },
+        {
+          "line": 18,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app"
+          ],
+          "route_aliases": [
+            "claude-frontier"
+          ]
+        },
+        {
+          "line": 19,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.advisor-tool-2026-03-01.api"
+          ],
+          "route_aliases": [
+            "advisor"
+          ]
+        },
+        {
+          "line": 20,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": [
+            "managed-agents"
+          ]
+        },
+        {
+          "line": 21,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": [
+            "gpt"
+          ]
+        },
+        {
+          "line": 22,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "openai.o3.api",
+            "openai.o4-mini.api"
+          ],
+          "route_aliases": [
+            "openai-reasoning"
+          ]
+        },
+        {
+          "line": 23,
+          "classification": "replaced_stale",
+          "record_ids": [
+            "xai.grok-4-5.api"
+          ],
+          "route_aliases": [
+            "grok"
+          ],
+          "note": "Official current flagship replaced the legacy literal."
+        },
+        {
+          "line": 24,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "google.gemini-3-pro.api"
+          ],
+          "route_aliases": [
+            "gemini"
+          ]
+        },
+        {
+          "line": 25,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api",
+            "moonshot-ai.moonshot-v1-8k.api",
+            "moonshot-ai.moonshot-v1-32k.api",
+            "moonshot-ai.moonshot-v1-128k.api",
+            "moonshot-ai.kimi-agent-swarm.app",
+            "moonshot-ai.kimi-researcher.app"
+          ],
+          "route_aliases": [
+            "kimi"
+          ]
+        },
+        {
+          "line": 26,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api",
+            "zai-bigmodel.glm-5-1.api",
+            "zai-bigmodel.glm-5.api",
+            "zai-bigmodel.glm-5-turbo.api",
+            "zai-bigmodel.glm-4-7.api",
+            "zai-bigmodel.glm-4-6.api",
+            "zai-bigmodel.glm-4-6v.api",
+            "zai-bigmodel.glm-4-5v.api",
+            "zai-bigmodel.glm-z1-family.api"
+          ],
+          "route_aliases": [
+            "glm"
+          ]
+        },
+        {
+          "line": 27,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "alibaba.qwen2-5-family.api",
+            "alibaba.qwen3-family.api"
+          ],
+          "route_aliases": [
+            "qwen"
+          ]
+        },
+        {
+          "line": 28,
+          "classification": "removed_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "Ollama hardcoded examples require local runtime verification."
+        },
+        {
+          "line": 29,
+          "classification": "removed_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No sourced Llama/Mistral model registry records."
+        },
+        {
+          "line": 30,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": [
+            "deepseek"
+          ]
+        },
+        {
+          "line": 31,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "MiniMax M3/M2.7 claims failed current verification."
+        },
+        {
+          "line": 32,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api"
+          ],
+          "route_aliases": [
+            "claude-code"
+          ]
+        },
+        {
+          "line": 34,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "google.gemini-3-pro.api"
+          ],
+          "route_aliases": [
+            "antigravity"
+          ]
+        },
+        {
+          "line": 39,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "gamma.gamma-app.app",
+            "gamma.generate-api.generate-api"
+          ],
+          "route_aliases": [
+            "gamma"
+          ]
+        },
+        {
+          "line": 41,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "perplexity.agent-api.agent-api",
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": [
+            "perplexity"
+          ]
+        },
+        {
+          "line": 44,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 45,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 49,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        },
+        {
+          "line": 58,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 61,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 64,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 65,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 66,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 70,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 73,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 75,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 78,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 83,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 85,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 87,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 89,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 94,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 98,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 99,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 101,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 105,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.advisor-tool-2026-03-01.api"
+          ],
+          "route_aliases": [
+            "advisor"
+          ]
+        },
+        {
+          "line": 106,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.advisor-tool-2026-03-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 116,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.advisor-tool-2026-03-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 117,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.advisor-tool-2026-03-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 122,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": [
+            "managed-agents"
+          ]
+        },
+        {
+          "line": 125,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 136,
+          "classification": "registry_record",
+          "record_ids": [
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 147,
+          "classification": "registry_record",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 150,
+          "classification": "registry_record",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 151,
+          "classification": "registry_record",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 153,
+          "classification": "registry_record",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 154,
+          "classification": "registry_record",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 155,
+          "classification": "registry_record",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 158,
+          "classification": "registry_record",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 159,
+          "classification": "registry_record",
+          "record_ids": [
+            "openai.gpt-5-5.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 173,
+          "classification": "replaced_stale",
+          "record_ids": [
+            "xai.grok-4-5.api"
+          ],
+          "route_aliases": [
+            "grok"
+          ]
+        },
+        {
+          "line": 176,
+          "classification": "replaced_stale",
+          "record_ids": [
+            "xai.grok-4-5.api"
+          ],
+          "route_aliases": [
+            "grok"
+          ]
+        },
+        {
+          "line": 180,
+          "classification": "registry_record",
+          "record_ids": [
+            "xai.grok-4-20-multi-agent.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 183,
+          "classification": "registry_record",
+          "record_ids": [
+            "xai.grok-4-5.api"
+          ],
+          "route_aliases": [
+            "grok"
+          ]
+        },
+        {
+          "line": 184,
+          "classification": "registry_record",
+          "record_ids": [
+            "xai.grok-4-5.api"
+          ],
+          "route_aliases": [
+            "grok"
+          ]
+        },
+        {
+          "line": 185,
+          "classification": "registry_record",
+          "record_ids": [
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 189,
+          "classification": "registry_record",
+          "record_ids": [
+            "google.gemini-3-pro.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 190,
+          "classification": "registry_record",
+          "record_ids": [
+            "google.gemini-3-pro.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 201,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api",
+            "moonshot-ai.moonshot-v1-8k.api",
+            "moonshot-ai.moonshot-v1-32k.api",
+            "moonshot-ai.moonshot-v1-128k.api",
+            "moonshot-ai.kimi-agent-swarm.app",
+            "moonshot-ai.kimi-researcher.app"
+          ],
+          "route_aliases": [
+            "kimi"
+          ]
+        },
+        {
+          "line": 204,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api",
+            "moonshot-ai.moonshot-v1-8k.api",
+            "moonshot-ai.moonshot-v1-32k.api",
+            "moonshot-ai.moonshot-v1-128k.api",
+            "moonshot-ai.kimi-agent-swarm.app",
+            "moonshot-ai.kimi-researcher.app"
+          ],
+          "route_aliases": [
+            "kimi"
+          ]
+        },
+        {
+          "line": 207,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api",
+            "moonshot-ai.moonshot-v1-8k.api",
+            "moonshot-ai.moonshot-v1-32k.api",
+            "moonshot-ai.moonshot-v1-128k.api",
+            "moonshot-ai.kimi-agent-swarm.app",
+            "moonshot-ai.kimi-researcher.app"
+          ],
+          "route_aliases": [
+            "kimi"
+          ]
+        },
+        {
+          "line": 208,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api",
+            "moonshot-ai.moonshot-v1-8k.api",
+            "moonshot-ai.moonshot-v1-32k.api",
+            "moonshot-ai.moonshot-v1-128k.api",
+            "moonshot-ai.kimi-agent-swarm.app",
+            "moonshot-ai.kimi-researcher.app"
+          ],
+          "route_aliases": [
+            "kimi"
+          ]
+        },
+        {
+          "line": 212,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api",
+            "moonshot-ai.moonshot-v1-8k.api",
+            "moonshot-ai.moonshot-v1-32k.api",
+            "moonshot-ai.moonshot-v1-128k.api",
+            "moonshot-ai.kimi-agent-swarm.app",
+            "moonshot-ai.kimi-researcher.app"
+          ],
+          "route_aliases": [
+            "kimi"
+          ]
+        },
+        {
+          "line": 217,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api",
+            "moonshot-ai.moonshot-v1-8k.api",
+            "moonshot-ai.moonshot-v1-32k.api",
+            "moonshot-ai.moonshot-v1-128k.api",
+            "moonshot-ai.kimi-agent-swarm.app",
+            "moonshot-ai.kimi-researcher.app"
+          ],
+          "route_aliases": [
+            "kimi"
+          ]
+        },
+        {
+          "line": 218,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api",
+            "moonshot-ai.moonshot-v1-8k.api",
+            "moonshot-ai.moonshot-v1-32k.api",
+            "moonshot-ai.moonshot-v1-128k.api",
+            "moonshot-ai.kimi-agent-swarm.app",
+            "moonshot-ai.kimi-researcher.app"
+          ],
+          "route_aliases": [
+            "kimi"
+          ]
+        },
+        {
+          "line": 219,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "moonshot-ai.kimi-k2-6.api",
+            "moonshot-ai.kimi-k2-7-code.api",
+            "moonshot-ai.kimi-k2-7-code-highspeed.api",
+            "moonshot-ai.kimi-k2-5.api",
+            "moonshot-ai.moonshot-v1-8k.api",
+            "moonshot-ai.moonshot-v1-32k.api",
+            "moonshot-ai.moonshot-v1-128k.api",
+            "moonshot-ai.kimi-agent-swarm.app",
+            "moonshot-ai.kimi-researcher.app"
+          ],
+          "route_aliases": [
+            "kimi"
+          ]
+        },
+        {
+          "line": 228,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api",
+            "zai-bigmodel.glm-5-1.api",
+            "zai-bigmodel.glm-5.api",
+            "zai-bigmodel.glm-5-turbo.api",
+            "zai-bigmodel.glm-4-7.api",
+            "zai-bigmodel.glm-4-6.api",
+            "zai-bigmodel.glm-4-6v.api",
+            "zai-bigmodel.glm-4-5v.api",
+            "zai-bigmodel.glm-z1-family.api"
+          ],
+          "route_aliases": [
+            "glm"
+          ]
+        },
+        {
+          "line": 233,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api",
+            "zai-bigmodel.glm-5-1.api",
+            "zai-bigmodel.glm-5.api",
+            "zai-bigmodel.glm-5-turbo.api",
+            "zai-bigmodel.glm-4-7.api",
+            "zai-bigmodel.glm-4-6.api",
+            "zai-bigmodel.glm-4-6v.api",
+            "zai-bigmodel.glm-4-5v.api",
+            "zai-bigmodel.glm-z1-family.api"
+          ],
+          "route_aliases": [
+            "glm"
+          ]
+        },
+        {
+          "line": 236,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api",
+            "zai-bigmodel.glm-5-1.api",
+            "zai-bigmodel.glm-5.api",
+            "zai-bigmodel.glm-5-turbo.api",
+            "zai-bigmodel.glm-4-7.api",
+            "zai-bigmodel.glm-4-6.api",
+            "zai-bigmodel.glm-4-6v.api",
+            "zai-bigmodel.glm-4-5v.api",
+            "zai-bigmodel.glm-z1-family.api"
+          ],
+          "route_aliases": [
+            "glm"
+          ]
+        },
+        {
+          "line": 241,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api",
+            "zai-bigmodel.glm-5-1.api",
+            "zai-bigmodel.glm-5.api",
+            "zai-bigmodel.glm-5-turbo.api",
+            "zai-bigmodel.glm-4-7.api",
+            "zai-bigmodel.glm-4-6.api",
+            "zai-bigmodel.glm-4-6v.api",
+            "zai-bigmodel.glm-4-5v.api",
+            "zai-bigmodel.glm-z1-family.api"
+          ],
+          "route_aliases": [
+            "glm"
+          ]
+        },
+        {
+          "line": 242,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api",
+            "zai-bigmodel.glm-5-1.api",
+            "zai-bigmodel.glm-5.api",
+            "zai-bigmodel.glm-5-turbo.api",
+            "zai-bigmodel.glm-4-7.api",
+            "zai-bigmodel.glm-4-6.api",
+            "zai-bigmodel.glm-4-6v.api",
+            "zai-bigmodel.glm-4-5v.api",
+            "zai-bigmodel.glm-z1-family.api"
+          ],
+          "route_aliases": [
+            "glm"
+          ]
+        },
+        {
+          "line": 243,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api",
+            "zai-bigmodel.glm-5-1.api",
+            "zai-bigmodel.glm-5.api",
+            "zai-bigmodel.glm-5-turbo.api",
+            "zai-bigmodel.glm-4-7.api",
+            "zai-bigmodel.glm-4-6.api",
+            "zai-bigmodel.glm-4-6v.api",
+            "zai-bigmodel.glm-4-5v.api",
+            "zai-bigmodel.glm-z1-family.api"
+          ],
+          "route_aliases": [
+            "glm"
+          ]
+        },
+        {
+          "line": 244,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api",
+            "zai-bigmodel.glm-5-1.api",
+            "zai-bigmodel.glm-5.api",
+            "zai-bigmodel.glm-5-turbo.api",
+            "zai-bigmodel.glm-4-7.api",
+            "zai-bigmodel.glm-4-6.api",
+            "zai-bigmodel.glm-4-6v.api",
+            "zai-bigmodel.glm-4-5v.api",
+            "zai-bigmodel.glm-z1-family.api"
+          ],
+          "route_aliases": [
+            "glm"
+          ]
+        },
+        {
+          "line": 245,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "zai-bigmodel.glm-5-2.api",
+            "zai-bigmodel.glm-5-2.coding-plan-api",
+            "zai-bigmodel.glm-5-1.api",
+            "zai-bigmodel.glm-5.api",
+            "zai-bigmodel.glm-5-turbo.api",
+            "zai-bigmodel.glm-4-7.api",
+            "zai-bigmodel.glm-4-6.api",
+            "zai-bigmodel.glm-4-6v.api",
+            "zai-bigmodel.glm-4-5v.api",
+            "zai-bigmodel.glm-z1-family.api"
+          ],
+          "route_aliases": [
+            "glm"
+          ]
+        },
+        {
+          "line": 249,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "alibaba.qwen2-5-family.api",
+            "alibaba.qwen3-family.api"
+          ],
+          "route_aliases": [
+            "qwen"
+          ]
+        },
+        {
+          "line": 251,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "alibaba.qwen2-5-family.api",
+            "alibaba.qwen3-family.api"
+          ],
+          "route_aliases": [
+            "qwen"
+          ]
+        },
+        {
+          "line": 257,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "alibaba.qwen2-5-family.api",
+            "alibaba.qwen3-family.api"
+          ],
+          "route_aliases": [
+            "qwen"
+          ]
+        },
+        {
+          "line": 258,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "alibaba.qwen2-5-family.api",
+            "alibaba.qwen3-family.api"
+          ],
+          "route_aliases": [
+            "qwen"
+          ]
+        },
+        {
+          "line": 259,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "alibaba.qwen2-5-family.api",
+            "alibaba.qwen3-family.api"
+          ],
+          "route_aliases": [
+            "qwen"
+          ]
+        },
+        {
+          "line": 260,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "alibaba.qwen2-5-family.api",
+            "alibaba.qwen3-family.api"
+          ],
+          "route_aliases": [
+            "qwen"
+          ]
+        },
+        {
+          "line": 261,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "alibaba.qwen2-5-family.api",
+            "alibaba.qwen3-family.api"
+          ],
+          "route_aliases": [
+            "qwen"
+          ]
+        },
+        {
+          "line": 265,
+          "classification": "removed_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "Local model/version/temperature claims require runtime-specific verification."
+        },
+        {
+          "line": 266,
+          "classification": "removed_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "Local model/version/temperature claims require runtime-specific verification."
+        },
+        {
+          "line": 269,
+          "classification": "removed_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "Local model/version/temperature claims require runtime-specific verification."
+        },
+        {
+          "line": 270,
+          "classification": "removed_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "Local model/version/temperature claims require runtime-specific verification."
+        },
+        {
+          "line": 282,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": [
+            "deepseek"
+          ]
+        },
+        {
+          "line": 283,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": [
+            "deepseek"
+          ]
+        },
+        {
+          "line": 285,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": [
+            "deepseek"
+          ]
+        },
+        {
+          "line": 288,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": [
+            "deepseek"
+          ]
+        },
+        {
+          "line": 289,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": [
+            "deepseek"
+          ]
+        },
+        {
+          "line": 290,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": [
+            "deepseek"
+          ]
+        },
+        {
+          "line": 293,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": [
+            "deepseek"
+          ]
+        },
+        {
+          "line": 294,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": [
+            "deepseek"
+          ]
+        },
+        {
+          "line": 295,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": [
+            "deepseek"
+          ]
+        },
+        {
+          "line": 296,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": [
+            "deepseek"
+          ]
+        },
+        {
+          "line": 297,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "deepseek.deepseek-v4-pro.api",
+            "deepseek.deepseek-v4-flash.api",
+            "deepseek.deepseek-chat.api",
+            "deepseek.deepseek-reasoner.api"
+          ],
+          "route_aliases": [
+            "deepseek"
+          ]
+        },
+        {
+          "line": 301,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No current official record supports the former MiniMax profile."
+        },
+        {
+          "line": 302,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No current official record supports the former MiniMax profile."
+        },
+        {
+          "line": 303,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No current official record supports the former MiniMax profile."
+        },
+        {
+          "line": 304,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No current official record supports the former MiniMax profile."
+        },
+        {
+          "line": 305,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No current official record supports the former MiniMax profile."
+        },
+        {
+          "line": 306,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No current official record supports the former MiniMax profile."
+        },
+        {
+          "line": 307,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No current official record supports the former MiniMax profile."
+        },
+        {
+          "line": 308,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No current official record supports the former MiniMax profile."
+        },
+        {
+          "line": 309,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No current official record supports the former MiniMax profile."
+        },
+        {
+          "line": 310,
+          "classification": "removed_stale_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "No current official record supports the former MiniMax profile."
+        },
+        {
+          "line": 314,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": [
+            "claude-code"
+          ]
+        },
+        {
+          "line": 319,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": [
+            "claude-code"
+          ]
+        },
+        {
+          "line": 320,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": [
+            "claude-code"
+          ]
+        },
+        {
+          "line": 322,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": [
+            "claude-code"
+          ]
+        },
+        {
+          "line": 323,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": [
+            "claude-code"
+          ]
+        },
+        {
+          "line": 324,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": [
+            "claude-code"
+          ]
+        },
+        {
+          "line": 325,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": [
+            "claude-code"
+          ]
+        },
+        {
+          "line": 326,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "anthropic.claude-fable-5.api",
+            "anthropic.claude-fable-5.app",
+            "anthropic.claude-mythos-5.app",
+            "anthropic.claude-opus-4-8.api",
+            "anthropic.claude-opus-4-7.api",
+            "anthropic.claude-sonnet-4-6.api",
+            "anthropic.claude-haiku-4-5-20251001.api",
+            "anthropic.advisor-tool-2026-03-01.api",
+            "anthropic.managed-agents-2026-04-01.api"
+          ],
+          "route_aliases": [
+            "claude-code"
+          ]
+        },
+        {
+          "line": 340,
+          "classification": "removed_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "Cortex underlying Claude family lacked a dedicated official provider-surface record."
+        },
+        {
+          "line": 349,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "google.gemini-3-pro.api"
+          ],
+          "route_aliases": [
+            "antigravity"
+          ]
+        },
+        {
+          "line": 397,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "gamma.gamma-app.app",
+            "gamma.generate-api.generate-api"
+          ],
+          "route_aliases": [
+            "gamma"
+          ]
+        },
+        {
+          "line": 400,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "gamma.gamma-app.app",
+            "gamma.generate-api.generate-api"
+          ],
+          "route_aliases": [
+            "gamma"
+          ]
+        },
+        {
+          "line": 402,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "gamma.gamma-app.app",
+            "gamma.generate-api.generate-api"
+          ],
+          "route_aliases": [
+            "gamma"
+          ]
+        },
+        {
+          "line": 403,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "gamma.gamma-app.app",
+            "gamma.generate-api.generate-api"
+          ],
+          "route_aliases": [
+            "gamma"
+          ]
+        },
+        {
+          "line": 404,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "gamma.gamma-app.app",
+            "gamma.generate-api.generate-api"
+          ],
+          "route_aliases": [
+            "gamma"
+          ]
+        },
+        {
+          "line": 419,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "perplexity.agent-api.agent-api",
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": [
+            "perplexity"
+          ]
+        },
+        {
+          "line": 422,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "perplexity.agent-api.agent-api",
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": [
+            "perplexity"
+          ]
+        },
+        {
+          "line": 423,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "perplexity.agent-api.agent-api",
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": [
+            "perplexity"
+          ]
+        },
+        {
+          "line": 424,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "perplexity.agent-api.agent-api",
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": [
+            "perplexity"
+          ]
+        },
+        {
+          "line": 425,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "perplexity.agent-api.agent-api",
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": [
+            "perplexity"
+          ]
+        },
+        {
+          "line": 426,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "perplexity.agent-api.agent-api",
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": [
+            "perplexity"
+          ]
+        },
+        {
+          "line": 427,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "perplexity.agent-api.agent-api",
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": [
+            "perplexity"
+          ]
+        },
+        {
+          "line": 428,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "perplexity.agent-api.agent-api",
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": [
+            "perplexity"
+          ]
+        },
+        {
+          "line": 429,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "perplexity.agent-api.agent-api",
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": [
+            "perplexity"
+          ]
+        },
+        {
+          "line": 430,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "perplexity.agent-api.agent-api",
+            "perplexity.sonar.sonar-api",
+            "perplexity.sonar-pro.sonar-api",
+            "perplexity.sonar-reasoning-pro.sonar-api",
+            "perplexity.sonar-deep-research.sonar-api"
+          ],
+          "route_aliases": [
+            "perplexity"
+          ]
+        },
+        {
+          "line": 436,
+          "classification": "registry_record",
+          "record_ids": [
+            "xai.grok-4-20-multi-agent.api"
+          ],
+          "route_aliases": []
+        },
+        {
+          "line": 452,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 456,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 457,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 458,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 459,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 460,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 461,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 462,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 463,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 464,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 465,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "black-forest-labs.flux-2-klein.api",
+            "black-forest-labs.flux-2-pro.api",
+            "black-forest-labs.flux-2-flex.api",
+            "black-forest-labs.flux-2-max.api",
+            "black-forest-labs.flux-2-dev.api",
+            "bytedance.seedream-5-0-260128.modelark-api",
+            "bytedance.seedream-5-0-lite.modelark-api",
+            "google.gemini-3-1-flash-image.images-api",
+            "google.gemini-3-1-flash-lite-image.images-api",
+            "google.gemini-3-pro-image.images-api",
+            "google.gemini-2-5-flash-image.images-api",
+            "midjourney.v8-1.app",
+            "midjourney.v7.app",
+            "openai.gpt-image-2.images-api",
+            "stability-ai.sd3-5-large.api",
+            "stability-ai.sd3-5-large-turbo.api",
+            "stability-ai.sd3-5-medium.api",
+            "stability-ai.sd3-5-flash.api",
+            "xai.grok-imagine-image.images-api",
+            "xai.grok-imagine-image-quality.images-api"
+          ],
+          "route_aliases": [
+            "image"
+          ]
+        },
+        {
+          "line": 497,
+          "classification": "removed_unverified",
+          "record_ids": [],
+          "route_aliases": [],
+          "note": "Unity is outside the frozen namespace and the version/retirement claim lacked a current official record."
+        },
+        {
+          "line": 503,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        },
+        {
+          "line": 505,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        },
+        {
+          "line": 506,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        },
+        {
+          "line": 507,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        },
+        {
+          "line": 508,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        },
+        {
+          "line": 509,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        },
+        {
+          "line": 510,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        },
+        {
+          "line": 511,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        },
+        {
+          "line": 512,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        },
+        {
+          "line": 513,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        },
+        {
+          "line": 514,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        },
+        {
+          "line": 515,
+          "classification": "registry_record_and_route",
+          "record_ids": [
+            "bytedance.dreamina-seedance-2-0-260128.modelark-api",
+            "bytedance.doubao-seedance-2-0-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-fast-260128.modelark-api",
+            "bytedance.dreamina-seedance-2-0-mini-260615.modelark-api",
+            "google.gemini-omni-flash-preview.interactions-api",
+            "google.veo-3-1-generate-preview.video-api",
+            "google.veo-3-1-fast-generate-preview.video-api",
+            "google.veo-3-1-lite-generate-preview.video-api",
+            "google.veo-3-1-generate-001.video-api",
+            "google.veo-3-1-fast-generate-001.video-api",
+            "google.veo-3-1-lite-generate-001.video-api",
+            "kling-ai.kling-v3.video-api",
+            "kling-ai.kling-v3-omni.video-api",
+            "lightricks.ltx-2-3-22b-dev.open-weights",
+            "lightricks.ltx-2-3-22b-distilled-1-1.open-weights",
+            "luma-ai.ray-3-2.video-api",
+            "openai.sora-2.video-api",
+            "openai.sora-2-pro.video-api",
+            "runway.gen4-5.video-api",
+            "xai.grok-imagine-video-1-5.video-api",
+            "xai.grok-imagine-video.video-api"
+          ],
+          "route_aliases": [
+            "video"
+          ]
+        }
+      ]
+    }
+  ]
+}

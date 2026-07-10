@@ -1,0 +1,23 @@
+{
+  "$schema": "./schema.json",
+  "document_type": "provider_shard",
+  "provider_family": "kling-ai",
+  "records": [
+    {
+      "id": "kling-ai.kling-v3.video-api",
+      "vendor": "kling-ai", "model_id": "kling-v3", "surface": "video-api", "channel": "production",
+      "availability": { "status": "account_gated", "scope": ["video-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "video_editing"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "duration_range_seconds", "value": [3, 15] }, { "key": "mode_values", "value": { "std": "720p", "pro": "1080p" } }, { "key": "cfg_scale_range", "value": [0, 1] }, { "key": "cfg_scale_default", "value": 0.5 }, { "key": "extension_endpoint", "value": "/v1/videos/video-extend" }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://kling.ai/document-api/", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.duration_range_seconds", "claims.mode_values", "claims.cfg_scale_range", "claims.cfg_scale_default", "claims.extension_endpoint"] }]
+    },
+    {
+      "id": "kling-ai.kling-v3-omni.video-api",
+      "vendor": "kling-ai", "model_id": "kling-v3-omni", "surface": "video-api", "channel": "production",
+      "availability": { "status": "account_gated", "scope": ["video-api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["video_generation", "video_editing", "audio_generation"], "routing_default_for": [], "prompting_constraints": [],
+      "claims": [{ "key": "duration_range_seconds", "value": [3, 15] }, { "key": "mode_values", "value": { "std": "720p", "pro": "1080p", "4k": "unverified API-schema-only value" } }, { "key": "video_operations", "value": ["multi-shot", "element references", "voice references", "native audio"] }, { "key": "extension_endpoint", "value": "/v1/videos/video-extend" }],
+      "last_verified": "2026-07-01", "source": [{ "url": "https://kling.ai/document-api/", "kind": "official_docs", "supports": ["model_id", "channel", "availability", "claims.duration_range_seconds", "claims.mode_values", "claims.video_operations", "claims.extension_endpoint"] }]
+    }
+  ]
+}
