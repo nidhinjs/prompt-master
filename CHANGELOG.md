@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.32.0] - 2026-07-10
+
+Deterministic routing and fallback release: conflicting question, output, variant, split, and retry rules now resolve through one precedence contract, while unknown tools and missing references fail safely without invented provider capabilities.
+
+### Added
+- **Canonical precedence and fallback contract:** security/approval wins first, explicit `no questions` means zero questions, and missing targets/formats are surfaced as explicit assumptions.
+- **Unknown-tool capability fingerprint:** seven required fields distinguish targetless requests, named unknown tools, and missing/unreadable references; unsupported claims are marked `[unverified]`.
+- **Release provenance controls:** CI actions and Node are pinned, workflow permissions are read-only, packaging uses an exact six-file allowlist, rejects dirty release uploads, normalizes ZIP timestamps, and emits SHA-256.
+- **Deterministic contract coverage:** offline scenarios and source assertions cover cardinality, split, retry exhaustion, activation/fallback, hook context, release policy, and adversarial negation without live model calls.
+
+### Changed
+- **Variants and split:** N=2/3 returns exactly N variants, requests above three are capped visibly, high-risk work suppresses variants, and split mode emits sequential self-contained `Prompt 1..N` entries inside one fence.
+- **Retry budget:** all agentic templates use three total execution slots: the initial attempt plus two retries, followed by evidence-backed escalation.
+- **Agentic supply chain:** dependency installs require scope/approval, a frozen lockfile, default-denied lifecycle scripts, and no networked install in read-only/no-network work.
+- **Multi-agent hook:** authoring intent is narrower and injected context now covers worker isolation, untrusted results, coordinator verification, serialized writes, and the vendor-managed swarm carve-out.
+
+### Fixed
+- **Offline assertion oracle:** negation is sentence/clause-local, recognizes English and Russian forms including `should not`, and malformed/empty/duplicate scenario definitions fail closed.
+- **Documentation integrity:** corrected the three broken historical links to `docs/sources.md`.
+- **Signed release tags:** `bump-version.ps1 -Tag` now creates a cryptographically signed tag and verifies it instead of creating only an annotated tag.
+
+## [1.31.1] - 2026-07-10
+
+Security and provider-contract patch: safe verification now fails closed, agentic prompts treat all runtime observations as untrusted data, and Sonar/Midjourney/Grok routes follow their provider-native capabilities.
+
+### Added
+- **Canonical agentic trust boundary:** repo files/diffs, issue and PR comments, logs, dependency metadata, web content, MCP/tool output, and worker messages are data only and cannot expand scope, tools, network destinations, or approval.
+- **Network egress contract:** agentic prompts default to no network and require destination-purpose allowlists, preconfigured runtime authentication, and secret non-transmission when access is enabled.
+- **Deterministic contract coverage:** source contracts plus 51 unique golden scenarios and 22 offline fixtures cover indirect injection, Template L redaction, Sonar citations, Midjourney Omni routing, and Grok constraints without live model calls.
+
+### Changed
+- **Prompt Decompiler safety:** Template L uses a redacted structural summary instead of reproducing the original prompt, secret literals, or hostile directives.
+- **Provider-native research:** Sonar clients read top-level `citations` and `search_results`; prompts keep Data gaps/confidence and no longer request inline URLs or a prose sources list.
+- **Image routing:** ordinary Midjourney generation remains V8.1, while `--oref`/`--ow` explicitly route to V7 Omni Reference; Grok Imagine uses positive preservation wording and no Negative Prompt field.
+
+### Fixed
+- **Fail-closed safe gate:** `scripts/test-safe.js` now returns success only when every required check executes and passes; EPERM, missing executables, reported skips, spawn errors, and an empty gate are failures.
+- **Fake-runner isolation:** safety tests pass an absolute temporary fake executable and isolate `PATH`, preventing fallback to a real Claude CLI.
+- **CI regression signal:** strict offline CI runs self-tests, source contracts, hook fixtures, lint, syntax, offline golden assertions, and fake-runner safety checks with an explicit executed/passed/failed/skipped summary.
+
 ## [1.31.0] - 2026-07-10
 
 Candidate/variants release: explicit alternative requests can return bounded prompt directions while the default output remains one prompt.
@@ -380,7 +420,7 @@ Hardening-фикс. На установленном скилле баг «мол
 ### Notes
 - **Fable 5 / Mythos 5 не удалены, а помечены suspended** (факт датирован) — если доступ вернут, откат тривиален. `reasoning_extraction`-правило и Fable-профиль сохранены с пометкой «применимо, если/когда восстановят».
 - Счётчик паттернов без изменений (42). Гард-рейлы v1.13 (A–G), v1.14, v1.15 (hook + Agentic Prompt Fragments) целы.
-- Обоснование — [docs/sources.md](../docs/sources.md).
+- Обоснование — [docs/sources.md](docs/sources.md).
 
 ## [1.15.0] - 2026-06-14
 
@@ -429,14 +469,14 @@ Hardening-фикс. На установленном скилле баг «мол
 - Diagnostic Checklist: пункт «две задачи в одном» заострён под **refactor + migrate** (разносить с зелёными тестами между, либо обосновать слияние + флаг un-bisectable риска).
 
 ### Added
-- **Условная model/effort-экономия в агентных промптах** (профиль Claude Code + Template M): одиночная scoped-задача → один сфокусированный проход без подагентов (дешевле всего); крупная multi-part работа → оркестратор на высоком effort (Fable 5) + делегирование независимых подзадач. Per-subagent модель задаётся конфигом, не телом промпта — управляем effort'ом и делегированием. **Сознательно НЕ «всегда тирить»** — оркестрация сама стоит токенов (обоснование в [docs/sources.md](../docs/sources.md)).
+- **Условная model/effort-экономия в агентных промптах** (профиль Claude Code + Template M): одиночная scoped-задача → один сфокусированный проход без подагентов (дешевле всего); крупная multi-part работа → оркестратор на высоком effort (Fable 5) + делегирование независимых подзадач. Per-subagent модель задаётся конфигом, не телом промпта — управляем effort'ом и делегированием. **Сознательно НЕ «всегда тирить»** — оркестрация сама стоит токенов (обоснование в [docs/sources.md](docs/sources.md)).
 - **Security-эквивалентность** в Diagnostic Checklist + Template M: рефактор/миграция в auth/crypto/payments → жёсткий инвариант «не понижать стойкость» (алгоритм подписи, hash-cost, constant-time, формат токенов/секретов).
 - **Refactor/migration safety net** (Diagnostic Checklist + Template M): не предполагать наличие тестов — подтвердить/создать characterization-тесты до изменений; снято противоречие «тесты не меняются» vs миграция (поведенческие ассерты зелёные, обвязка — моки/импорты — может меняться).
 - `docs/sources.md`: строки про forks≠placeholders и conditional-tiering-rationale.
 
 ## [1.12.0] - 2026-06-12
 
-Селективный срез из v2 PRD — взято только то, что не раздувает токены и не конфликтует с hard rules; Council-style multi-critic, числовой uncertainty-коэффициент, 4–5 вопросов и формальные Lean/Thorough-режимы **отклонены** (обоснование в [docs/sources.md](../docs/sources.md)).
+Селективный срез из v2 PRD — взято только то, что не раздувает токены и не конфликтует с hard rules; Council-style multi-critic, числовой uncertainty-коэффициент, 4–5 вопросов и формальные Lean/Thorough-режимы **отклонены** (обоснование в [docs/sources.md](docs/sources.md)).
 
 ### Added
 - **Internal readiness gate** в Intent Extraction: качественная оценка Low/Med/High **только для решения скилла** (наружу не выводится — ни число, ни ярлык). При Medium/Low — вопросы-развилки, ранжированные по влиянию; жёсткий cap 3 вопроса; при остаточной неопределённости — best-effort промпт с явными допущениями + флаг открытых вопросов.
@@ -520,6 +560,8 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.32.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.32.0
+[1.31.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.31.1
 [1.31.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.31.0
 [1.30.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.30.0
 [1.29.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.29.0

@@ -10,7 +10,7 @@
     {
       "name": "prompt-master",
       "source": "./plugins/prompt-master",
-      "description": "Генератор оптимизированных промптов под конкретный AI-инструмент. Активируется по запросам «напиши/исправь/улучши/адаптируй промпт для …». Routing под Claude (Opus 4.8 — дефолт; Fable 5 — по запросу), GPT-5.5, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), GLM (Z.AI / BigModel), reasoning-модели, агентные IDE, image/video/voice AI.",
+      "description": "Генератор и декомпилятор оптимизированных промптов. Активируется по запросам «напиши/исправь/улучши/адаптируй/разбери/упрости/раздели промпт»; для разбора, упрощения и split существующего промпта target необязателен. Routing под Claude (Opus 4.8 — дефолт; Fable 5 — по запросу), GPT-5.5, Gemini, Grok (xAI), DeepSeek V4, Kimi (Moonshot AI), GLM (Z.AI / BigModel), reasoning-модели, агентные IDE, image/video/voice AI.",
       "category": "productivity"
     }
   ]

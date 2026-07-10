@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Safety regression tests for scripts/run-golden.js.
-// Uses a fake `claude` binary in PATH. Never calls the real Claude CLI.
+// Uses an absolute fake Claude executable. Never calls the real Claude CLI.
 
 const fs = require('fs');
 const os = require('os');
@@ -31,8 +31,12 @@ function assert(condition, message) {
 
 const nestedSpawnProbe = spawnSync(process.execPath, ['-e', 'process.exit(0)'], { encoding: 'utf8' });
 if (nestedSpawnProbe.error?.code === 'EPERM' && nestedSpawnProbe.status == null) {
-  console.warn('SKIP: nested Node spawn is blocked by this sandbox (EPERM)');
-  process.exit(0);
+  console.error('FAIL: nested Node spawn is blocked by this sandbox (EPERM)');
+  process.exit(1);
+}
+if (nestedSpawnProbe.error || nestedSpawnProbe.status !== 0) {
+  console.error(`FAIL: nested Node spawn probe failed: ${nestedSpawnProbe.error || nestedSpawnProbe.status}`);
+  process.exit(1);
 }
 const runnerSpawnProbe = spawnSync(process.execPath, [runner, '--only', 'candidate-set-explicit-variants'], {
   cwd: repoRoot,
@@ -40,14 +44,18 @@ const runnerSpawnProbe = spawnSync(process.execPath, [runner, '--only', 'candida
   encoding: 'utf8',
 });
 if (runnerSpawnProbe.error?.code === 'EPERM' && !runnerSpawnProbe.stdout && !runnerSpawnProbe.stderr) {
-  console.warn('SKIP: runner subprocess output is blocked by this sandbox (EPERM)');
-  process.exit(0);
+  console.error('FAIL: runner subprocess output is blocked by this sandbox (EPERM)');
+  process.exit(1);
+}
+if (runnerSpawnProbe.error) {
+  console.error(`FAIL: runner subprocess probe failed: ${runnerSpawnProbe.error}`);
+  process.exit(1);
 }
 
 function makeFakeClaude() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'prompt-master-fake-claude-'));
   const marker = path.join(dir, 'calls.log');
-  const fake = path.join(dir, 'claude');
+  const fake = path.join(dir, 'prompt-master-fake-claude');
   fs.writeFileSync(
     fake,
     [
@@ -57,7 +65,7 @@ function makeFakeClaude() {
       'case "$FAKE_CLAUDE_MODE" in',
       '  not-logged) echo "Not logged in · Please run /login" >&2; exit 1 ;;',
       '  fail) echo "model failed" >&2; exit 1 ;;',
-      '  slow) sleep 2; echo "late"; exit 0 ;;',
+      '  slow) /bin/sleep 2; echo "late"; exit 0 ;;',
       '  assert-fail) echo "Variant A only"; exit 0 ;;',
       '  *)',
       '    echo "Variant A"',
@@ -72,7 +80,7 @@ function makeFakeClaude() {
     ].join('\n'),
     { mode: 0o755 }
   );
-  return { dir, marker };
+  return { dir, marker, executable: fake };
 }
 
 function runRunner(args, envOverrides = {}) {
@@ -80,9 +88,11 @@ function runRunner(args, envOverrides = {}) {
   const env = {
     ...withoutLiveEnv(),
     ...envOverrides,
-    PATH: `${fake.dir}${path.delimiter}${process.env.PATH || ''}`,
+    PATH: fake.dir,
+    PROMPT_MASTER_CLAUDE_BIN: fake.executable,
     FAKE_CLAUDE_MARKER: fake.marker,
   };
+  assert(path.isAbsolute(env.PROMPT_MASTER_CLAUDE_BIN), 'fake Claude executable must be absolute');
   const res = spawnSync(process.execPath, [runner, ...args], {
     cwd: repoRoot,
     env,

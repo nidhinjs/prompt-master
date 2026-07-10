@@ -10,7 +10,7 @@
 
     Скрипт читает текущую версию из plugin.json (канон), вычисляет новую,
     правит все файлы текстово (форматирование сохраняется) и по флагу
-    создаёт подписанный git-тег vX.Y.Z.
+    создаёт криптографически подписанный git-тег vX.Y.Z.
 
 .PARAMETER Version
     Явная целевая версия, напр. 1.9.0. Взаимоисключима с -Bump.
@@ -19,7 +19,7 @@
     Семантический шаг от текущей версии: major | minor | patch.
 
 .PARAMETER Tag
-    После правок создать аннотированный (подписанный) git-тег vX.Y.Z на HEAD.
+    После правок создать GPG/SSH-подписанный git-тег vX.Y.Z на HEAD и проверить подпись.
     Авто-чинит WSL-путь user.signingkey (/mnt/c/... -> C:/...) для Git-for-Windows.
 
 .PARAMETER NoChangelog
@@ -181,9 +181,11 @@ if ($Tag) {
         Write-Host "  -- signingkey WSL-путь сконвертирован: $winKey" -ForegroundColor DarkGray
         $tagArgs += @('-c', "user.signingkey=$winKey")
     }
-    & git -C $repoRoot @tagArgs tag -a "v$new" -m "v$new"
+    & git -C $repoRoot @tagArgs tag -s "v$new" -m "v$new"
     if ($LASTEXITCODE -ne 0) { Fail "git tag завершился с ошибкой" }
-    Write-Host "  ok git tag v$new" -ForegroundColor Green
+    & git -C $repoRoot tag -v "v$new"
+    if ($LASTEXITCODE -ne 0) { Fail "Подпись тега v$new не прошла проверку" }
+    Write-Host "  ok signed git tag v$new" -ForegroundColor Green
 }
 
 # --- Итог ---
@@ -196,6 +198,6 @@ if ($Tag) {
 }
 else {
     Write-Host "  3. git push origin HEAD"
-    Write-Host "     (тег: ./scripts/bump-version.ps1 -Version $new -Tag  — или git tag -a v$new -m v$new)"
+    Write-Host "     (подписанный тег: ./scripts/bump-version.ps1 -Version $new -Tag)"
     Write-Host "  4. gh release create v$new --title `"v$new`" --notes `"<changelog>`"   # после пуша тега"
 }

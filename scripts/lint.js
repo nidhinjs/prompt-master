@@ -21,6 +21,8 @@ const files = {
   toolProfilesMd: p('plugins/prompt-master/skills/prompt-master/references/tool-profiles.md'),
   modelsMd: p('plugins/prompt-master/skills/prompt-master/references/models.md'),
   goldenJson: p('tests/golden/scenarios.json'),
+  safeTestJs: p('scripts/test-safe.js'),
+  contractsTestJs: p('scripts/test-contracts.js'),
   refreshChecklistMd: p('docs/REFRESH_CHECKLIST.md'),
 };
 
@@ -92,6 +94,8 @@ const tplText = read(files.templatesMd);
 const profText = read(files.toolProfilesMd);
 const modelsText = read(files.modelsMd);
 const goldenText = read(files.goldenJson);
+const safeTestText = read(files.safeTestJs);
+const contractsTestText = read(files.contractsTestJs);
 const refreshChecklistText = read(files.refreshChecklistMd);
 
 log('version consistency');
@@ -573,6 +577,28 @@ try {
     'candidate-set-blocked-for-security',
     'candidate-set-single-fence-midjourney',
     'candidate-set-no-cot-reasoning-model',
+    'indirect-injection-trust-boundary',
+    'template-l-redacted-source',
+    'sonar-native-citations',
+    'midjourney-v7-omni-reference',
+    'grok-imagine-positive-constraints',
+    'precedence-noquestions-target-missing',
+    'precedence-noquestions-format-missing',
+    'precedence-research-format-first',
+    'precedence-grok-format-first',
+    'variants-exactly-two',
+    'variants-exactly-three',
+    'variants-cap-three',
+    'variants-high-risk-suppressed-v132',
+    'split-exactly-two',
+    'split-exactly-three',
+    'retry-initial-plus-two',
+    'unknown-tool-capability-fingerprint',
+    'missing-reference-unverified',
+    'targetless-explicit-activation',
+    'precedence-conflict-safe',
+    'hook-agentic-context',
+    'oracle-clause-local-adversarial',
   ]) {
     if (!ids.includes(id)) errors.push(`Missing golden scenario: ${id}`);
   }
@@ -587,6 +613,14 @@ try {
   }
 } catch (e) {
   errors.push(`Cannot parse tests/golden/scenarios.json: ${e.message}`);
+}
+
+log('source contract test wiring');
+if (!/args:\s*\['scripts\/test-contracts\.js'\]/.test(safeTestText)) {
+  errors.push('scripts/test-safe.js must include scripts/test-contracts.js in DEFAULT_CHECKS');
+}
+if (!/Canonical Trust Boundary/.test(contractsTestText) || !/Template L/.test(contractsTestText)) {
+  errors.push('scripts/test-contracts.js must enforce trust-boundary and Template L contracts');
 }
 
 console.log('');

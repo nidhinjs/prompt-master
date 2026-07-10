@@ -422,11 +422,11 @@ Gamma turns text into **cards** (not classic slides). For volatile facts (params
 Two surfaces — see [models.md](models.md) for current model IDs. Pick by task:
 - **Agent API** (`/v1/agent`, `client.responses.create`) is Perplexity's **recommended default for new apps**: an agent loop with custom tools, presets (incl. `deep-research`), output-control, and direct multi-provider model access (Perplexity Sonar + Anthropic/OpenAI/Google/xAI/NVIDIA). Reach for it when the user is building a research agent or app, wants custom tools, or wants to pick a specific underlying model.
 - **Sonar API** (OpenAI-compatible chat) for direct search-grounded answers: `sonar` / `sonar-pro` for quick cited answers, `sonar-reasoning-pro` for reasoned ones, `sonar-deep-research` (128K) for exhaustive cited reports.
-- **Deep research** → `sonar-deep-research`: prompt it as a research brief (Template N) with a required **Data gaps & confidence** section + the citation contract.
+- **Deep research** → `sonar-deep-research`: prompt it as a research brief (Template N) with a required **Data gaps & confidence** section + the Sonar-native citation contract below.
 - **Sonar search is driven by the USER MESSAGE only** — the system prompt is not seen by search (use it for tone/grounding). Put the concrete, specific question in the user message.
 - **Set domain / recency / region limits as request PARAMETERS, not prose** (`search_domain_filter` ≤20 allow/deny via `-`, `search_recency_filter` hour/day/week/month/year). "Search only on X" in prose is ignored. Cap result counts (top-N); don't ask for URLs in prose; avoid few-shot.
 - **Surface defaulted search knobs** — deliver an `Assumed settings:` note line for the filters the user didn't set (e.g. `no domain filter · no recency limit`), each with how to set it (`search_domain_filter` ≤20 / `search_recency_filter` as request parameters). Never an extra question; don't assert `reasoning_effort` values (⚠️ unverified).
-- Always require a closing **Data gaps & confidence** section **and inline citations** — "cite each non-obvious claim inline with a link to the retrieved source; never fabricate a citation; mark unsourced claims [uncertain]."
+- Always require a closing **Data gaps & confidence** section. **Do not ask Sonar for inline links, a prose sources list, or any URL in response text.** Consume the response's top-level `citations` and `search_results` fields client-side and render source attribution from those fields; never reconstruct URLs from answer prose. Source: https://docs.perplexity.ai/docs/sonar/prompt-guide
 - `reasoning_effort` exact values are ⚠️ unverified — don't assert them. **UI:** Focus modes + Spaces (persistent instructions + files) are UI, not API. **"Search as Code" / "Deep Research in Computer"** is a product/blog concept — not a callable API feature; don't instruct it.
 
 ---
@@ -453,14 +453,16 @@ Two surfaces — see [models.md](models.md) for current model IDs. Pick by task:
 *Traits: knobs (aspect ratio, cfg/guidance, steps, quality, resolution)*
 First detect: generation from scratch or editing an existing image?
 
-- **Midjourney (V8.1)**: Comma-separated descriptors, not prose. Subject first, then style, mood, lighting, composition. Parameters at end: `--ar 16:9 --v 8.1 --s 100`. Character/object consistency via `--oref [url] --ow 100` (Omni Reference — replaces the retired `--cref`); style via `--sref [url] --sw 100`. Also `--chaos 0–100`, negatives `--no a, b`, `--hd` for native 2K, `--raw` for stricter adherence. *Syntax: comma-descriptor list + `--` flags; no full sentences.*
+- **Midjourney ordinary generation**: Default to **V8.1** and use comma-separated descriptors, not prose: subject first, then style, mood, lighting, composition; parameters at end, e.g. `--ar 16:9 --v 8.1 --s 100`. Style uses `--sref [url] --sw 100`. Also `--chaos 0–100`, negatives `--no a, b`, `--hd` for native 2K, `--raw` for stricter adherence. *Syntax: comma-descriptor list + `--` flags; no full sentences.*
+- **Midjourney consistency route**: **Omni Reference is V7-only**; use `--v 7 --oref [url] --ow 100` (replaces retired `--cref`). Sources: https://docs.midjourney.com/hc/en-us/articles/36285124473997-Omni-Reference · https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version
+- **Midjourney version conflict**: a request for V8.1 plus character/object consistency must route explicitly to supported V7 Omni Reference or another supported consistency-capable model.
 - **GPT-image (`gpt-image-2`)**: OpenAI's current image model — DALL·E is retired; `gpt-image-2` is the flagship (older `gpt-image-1.5` / `gpt-image-1-mini` / `chatgpt-image-latest` are sunset-scheduled). Prose works; add "do not include text unless specified." Knobs: `size` (arbitrary, ÷16, ratio ≤3:1), `quality` low/med/high, `n`, `background` opaque/auto, `output_format`, `moderation` auto/low. Returns base64. Edit/compose via `/images/edits` with up to 16 reference images + optional mask.
 - **Stable Diffusion (3.5)**: `(word:weight)` syntax for emphasis. Models `sd3.5-large` / `-large-turbo` / `-medium` / `-flash`; `cfg_scale` typical 1–20 (default varies by endpoint); negative prompt optional in the API but strongly recommended — include one; `style_preset` for style bias. Edit via dedicated endpoints (inpaint / outpaint / search-and-replace / erase) and Control (structure / style-transfer). *Syntax: weighted positive + explicit negative block.*
 - **FLUX.2** (klein fast · pro · flex typography · max +grounding · dev): natural-language OR structured/JSON prompts (subject, lighting, camera_angle, composition) + hex colors for exact color. Knobs: `guidance` 1.5–10, `steps` 1–50, `safety_tolerance` 0–5. Multi-reference editing up to 8 (10 in playground) for character/style consistency. *Syntax: prose or JSON; no SD-style weights.*
 - **SeeDream (5.0)**: ByteDance unified generate+edit (ModelArk). Model e.g. `seedream-5-0-260128` / `-lite`; `size` 1K–4K; multi-image references (character / style / subject transfer), grouped outputs. Specify art style explicitly before scene content. (No documented negative-prompt parameter — steer via positive wording.)
 - **Google Nano Banana 2** (`gemini-3.1-flash-image`): generalist with Google-Search grounding + character-consistency. **Lite** (`gemini-3.1-flash-lite-image`) is the fast/cheap **1K-only** tier optimized for speed — **no grounding, no character-consistency, no style refs**. **Pro** (`gemini-3-pro-image`) for the hardest jobs. **Route character-consistency / brand work to Nano Banana 2 or Pro, NOT Lite.** Edit by passing the source image with the instruction.
-- **Grok Imagine** (`grok-imagine-image` fast · `grok-imagine-image-quality`): natural-language, **no negative-prompt parameter** — control via wording + references. `aspect_ratio` (incl. wide 19.5:9 / 20:9), `resolution` 1k/2k. Edit/compose via `/images/edits` with up to 3 reference images.
-- **Surface defaulted knobs** — deliver an `Assumed settings:` note line for params the user didn't set (Midjourney `--ar 16:9 · --v 8.1 · --s 100`; SD `cfg 7 · steps 20–30 · negative included`; FLUX.2 `guidance 5 · steps 30`; GPT-image `quality high · size auto`; Grok / Nano Banana `resolution · aspect_ratio`), each with where to change it (prompt-tail flags / request params / Advanced settings).
+- **Grok Imagine** (`grok-imagine-image` fast · `grok-imagine-image-quality`): natural-language, **no Negative Prompt parameter or field** — do not output a Negative Prompt block; state desired constraints with positive wording and references. `aspect_ratio` (incl. wide 19.5:9 / 20:9), `resolution` 1k/2k. Edit/compose via `/images/edits` with up to 3 reference images.
+- **Surface defaulted knobs** — deliver an `Assumed settings:` note line for params the user didn't set. For Midjourney, surface the applicable ordinary-generation or consistency route above. Other examples: SD `cfg 7 · steps 20–30 · negative included`; FLUX.2 `guidance 5 · steps 30`; GPT-image `quality high · size auto`; Grok / Nano Banana `resolution · aspect_ratio`. Include where to change each knob (prompt-tail flags / request params / Advanced settings).
 
 ---
 
@@ -508,7 +510,7 @@ Read templates.md Template K for the full ComfyUI template.
 - **Luma Ray** (Dream Machine; `ray-3.2`): cinematic — reference lens, lighting, color grading. `type` video / video_edit / video_reframe; resolution 360p–1080p; 5s or 10s; up to 64 keyframes; edit controls (depth / pose `precise`/`coarse` / trajectory).
 - **Seedance 2.0** (ByteDance; `dreamina-seedance-2-0-260128`, plus Fast / Mini variants): multimodal references (image + video + audio, addressed as "Image 1"), native generated audio, first/last-frame, extend. `ratio`, `duration` 4–15s, `resolution` 480p/720p/1080p/4K (1080p not on Fast/Mini; 4K only on standard).
 - **Omni Flash** (Google; `gemini-omni-flash-preview`, Interactions API): conversational video generation + editing — iterate in natural language, keeping unchanged parts. Use single-scene cues ("In a single continuous shot"), role tags `<FIRST_FRAME>` / `<IMAGE_REF_n>`, timecodes `[0-3s] …`; for edits, short direct instructions + "Keep everything else the same" (long re-descriptions cause drift).
-- **Grok Imagine video** (`grok-imagine-video-1.5` / `grok-imagine-video`): five modes — text-to-video, image-to-video (source = first frame), reference-to-video (`grok-imagine-video`, refs as `<IMAGE_n>`, no first-frame lock), edit, extend. `duration` ≤15s, `resolution` 480p/720p/1080p (1080p only on `-1.5` for image-to-video). No negative-prompt parameter.
+- **Grok Imagine video** (`grok-imagine-video-1.5` / `grok-imagine-video`): five modes — text-to-video, image-to-video (source = first frame), reference-to-video (`grok-imagine-video`, refs as `<IMAGE_n>`, no first-frame lock), edit, extend. `duration` ≤15s, `resolution` 480p/720p/1080p (1080p only on `-1.5` for image-to-video). No Negative Prompt parameter or field; express constraints with positive scene and motion wording.
 - **Surface defaulted knobs** — deliver an `Assumed settings:` note line for video params the user didn't set (duration, resolution, aspect ratio, `mode`/quality tier), each with where to change it.
 - Read templates.md **Template I** for the full generation template; for conversational editing (Omni Flash / Grok Imagine / Runway `aleph2`) read the **Conversational video editing** section in [templates.md](templates.md).
 
@@ -537,5 +539,59 @@ Read templates.md Template L for the full Prompt Decompiler template.
 ---
 
 **Unknown tool:**
-Identify the closest matching tool category from context. If genuinely unclear, ask: "Which tool is this for?" — then route accordingly. If no tool is found listed, connect to the closest related tool.
-Then build using the closest matching category.
+
+Do not infer an unknown provider from its name or reconstruct a missing profile
+from memory. First classify the routing state, then build a capability
+fingerprint from user-supplied or locally verified evidence.
+
+**Capability fingerprint — all 7 fields are required:**
+1. **Modality:** text, code, image, video, audio, 3D, multimodal, or `[unverified]`.
+2. **Read/write side effects:** output-only, read-only, local writes, external
+   actions, or `[unverified]`.
+3. **Tool/API/schema support:** available tools, API surface, structured-output
+   or schema support, or `[unverified]`.
+4. **Retrieval/freshness:** no retrieval, supplied-context only, live retrieval
+   with its verified source boundary, or `[unverified]`.
+5. **Context/input type:** accepted text/files/media, relevant context limits,
+   or `[unverified]`.
+6. **Output constraints:** verified format, length, syntax, and parameter surface,
+   or `[unverified]`.
+7. **Risk/approval tier:** read/draft/local-write/external or destructive action,
+   plus the required approval boundary; use `[unverified]` where authority or
+   side effects are unclear.
+
+Never invent model IDs, flags, endpoints, parameters, context limits, tool
+names, or capabilities. Mark every unsupported claim `[unverified]`; do not turn
+a neighboring profile's provider details into defaults for this tool.
+
+**Route the three states distinctly:**
+- **Targetless request:** the user asks for a prompt but names no target. If
+  questions are allowed, ask only the single most decision-changing question —
+  normally `Which tool or runtime will receive this prompt?` — and count it
+  toward the global question cap. Do not silently treat a task category as a
+  named product.
+- **Named unknown tool:** retain the user's tool name, complete the fingerprint,
+  and route by verified capabilities rather than name similarity. If one missing
+  field would change the prompt materially and questions remain, ask only that
+  one decisive capability question within the global cap.
+- **Missing/unreadable reference:** if a routed profile or reference is absent,
+  inaccessible, or cannot be read, do not recreate it from memory and do not
+  claim its rules were loaded. Fall back to the minimal capability-safe prompt
+  below and identify the unavailable reference.
+
+**No-question / unresolved fallback:** choose the conservative closest category
+using only verified fingerprint fields. Default unknown side effects to
+output-only/read-only, network and external actions to disabled, and structured
+output or provider syntax to plain text. Outside the prompt block, emit:
+`Assumed target tool: [name or closest category] — [unverified]`, followed by
+the unresolved fingerprint fields as explicit `[unverified]` capability
+assumptions. This fallback applies when the user says `no questions`, the global
+question cap is spent, or the single question goes unanswered.
+
+**Minimal capability-safe prompt for a missing reference:** include only the
+verified task, supplied inputs, generic output shape, explicit scope, and
+acceptance criteria. Do not add provider-specific syntax or capabilities.
+Preserve credential stripping, the canonical untrusted-data boundary, narrow
+tool/network permissions, stop conditions, and human/external approval for
+irreversible or high-risk actions. In the note, label the reference unavailable
+and enumerate every capability assumption that could not be verified.

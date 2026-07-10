@@ -105,11 +105,11 @@ Prompt Master runs a structured pipeline on every request:
 
 1. **Detects the target tool** — figures out which AI system the prompt is for and routes silently.
 2. **Extracts 9 dimensions of intent** — task, target tool, output format, constraints, input, context, audience, success criteria, examples.
-3. **Asks targeted clarifying questions** — at most 3, only when critical info is missing.
+3. **Resolves missing inputs deterministically** — asks at most 3 targeted questions when allowed; an explicit `no questions` request gets zero questions plus visible target/format assumptions.
 4. **Routes to the right architecture** — picks the correct template and tool profile automatically, never shown to you.
 5. **Applies safe techniques only** — role assignment, few-shot, XML structure, grounding anchors, memory block, source citations — as needed.
 6. **Runs a token-efficiency audit** — strips every word that doesn't change the output.
-7. **Delivers the prompt** — by default, one clean copyable block with a one-line strategy note; if you explicitly ask for alternatives, it may return bounded prompt directions with fit, tradeoffs, and when to use each.
+7. **Delivers one fenced artifact** — one prompt by default, exactly 2–3 labeled variants when requested, or a sequential `Prompt 1..N` set for split tasks.
 
 ---
 
@@ -403,7 +403,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.31.0** (candidate/variants release: explicit alternatives can return bounded prompt directions; default remains one prompt).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.32.0** (deterministic precedence, no-question fallbacks, exact variants/split/retry contracts, hardened offline oracle, and reproducible release packaging).
 
 ## 📄 License
 

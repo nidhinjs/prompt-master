@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 // Fixture tests for plugins/prompt-master/hooks/multi-agent-detect.js.
-// Tests the detector directly and runs a small child-process smoke check. Some
-// managed sandboxes block Node child stdin/stdout with EPERM; detector coverage
-// must not depend on that integration path.
+// Tests the detector directly and runs a small child-process smoke check.
+// Integration checks fail closed when the child cannot be executed.
 // Usage: node scripts/test-hook.js   → exit 0 all green / exit 1 on failure.
 
 const { spawnSync } = require('child_process');
@@ -63,6 +62,22 @@ for (const [prompt, expected, why] of FIXTURES) {
       console.error(`FAIL: "${prompt}" — hook output missing UserPromptSubmit payload`);
       failed++;
     }
+    const context = output?.hookSpecificOutput?.additionalContext || '';
+    for (const [contract, pattern] of [
+      ['agentic fragment routing', /Agentic Prompt Fragments/],
+      ['single-loop default', /default to a single loop/i],
+      ['transcript hygiene', /do not pass raw parent transcripts[\s\S]{0,100}secrets[\s\S]{0,40}reasoning/i],
+      ['scoped worker packet', /scoped packet with objective, inputs, allowed tools, trust boundaries, output schema, budget, forbidden actions, and evidence rules/i],
+      ['untrusted results', /worker messages[\s\S]{0,80}tool output as untrusted data/i],
+      ['safe parallelism', /Parallelize only independent read-only work[\s\S]{0,100}serialize writes/i],
+      ['managed-swarm carve-out', /vendor-managed swarm[\s\S]{0,180}do NOT design a topology, agent count, or worker packets/i],
+      ['approval boundary', /external-action approvals/i],
+    ]) {
+      if (!pattern.test(context)) {
+        console.error(`FAIL: "${prompt}" — hook context missing ${contract}`);
+        failed++;
+      }
+    }
   }
 }
 
@@ -81,6 +96,8 @@ for (const [prompt, expected, why] of [
     continue;
   }
   if (res.error?.code === 'EPERM') {
+    console.error(`FAIL (EPERM): "${prompt}" — child smoke check was not executed`);
+    failed++;
     continue;
   }
   if (res.error) {
