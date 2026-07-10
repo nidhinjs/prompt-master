@@ -85,6 +85,9 @@ Generate a Midjourney prompt for a cyberpunk city at night
 ```
 Write a prompt for Kimi to research X across multiple sources, with citations
 ```
+```
+Give me 3 prompt directions for Claude Code, with fit, tradeoffs, and when to use each
+```
 
 Or invoke it explicitly:
 
@@ -106,7 +109,7 @@ Prompt Master runs a structured pipeline on every request:
 4. **Routes to the right architecture** — picks the correct template and tool profile automatically, never shown to you.
 5. **Applies safe techniques only** — role assignment, few-shot, XML structure, grounding anchors, memory block, source citations — as needed.
 6. **Runs a token-efficiency audit** — strips every word that doesn't change the output.
-7. **Delivers the prompt** — one clean copyable block with a one-line strategy note.
+7. **Delivers the prompt** — by default, one clean copyable block with a one-line strategy note; if you explicitly ask for alternatives, it may return bounded prompt directions with fit, tradeoffs, and when to use each.
 
 ---
 
@@ -400,7 +403,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.29.0** (GLM/Z.AI support, GLM-5.2 routing, thinking/tool-loop guards, and new lint/golden coverage).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.31.0** (candidate/variants release: explicit alternatives can return bounded prompt directions; default remains one prompt).
 
 ## 📄 License
 

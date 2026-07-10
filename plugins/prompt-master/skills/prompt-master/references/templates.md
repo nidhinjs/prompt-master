@@ -140,6 +140,20 @@ Personality: Sharp, dry, confident — no adjectives, no exclamation marks.
 Experiment: Give 3 variants ranging from minimal to bold.
 ```
 
+### Candidate / Variant Set Fragment
+
+Use only when the user explicitly asks for variants/alternatives/options/directions, or inside #56 prototype-first. Return 3 labeled variants inside one fenced output block.
+If the user asks for multiple prompt variants, write the ready prompt variants here; do not write one prompt that asks the target model to generate variants later.
+
+For each variant:
+- Variant [A-C] - [Mainstream / Balanced / Novel, or a descriptive label]
+- Fit: [what request, taste, or use case this best fits]
+- Risk / tradeoff: [what it may sacrifice or fail at]
+- When to use: [the user reaction or condition that should choose it]
+- Prompt: [paste-ready prompt]
+
+Do not include likelihood labels, score fields, private-process fields, or step-by-step trace fields.
+
 ---
 
 ## Template E — Chain of Thought
@@ -699,8 +713,10 @@ Note for the user (outside the prompt block): execute the spec in a **fresh sess
 **#56 Prototype-first** *(taste-based / "I'll know it when I see it" criteria — visual/UX/scope-shaping work the user can only recognize, not specify. A throwaway mock costs nothing and drains the unknown cheaply; wiring the real app first makes a wrong guess expensive to revert):*
 ```
 Before wiring anything up, make a single self-contained HTML file with fake data
-showing [N, e.g. 4] genuinely different directions for [the thing] — not
-variations of one idea. No backend, routes, or state. I'll react and pick.
+showing [N, e.g. 4] genuinely different candidate directions for [the thing]
+— not variations of one idea. For each direction include: name, fit,
+risk / tradeoff, and what user reaction would choose it. No backend, routes,
+or state. I'll react and pick.
 ```
 Note for the user (outside the prompt block): the mock is throwaway — do not let its code leak into the real app; it exists to react to, then rebuild properly.
 

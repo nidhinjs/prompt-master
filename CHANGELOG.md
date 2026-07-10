@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.31.0] - 2026-07-10
+
+Candidate/variants release: explicit alternative requests can return bounded prompt directions while the default output remains one prompt.
+
+### Added
+- **Candidate / variant set fragment:** `templates.md` now documents the opt-in one-fence candidate shape with `Fit`, `Risk / tradeoff`, and `When to use` labels.
+- **Regression coverage:** golden scenarios cover explicit variants, not-default behavior, prototype-first candidate directions, high-risk suppression, single-fence Midjourney variants, and no-CoT preservation for reasoning-native targets. `scripts/lint.js` now requires those IDs and guards candidate/runtime/public-doc drift.
+- **Safe verification gate:** `scripts/test-safe.js` is now the local/CI entrypoint for hook fixtures, lint, syntax checks, offline golden assertion fixtures, and fake-Claude runner safety tests without calling the real Claude CLI.
+- **Offline golden assertion fixtures:** `scripts/golden-assertions.js`, `scripts/test-golden-regex.js`, and `tests/golden/offline-fixtures.json` cover regex/root-cause regressions without live model calls.
+- **Fake-Claude runner safety tests:** `scripts/test-run-golden-safe.js` validates opt-in guards, bounded live-call budgets, timeout classification, env-error classification, and assertion-failure reporting through a temporary fake `claude` binary.
+- **Maintainer rationale:** `docs/sources.md` records the bounded candidate-set adaptation and the rejected overclaim surface.
+
+### Changed
+- **Runtime output contract:** `SKILL.md` keeps the default as one paste-ready prompt in one fenced block, with variants only on explicit request or pattern #56 prototype-first.
+- **High-risk handling:** `agentic.md` blocks divergent executable variants for R5/R6 work and routes alternatives to draft-only comparison with approval gates.
+- **Public docs synchronized:** README EN/RU now describe explicit alternatives without changing the default one-prompt contract.
+- **CI safety:** GitHub Actions now runs `node scripts/test-safe.js` instead of ad hoc checks, keeping live Claude eval out of the automated release gate.
+
+### Fixed
+- **Live Claude runner guardrail:** `scripts/run-golden.js` now refuses to call `claude -p` unless `PROMPT_MASTER_ALLOW_CLAUDE_RUNNER=1` is set, refuses full-suite live eval without a second `PROMPT_MASTER_ALLOW_FULL_GOLDEN=1` opt-in, supports `--max-scenarios`, and classifies live-runner failures as `ENV_ERROR`, `TIMEOUT`, `MODEL_ERROR`, or `ASSERT_FAIL`.
+- **Safe-gate drift guard:** `scripts/lint.js` now rejects runnable live-Claude commands in safe docs/CI gates so `scripts/run-golden.js` cannot silently become a normal test again.
+
 ## [1.30.0] - 2026-07-09
 
 Agentic runtime safety release: вынесен отдельный decision layer для риск-классификации, approval boundaries и multi-agent escalation без раздувания `SKILL.md`.
@@ -498,6 +520,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.31.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.31.0
 [1.30.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.30.0
 [1.29.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.29.0
 [1.28.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.28.0

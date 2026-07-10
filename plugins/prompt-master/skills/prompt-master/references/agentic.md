@@ -29,6 +29,10 @@ Escalators:
 - Any action outside stated scope raises at least to R4.
 - Any persistent external side effect is R5 even if technically reversible.
 - Security-sensitive code paths are at least R6 for design and review.
+- For R5/R6 work, deterministic safety beats diversity: do not generate
+  divergent executable variants. If alternatives are needed, use a draft-only
+  comparison or decision matrix with approval gates, not multiple
+  implementation prompts.
 
 ## Intent Flags
 

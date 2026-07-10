@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Fixture tests for plugins/prompt-master/hooks/multi-agent-detect.js.
-// Runs the hook as a child process with stdin and asserts whether it fires for
-// each fixture. Some managed sandboxes block Node child stdin/stdout with EPERM;
-// in that case only, fall back to the exported detector so local checks stay useful.
+// Tests the detector directly and runs a small child-process smoke check. Some
+// managed sandboxes block Node child stdin/stdout with EPERM; detector coverage
+// must not depend on that integration path.
 // Usage: node scripts/test-hook.js   → exit 0 all green / exit 1 on failure.
 
 const { spawnSync } = require('child_process');
@@ -52,28 +52,7 @@ const FIXTURES = [
 
 let failed = 0;
 for (const [prompt, expected, why] of FIXTURES) {
-  const res = spawnSync('node', [HOOK], {
-    input: JSON.stringify({ prompt }),
-    encoding: 'utf8',
-    timeout: TIMEOUT_MS,
-  });
-  if (res.error && res.error.code === 'ETIMEDOUT') {
-    console.error(`FAIL (timeout ${TIMEOUT_MS}ms): "${prompt}" — hook must not hang`);
-    failed++;
-    continue;
-  }
-  if (res.error && res.error.code !== 'EPERM') {
-    console.error(`FAIL (${res.error.code || res.error.message}): "${prompt}"`);
-    failed++;
-    continue;
-  }
-  if (!res.error && res.status !== 0) {
-    console.error(`FAIL (exit ${res.status}): "${prompt}" — hook must always exit 0`);
-    failed++;
-    continue;
-  }
-
-  const fired = res.error?.code === 'EPERM' ? shouldFire(prompt) : res.stdout.trim().length > 0;
+  const fired = shouldFire(prompt);
   if (fired !== expected) {
     console.error(`FAIL: "${prompt}" — expected fire=${expected} (${why}), got fire=${fired}`);
     failed++;
@@ -84,6 +63,40 @@ for (const [prompt, expected, why] of FIXTURES) {
       console.error(`FAIL: "${prompt}" — hook output missing UserPromptSubmit payload`);
       failed++;
     }
+  }
+}
+
+for (const [prompt, expected, why] of [
+  ['prompt for a team of agents doing research', true, 'child positive smoke'],
+  ['help me write a prompt for Midjourney', false, 'child negative smoke'],
+]) {
+  const res = spawnSync('node', [HOOK], {
+    input: JSON.stringify({ prompt }),
+    encoding: 'utf8',
+    timeout: TIMEOUT_MS,
+  });
+  if (res.error && res.error.code === 'ETIMEDOUT') {
+    console.error(`FAIL (timeout ${TIMEOUT_MS}ms): "${prompt}" — hook must not hang`);
+    failed++;
+    continue;
+  }
+  if (res.error?.code === 'EPERM') {
+    continue;
+  }
+  if (res.error) {
+    console.error(`FAIL (${res.error.code || res.error.message}): "${prompt}"`);
+    failed++;
+    continue;
+  }
+  if (res.status !== 0) {
+    console.error(`FAIL (exit ${res.status}): "${prompt}" — hook must always exit 0`);
+    failed++;
+    continue;
+  }
+  const fired = res.stdout.trim().length > 0;
+  if (fired !== expected) {
+    console.error(`FAIL: "${prompt}" — expected child fire=${expected} (${why}), got fire=${fired}`);
+    failed++;
   }
 }
 

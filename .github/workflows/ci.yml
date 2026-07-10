@@ -11,8 +11,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Hook fixture tests
-        run: node scripts/test-hook.js
-
-      - name: Skill consistency lint
-        run: node scripts/lint.js
+      - name: Safe verification
+        run: node scripts/test-safe.js

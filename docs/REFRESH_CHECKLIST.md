@@ -24,16 +24,24 @@
 9. **`docs/sources.md`** — добавь источник факта; research-файлы кладём в `docs/` и коммитим.
 10. **`plugin.json` / `marketplace.json`** — описания упоминают модели и счётчик паттернов.
 
-## После правок
+## После правок — безопасная проверка
 
-- `node scripts/test-hook.js` — fixtures хука зелёные.
-- `node scripts/lint.js` — версия/счётчики/ToC/cross-refs/no-CoT
-  списки/трейты/single-source статусы/Fable promo-факты согласованы (то же гоняет CI на push/PR).
+- `node scripts/test-safe.js` — основной локальный/CI gate. Он включает hook fixtures,
+  `node scripts/lint.js`, syntax check live-runner, offline golden-regex fixtures и
+  fake-Claude E2E; настоящий Claude CLI не вызывается.
+- `node scripts/test-hook.js` — можно запускать отдельно при правках хука.
+- `node scripts/lint.js` — можно запускать отдельно при правках профилей/документов.
 - `./scripts/lint.ps1` (pwsh или powershell.exe) — legacy helper, не основной CI gate.
-- `node scripts/run-golden.js` — поведенческие golden-сценарии (реальные вызовы модели,
-  запускать вручную перед релизом; FAIL = сигнал для разбора, не слепой правки).
 - `./scripts/bump-version.ps1 -Bump minor|patch` — синхронный подъём версии.
 - Заполни секцию в `CHANGELOG.md`.
+
+## Live eval — запрещён по умолчанию
+
+- `scripts/run-golden.js` делает реальные `claude -p` вызовы и не является обычным
+  тестом. Не запускай его без явного разрешения пользователя в текущем диалоге.
+- Даже при разрешении ограничивай прогон: `--only <id>` или `--max-scenarios <n>`,
+  плюс `PROMPT_MASTER_ALLOW_CLAUDE_RUNNER=1`.
+- Полный suite требует второго opt-in: `PROMPT_MASTER_ALLOW_FULL_GOLDEN=1`.
 
 ## Трейты профилей
 

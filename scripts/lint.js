@@ -21,6 +21,7 @@ const files = {
   toolProfilesMd: p('plugins/prompt-master/skills/prompt-master/references/tool-profiles.md'),
   modelsMd: p('plugins/prompt-master/skills/prompt-master/references/models.md'),
   goldenJson: p('tests/golden/scenarios.json'),
+  refreshChecklistMd: p('docs/REFRESH_CHECKLIST.md'),
 };
 
 const errors = [];
@@ -91,6 +92,7 @@ const tplText = read(files.templatesMd);
 const profText = read(files.toolProfilesMd);
 const modelsText = read(files.modelsMd);
 const goldenText = read(files.goldenJson);
+const refreshChecklistText = read(files.refreshChecklistMd);
 
 log('version consistency');
 const pluginVersion = pluginText.match(/"version"\s*:\s*"(\d+\.\d+\.\d+)"/)?.[1];
@@ -104,6 +106,16 @@ if (pluginVersion && skillVersion && pluginVersion !== skillVersion) {
 }
 if (pluginVersion && changelogVersion && pluginVersion !== changelogVersion) {
   errors.push(`Version mismatch: plugin.json=${pluginVersion} vs CHANGELOG.md latest heading=${changelogVersion}`);
+}
+if (pluginVersion) {
+  for (const [name, text, label] of [
+    ['README.md', readmeText, 'Current release'],
+    ['README.ru.md', readmeRuText, 'Текущий релиз'],
+  ]) {
+    const m = text.match(new RegExp(`${label}:\\s*\\*\\*v(\\d+\\.\\d+\\.\\d+)\\*\\*`));
+    if (!m) errors.push(`${name}: cannot parse '${label}: **vX.Y.Z**' line`);
+    else if (m[1] !== pluginVersion) errors.push(`${name}: current-release line says v${m[1]} instead of v${pluginVersion}`);
+  }
 }
 if (pluginVersion) console.log(`  version = ${pluginVersion}`);
 
@@ -415,6 +427,88 @@ for (const [name, rx] of [
   if (!rx.test(agenticText)) errors.push(`agentic.md missing ${name} guard`);
 }
 
+log('candidate / variant set policy');
+const runtimeFiles = {
+  'SKILL.md': skillText,
+  'templates.md': tplText,
+  'patterns.md': patText,
+  'tool-profiles.md': profText,
+  'agentic.md': agenticText,
+};
+for (const [name, text] of Object.entries(runtimeFiles)) {
+  if (/Verbalized Sampling/i.test(text)) errors.push(`${name}: runtime files must not expose Verbalized Sampling branding`);
+  if (/\bprobabilit(?:y|ies)\s*[:=]|"probability"|probability band/i.test(text)) {
+    errors.push(`${name}: runtime files must not use probability labels for candidate sets`);
+  }
+}
+const candidateFragment = tplText.match(/^### Candidate \/ Variant Set Fragment\s*$([\s\S]*?)(?=^---\s*$)/m)?.[1] || '';
+if (!candidateFragment) {
+  errors.push('templates.md missing Candidate / Variant Set Fragment');
+} else {
+  for (const [label, rx] of [
+    ['Variant label', /Variant \[A-C\]/],
+    ['Fit label', /^- Fit:/m],
+    ['Risk / tradeoff label', /^- Risk \/ tradeoff:/m],
+    ['When to use label', /^- When to use:/m],
+    ['single fenced output block', /one fenced output block/i],
+  ]) {
+    if (!rx.test(candidateFragment)) errors.push(`templates.md Candidate / Variant Set Fragment missing ${label}`);
+  }
+  for (const rx of [/\bReasoning\s*:/i, /\bRationale\s*:/i, /<thinking>/i, /chain[ -]of[ -]thought/i]) {
+    if (rx.test(candidateFragment)) errors.push(`templates.md Candidate / Variant Set Fragment contains forbidden field/pattern: ${rx}`);
+  }
+}
+const pattern56 = patText.match(/^\| 56 \|.*$/m)?.[0] || '';
+if (!/fit/i.test(pattern56) || !/risk \/ tradeoff/i.test(pattern56)) {
+  errors.push('patterns.md pattern #56 must include fit and risk / tradeoff labels');
+}
+for (const [name, rx] of [
+  ['explicit opt-in variants', /explicitly asks for variants\/alternatives\/options\/directions\/multiple prompts/i],
+  ['single-fence output', /single fenced prompt block/i],
+  ['default one prompt', /emit one final prompt unless variants were explicitly requested/i],
+  ['high-risk suppression', /Do not use variants for credentials, auth\/security, migrations, production\/deploy, database writes, destructive actions, or R5\/R6 work/i],
+]) {
+  if (!rx.test(skillText)) errors.push(`SKILL.md missing candidate-set policy: ${name}`);
+}
+if (!/For R5\/R6 work[\s\S]{0,160}do not generate\s+divergent executable variants/i.test(agenticText)) {
+  errors.push('agentic.md missing R5/R6 no executable variants guard');
+}
+
+log('public docs claim hygiene');
+for (const [name, text] of [
+  ['README.md', readmeText],
+  ['README.ru.md', readmeRuText],
+]) {
+  for (const rx of [/1\.6-2\.1x/i, /25\.7%/, /mode collapse/i, /Verbalized Sampling/i, /calibrated sampling/i]) {
+    if (rx.test(text)) errors.push(`${name}: public docs must not claim paper metrics or VS branding (${rx})`);
+  }
+}
+
+log('live Claude runner exclusion from safe gates');
+function collectFilesByExt(dir, exts) {
+  if (!fs.existsSync(dir)) return [];
+  const out = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const abs = path.join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...collectFilesByExt(abs, exts));
+    else if (exts.some((ext) => entry.name.endsWith(ext))) out.push(abs);
+  }
+  return out;
+}
+const safeGateFiles = [
+  ['README.md', readmeText],
+  ['README.ru.md', readmeRuText],
+  ['docs/REFRESH_CHECKLIST.md', refreshChecklistText],
+  ...collectFilesByExt(p('.github'), ['.yml', '.yaml']).map((abs) => [rel(abs), read(abs)]),
+];
+const runnableLiveCommandRx =
+  /(^|\n)\s*(?:run:\s*)?(?:[-*]\s*)?`?(?:(?:GOLDEN_MODEL=\S+|PROMPT_MASTER_ALLOW_CLAUDE_RUNNER=1)\s+)*node\s+scripts\/run-golden\.js\b|(^|\n)\s*(?:run:\s*)?(?:[-*]\s*)?`?claude\s+-p\b/m;
+for (const [name, text] of safeGateFiles) {
+  if (runnableLiveCommandRx.test(text)) {
+    errors.push(`${name}: safe gates must not contain runnable live Claude commands`);
+  }
+}
+
 log('Advisor / Managed Agents model facts');
 if (/\bAdvisor Tool\b/i.test(profText)) {
   for (const id of ['advisor-tool-2026-03-01', 'advisor_20260301']) {
@@ -473,8 +567,23 @@ try {
     'agentic-policy-reviewer-before-execution',
     'agentic-no-model-self-approval',
     'agentic-draft-commit-split',
+    'candidate-set-explicit-variants',
+    'candidate-set-not-default',
+    'taste-prototype-candidate-directions',
+    'candidate-set-blocked-for-security',
+    'candidate-set-single-fence-midjourney',
+    'candidate-set-no-cot-reasoning-model',
   ]) {
     if (!ids.includes(id)) errors.push(`Missing golden scenario: ${id}`);
+  }
+  for (const s of golden.scenarios || []) {
+    if (/^(candidate-set-|taste-prototype-candidate-directions$)/.test(s.id)) {
+      for (const rx of [...(s.mustMatch || []), ...(s.mustNotMatch || [])]) {
+        if (/\.\*|\[\\s\\S\]\*/.test(rx)) {
+          errors.push(`Golden scenario ${s.id} uses an unbounded regex: ${rx}`);
+        }
+      }
+    }
   }
 } catch (e) {
   errors.push(`Cannot parse tests/golden/scenarios.json: ${e.message}`);
