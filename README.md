@@ -288,12 +288,22 @@ behavior `[unverified]` instead of copying a neighboring tool's facts.
 
 Prompt Master **can** generate multi-agent / orchestration prompts, but it's **deliberately opt-in**: by default it keeps a prompt to a single agent loop, because over-orchestration burns tokens. To get a multi-agent prompt, **say so explicitly** — e.g. *"write a **multi-agent** prompt…"*, *"use an **orchestrator + sub-agents**"*, *"**fan-out** across agents"*, or name a tool's native mode (**Agent Swarm**, **multi-agent research**).
 
+That rule applies to the **prompt form**, not to a native execution mode. For
+ChatGPT Work with a supported GPT-5.6 model and an account eligible for
+**Ultra**, Prompt Master may recommend hosted subagents when the task contains
+at least two independent bounded workstreams. For difficult but sequential
+work, it recommends **Max** and one deep agent. The mode choice appears in
+`Recommended setup:` outside the copyable prompt.
+
 Native multi-agent support by target:
 
 | Target | Multi-agent capability | How Prompt Master frames it |
 |---|---|---|
 | **Grok / xAI** | Provider-managed research when the selected registry record/surface supports it | Research brief plus registry-selected search controls; never hardcode an agent count |
 | **Kimi / Moonshot AI** | App-native swarm only when the selected registry record confirms availability | One large decomposable task + final artifact; do not set or script a worker count |
+| **ChatGPT Work / GPT-5.6 Ultra** | For supported models and eligible accounts, Ultra may proactively delegate independent task parts to hosted subagents | Recommend Ultra only for parallelizable work; keep the model and mode in `Recommended setup:`, not inside the prompt |
+| **Codex / GPT-5.6 Ultra** | Ultra goes beyond a single-agent run and distributes independent task parts across subagents in parallel | Define bounded work packages, one coordinator, and final synthesis; serialize writes and external actions |
+| **OpenAI Responses API / GPT-5.6** | Explicit Multi-agent beta is available with all GPT-5.6 models | Keep the beta flag and request controls outside the prompt; the root agent owns coordination, conflict checks, and one final answer |
 | **Perplexity / Manus** | Multi-agent web-research orchestrators | Describe the end deliverable, not the steps — they decompose internally |
 | **Claude Code / Cline / Devin / SWE-agent** | You design the orchestration (orchestrator + sub-agents) | Agentic Prompt Fragments: fan-out + synthesizer, evaluator loop, handoff contracts, human-in-the-loop gates |
 | **DeepSeek** | No registry-confirmed native swarm | Use the registry-selected reasoning/retrieval route or a bounded custom tool loop |
@@ -303,6 +313,8 @@ Two orchestration styles remain distinct: **provider-managed**, where the
 selected registry record confirms the surface and the prompt only frames the
 goal; and **user-designed**, where a coding agent receives an explicit bounded
 topology. Prompt Master never invents availability or a worker count.
+
+Official mode boundaries: [ChatGPT Work/Codex Ultra and GPT-5.6](https://learn.chatgpt.com/docs/models#know-when-to-use-max-or-ultra), [Responses API Multi-agent beta](https://developers.openai.com/api/docs/guides/responses-multi-agent).
 
 ---
 
