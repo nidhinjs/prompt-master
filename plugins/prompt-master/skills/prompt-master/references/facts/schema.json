@@ -22,7 +22,7 @@
     },
     "surface": {
       "enum": [
-        "api", "app", "claude-ai", "claude-code", "cowork",
+        "api", "app", "codex", "claude-ai", "claude-code", "cowork",
         "agent-api", "sonar-api", "generate-api", "images-api",
         "video-api", "variations-api", "interactions-api", "modelark-api",
         "coding-plan-api", "open-weights"
@@ -239,6 +239,16 @@
           "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
         },
         "candidate_record_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        },
+        "capability_record_ids": {
+          "description": "Optional lifecycle-independent capabilities loaded with the selected model from this same route.",
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,

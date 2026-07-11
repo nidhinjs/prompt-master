@@ -4,6 +4,216 @@
   "provider_family": "openai",
   "records": [
     {
+      "id": "openai.gpt-5-6-sol.api",
+      "vendor": "openai",
+      "model_id": "gpt-5.6-sol",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "frontier", "coding", "long_context", "multimodal", "research", "structured_output", "agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["outcome_first", "no_cot", "surface_specific"],
+      "claims": [
+        { "key": "context_window_tokens", "value": 1050000 },
+        { "key": "max_output_tokens", "value": 128000 },
+        { "key": "modalities", "value": { "input": ["text", "image"], "output": ["text"] } },
+        { "key": "knowledge_cutoff", "value": "2026-02-16" },
+        { "key": "endpoint", "value": ["responses", "chat_completions", "batch"] },
+        { "key": "preferred_api", "value": "responses" },
+        { "key": "reasoning_effort_values", "value": ["none", "low", "medium", "high", "xhigh", "max"] },
+        { "key": "default_reasoning_effort", "value": "medium" },
+        { "key": "structured_output", "value": true },
+        { "key": "knobs", "value": { "reasoning.mode": ["standard", "pro"], "reasoning.context": ["auto", "current_turn", "all_turns"], "text.verbosity": ["low", "medium", "high"], "image.detail": ["low", "high", "original", "auto"] } }
+      ],
+      "last_verified": "2026-07-11",
+      "source": [
+        { "url": "https://developers.openai.com/api/docs/models/gpt-5.6-sol", "kind": "official_model_card", "supports": ["model_id", "surface", "channel", "availability", "recommended_for", "claims.context_window_tokens", "claims.max_output_tokens", "claims.modalities", "claims.knowledge_cutoff", "claims.endpoint", "claims.structured_output"] },
+        { "url": "https://developers.openai.com/api/docs/guides/latest-model", "kind": "official_docs", "supports": ["recommended_for", "prompting_constraints", "claims.preferred_api", "claims.reasoning_effort_values", "claims.default_reasoning_effort", "claims.knobs"] }
+      ]
+    },
+    {
+      "id": "openai.gpt-5-6-terra.api",
+      "vendor": "openai",
+      "model_id": "gpt-5.6-terra",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "coding", "fast", "economy", "long_context", "multimodal", "structured_output", "agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["outcome_first", "no_cot", "surface_specific"],
+      "claims": [
+        { "key": "context_window_tokens", "value": 1050000 },
+        { "key": "max_output_tokens", "value": 128000 },
+        { "key": "modalities", "value": { "input": ["text", "image"], "output": ["text"] } },
+        { "key": "knowledge_cutoff", "value": "2026-02-16" },
+        { "key": "endpoint", "value": ["responses", "chat_completions", "batch"] },
+        { "key": "preferred_api", "value": "responses" },
+        { "key": "reasoning_effort_values", "value": ["none", "low", "medium", "high", "xhigh", "max"] },
+        { "key": "default_reasoning_effort", "value": "medium" },
+        { "key": "structured_output", "value": true },
+        { "key": "knobs", "value": { "reasoning.mode": ["standard", "pro"], "reasoning.context": ["auto", "current_turn", "all_turns"], "text.verbosity": ["low", "medium", "high"], "image.detail": ["low", "high", "original", "auto"] } }
+      ],
+      "last_verified": "2026-07-11",
+      "source": [
+        { "url": "https://developers.openai.com/api/docs/models/gpt-5.6-terra", "kind": "official_model_card", "supports": ["model_id", "surface", "channel", "availability", "recommended_for", "claims.context_window_tokens", "claims.max_output_tokens", "claims.modalities", "claims.knowledge_cutoff", "claims.endpoint", "claims.structured_output"] },
+        { "url": "https://developers.openai.com/api/docs/guides/latest-model", "kind": "official_docs", "supports": ["recommended_for", "prompting_constraints", "claims.preferred_api", "claims.reasoning_effort_values", "claims.default_reasoning_effort", "claims.knobs"] }
+      ]
+    },
+    {
+      "id": "openai.gpt-5-6-luna.api",
+      "vendor": "openai",
+      "model_id": "gpt-5.6-luna",
+      "surface": "api",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "fast", "economy", "long_context", "multimodal", "structured_output"],
+      "routing_default_for": [],
+      "prompting_constraints": ["outcome_first", "no_cot", "surface_specific"],
+      "claims": [
+        { "key": "context_window_tokens", "value": 1050000 },
+        { "key": "max_output_tokens", "value": 128000 },
+        { "key": "modalities", "value": { "input": ["text", "image"], "output": ["text"] } },
+        { "key": "knowledge_cutoff", "value": "2026-02-16" },
+        { "key": "endpoint", "value": ["responses", "chat_completions", "batch"] },
+        { "key": "preferred_api", "value": "responses" },
+        { "key": "reasoning_effort_values", "value": ["none", "low", "medium", "high", "xhigh", "max"] },
+        { "key": "default_reasoning_effort", "value": "medium" },
+        { "key": "structured_output", "value": true },
+        { "key": "knobs", "value": { "reasoning.mode": ["standard", "pro"], "reasoning.context": ["auto", "current_turn", "all_turns"], "text.verbosity": ["low", "medium", "high"], "image.detail": ["low", "high", "original", "auto"] } }
+      ],
+      "last_verified": "2026-07-11",
+      "source": [
+        { "url": "https://developers.openai.com/api/docs/models/gpt-5.6-luna", "kind": "official_model_card", "supports": ["model_id", "surface", "channel", "availability", "recommended_for", "claims.context_window_tokens", "claims.max_output_tokens", "claims.modalities", "claims.knowledge_cutoff", "claims.endpoint", "claims.structured_output"] },
+        { "url": "https://developers.openai.com/api/docs/guides/latest-model", "kind": "official_docs", "supports": ["recommended_for", "prompting_constraints", "claims.preferred_api", "claims.reasoning_effort_values", "claims.default_reasoning_effort", "claims.knobs"] }
+      ]
+    },
+    {
+      "id": "openai.gpt-5-6-sol.app",
+      "vendor": "openai",
+      "model_id": "gpt-5.6-sol",
+      "surface": "app",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["app"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "frontier", "coding", "research", "agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["outcome_first", "no_cot", "surface_specific"],
+      "claims": [
+        { "key": "effort_levels", "value": ["Light", "Medium", "High", "Extra High"] },
+        { "key": "app_modes", "value": { "presets": ["Power", "Powerful", "Efficient", "Advanced"], "deep_single_agent": "Max", "parallel_subagents": "Ultra" } },
+        { "key": "platforms_supported", "value": ["ChatGPT desktop app", "ChatGPT web"] }
+      ],
+      "last_verified": "2026-07-11",
+      "source": [{ "url": "https://learn.chatgpt.com/docs/models", "kind": "official_docs", "supports": ["model_id", "surface", "channel", "availability", "recommended_for", "prompting_constraints", "claims.effort_levels", "claims.app_modes", "claims.platforms_supported"] }]
+    },
+    {
+      "id": "openai.gpt-5-6-terra.app",
+      "vendor": "openai",
+      "model_id": "gpt-5.6-terra",
+      "surface": "app",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["app"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "coding", "fast", "economy", "research", "agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["outcome_first", "no_cot", "surface_specific"],
+      "claims": [
+        { "key": "effort_levels", "value": ["Light", "Medium", "High", "Extra High"] },
+        { "key": "app_modes", "value": { "presets": ["Power", "Powerful", "Efficient", "Advanced"], "deep_single_agent": "Max", "parallel_subagents": "Ultra" } },
+        { "key": "platforms_supported", "value": ["ChatGPT desktop app", "ChatGPT web"] }
+      ],
+      "last_verified": "2026-07-11",
+      "source": [{ "url": "https://learn.chatgpt.com/docs/models", "kind": "official_docs", "supports": ["model_id", "surface", "channel", "availability", "recommended_for", "prompting_constraints", "claims.effort_levels", "claims.app_modes", "claims.platforms_supported"] }]
+    },
+    {
+      "id": "openai.gpt-5-6-luna.app",
+      "vendor": "openai",
+      "model_id": "gpt-5.6-luna",
+      "surface": "app",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["app"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "fast", "economy", "structured_output"],
+      "routing_default_for": [],
+      "prompting_constraints": ["outcome_first", "no_cot", "surface_specific"],
+      "claims": [
+        { "key": "effort_levels", "value": ["Light", "Medium", "High", "Extra High"] },
+        { "key": "app_modes", "value": { "presets": ["Power", "Powerful", "Efficient", "Advanced"], "deep_single_agent": "Max", "parallel_subagents": "Ultra" } },
+        { "key": "platforms_supported", "value": ["ChatGPT desktop app", "ChatGPT web"] }
+      ],
+      "last_verified": "2026-07-11",
+      "source": [{ "url": "https://learn.chatgpt.com/docs/models", "kind": "official_docs", "supports": ["model_id", "surface", "channel", "availability", "recommended_for", "prompting_constraints", "claims.effort_levels", "claims.app_modes", "claims.platforms_supported"] }]
+    },
+    {
+      "id": "openai.gpt-5-6-sol.codex",
+      "vendor": "openai",
+      "model_id": "gpt-5.6-sol",
+      "surface": "codex",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["codex"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "frontier", "coding", "research", "agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["outcome_first", "no_cot", "surface_specific"],
+      "claims": [
+        { "key": "app_modes", "value": { "deep_single_agent": "max", "parallel_subagents": "ultra" } },
+        { "key": "platforms_supported", "value": ["Codex app", "Codex CLI", "Codex IDE extension"] }
+      ],
+      "last_verified": "2026-07-11",
+      "source": [{ "url": "https://learn.chatgpt.com/docs/models", "kind": "official_docs", "supports": ["model_id", "surface", "channel", "availability", "recommended_for", "prompting_constraints", "claims.app_modes", "claims.platforms_supported"] }]
+    },
+    {
+      "id": "openai.gpt-5-6-terra.codex",
+      "vendor": "openai",
+      "model_id": "gpt-5.6-terra",
+      "surface": "codex",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["codex"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "coding", "fast", "economy", "research", "agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["outcome_first", "no_cot", "surface_specific"],
+      "claims": [
+        { "key": "app_modes", "value": { "deep_single_agent": "max", "parallel_subagents": "ultra" } },
+        { "key": "platforms_supported", "value": ["Codex app", "Codex CLI", "Codex IDE extension"] }
+      ],
+      "last_verified": "2026-07-11",
+      "source": [{ "url": "https://learn.chatgpt.com/docs/models", "kind": "official_docs", "supports": ["model_id", "surface", "channel", "availability", "recommended_for", "prompting_constraints", "claims.app_modes", "claims.platforms_supported"] }]
+    },
+    {
+      "id": "openai.gpt-5-6-luna.codex",
+      "vendor": "openai",
+      "model_id": "gpt-5.6-luna",
+      "surface": "codex",
+      "channel": "production",
+      "availability": { "status": "public", "scope": ["codex"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["general", "fast", "economy", "coding", "structured_output"],
+      "routing_default_for": [],
+      "prompting_constraints": ["outcome_first", "no_cot", "surface_specific"],
+      "claims": [
+        { "key": "app_modes", "value": { "deep_single_agent": "max", "parallel_subagents": "ultra" } },
+        { "key": "platforms_supported", "value": ["Codex app", "Codex CLI", "Codex IDE extension"] }
+      ],
+      "last_verified": "2026-07-11",
+      "source": [{ "url": "https://learn.chatgpt.com/docs/models", "kind": "official_docs", "supports": ["model_id", "surface", "channel", "availability", "recommended_for", "prompting_constraints", "claims.app_modes", "claims.platforms_supported"] }]
+    },
+    {
+      "id": "openai.responses-multi-agent-v1.api",
+      "vendor": "openai",
+      "model_id": "responses_multi_agent=v1",
+      "surface": "api",
+      "channel": "beta",
+      "availability": { "status": "public", "scope": ["api"], "regions": ["global"], "sunset_on": null },
+      "recommended_for": ["agentic"],
+      "routing_default_for": [],
+      "prompting_constraints": ["surface_specific", "preview_reverify"],
+      "claims": [
+        { "key": "beta_header", "value": "responses_multi_agent=v1" },
+        { "key": "tool_type", "value": "multi_agent" },
+        { "key": "agent_tools", "value": { "collaboration": ["spawn_agent", "send_message", "followup_task", "wait_agent", "interrupt_agent", "list_agents"], "output_items": ["multi_agent_call", "multi_agent_call_output", "agent_message"] } },
+        { "key": "knobs", "value": ["multi_agent.enabled", "multi_agent.max_concurrent_subagents"] },
+        { "key": "endpoint", "value": "/v1/responses" },
+        { "key": "platforms_supported", "value": ["Responses API beta"] }
+      ],
+      "last_verified": "2026-07-11",
+      "source": [{ "url": "https://developers.openai.com/api/docs/guides/responses-multi-agent", "kind": "official_docs", "supports": ["model_id", "surface", "channel", "availability", "recommended_for", "prompting_constraints", "claims.beta_header", "claims.tool_type", "claims.agent_tools", "claims.knobs", "claims.endpoint", "claims.platforms_supported"] }]
+    },
+    {
       "id": "openai.gpt-5-5.api",
       "vendor": "openai",
       "model_id": "gpt-5.5",

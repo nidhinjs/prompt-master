@@ -149,6 +149,8 @@ const mutations = {
   staleLimited(f) { setStale(f, 'legacy', 'limited', 15); },
   staleProduction(f) { setStale(f, 'production', 'public', 61); },
   orphanCandidate(f) { editJson(f.index, (v) => { v.routing[0].candidate_record_ids.push('openai.missing.api'); }); },
+  orphanCapability(f) { editJson(f.index, (v) => { v.routing[0].capability_record_ids = ['openai.missing.api']; }); },
+  capabilityAlsoCandidate(f) { editJson(f.index, (v) => { v.routing[0].capability_record_ids = [v.routing[0].candidate_record_ids[0]]; }); },
   orphanRecord(f) { editJson(f.shard, (v) => { v.records.push(secondRecord()); }); },
   orphanDiskShard(f) { fs.copyFileSync(f.shard, path.join(f.facts, 'extra.json')); },
   missingIndexShard(f) { editJson(f.index, (v) => { v.shards[0].path = 'missing.json'; }); },
@@ -247,13 +249,17 @@ const actualIndex = readJson(path.join(
   'plugins/prompt-master/skills/prompt-master/references/facts/index.json'
 ));
 const actualRecordIds = new Set();
+const actualRecords = new Map();
 for (const shard of actualIndex.shards) {
   const value = readJson(path.join(
     repoRoot,
     'plugins/prompt-master/skills/prompt-master/references/facts',
     shard.path
   ));
-  for (const record of value.records) actualRecordIds.add(record.id);
+  for (const record of value.records) {
+    actualRecordIds.add(record.id);
+    actualRecords.set(record.id, record);
+  }
 }
 const actualAliases = new Set(actualIndex.routing.map((route) => route.alias));
 const migrationClean = validateMigrationMapDocument(migrationMap, actualRecordIds, actualAliases);
@@ -274,6 +280,55 @@ for (const testCase of fixtureManifest.migration_cases) {
     failed++;
     console.error(`FAIL ${testCase.name}: ${error.message}`);
   }
+}
+
+try {
+  const routes = new Map(actualIndex.routing.map((route) => [route.alias, route]));
+  const apiIds = [
+    'openai.gpt-5-6-sol.api',
+    'openai.gpt-5-6-terra.api',
+    'openai.gpt-5-6-luna.api',
+  ];
+  const appIds = [
+    'openai.gpt-5-6-sol.app',
+    'openai.gpt-5-6-terra.app',
+    'openai.gpt-5-6-luna.app',
+  ];
+  const codexIds = [
+    'openai.gpt-5-6-sol.codex',
+    'openai.gpt-5-6-terra.codex',
+    'openai.gpt-5-6-luna.codex',
+  ];
+  for (const id of [...apiIds, ...appIds, ...codexIds]) assert(actualRecords.has(id), `missing GPT-5.6 record ${id}`);
+  assert(apiIds.every((id) => actualRecords.get(id).surface === 'api'), 'GPT-5.6 API records must stay on api surface');
+  assert(appIds.every((id) => actualRecords.get(id).surface === 'app'), 'GPT-5.6 ChatGPT records must stay on app surface');
+  assert(codexIds.every((id) => actualRecords.get(id).surface === 'codex'), 'GPT-5.6 Codex records must stay on codex surface');
+  for (const alias of ['openai-api', 'openai-reasoning']) {
+    assert(routes.get(alias)?.default_record_id === apiIds[0], `${alias} must default to GPT-5.6 Sol API`);
+  }
+  for (const alias of ['gpt', 'openai', 'gpt-5.6', 'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna']) {
+    assert(routes.get(alias) && !routes.get(alias).default_record_id, `${alias} must require surface resolution`);
+  }
+  for (const alias of ['chatgpt', 'chatgpt work']) {
+    const route = routes.get(alias);
+    assert(route?.default_record_id === appIds[0], `${alias} must default to GPT-5.6 Sol app record`);
+    assert(route.candidate_record_ids.every((id) => actualRecords.get(id)?.surface === 'app'), `${alias} must contain only app records`);
+  }
+  assert(routes.get('codex')?.default_record_id === codexIds[0], 'codex must default to GPT-5.6 Sol Codex record');
+  assert(routes.get('codex').candidate_record_ids.every((id) => actualRecords.get(id)?.surface === 'codex'), 'codex must contain only codex records');
+  assert(routes.get('gpt').candidate_record_ids.includes('openai.gpt-5-5.api'), 'GPT-5.5 must remain reachable for compatibility');
+  assert(!['gpt', 'openai', 'openai-api', 'openai-reasoning'].some((alias) => routes.get(alias)?.default_record_id === 'openai.gpt-5-5.api'), 'GPT-5.5 must not remain a generic default');
+  const multiAgent = actualRecords.get('openai.responses-multi-agent-v1.api');
+  assert(multiAgent?.channel === 'beta', 'Responses Multi-agent capability must remain beta');
+  assert(!actualIndex.routing.some((route) => route.default_record_id === multiAgent.id), 'Responses Multi-agent beta must never be a default');
+  const multiRoute = routes.get('responses-multi-agent');
+  assert(multiRoute?.default_record_id === apiIds[0], 'Responses Multi-agent must select a production model separately');
+  assert(JSON.stringify(multiRoute.capability_record_ids) === JSON.stringify([multiAgent.id]), 'Responses Multi-agent route must load its beta capability record');
+  assert(![...actualRecords.values()].some((record) => record.model_id === 'gpt-5.6-pro'), 'gpt-5.6-pro is not a valid model slug');
+  passed++;
+} catch (error) {
+  failed++;
+  console.error(`FAIL gpt-5.6-production-routing: ${error.message}`);
 }
 
 if (failed) {

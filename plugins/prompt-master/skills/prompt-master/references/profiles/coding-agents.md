@@ -33,6 +33,28 @@ missing, use [decompiler-fallback.md](decompiler-fallback.md).
 - For long runs, choose a conservative reversible deviation, log it under
   `## Deviations`, continue, and stop only for irreversible uncertainty.
 
+## Codex
+
+- Route code, repository, command, test, review, and developer-tool work here,
+  including work reached through a ChatGPT client. Do not use the non-code
+  ChatGPT Chat/Work profile.
+- Keep model and execution controls in `Recommended setup:` and resolve them only
+  from the selected Codex route record. Do not put UI labels, config keys, or API
+  request fields in the fenced task prompt unless Codex configuration is the
+  requested artifact.
+- Use subagents only for independent bounded packages. Give each scope, allowed
+  resources, result/evidence schema, and stop condition; the coordinator owns
+  dependency order, integration, conflict resolution, and final verification.
+- Prefer a deeper single-agent choice for a hard sequential change. Never
+  simulate multi-agent work with role-play personas or force fan-out by file.
+- Challenge expensive configurations with a dated workload-relevant comparison:
+  test smaller-tier/higher-effort and deeper-single-agent alternatives, measure
+  completed-task quality/cost/latency, and discard dominated options. Do not turn
+  a community benchmark snapshot into a universal ranking.
+- Promise exact worker count, nesting, or per-agent model selection only when the
+  selected surface verifies it. Custom agent files are a separate explicit
+  configuration request, not ordinary prompt content.
+
 ## Claude Code
 
 - Front-load intent, exact scope, constraints, acceptance criteria, relevant

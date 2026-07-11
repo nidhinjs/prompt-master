@@ -427,7 +427,7 @@ Prompt Master сверяет каждую сырую идею с 61 извест
 
 ## ℹ️ История версий
 
-Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.34.0** (Codex discovery в repository/plugin mode поверх того же канонического runtime, Windows-safe locator, optional hook parity и детерминированная cross-surface проверка).
+Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.35.0** (роутинг GPT-5.6 Sol/Terra/Luna, разделение ChatGPT Work/Codex/API и model-aware рекомендация single-agent либо multi-agent setup).
 
 ## 📄 Лицензия
 

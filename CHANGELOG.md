@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.35.0] - 2026-07-11
+
+GPT-5.6 surface-aware prompt and routing release: Prompt Master now resolves
+ChatGPT Chat/Work, Codex, and OpenAI API before choosing a model or execution
+mode, then keeps the verified setup outside the paste-ready prompt.
+
+### Added
+- **GPT-5.6 canonical facts:** separate production API, ChatGPT app, and Codex
+  records for Sol, Terra, and Luna, plus a separately lifecycle-managed
+  Responses Multi-agent beta capability record attached to its model route.
+- **Surface-first authoring:** ambiguous OpenAI-family requests resolve Chat,
+  Work, Codex, or API before model/mode selection; `no questions` exposes an
+  `Assumed surface:` and the remaining fork.
+- **Model and mode router:** frontier, balanced, and repeatable/high-volume work
+  select registry-eligible tiers; independent workstreams may use the verified
+  subagent mode, while hard sequential work stays on a deeper single agent.
+- **Post-prompt recommendation:** one short `Recommended setup:` note carries the
+  selected surface, model/mode, fit reason, and control location outside the
+  single copyable prompt fence.
+- **Deterministic coverage:** source contracts, production-registry assertions,
+  golden scenarios, and positive/negative offline fixtures cover surface order,
+  tier choice, Ultra-versus-Max semantics, API setup, and prompt-boundary leaks.
+
+### Changed
+- Explicit OpenAI API and reasoning routes now default to the verified GPT-5.6
+  flagship API record; bare `gpt`, `openai`, and model-family aliases require
+  surface resolution. GPT-5.5 remains reachable for compatibility.
+- ChatGPT Work, Codex, and Responses API use separate profile routes. UI labels,
+  Codex configuration, and API request fields no longer share one generic GPT
+  profile path.
+- Coding-agent economy guidance now challenges expensive configurations with
+  dated representative comparisons instead of treating the largest tier or
+  multi-agent fan-out as automatically optimal.
+
+### Security
+- Multi-agent execution requires independent bounded work packages. Writes,
+  integration, approvals, and external effects remain serialized and owned by
+  the coordinator.
+- API-only controls cannot leak into ChatGPT prompts, beta capabilities cannot
+  become defaults, and no model or reviewer may self-approve external or
+  destructive work.
+- Verification remains offline and deterministic; no live Claude, Codex, or
+  OpenAI model execution is part of the release gate.
+
 ## [1.34.0] - 2026-07-11
 
 Codex discovery and distribution release: the Claude-origin Prompt Master skill
@@ -636,6 +680,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.35.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.35.0
 [1.34.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.34.0
 [1.33.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.33.0
 [1.32.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.32.0

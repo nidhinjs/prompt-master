@@ -14,6 +14,13 @@ not recreate it from memory. `none (evergreen-only)` means the route has no vola
 provider/model fact; verify capabilities locally and never invent a registry
 record.
 
+### OpenAI surface tie-break
+
+Resolve the receiving surface before selecting an OpenAI-family row. ChatGPT,
+OpenAI, GPT, or a model name alone does not distinguish Chat, Work, Codex, and
+API. Use the surface question/fallback contract in `SKILL.md`; never cross from
+a user-facing prompt to Codex configuration or API request syntax silently.
+
 ## Routing index
 
 | Route (legacy-compatible) | Match / preserved aliases | Primary profile | Fact lookup | Add-on only for explicit composite |
@@ -22,8 +29,10 @@ record.
 | **Claude frontier / long-horizon** | Explicit Fable or Mythos registry alias only | [hosted-text](profiles/hosted-text.md) | [route: `claude-frontier`](facts/index.json) | — |
 | **Claude Advisor Tool** | Claude Advisor, advisor tool, bounded Claude checkpoint | [hosted-text](profiles/hosted-text.md) | [route: `advisor`](facts/index.json) | — |
 | **Claude Managed Agents** | Claude Managed Agents, CMA, Anthropic Managed Agents, Plan Big Execute Small | [hosted-text](profiles/hosted-text.md) | [route: `managed-agents`](facts/index.json) | — |
-| **OpenAI GPT / ChatGPT** | OpenAI, GPT, ChatGPT; named models resolve in registry | [hosted-text](profiles/hosted-text.md) | [route: `gpt`](facts/index.json) | — |
-| **OpenAI reasoning** | Named OpenAI reasoning record | [hosted-text](profiles/hosted-text.md) | [route: `openai-reasoning`](facts/index.json) | — |
+| **ChatGPT Chat / Work** | Explicit Chat, Quick Chat, ChatGPT Work, or non-code ChatGPT app prompt after surface resolution | [hosted-text](profiles/hosted-text.md) | [route: `chatgpt`](facts/index.json) | — |
+| **OpenAI API** | Explicit OpenAI API, Responses API, SDK/client request, endpoint, or request-field prompt | [hosted-text](profiles/hosted-text.md) | [route: `openai-api`](facts/index.json) | — |
+| **OpenAI Responses Multi-agent** | Explicit Responses Multi-agent or OpenAI API multi-agent request | [hosted-text](profiles/hosted-text.md) | [route: `responses-multi-agent`](facts/index.json) | — |
+| **OpenAI reasoning API** | Named OpenAI reasoning API record | [hosted-text](profiles/hosted-text.md) | [route: `openai-reasoning`](facts/index.json) | — |
 | **Grok / xAI** | Grok, xAI; named models resolve in registry | [hosted-text](profiles/hosted-text.md) | [route: `grok`](facts/index.json) | [research-browser](profiles/research-browser.md), research only |
 | **Gemini / Google** | Gemini, Google AI Studio, Vertex; named models resolve in registry | [hosted-text](profiles/hosted-text.md) | [route: `gemini`](facts/index.json) | [research-browser](profiles/research-browser.md), grounded research only |
 | **Kimi / Moonshot AI** | Kimi, Moonshot | [hosted-text](profiles/hosted-text.md) | [route: `kimi`](facts/index.json) | [research-browser](profiles/research-browser.md), research/swarm only |
@@ -33,6 +42,7 @@ record.
 | **Llama / Mistral / open-weight** | Named Llama, Mistral, or open-weight variant | [local-text](profiles/local-text.md) | `none (evergreen-only)` | — |
 | **DeepSeek** | DeepSeek; named models resolve in registry | [hosted-text](profiles/hosted-text.md) | [route: `deepseek`](facts/index.json) | — |
 | **MiniMax** | MiniMax; no verified model alias, require current-doc verification | [hosted-text](profiles/hosted-text.md) | `none (evergreen-only)` | — |
+| **Codex** | Explicit Codex app/CLI/IDE, repository work, code execution, or developer-tool task | [coding-agents](profiles/coding-agents.md) | [route: `codex`](facts/index.json) | — |
 | **Claude Code** | Inside Claude Code or a Claude Code prompt | [coding-agents](profiles/coding-agents.md) | [route: `claude-code`](facts/index.json) | — |
 | **Cortex Code** | Cortex Code, Snowflake Cortex | [coding-agents](profiles/coding-agents.md) | `none (evergreen-only)` | — |
 | **Antigravity** | Antigravity, Google agentic IDE | [coding-agents](profiles/coding-agents.md) | [route: `antigravity`](facts/index.json) | — |

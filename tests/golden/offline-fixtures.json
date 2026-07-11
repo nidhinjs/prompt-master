@@ -317,6 +317,114 @@
       "name": "oracle catches unrelated later sentence",
       "expectedPass": false,
       "output": "Never expose credentials. Show the solution шаг за шагом."
+    },
+    {
+      "id": "gpt56-multiagent-surface-first",
+      "name": "surface chooser precedes model selection",
+      "expectedPass": true,
+      "output": "Где будет исполняться промпт: ChatGPT Chat, ChatGPT Work, Codex или Responses API?"
+    },
+    {
+      "id": "gpt56-multiagent-surface-first",
+      "name": "silent model selection before surface fails",
+      "expectedPass": false,
+      "output": "Recommended setup: gpt-5.6-sol with multi-agent enabled."
+    },
+    {
+      "id": "gpt56-multiagent-surface-first",
+      "name": "Chat and Work collapsed into one surface fails",
+      "expectedPass": false,
+      "output": "Выберите ChatGPT Chat/Work, Codex или Responses API?"
+    },
+    {
+      "id": "gpt56-chatgpt-work-ultra",
+      "name": "Work Ultra setup without API fields",
+      "expectedPass": true,
+      "output": "Handle three independent research streams in parallel and synthesize one report.\nRecommended setup: gpt-5.6-sol · Ultra. Quality-first parallel Work task."
+    },
+    {
+      "id": "gpt56-chatgpt-work-ultra",
+      "name": "ChatGPT Work API field leak fails",
+      "expectedPass": false,
+      "output": "Handle independent streams in parallel.\nRecommended setup: gpt-5.6-sol · Ultra · reasoning.effort=high."
+    },
+    {
+      "id": "gpt56-chatgpt-work-ultra",
+      "name": "ChatGPT Work beta protocol leak fails",
+      "expectedPass": false,
+      "output": "Handle independent streams in parallel.\nRecommended setup: gpt-5.6-sol · Ultra · responses_multi_agent=v1 · multi_agent.enabled=true · /v1/responses."
+    },
+    {
+      "id": "gpt56-chatgpt-sequential-max",
+      "name": "sequential task uses Max single agent",
+      "expectedPass": true,
+      "output": "Use one agent for the ordered proof because each result depends on the previous step.\nRecommended setup: gpt-5.6-sol · Max."
+    },
+    {
+      "id": "gpt56-chatgpt-sequential-max",
+      "name": "sequential task forced to Ultra fails",
+      "expectedPass": false,
+      "output": "Run the sequential proof with gpt-5.6-sol.\nRecommended setup: Ultra."
+    },
+    {
+      "id": "gpt56-api-multiagent-setup",
+      "name": "Responses runtime setup pass",
+      "expectedPass": true,
+      "output": "The root coordinator synthesizes all results.\nOpenAI-Beta: responses_multi_agent=v1\n{\"model\":\"gpt-5.6-sol\",\"multi_agent\":{\"enabled\":true,\"max_concurrent_subagents\":3}}"
+    },
+    {
+      "id": "gpt56-api-multiagent-setup",
+      "name": "API uses UI Ultra and invented Pro slug fails",
+      "expectedPass": false,
+      "output": "The root synthesizes the result. model=gpt-5.6-pro; mode=Ultra; multi_agent=true; max_concurrent_subagents=3."
+    },
+    {
+      "id": "gpt56-luna-volume",
+      "name": "Luna high-volume routing pass",
+      "expectedPass": true,
+      "output": "Recommended setup: gpt-5.6-luna. Optimize throughput and cost for repeatable classification."
+    },
+    {
+      "id": "gpt56-luna-volume",
+      "name": "Sol recommended for cheap batch fails",
+      "expectedPass": false,
+      "output": "Recommended setup: gpt-5.6-sol. Sol is recommended for the lowest-cost high-throughput classification."
+    },
+    {
+      "id": "gpt56-multiagent-single-agent-fallback",
+      "name": "ordered dependency stays single agent",
+      "expectedPass": true,
+      "output": "Use one agent for this sequential workflow because every stage depends on the prior result."
+    },
+    {
+      "id": "gpt56-multiagent-single-agent-fallback",
+      "name": "forced fan-out for ordered work fails",
+      "expectedPass": false,
+      "output": "The work is sequential and depends on prior stages. Spawn three agents anyway."
+    },
+    {
+      "id": "gpt56-noquestions-surface-fallback",
+      "name": "no-questions surfaces assumption and fork",
+      "expectedPass": true,
+      "output": "Assumed surface: ChatGPT Work. Unresolved fork: ChatGPT Work vs Codex vs Responses API."
+    },
+    {
+      "id": "gpt56-noquestions-surface-fallback",
+      "name": "no-questions still asks fails",
+      "expectedPass": false,
+      "output": "Assumed surface: ChatGPT Work. Which surface do you actually want? Unresolved fork remains."
+    },
+    {
+      "id": "gpt56-recommended-setup-outside-fence",
+      "name": "setup below prompt fence pass",
+      "expectedPass": true,
+      "output": "```text\nCompare the independent strategies and synthesize one table.\n```\nRecommended setup: ChatGPT Work · balanced model · Ultra."
+    },
+    {
+      "id": "gpt56-recommended-setup-outside-fence",
+      "name": "setup inside prompt fence fails",
+      "expectedPass": false,
+      "output": "```text\nCompare the strategies.\nRecommended setup: ChatGPT Work · Ultra.\n```"
     }
   ]
 }

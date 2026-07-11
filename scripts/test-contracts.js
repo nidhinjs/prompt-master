@@ -387,6 +387,95 @@ const cases = [
     }
   },
 
+  function openAiGpt56SurfaceAndMultiAgentContract() {
+    const apiIds = new Set([
+      'openai.gpt-5-6-sol.api',
+      'openai.gpt-5-6-terra.api',
+      'openai.gpt-5-6-luna.api',
+    ]);
+    const appIds = new Set([
+      'openai.gpt-5-6-sol.app',
+      'openai.gpt-5-6-terra.app',
+      'openai.gpt-5-6-luna.app',
+    ]);
+    const codexIds = new Set([
+      'openai.gpt-5-6-sol.codex',
+      'openai.gpt-5-6-terra.codex',
+      'openai.gpt-5-6-luna.codex',
+    ]);
+    const apiRecords = factRecords.filter((record) => apiIds.has(record.id));
+    const appRecords = factRecords.filter((record) => appIds.has(record.id));
+    const codexRecords = factRecords.filter((record) => codexIds.has(record.id));
+    assert(apiRecords.length === 3, 'registry must contain exactly three GPT-5.6 API tier records');
+    assert(appRecords.length === 3, 'registry must contain exactly three GPT-5.6 app tier records');
+    assert(codexRecords.length === 3, 'registry must contain exactly three GPT-5.6 Codex tier records');
+    for (const record of apiRecords) {
+      assert(record.surface === 'api' && record.channel === 'production', `${record.id} must be a production API record`);
+      assert(claim(record, 'context_window_tokens') === 1050000, `${record.id} context must follow its live model page`);
+      assert(claim(record, 'max_output_tokens') === 128000, `${record.id} max output mismatch`);
+      assert(claim(record, 'preferred_api') === 'responses', `${record.id} must prefer Responses API`);
+      assert(claim(record, 'default_reasoning_effort') === 'medium', `${record.id} default effort mismatch`);
+      assert(JSON.stringify(claim(record, 'reasoning_effort_values')) === JSON.stringify(['none', 'low', 'medium', 'high', 'xhigh', 'max']), `${record.id} effort enum mismatch`);
+    }
+    for (const record of appRecords) {
+      assert(record.surface === 'app' && record.channel === 'production', `${record.id} must be a production app record`);
+      const modes = claim(record, 'app_modes');
+      assert(modes?.deep_single_agent && modes?.parallel_subagents, `${record.id} must separate deep single-agent and subagent modes`);
+      assert(claim(record, 'platforms_supported').every((platform) => !/Codex/i.test(platform)), `${record.id} must not absorb Codex platforms`);
+    }
+    for (const record of codexRecords) {
+      assert(record.surface === 'codex' && record.channel === 'production', `${record.id} must be a production Codex record`);
+      const modes = claim(record, 'app_modes');
+      assert(modes?.deep_single_agent && modes?.parallel_subagents, `${record.id} must separate Codex single-agent and subagent modes`);
+      assert(claim(record, 'platforms_supported').every((platform) => !/ChatGPT/i.test(platform)), `${record.id} must not absorb ChatGPT platforms`);
+    }
+    const routes = new Map(factsIndex.routing.map((route) => [route.alias, route]));
+    for (const alias of ['openai-api', 'openai-reasoning']) {
+      assert(routes.get(alias)?.default_record_id === 'openai.gpt-5-6-sol.api', `${alias} must default to GPT-5.6 Sol API`);
+    }
+    for (const alias of ['gpt', 'openai', 'gpt-5.6', 'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna']) {
+      assert(routes.get(alias) && !routes.get(alias).default_record_id, `${alias} must not pick a surface prematurely`);
+    }
+    for (const alias of ['chatgpt', 'chatgpt work']) {
+      const route = routes.get(alias);
+      assert(route?.default_record_id === 'openai.gpt-5-6-sol.app', `${alias} must default to GPT-5.6 Sol app`);
+      assert(route.candidate_record_ids.every((id) => appIds.has(id)), `${alias} must stay app-only`);
+    }
+    assert(routes.get('codex')?.default_record_id === 'openai.gpt-5-6-sol.codex', 'codex must default to GPT-5.6 Sol Codex record');
+    assert(routes.get('codex').candidate_record_ids.every((id) => codexIds.has(id)), 'codex must stay codex-only');
+    assert(routes.get('gpt').candidate_record_ids.includes('openai.gpt-5-5.api'), 'GPT-5.5 compatibility candidate must remain reachable');
+    const betaRecords = factRecords.filter((record) => record.id === 'openai.responses-multi-agent-v1.api');
+    assert(betaRecords.length === 1 && betaRecords[0].channel === 'beta', 'Responses Multi-agent must be one beta capability record');
+    assert(!factsIndex.routing.some((route) => route.default_record_id === betaRecords[0].id), 'Responses Multi-agent beta must never be a default');
+    const multiRoute = routes.get('responses-multi-agent');
+    assert(multiRoute?.default_record_id === 'openai.gpt-5-6-sol.api', 'Responses Multi-agent must separately select a production model');
+    assert(JSON.stringify(multiRoute.capability_record_ids) === JSON.stringify([betaRecords[0].id]), 'Responses Multi-agent route must attach its beta capability record');
+
+    const chatgpt = markdownSection(profileBundles['hosted-text.md'], 'ChatGPT Chat and Work');
+    const api = markdownSection(profileBundles['hosted-text.md'], 'OpenAI API');
+    const multi = markdownSection(profileBundles['hosted-text.md'], 'OpenAI Responses Multi-agent (beta)');
+    const codex = markdownSection(profileBundles['coding-agents.md'], 'Codex');
+    requireMatch(sources.skill, /Surface before model or mode[\s\S]{0,500}Assumed surface:/i, 'core must resolve OpenAI surface before model/mode');
+    requireMatch(sources.skill, /ChatGPT Chat[\s\S]{0,120}ChatGPT Work[\s\S]{0,120}Codex[\s\S]{0,120}Responses API/i, 'OpenAI surface chooser must keep four surfaces separate');
+    requireMatch(sources.skill, /Recommended setup:[\s\S]{0,300}outside the fenced prompt/i, 'core must keep recommended setup outside prompt');
+    requireMatch(chatgpt, /Resolve Chat versus Work before model selection/i, 'ChatGPT profile must split Chat and Work');
+    requireMatch(chatgpt, /at least two independent bounded workstreams/i, 'ChatGPT Work needs a decomposition gate');
+    requireMatch(chatgpt, /hard but sequential[\s\S]{0,120}single-agent mode/i, 'ChatGPT Work must fall back to deeper single-agent mode');
+    assert(!/(?:reasoning\.(?:effort|mode|context)|text\.verbosity|allowed_callers|programmatic_tool_calling|previous_response_id|responses_multi_agent|multi_agent\.|\/v1\/responses|multi_agent_call|agent_message)/i.test(chatgpt), 'ChatGPT profile leaks API-only controls');
+    requireMatch(api, /request controls in API setup/i, 'API profile must keep request controls outside prompt');
+    requireMatch(multi, /at least two independent bounded workstreams/i, 'Responses Multi-agent needs a decomposition gate');
+    requireMatch(multi, /share its selected model and tools/i, 'Responses Multi-agent must not promise heterogeneous workers');
+    requireMatch(multi, /one final[\s\S]{0,40}synthesis/i, 'root must own final synthesis');
+    requireMatch(codex, /independent bounded packages/i, 'Codex needs bounded subagent packets');
+    requireMatch(codex, /deeper single-agent[\s\S]{0,80}hard sequential/i, 'Codex must preserve the single-agent fallback');
+    requireMatch(codex, /community benchmark snapshot[\s\S]{0,80}universal ranking/i, 'Codex economy guidance must stay benchmark-scoped');
+    assert(!/gpt-5\.6-(?:sol|terra|luna)/i.test(`${sources.skill}\n${sources.profileIndex}\n${sources.profiles}`), 'GPT-5.6 model IDs must remain registry-owned');
+    assert(!/gpt-5\.6-pro/i.test(`${sources.skill}\n${sources.profileIndex}\n${sources.profiles}`), 'runtime must not invent a GPT-5.6 Pro slug');
+    requireMatch(sources.profileIndex, /ChatGPT Chat \/ Work[\s\S]{0,240}route: `chatgpt`/i, 'profile index missing ChatGPT route');
+    requireMatch(sources.profileIndex, /OpenAI API[\s\S]{0,240}route: `openai-api`/i, 'profile index missing OpenAI API route');
+    requireMatch(sources.profileIndex, /\| \*\*Codex\*\*[\s\S]{0,240}coding-agents[\s\S]{0,120}route: `codex`/i, 'profile index missing Codex route');
+  },
+
   function hookContextContract() {
     for (const pattern of [
       /Agentic Prompt Fragments/,

@@ -472,6 +472,12 @@ function validateRegistry(options = {}) {
       if (!records.has(id)) errors.push(`${location}: orphan candidate record ${id}`);
       else reachableRecords.add(id);
     }
+    const candidateIds = new Set(route.candidate_record_ids || []);
+    for (const id of route.capability_record_ids || []) {
+      if (candidateIds.has(id)) errors.push(`${location}: capability record must not also be a model candidate ${id}`);
+      if (!records.has(id)) errors.push(`${location}: orphan capability record ${id}`);
+      else reachableRecords.add(id);
+    }
     if (route.default_record_id !== undefined) {
       if (!(route.candidate_record_ids || []).includes(route.default_record_id)) errors.push(`${location}: default must be a candidate`);
       const selected = records.get(route.default_record_id)?.record;

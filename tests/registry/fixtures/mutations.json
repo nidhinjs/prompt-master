@@ -29,6 +29,8 @@
     { "name": "stale-limited", "mutation": "staleLimited", "error": "maximum 14" },
     { "name": "stale-production", "mutation": "staleProduction", "error": "maximum 60" },
     { "name": "orphan-candidate", "mutation": "orphanCandidate", "error": "orphan candidate record" },
+    { "name": "orphan-capability", "mutation": "orphanCapability", "error": "orphan capability record" },
+    { "name": "capability-also-candidate", "mutation": "capabilityAlsoCandidate", "error": "capability record must not also be a model candidate" },
     { "name": "orphan-record", "mutation": "orphanRecord", "error": "unreachable from index routing" },
     { "name": "orphan-disk-shard", "mutation": "orphanDiskShard", "error": "orphan shard" },
     { "name": "missing-index-shard", "mutation": "missingIndexShard", "error": "listed shard is missing" },

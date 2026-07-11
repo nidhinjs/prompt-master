@@ -144,11 +144,11 @@ if (pluginVersion && changelogVersion && pluginVersion !== changelogVersion) {
   errors.push(`Version mismatch: plugin.json=${pluginVersion} vs CHANGELOG.md latest heading=${changelogVersion}`);
 }
 if (pluginVersion) {
-  for (const [name, text, label] of [
-    ['README.md', readmeText, 'Current release'],
-    ['README.ru.md', readmeRuText, 'Текущий релиз'],
+  for (const [name, text, pattern, label] of [
+    ['README.md', readmeText, /Current release(?: candidate)?:\s*\*\*v(\d+\.\d+\.\d+)\*\*/, 'Current release[ candidate]'],
+    ['README.ru.md', readmeRuText, /Текущий релиз(?:-кандидат)?:\s*\*\*v(\d+\.\d+\.\d+)\*\*/, 'Текущий релиз[-кандидат]'],
   ]) {
-    const m = text.match(new RegExp(`${label}:\\s*\\*\\*v(\\d+\\.\\d+\\.\\d+)\\*\\*`));
+    const m = text.match(pattern);
     if (!m) errors.push(`${name}: cannot parse '${label}: **vX.Y.Z**' line`);
     else if (m[1] !== pluginVersion) errors.push(`${name}: current-release line says v${m[1]} instead of v${pluginVersion}`);
   }
@@ -600,6 +600,14 @@ try {
     'targetless-explicit-activation',
     'precedence-conflict-safe',
     'hook-agentic-context',
+    'gpt56-multiagent-surface-first',
+    'gpt56-chatgpt-work-ultra',
+    'gpt56-chatgpt-sequential-max',
+    'gpt56-api-multiagent-setup',
+    'gpt56-luna-volume',
+    'gpt56-multiagent-single-agent-fallback',
+    'gpt56-noquestions-surface-fallback',
+    'gpt56-recommended-setup-outside-fence',
     'oracle-clause-local-adversarial',
   ]) {
     if (!ids.includes(id)) errors.push(`Missing golden scenario: ${id}`);

@@ -427,7 +427,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.34.0** (Codex repository/plugin discovery over the same canonical runtime, a Windows-safe locator, optional hook parity, and deterministic cross-surface validation).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.35.0** (GPT-5.6 Sol/Terra/Luna routing, ChatGPT Work/Codex/API surface isolation, and model-aware single-agent versus multi-agent setup recommendations).
 
 ## 📄 License
 

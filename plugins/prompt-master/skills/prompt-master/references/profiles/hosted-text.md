@@ -91,25 +91,62 @@ route to [media.md](media.md), not this bundle.
 - Reserve a late correctness/diagnostic review for risky work. Treat hosted
   session topology and built-in tool names as registry-owned facts.
 
-## ChatGPT / OpenAI GPT models
+## OpenAI shared prompt body
 
-- Start with the smallest prompt that reaches the goal; add structure only when
-  it improves control.
-- State the output contract, length, completion criteria, and tool-use
-  expectations explicitly. Compact structured outputs work well.
-- Persona framing (“You are a … who …”) is useful when tone or expertise matters.
-- Prefer outcome-first prompts: goal, success criteria, constraints, evidence,
-  and stop rules. Re-test inherited process-heavy instruction stacks.
-- Reserve absolutes for real safety or invariant constraints.
-- Treat verbosity and reasoning effort as runtime controls when available; do
-  not duplicate current defaults in prose.
-- For tool work, request a brief preamble; for retrieval, define another-call
-  condition and a stopping budget.
-- State collaboration style briefly. Use plain paragraphs by default and mark
-  the boundary between sourced facts and creative wording.
+- Use the smallest outcome-first prompt that reaches the goal: relevant context,
+  result, success criteria, hard constraints, evidence, and stop condition once.
+- Keep task-specific length, structure, tone, and required content in the prompt.
+  Keep model, runtime depth, execution mode, caching, transport, and tool setup
+  outside it.
+- Define confirmation only for external, destructive, costly, or scope-expanding
+  action; do not repeat approval language for safe in-scope work.
+- Do not request hidden reasoning. Request the result, required evidence, and an
+  explicit uncertainty or blocked report.
+
+## ChatGPT Chat and Work
+
+- Resolve Chat versus Work before model selection. Use Chat for conversation,
+  brainstorming, answers, or short drafts; use Work for a substantial non-code
+  deliverable using multiple sources, tools, files, or steps.
+- Put model and execution choices only in `Recommended setup:`. The fenced prompt
+  contains goal, inputs/sources, output contract, boundaries, and final check,
+  never UI labels or API setup.
+- For parallel Work, require at least two independent bounded workstreams, one
+  consolidated synthesis, conflict handling, and a shared evidence contract. Do
+  not promise exact worker count, nesting, topology, or per-worker models unless
+  the selected record verifies that control.
+- If independent workstreams exist, use the record's verified subagent mode. If
+  the task is hard but sequential, use its deeper single-agent mode instead.
+- Choose a `frontier` candidate for ambiguous, difficult, high-value, or polished
+  work; a `general` candidate for everyday work; and a `fast`/`economy` candidate
+  for clear repeatable work. Use only registry-eligible candidates and defaults.
+
+## OpenAI API
+
+- Keep the prompt body portable and outcome-focused. Put model, reasoning,
+  verbosity, state, caching, tools, and other request controls in API setup.
+- API multi-agent and programmatic tools are request/runtime capabilities, not
+  ChatGPT Work modes. Use them only for a verified API record and explicit API
+  target.
+- `Recommended setup:` may summarize the selected record and controls. Do not
+  generate client code or request schemas unless the user explicitly asks.
+
+## OpenAI Responses Multi-agent (beta)
+
+- Enable only for at least two independent bounded workstreams. Prefer one agent
+  for ordered dependencies, a short task, fixed execution graphs, or shared
+  mutable state.
+- The root owns delegation, conflict resolution, evidence checks, and one final
+  synthesis. Parallelize independent reads/analysis; serialize writes,
+  integration, approvals, and external effects.
+- Keep the beta header and request fields in registry-backed setup, outside the
+  prompt. Agents in one request share its selected model and tools; do not promise
+  heterogeneous workers.
 
 ## OpenAI reasoning models
 
+- Apply this only to an API record selected by the OpenAI API route; it is not a
+  ChatGPT UI or Codex configuration profile.
 - Keep instructions short and clean: requested result, inputs, constraints, and
   what “done” means.
 - Prefer zero-shot; add only tightly aligned examples when demonstrated useful.

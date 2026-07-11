@@ -440,6 +440,62 @@
       "why": "The hook injects complete agentic context, including safe default, worker packet, trust boundary, and swarm carve-out"
     },
     {
+      "id": "gpt56-multiagent-surface-first",
+      "request": "Подготовь промпт для ChatGPT 5.6 в мультиагентном исполнении с выбором оптимальной модели.",
+      "mustMatch": ["ChatGPT Chat", "ChatGPT Work", "Codex", "Responses API", "[?？]"],
+      "mustNotMatch": ["Recommended setup\\s*:|gpt-5\\.6-(?:sol|terra|luna)"],
+      "why": "An ambiguous OpenAI-family request must resolve Chat/Work, Codex, or API before selecting a model"
+    },
+    {
+      "id": "gpt56-chatgpt-work-ultra",
+      "request": "Промпт для ChatGPT Work: параллельно исследовать рынок, конкурентов и риски, затем собрать единый инвестиционный отчёт. Максимальное качество, формат Markdown, без вопросов.",
+      "mustMatch": ["Recommended setup\\s*:", "(?:gpt-5\\.6-)?sol", "Ultra", "(independent|parallel|паралл|независим)"],
+      "mustNotMatch": ["reasoning\\.(?:effort|mode|context)|text\\.verbosity|allowed_callers|programmatic_tool_calling|responses_multi_agent|multi_agent\\.|/v1/responses|multi_agent_call|agent_message"],
+      "why": "A genuinely parallel quality-first Work task selects the app subagent mode without API leakage"
+    },
+    {
+      "id": "gpt56-chatgpt-sequential-max",
+      "request": "Промпт для ChatGPT Work: последовательно доказать теорему, где каждый следующий шаг зависит от предыдущего. Максимальное качество, формат Markdown, без вопросов.",
+      "mustMatch": ["Recommended setup\\s*:", "(?:gpt-5\\.6-)?sol", "Max", "(single-agent|one agent|один агент|последовательн)"],
+      "mustNotMatch": ["Ultra"],
+      "why": "A hard ordered chain uses deeper single-agent execution instead of forced subagents"
+    },
+    {
+      "id": "gpt56-api-multiagent-setup",
+      "request": "Подготовь промпт и request setup для OpenAI Responses API GPT-5.6: три независимых аналитических направления, root синтезирует результат. Приоритет качества, без вопросов.",
+      "mustMatch": ["gpt-5\\.6-sol", "responses_multi_agent", "multi_agent", "max_concurrent_subagents", "(root|coordinator).{0,100}(synth|синтез)"],
+      "mustNotMatch": ["Ultra|gpt-5\\.6-pro"],
+      "why": "Responses Multi-agent is explicit API runtime configuration, not a ChatGPT UI mode or Pro slug"
+    },
+    {
+      "id": "gpt56-luna-volume",
+      "request": "Промпт для ChatGPT Work: классифицировать 50 000 уже нормализованных отзывов по фиксированной схеме. Главные приоритеты — стоимость и пропускная способность. Формат JSONL, без вопросов.",
+      "mustMatch": ["Recommended setup\\s*:", "(?:gpt-5\\.6-)?luna", "(cost|throughput|стоим|пропуск)"],
+      "mustNotMatch": ["(?:gpt-5\\.6-)?sol.{0,100}(recommended|рекоменду)"],
+      "why": "Clear repeatable high-volume work routes to the economy tier"
+    },
+    {
+      "id": "gpt56-multiagent-single-agent-fallback",
+      "request": "Промпт для ChatGPT Work: используй мультиагентность, чтобы по очереди переписать один договор — каждый этап зависит от результата предыдущего. Формат DOCX-текст, без вопросов.",
+      "mustMatch": ["(single-agent|one agent|один агент|не использовать субагент)", "(sequential|ordered|последовательн|зависит)"],
+      "mustNotMatch": ["spawn (?:[2-9]|two|three|four)|создай (?:[2-9]|два|три|четыре) агент"],
+      "why": "The multi-agent request is rejected when work packages are not independent"
+    },
+    {
+      "id": "gpt56-noquestions-surface-fallback",
+      "request": "Сделай промпт для GPT-5.6 с оптимальной моделью и мультиагентностью. Поверхность не уточняю, вопросов не задавай.",
+      "mustMatch": ["Assumed surface\\s*:", "(open fork|unresolved|развил|не решен)"],
+      "mustNotMatch": ["[?？]"],
+      "why": "No-questions preserves the surface fork explicitly instead of silently mixing UI, Codex, and API"
+    },
+    {
+      "id": "gpt56-recommended-setup-outside-fence",
+      "request": "Промпт для ChatGPT Work: сравнить три независимые стратегии и выбрать одну. Баланс качества и стоимости, формат таблица, без вопросов.",
+      "mustMatch": ["```[\\s\\S]{0,3000}```[\\s\\S]{0,500}Recommended setup\\s*:"],
+      "mustNotMatch": ["```[\\s\\S]{0,3000}Recommended setup\\s*:[\\s\\S]{0,3000}```"],
+      "why": "Model/mode guidance belongs below the single copyable prompt fence"
+    },
+    {
       "id": "oracle-clause-local-adversarial",
       "request": "Oracle fixture: verify that a negated reasoning phrase in one clause does not hide a positive leak in another clause.",
       "mustNotMatch": ["step[ -]by[ -]step", "chain[ -]of[ -]thought", "шаг за шагом"],
