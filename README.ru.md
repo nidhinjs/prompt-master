@@ -4,9 +4,9 @@
 
 [English](README.md) · **Русский**
 
-**Что это:** Claude-скилл, который пишет точные, готовые к вставке промпты для любого AI-инструмента — с роутингом под конкретную модель или платформу, которую ты назовёшь.
+**Что это:** скилл для написания промптов, изначально созданный для Claude, а теперь доступный в Claude и Codex из одного канонического runtime. Он пишет точные, готовые к вставке промпты для любого AI-инструмента и роутит под названную модель или платформу.
 **Зачем:** каждый расплывчатый промпт — это слитый кредит. Prompt Master извлекает намерение, выбирает правильную архитектуру и вычищает каждое слово, которое не меняет результат.
-**Как начать:** установи через маркетплейс плагинов (см. ниже) и скажи: `Напиши промпт для [инструмент], чтобы [задача]` — или вставь плохой промпт и попроси исправить.
+**Как начать:** выбери один host-specific способ установки ниже и скажи: `Напиши промпт для [инструмент], чтобы [задача]` — или вставь плохой промпт и попроси исправить.
 
 **Работает с:** hosted/local text-моделями, reasoning-системами, coding-агентами и IDE, research/browser-агентами, presentation/workflow builders, image/video/voice/3D-инструментами — и с неизвестными инструментами через capability-safe fallback. Текущий provider/model выбирается из валидируемого реестра фактов, а не из README.
 
@@ -14,7 +14,41 @@
 
 ## 🚀 Установка
 
-### РЕКОМЕНДУЕТСЯ — Claude Code / Cowork (маркетплейс плагинов)
+### Codex — режим репозитория
+
+Используй этот режим при работе в клоне репозитория:
+
+```bash
+git clone https://github.com/azagreev/prompt-master-za.git
+cd prompt-master-za
+codex
+```
+
+Codex обнаруживает `.agents/skills/prompt-master`, который указывает на канонический скилл в `plugins/prompt-master/skills/prompt-master`. Явный вызов — `$prompt-master`; запрос на написание промпта естественным языком может активировать скилл неявно по его описанию. Изменения файлов скилла обнаруживаются автоматически; если selector не появился, перезапусти Codex.
+
+### Codex — режим установленного плагина
+
+На экране **Plugins** в приложении Codex добавь GitHub-маркетплейс `azagreev/prompt-master-za` и установи **prompt-master** либо используй проверенный CLI flow:
+
+```bash
+codex plugin marketplace add azagreev/prompt-master-za
+codex plugin add prompt-master@prompt-master
+codex plugin list
+```
+
+Команды проверены на `codex-cli 0.144.1`. У этого проекта нет поддерживаемой установки ZIP в Codex.
+
+> **Выбери режим репозитория или установленный плагин, но не оба.** Codex показывает одноимённые скиллы отдельными selectors и не объединяет их. Чтобы оставить режим репозитория, удали установленную копию: `codex plugin remove prompt-master@prompt-master`. Чтобы оставить установленный плагин при работе в этом репозитории, отключи repository entry в `~/.codex/config.toml`:
+>
+> ```toml
+> [[skills.config]]
+> path = "/absolute/path/to/prompt-master-za/.agents/skills/prompt-master/SKILL.md"
+> enabled = false
+> ```
+
+Установленный плагин может содержать hook `UserPromptSubmit`. Перед запуском non-managed hook Codex просит его проверить и явно доверить. Hook Prompt Master лишь добавляет advisory context для запросов на мультиагентные промпты; отказ или пропуск hook не отключает основной скилл.
+
+### Claude Code / Cowork — маркетплейс плагинов
 
 ```bash
 # 1. Добавить маркетплейс из GitHub
@@ -26,19 +60,27 @@
 
 В Cowork: **Customize → Browse plugins → Personal → + → Add marketplace from GitHub →** `azagreev/prompt-master-za` → установить **prompt-master**.
 
-### ИЛИ — Claude.ai (браузер, ZIP) — минует кэш маркетплейса
+### Claude.ai — ZIP в браузере
 
 1. Возьми готовый бандл `prompt-master-<version>.zip` из [последнего релиза](https://github.com/azagreev/prompt-master-za/releases/latest) — или собери из клона: `./scripts/package-skill.ps1` (архивирует `skills/prompt-master/` так, что в корне — `SKILL.md` и `references/`).
 2. **claude.ai → Customize → Skills → Upload a Skill.**
 
-### ИЛИ — клонировать в директорию скиллов Claude Code
+### Claude Code — ручная установка в директорию скиллов
 
 ```bash
 git clone https://github.com/azagreev/prompt-master-za.git
 cp -r prompt-master-za/plugins/prompt-master/skills/prompt-master ~/.claude/skills/prompt-master
 ```
 
-### 🔄 Как поддерживать актуальность (читай, если завис на старой версии)
+### 🔄 Как поддерживать актуальность
+
+#### Codex
+
+- **Режим репозитория:** выполни `git pull`. Codex обнаруживает изменения скилла автоматически; перезапуск нужен только если скилл не появился.
+- **Установленный плагин:** `codex plugin marketplace upgrade prompt-master` обновляет настроенный снапшот Git-маркетплейса. Установленный плагин сам является кешированным снапшотом, поэтому для новых файлов переустанови его: `codex plugin remove prompt-master@prompt-master`, затем `codex plugin add prompt-master@prompt-master`.
+- Здесь не заявляется непроверенное автообновление для Codex app/CLI `0.144.1`; проверяй установленное состояние через `codex plugin list`.
+
+#### Claude Code / Cowork
 
 Сторонние маркетплейсы (как этот) **не обновляются автоматически по умолчанию** — авто-pull на старте сессии есть только у официального маркетплейса Anthropic. После нового релиза кнопка **Update** может выглядеть активной, но ничего не делать, потому что сравнивает устаревший локальный клон сам с собой.
 
@@ -89,7 +131,17 @@ cp -r prompt-master-za/plugins/prompt-master/skills/prompt-master ~/.claude/skil
 Дай 3 направления промпта для Claude Code: где какой лучше подходит, компромиссы и когда выбирать
 ```
 
-Или вызови явно:
+Или вызови явно синтаксисом своего host.
+
+Codex:
+
+```
+$prompt-master
+
+Хочу попросить Claude Code собрать todo-приложение на React и Supabase
+```
+
+Claude Code:
 
 ```
 /prompt-master:prompt-master
@@ -375,7 +427,7 @@ Prompt Master сверяет каждую сырую идею с 61 извест
 
 ## ℹ️ История версий
 
-Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.33.0** (канонический реестр provider/model facts, семь прогрессивно загружаемых workflow-профилей, fail-closed проверка freshness/роутинга и детерминированная упаковка по tracked manifest).
+Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.34.0** (Codex discovery в repository/plugin mode поверх того же канонического runtime, Windows-safe locator, optional hook parity и детерминированная cross-surface проверка).
 
 ## 📄 Лицензия
 

@@ -32,6 +32,10 @@ const sources = {
   ci: read('.github/workflows/ci.yml'),
   packagePs1: read('scripts/package-skill.ps1').replace(/^\uFEFF/, ''),
   runtimeManifest: read('plugins/prompt-master/runtime-manifest.json'),
+  codexManifest: read('plugins/prompt-master/.codex-plugin/plugin.json'),
+  codexLayoutTest: read('scripts/test-codex-layout.js'),
+  codexHookTest: read('scripts/test-codex-hook.js'),
+  bumpVersionPs1: read('scripts/bump-version.ps1').replace(/^\uFEFF/, ''),
   lintJs: read('scripts/lint.js'),
   lintPs1: read('scripts/lint.ps1').replace(/^\uFEFF/, ''),
   safeTest: read('scripts/test-safe.js'),
@@ -438,6 +442,22 @@ const cases = [
     requireMatch(sources.packagePs1, /ZIP\/source parity mismatch/i, 'package must compare every ZIP entry with its source');
     requireMatch(sources.packagePs1, /ComputeHash\(\$entryStream\)[\s\S]{0,200}ComputeHash\(\$sourceStream\)/i, 'package parity must hash entry and source bytes');
     requireMatch(sources.packagePs1, /gh release upload \$tag \$zipPath \$shaPath/i, 'release upload must include ZIP and SHA-256 sidecar');
+    assert(!/codex\s+plugin\s+add/i.test(sources.packagePs1), 'Claude ZIP packaging must not claim Codex plugin installation');
+
+    const codexManifest = JSON.parse(sources.codexManifest);
+    assert(codexManifest.name === 'prompt-master', 'Codex manifest name mismatch');
+    assert(/^\d+\.\d+\.\d+$/.test(codexManifest.version || ''), 'Codex manifest version must be semantic');
+    assert(codexManifest.skills === './skills/', "Codex manifest skills must be './skills/'");
+    requireMatch(sources.codexLayoutTest, /validateCodexSkill\(/, 'Codex layout test must validate skill frontmatter independently');
+    requireMatch(sources.codexLayoutTest, /fields must be exactly name and description/, 'Codex layout test must reject unsupported frontmatter fields');
+    requireMatch(sources.codexLayoutTest, /plain-text or symlink entries are forbidden/, 'Codex layout test must reject a plain-text symlink checkout');
+    requireMatch(sources.codexLayoutTest, /canonical link escapes repository root/, 'Codex layout test must reject escaping locator links');
+    requireMatch(sources.codexLayoutTest, /no copied runtime\/references/, 'Codex layout test must reject duplicate runtime copies');
+    requireMatch(sources.codexLayoutTest, /createHash\('sha256'\)/, 'Codex layout test must hash every runtime surface');
+    requireMatch(sources.codexHookTest, /Claude and Codex fixtures must produce equivalent output/, 'Codex hook test must enforce cross-host output equivalence');
+    requireMatch(sources.codexHookTest, /advisory hook must exit zero/, 'Codex hook test must enforce advisory exit zero');
+    requireMatch(sources.bumpVersionPs1, /\.codex-plugin\/plugin\.json/, 'version bump must include Codex manifest');
+    assert(!/SKILL\.md frontmatter \(only first|В SKILL\.md нет frontmatter 'version:'/.test(sources.bumpVersionPs1), 'version bump must not add unsupported Codex SKILL version frontmatter');
 
     requireMatch(sources.lintJs, /require\('\.\/validate-registry'\)/, 'JS lint must use the canonical registry validator');
     requireMatch(sources.lintJs, /require\('\.\/validate-runtime-inventory'\)/, 'JS lint must use the canonical runtime inventory validator');
@@ -447,6 +467,8 @@ const cases = [
     requireMatch(sources.lintPs1, /exit \$code/, 'PowerShell lint must preserve the canonical lint exit result');
     requireMatch(sources.safeTest, /args:\s*\['scripts\/test-registry\.js'\]/, 'strict safe gate must include registry mutation tests');
     requireMatch(sources.safeTest, /args:\s*\['scripts\/test-runtime-inventory\.js'\]/, 'strict safe gate must include runtime inventory mutation tests');
+    requireMatch(sources.safeTest, /args:\s*\['scripts\/test-codex-layout\.js'\]/, 'strict safe gate must include Codex layout tests');
+    requireMatch(sources.safeTest, /args:\s*\['scripts\/test-codex-hook\.js'\]/, 'strict safe gate must include Codex hook tests');
   },
 ];
 

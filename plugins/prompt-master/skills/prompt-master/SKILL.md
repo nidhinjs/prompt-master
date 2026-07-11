@@ -1,6 +1,5 @@
 ---
 name: prompt-master
-version: 1.33.0
 description: Generates and decompiles optimized prompts. Activates only when the user explicitly asks to write, fix, improve, adapt, break down, analyze, simplify, or split a prompt; a named target is optional for targetless Break down/Simplify/Split of an existing pasted prompt. Does not activate for general conversation, coding tasks, document writing, analysis of non-prompt content, or other non-prompt-engineering work.
 ---
 

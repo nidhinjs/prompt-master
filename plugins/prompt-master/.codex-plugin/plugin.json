@@ -1,0 +1,34 @@
+{
+  "name": "prompt-master",
+  "version": "1.34.0",
+  "description": "Generates, improves, adapts, decompiles, simplifies, and splits paste-ready prompts for AI tools.",
+  "author": {
+    "name": "Andrey Zagreev",
+    "url": "https://github.com/azagreev"
+  },
+  "homepage": "https://github.com/azagreev/prompt-master-za",
+  "repository": "https://github.com/azagreev/prompt-master-za",
+  "license": "MIT",
+  "keywords": [
+    "prompt-engineering",
+    "prompts",
+    "prompt-generator",
+    "llm"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Prompt Master",
+    "shortDescription": "Generate and refine paste-ready AI prompts",
+    "longDescription": "Create, improve, adapt, analyze, simplify, or split prompts for text, coding, research, builder, and media AI workflows.",
+    "developerName": "Andrey Zagreev",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/azagreev/prompt-master-za",
+    "defaultPrompt": [
+      "$prompt-master Improve this prompt for my target AI tool."
+    ]
+  }
+}

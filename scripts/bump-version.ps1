@@ -5,8 +5,11 @@
 .DESCRIPTION
     Версия скилла живёт в нескольких файлах, которые легко рассинхронить:
       1. plugins/prompt-master/.claude-plugin/plugin.json  ("version")  — канон
-      2. plugins/prompt-master/skills/prompt-master/SKILL.md (frontmatter version:)
+      2. plugins/prompt-master/.codex-plugin/plugin.json   ("version")
       3. CHANGELOG.md (секция ## [X.Y.Z])
+
+    SKILL.md намеренно не содержит version: Codex разрешает в frontmatter
+    навыка только поля name и description.
 
     Скрипт читает текущую версию из plugin.json (канон), вычисляет новую,
     правит все файлы текстово (форматирование сохраняется) и по флагу
@@ -30,7 +33,7 @@
 
 .EXAMPLE
     ./scripts/bump-version.ps1 -Bump minor
-    1.8.0 -> 1.9.0, правит plugin.json + SKILL.md, вставляет стаб в CHANGELOG.
+    1.8.0 -> 1.9.0, правит Claude/Codex plugin.json и вставляет стаб в CHANGELOG.
 
 .EXAMPLE
     ./scripts/bump-version.ps1 -Version 2.0.0 -Tag
@@ -59,12 +62,12 @@ $ErrorActionPreference = 'Stop'
 # --- Пути (всё относительно корня репозитория = родитель папки scripts) ---
 $repoRoot     = Split-Path -Parent $PSScriptRoot
 $pluginJson   = Join-Path $repoRoot 'plugins/prompt-master/.claude-plugin/plugin.json'
-$skillMd      = Join-Path $repoRoot 'plugins/prompt-master/skills/prompt-master/SKILL.md'
+$codexPluginJson = Join-Path $repoRoot 'plugins/prompt-master/.codex-plugin/plugin.json'
 $changelogMd  = Join-Path $repoRoot 'CHANGELOG.md'
 
 function Fail($msg) { Write-Host "ERROR: $msg" -ForegroundColor Red; exit 1 }
 
-foreach ($f in @($pluginJson, $skillMd)) {
+foreach ($f in @($pluginJson, $codexPluginJson)) {
     if (-not (Test-Path $f)) { Fail "Не найден обязательный файл: $f" }
 }
 
@@ -77,6 +80,15 @@ if ($pluginText -notmatch '"version"\s*:\s*"(\d+)\.(\d+)\.(\d+)"') {
 }
 $curMajor = [int]$Matches[1]; $curMinor = [int]$Matches[2]; $curPatch = [int]$Matches[3]
 $current  = "$curMajor.$curMinor.$curPatch"
+$codexPluginText = Get-Content -Raw -LiteralPath $codexPluginJson -Encoding UTF8
+$codexVersionMatch = [regex]::Match($codexPluginText, '"version"\s*:\s*"(\d+\.\d+\.\d+)"')
+if (-not $codexVersionMatch.Success) {
+    Fail "Не удалось прочитать version из Codex plugin.json"
+}
+$codexCurrent = $codexVersionMatch.Groups[1].Value
+if ($codexCurrent -ne $current) {
+    Fail "Версии manifest до bump рассинхронизированы: Claude=$current, Codex=$codexCurrent"
+}
 
 # --- Новая версия ---
 if ($PSCmdlet.ParameterSetName -eq 'Bump') {
@@ -107,7 +119,7 @@ Write-Host "Bump: $current -> $new" -ForegroundColor Cyan
 if ($DryRun) {
     Write-Host "`n[DryRun] Будут изменены:" -ForegroundColor Yellow
     Write-Host "  - $pluginJson"
-    Write-Host "  - $skillMd"
+    Write-Host "  - $codexPluginJson"
     if (-not $NoChangelog) { Write-Host "  - $changelogMd (вставка секции ## [$new])" }
     if ($Tag) { Write-Host "  - git tag v$new (подписанный) на HEAD" }
     exit 0
@@ -122,16 +134,10 @@ $pluginText = $pluginText -replace '("version"\s*:\s*")(\d+\.\d+\.\d+)(")', "`${
 [System.IO.File]::WriteAllText($pluginJson, $pluginText, $utf8NoBom)
 Write-Host "  ok plugin.json" -ForegroundColor Green
 
-# --- 2. SKILL.md frontmatter (только первое вхождение version: в шапке) ---
-# Именно instance-метод Regex.Replace с count: у статического [regex]::Replace
-# четвёртый int-аргумент трактуется как RegexOptions (1 = IgnoreCase) и
-# заменяет ВСЕ вхождения без учёта регистра.
-$skillText = Get-Content -Raw -LiteralPath $skillMd -Encoding UTF8
-if ($skillText -notmatch '(?m)^version:\s*\S+') { Fail "В SKILL.md нет frontmatter 'version:'" }
-$versionRx = [regex]'(?m)^version:\s*\S+'
-$skillText = $versionRx.Replace($skillText, "version: $new", 1)
-[System.IO.File]::WriteAllText($skillMd, $skillText, $utf8NoBom)
-Write-Host "  ok SKILL.md" -ForegroundColor Green
+# --- 2. Codex plugin.json ---
+$codexPluginText = $codexPluginText -replace '("version"\s*:\s*")(\d+\.\d+\.\d+)(")', "`${1}$new`${3}"
+[System.IO.File]::WriteAllText($codexPluginJson, $codexPluginText, $utf8NoBom)
+Write-Host "  ok Codex plugin.json" -ForegroundColor Green
 
 # --- 3. CHANGELOG.md: дата-стаб секции + footer-ссылка на GitHub release ---
 if (-not $NoChangelog) {

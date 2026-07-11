@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.34.0] - 2026-07-11
+
+Codex discovery and distribution release: the Claude-origin Prompt Master skill
+now has Codex repository and installed-plugin entry points while both hosts load
+one canonical runtime tree.
+
+### Added
+- **Codex repository discovery:** a thin `.agents/skills/prompt-master` locator
+  loads the canonical tracked skill without copying runtime rules or references.
+- **Codex plugin manifest:** `.codex-plugin/plugin.json` exposes the existing
+  skill tree with validated publisher, interface, and `./skills/` metadata.
+- **Cross-surface verification:** offline layout and hook suites cover locator
+  resolution, runtime hashes, malformed layouts, Claude/Codex hook parity, and
+  optional-hook behavior without a live model.
+- **Host-specific installation guidance:** Codex repository/plugin modes,
+  `$prompt-master`, duplicate avoidance, disable/update flows, and hook trust are
+  documented separately from Claude Code and Claude.ai installation.
+
+### Changed
+- **Windows-safe discovery:** a clean Git for Windows checkout proved directory
+  symlinks degrade to plain files under the default configuration, so repository
+  discovery uses the roadmap's thin-locator fallback.
+- **Codex-compatible skill metadata:** canonical and locator `SKILL.md`
+  frontmatter use only `name` and `description`; release version parity is now
+  enforced across the Claude and Codex plugin manifests, changelog, docs, tag
+  context, and artifact name.
+- **Version tooling:** lint, safe-gate, and version-bump contracts understand both
+  plugin manifests while the deterministic Claude skill ZIP remains sourced from
+  the unchanged tracked runtime manifest.
+
+### Security
+- Plugin hooks remain byte-identical, advisory, and optional. Codex may skip the
+  non-managed `UserPromptSubmit` hook until the user reviews and trusts it; core
+  skill discovery and prompt generation do not depend on hook execution.
+- No real Claude or Codex model execution is enabled by normal CI or the offline
+  release gate.
+
 ## [1.33.0] - 2026-07-10
 
 Canonical-facts and progressive-disclosure release: volatile provider/model
@@ -599,6 +636,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.34.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.34.0
 [1.33.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.33.0
 [1.32.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.32.0
 [1.31.1]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.31.1

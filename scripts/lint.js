@@ -11,6 +11,7 @@ const p = (...parts) => path.join(repoRoot, ...parts);
 
 const files = {
   pluginJson: p('plugins/prompt-master/.claude-plugin/plugin.json'),
+  codexPluginJson: p('plugins/prompt-master/.codex-plugin/plugin.json'),
   skillMd: p('plugins/prompt-master/skills/prompt-master/SKILL.md'),
   changelogMd: p('CHANGELOG.md'),
   patternsMd: p('plugins/prompt-master/skills/prompt-master/references/patterns.md'),
@@ -85,6 +86,7 @@ function log(name) {
 }
 
 const pluginText = read(files.pluginJson);
+const codexPluginText = read(files.codexPluginJson);
 const skillText = read(files.skillMd);
 const clText = read(files.changelogMd);
 const patText = read(files.patternsMd);
@@ -130,13 +132,13 @@ const registry = registryDocuments();
 
 log('version consistency');
 const pluginVersion = pluginText.match(/"version"\s*:\s*"(\d+\.\d+\.\d+)"/)?.[1];
-const skillVersion = skillText.match(/^version:\s*(\S+)/m)?.[1];
+const codexPluginVersion = codexPluginText.match(/"version"\s*:\s*"(\d+\.\d+\.\d+)"/)?.[1];
 const changelogVersion = clText.match(/^##\s*\[(\d+\.\d+\.\d+)\]/m)?.[1];
-if (!pluginVersion) errors.push("Cannot parse 'version' from plugin.json");
-if (!skillVersion) errors.push("Cannot parse 'version:' from SKILL.md frontmatter");
+if (!pluginVersion) errors.push("Cannot parse 'version' from Claude plugin.json");
+if (!codexPluginVersion) errors.push("Cannot parse 'version' from Codex plugin.json");
 if (!changelogVersion) errors.push("Cannot find a version heading in CHANGELOG.md");
-if (pluginVersion && skillVersion && pluginVersion !== skillVersion) {
-  errors.push(`Version mismatch: plugin.json=${pluginVersion} vs SKILL.md=${skillVersion}`);
+if (pluginVersion && codexPluginVersion && pluginVersion !== codexPluginVersion) {
+  errors.push(`Version mismatch: Claude plugin.json=${pluginVersion} vs Codex plugin.json=${codexPluginVersion}`);
 }
 if (pluginVersion && changelogVersion && pluginVersion !== changelogVersion) {
   errors.push(`Version mismatch: plugin.json=${pluginVersion} vs CHANGELOG.md latest heading=${changelogVersion}`);
@@ -153,11 +155,33 @@ if (pluginVersion) {
 }
 if (pluginVersion) console.log(`  version = ${pluginVersion}`);
 
+if (pluginVersion) {
+  const packageText = read(p('scripts/package-skill.ps1'));
+  if (!/\$zipName\s*=\s*"prompt-master-\$version\.zip"/.test(packageText)) {
+    errors.push('scripts/package-skill.ps1: artifact name must be prompt-master-$version.zip');
+  }
+  const distDir = p('dist');
+  if (fs.existsSync(distDir)) {
+    const artifacts = new Set(fs.readdirSync(distDir));
+    const zip = `prompt-master-${pluginVersion}.zip`;
+    const sha = `${zip}.sha256`;
+    if (artifacts.has(zip) !== artifacts.has(sha)) errors.push(`dist artifact pair incomplete for ${pluginVersion}: ZIP and SHA-256 sidecar must both exist`);
+  }
+  if (process.env.GITHUB_REF_TYPE === 'tag' && process.env.GITHUB_REF_NAME !== `v${pluginVersion}`) {
+    errors.push(`Release tag mismatch: ${process.env.GITHUB_REF_NAME || '(missing)'} vs v${pluginVersion}`);
+  }
+}
+
 log('SKILL.md frontmatter fields');
-for (const field of ['name', 'version', 'description']) {
+for (const field of ['name', 'description']) {
   if (!new RegExp(`^${field}:\\s*\\S`, 'm').test(skillText)) {
     errors.push(`SKILL.md frontmatter missing required field: '${field}'`);
   }
+}
+const frontmatter = skillText.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/)?.[1] || '';
+const frontmatterFields = matches(frontmatter, /^([A-Za-z][A-Za-z0-9_-]*):/gm).sort();
+if (JSON.stringify(frontmatterFields) !== JSON.stringify(['description', 'name'])) {
+  errors.push(`SKILL.md Codex frontmatter fields must be exactly name and description, got ${frontmatterFields.join(', ') || '(none)'}`);
 }
 
 log('pattern count consistency');
@@ -457,12 +481,22 @@ if (!/For R5\/R6 work[\s\S]{0,160}do not generate\s+divergent executable variant
 }
 
 log('public docs claim hygiene');
-for (const [name, text] of [
+const publicDocs = [
   ['README.md', readmeText],
   ['README.ru.md', readmeRuText],
-]) {
+  ['docs/installation.md', installText],
+];
+for (const [name, text] of publicDocs) {
   for (const rx of [/1\.6-2\.1x/i, /25\.7%/, /mode collapse/i, /Verbalized Sampling/i, /calibrated sampling/i]) {
     if (rx.test(text)) errors.push(`${name}: public docs must not claim paper metrics or VS branding (${rx})`);
+  }
+  if (/\bcodex\s+plugin\s+add\b/i.test(text) && !/codex-cli\s+0\.144\.1/i.test(text)) {
+    errors.push(`${name}: 'codex plugin add' must be documented with the locally verified CLI version`);
+  }
+  for (const line of text.split('\n')) {
+    if (/codex/i.test(line) && /\.zip\b/i.test(line) && /(?:install|upload|import|установ|загруз)/i.test(line)) {
+      errors.push(`${name}: unsupported Codex ZIP installation claim: ${line.trim()}`);
+    }
   }
 }
 
@@ -592,6 +626,12 @@ if (!/args:\s*\['scripts\/test-registry\.js'\]/.test(safeTestText)) {
 }
 if (!/args:\s*\['scripts\/test-runtime-inventory\.js'\]/.test(safeTestText)) {
   errors.push('scripts/test-safe.js must include scripts/test-runtime-inventory.js in DEFAULT_CHECKS');
+}
+if (!/args:\s*\['scripts\/test-codex-layout\.js'\]/.test(safeTestText)) {
+  errors.push('scripts/test-safe.js must include scripts/test-codex-layout.js in DEFAULT_CHECKS');
+}
+if (!/args:\s*\['scripts\/test-codex-hook\.js'\]/.test(safeTestText)) {
+  errors.push('scripts/test-safe.js must include scripts/test-codex-hook.js in DEFAULT_CHECKS');
 }
 if (!/Canonical Trust Boundary/.test(contractsTestText) || !/Template L/.test(contractsTestText)) {
   errors.push('scripts/test-contracts.js must enforce trust-boundary and Template L contracts');

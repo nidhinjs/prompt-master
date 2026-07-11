@@ -4,9 +4,9 @@
 
 **English** · [Русский](README.ru.md)
 
-**What:** A Claude skill that writes accurate, paste-ready prompts for any AI tool — routed to the specific model or platform you name.
+**What:** A prompt-authoring skill originally built for Claude, now hosted by Claude and Codex from one canonical runtime. It writes accurate, paste-ready prompts for any AI tool and routes to the model or platform you name.
 **Why:** Every vague prompt is a wasted credit. Prompt Master extracts intent, picks the right architecture, and strips every word that doesn't change the output.
-**How to start:** Install via the plugin marketplace (see below), then say: `Write me a prompt for [tool] to [task]` — or paste a bad prompt and ask to fix it.
+**How to start:** Choose one host-specific installation below, then say: `Write me a prompt for [tool] to [task]` — or paste a bad prompt and ask to fix it.
 
 **Works with:** hosted and local text models, reasoning systems, coding agents and IDEs, research/browser agents, presentation and workflow builders, image/video/voice/3D tools — and unknown tools through a capability-safe fallback. Current provider/model selection comes from the validated facts registry, not this README.
 
@@ -14,7 +14,41 @@
 
 ## 🚀 Installation
 
-### RECOMMENDED — Claude Code / Cowork (plugin marketplace)
+### Codex — repository mode
+
+Use this mode while working in a clone of the repository:
+
+```bash
+git clone https://github.com/azagreev/prompt-master-za.git
+cd prompt-master-za
+codex
+```
+
+Codex discovers `.agents/skills/prompt-master`, which points to the canonical skill under `plugins/prompt-master/skills/prompt-master`. Invoke it explicitly with `$prompt-master`, or ask naturally for a prompt and let the skill description trigger it implicitly. Skill file changes are detected automatically; if the selector is missing, restart Codex.
+
+### Codex — installed-plugin mode
+
+Use the Codex **Plugins** screen to add the GitHub marketplace `azagreev/prompt-master-za` and install **prompt-master**, or use the verified Codex CLI flow:
+
+```bash
+codex plugin marketplace add azagreev/prompt-master-za
+codex plugin add prompt-master@prompt-master
+codex plugin list
+```
+
+These commands are verified against `codex-cli 0.144.1`. There is no supported Codex ZIP installation path for this project.
+
+> **Choose repository mode or installed-plugin mode, not both.** Codex shows same-named skills as separate selectors rather than merging them. To keep repository mode, remove the installed copy with `codex plugin remove prompt-master@prompt-master`. To keep the installed plugin while working in this repository, disable the repository entry in `~/.codex/config.toml`:
+>
+> ```toml
+> [[skills.config]]
+> path = "/absolute/path/to/prompt-master-za/.agents/skills/prompt-master/SKILL.md"
+> enabled = false
+> ```
+
+Installed plugins may include a `UserPromptSubmit` hook. Codex asks you to review/trust a non-managed hook before running it. Prompt Master's hook only adds advisory context for multi-agent prompt requests; declining or skipping it does not disable the core skill.
+
+### Claude Code / Cowork — plugin marketplace
 
 ```bash
 # 1. Add the marketplace from GitHub
@@ -26,19 +60,27 @@
 
 In Cowork: **Customize → Browse plugins → Personal → + → Add marketplace from GitHub →** `azagreev/prompt-master-za` → install **prompt-master**.
 
-### OR — Claude.ai (browser, ZIP) — bypasses the marketplace cache
+### Claude.ai — browser ZIP
 
 1. Grab the ready bundle `prompt-master-<version>.zip` attached to the [latest Release](https://github.com/azagreev/prompt-master-za/releases/latest) — or build it from a clone with `./scripts/package-skill.ps1` (zips `skills/prompt-master/` with `SKILL.md` + `references/` at the archive root).
 2. **claude.ai → Customize → Skills → Upload a Skill.**
 
-### OR — Clone into the Claude Code skills directory
+### Claude Code — manual skills directory
 
 ```bash
 git clone https://github.com/azagreev/prompt-master-za.git
 cp -r prompt-master-za/plugins/prompt-master/skills/prompt-master ~/.claude/skills/prompt-master
 ```
 
-### 🔄 Keeping it updated (read this if you're on an old version)
+### 🔄 Keeping it updated
+
+#### Codex
+
+- **Repository mode:** run `git pull`. Codex detects skill changes automatically; restart only if the skill does not appear.
+- **Installed-plugin mode:** `codex plugin marketplace upgrade prompt-master` refreshes the configured Git marketplace snapshot. The installed plugin is a cached snapshot, so reinstall it to pick up changed plugin files: `codex plugin remove prompt-master@prompt-master`, then `codex plugin add prompt-master@prompt-master`.
+- No automatic-update behavior is claimed here for Codex app/CLI `0.144.1`; verify updates with `codex plugin list`.
+
+#### Claude Code / Cowork
 
 Third-party marketplaces (like this one) **do not auto-update by default** — only the official Anthropic marketplace auto-pulls on session start. After a new release the **Update** button can look active but do nothing, because it compares a stale local clone against itself.
 
@@ -89,7 +131,17 @@ Write a prompt for Kimi to research X across multiple sources, with citations
 Give me 3 prompt directions for Claude Code, with fit, tradeoffs, and when to use each
 ```
 
-Or invoke it explicitly:
+Or invoke it explicitly using the syntax for your host.
+
+Codex:
+
+```
+$prompt-master
+
+I want to ask Claude Code to build a todo app with React and Supabase
+```
+
+Claude Code:
 
 ```
 /prompt-master:prompt-master
@@ -375,7 +427,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.33.0** (canonical provider/model facts registry, seven progressively loaded workflow profiles, fail-closed freshness/routing validation, and manifest-driven deterministic packaging).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.34.0** (Codex repository/plugin discovery over the same canonical runtime, a Windows-safe locator, optional hook parity, and deterministic cross-surface validation).
 
 ## 📄 License
 
