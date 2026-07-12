@@ -1,4 +1,4 @@
-name = "runtime-author"
+name = "runtime_author"
 description = "Implementation author for explicitly assigned prompt-master runtime paths only."
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"

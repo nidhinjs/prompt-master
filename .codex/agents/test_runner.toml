@@ -1,4 +1,4 @@
-name = "test-runner"
+name = "test_runner"
 description = "Read-only deterministic test runner that reports exact manifests, counts, and environment failures."
 model = "gpt-5.6-luna"
 model_reasoning_effort = "low"

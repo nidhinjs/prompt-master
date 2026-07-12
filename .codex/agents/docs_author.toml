@@ -1,4 +1,4 @@
-name = "docs-author"
+name = "docs_author"
 description = "Read-only documentation specialist that proposes source-linked wording for root-owned files."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"

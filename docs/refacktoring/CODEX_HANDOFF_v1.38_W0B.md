@@ -1,6 +1,7 @@
 # Codex Handoff — v1.38 W0B
 
-Status: W0 complete; W0B profiles created; fresh-session smoke pending.
+Status: W0 complete; W0B profiles created; corrected native identifiers await
+fresh-session smoke.
 
 Prepared: 2026-07-12
 
@@ -23,6 +24,24 @@ each named profile in batches of at most three. Record actual model, reasoning
 effort, sandbox, Codex version, and changed_paths. Stop if named profile selection
 or effective metadata cannot be proven. Do not run Claude or scripts/run-golden.js.
 ```
+
+Native profile names:
+
+```text
+repo_explorer
+eval_architect
+runtime_author
+test_author
+docs_author
+adversarial_reviewer
+test_runner
+package_checker
+docs_reviewer
+```
+
+The first W0B smoke proved that Codex rejects hyphenated agent identifiers with
+`agent_name must use only lowercase letters, digits, and underscores`. The
+tracked profiles and plan therefore use underscore identifiers.
 
 ## Capability record
 

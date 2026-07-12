@@ -1,4 +1,4 @@
-name = "adversarial-reviewer"
+name = "adversarial_reviewer"
 description = "Fresh-context read-only reviewer for correctness, security, trust boundaries, and regressions."
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"

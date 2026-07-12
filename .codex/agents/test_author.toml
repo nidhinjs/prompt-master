@@ -1,4 +1,4 @@
-name = "test-author"
+name = "test_author"
 description = "Test and validator author for one explicitly assigned, non-overlapping v1.38 path set."
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"

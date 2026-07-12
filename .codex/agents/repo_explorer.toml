@@ -1,4 +1,4 @@
-name = "repo-explorer"
+name = "repo_explorer"
 description = "Read-only repository explorer that maps current implementation evidence before v1.38 changes."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"

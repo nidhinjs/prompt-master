@@ -190,15 +190,15 @@ published:
 
 | Role | Preferred model | Initial effort | Ownership and escalation |
 |---|---|---:|---|
-| `repo-explorer` | `gpt-5.6-terra` | `medium` | Read-only repository/evidence map; promote to `high` only for a recorded cross-file contradiction |
-| `eval-architect` | `gpt-5.6-sol` | `high` | Read-only eval/schema/interface design before the freeze; never edits fixtures or runtime |
-| `runtime-author` | `gpt-5.6-sol` | `high` | Exclusive runtime paths; conditional `xhigh` only for an unresolved architecture blocker |
-| `test-author` | `gpt-5.6-sol` | `high` | Exclusive assigned eval/validator paths; multiple instances require disjoint ownership |
-| `docs-author` | `gpt-5.6-terra` | `medium` | Read-only documentation/source proposal; root alone applies changes to shared docs |
-| `adversarial-reviewer` | `gpt-5.6-sol` | `high` | Read-only fresh context; conditional `xhigh` for one unresolved critical finding |
-| `test-runner` | `gpt-5.6-luna` | lowest catalog-supported level that passes runner checks | No semantic edits; deterministic scripts decide pass/fail |
-| `package-checker` | `gpt-5.6-luna` | lowest catalog-supported level | Read-only inventory/hash work; never substitutes judgment for byte/hash checks |
-| `docs-reviewer` | `gpt-5.6-terra` | `high` | Read-only consistency and traceability review |
+| `repo_explorer` | `gpt-5.6-terra` | `medium` | Read-only repository/evidence map; promote to `high` only for a recorded cross-file contradiction |
+| `eval_architect` | `gpt-5.6-sol` | `high` | Read-only eval/schema/interface design before the freeze; never edits fixtures or runtime |
+| `runtime_author` | `gpt-5.6-sol` | `high` | Exclusive runtime paths; conditional `xhigh` only for an unresolved architecture blocker |
+| `test_author` | `gpt-5.6-sol` | `high` | Exclusive assigned eval/validator paths; multiple instances require disjoint ownership |
+| `docs_author` | `gpt-5.6-terra` | `medium` | Read-only documentation/source proposal; root alone applies changes to shared docs |
+| `adversarial_reviewer` | `gpt-5.6-sol` | `high` | Read-only fresh context; conditional `xhigh` for one unresolved critical finding |
+| `test_runner` | `gpt-5.6-luna` | lowest catalog-supported level that passes runner checks | No semantic edits; deterministic scripts decide pass/fail |
+| `package_checker` | `gpt-5.6-luna` | lowest catalog-supported level | Read-only inventory/hash work; never substitutes judgment for byte/hash checks |
+| `docs_reviewer` | `gpt-5.6-terra` | `high` | Read-only consistency and traceability review |
 
 These profiles are planned implementation inputs and are absent from the
 audited v1.37.0 tree. They must be added and validated before delegation; the
@@ -209,7 +209,7 @@ amendment; automatic model selection may be used only when the amended role
 declares it and the actual selection is captured in evidence.
 
 Each project profile must define `name`, `description`, and
-`developer_instructions`. Only `runtime-author` and `test-author` inherit a
+`developer_instructions`. Only `runtime_author` and `test_author` inherit a
 scoped workspace-write sandbox from root; all exploration, architecture,
 documentation, reviewer, runner, and checker profiles explicitly use read-only
 where supported. No profile requests `danger-full-access`, broad network access,
@@ -246,19 +246,19 @@ preferable to an unsafe dependency overlap.
 |---|---|---|---|
 | `W0` preflight | none | Verify branch, staged/untracked boundaries, v1.37 tag/commit, prohibited runner policy, model catalog, sandbox, and file ownership ledger; preserve the three pre-existing untracked documents and stage no file by wildcard | `G0`: root records provenance/capabilities and prepares a planning-only commit containing exactly this plan and the roadmap before candidate work |
 | `W0B` profile bootstrap | root only, then fresh Codex session | Create `.codex/config.toml` and every `.codex/agents/*.toml` profile; commit bootstrap; record a resume packet; reload the project; smoke-spawn each named role in batches of at most three and record actual model/effort/sandbox | `G0B`: native profile loading and effective thread/depth limits are proven before any delegated project task; missing metadata or selector support stops execution |
-| `W1` read-only design audit | `repo-explorer`; `eval-architect`; `adversarial-reviewer` | Current-code map, eval/schema/interface proposal, safety and release-boundary risks; no edits | `G1`: root reconciles contradictions and freezes task IDs, inputs, owned paths, acceptance IDs, and interfaces |
-| `W2A` eval freeze | two `test-author` instances with disjoint data/validator paths; `package-checker` read-only | Instance A materializes `tests/skill-evals/**`; instance B implements the deterministic eval core/validator/tests from the frozen W1 interface; checker verifies baseline objects and exclusion contracts | `G2A`: validator/mutations pass, seven evals/assertions and acceptance map reconcile, baseline verifies, then root creates eval-freeze commit `S` containing data plus validator and records its tree/input hashes |
-| `W2B` Codex profile validator | one `test-author`; `package-checker` read-only | Implement the static Codex profile validator/tests; checker re-audits path/manifest isolation | `G2B`: profile validator and mutation tests pass, no new test can spawn a model process, runtime tree remains untouched |
-| `W3` candidate | `runtime-author`; read-only `docs-author` | Author changes only the six runtime paths; docs role returns a source-linked wording/change proposal and touches no shared file | `G3`: root reviews the runtime diff, verifies one canonical owner, and rejects any post-hoc weakening of evals |
+| `W1` read-only design audit | `repo_explorer`; `eval_architect`; `adversarial_reviewer` | Current-code map, eval/schema/interface proposal, safety and release-boundary risks; no edits | `G1`: root reconciles contradictions and freezes task IDs, inputs, owned paths, acceptance IDs, and interfaces |
+| `W2A` eval freeze | two `test_author` instances with disjoint data/validator paths; `package_checker` read-only | Instance A materializes `tests/skill-evals/**`; instance B implements the deterministic eval core/validator/tests from the frozen W1 interface; checker verifies baseline objects and exclusion contracts | `G2A`: validator/mutations pass, seven evals/assertions and acceptance map reconcile, baseline verifies, then root creates eval-freeze commit `S` containing data plus validator and records its tree/input hashes |
+| `W2B` Codex profile validator | one `test_author`; `package_checker` read-only | Implement the static Codex profile validator/tests; checker re-audits path/manifest isolation | `G2B`: profile validator and mutation tests pass, no new test can spawn a model process, runtime tree remains untouched |
+| `W3` candidate | `runtime_author`; read-only `docs_author` | Author changes only the six runtime paths; docs role returns a source-linked wording/change proposal and touches no shared file | `G3`: root reviews the runtime diff, verifies one canonical owner, and rejects any post-hoc weakening of evals |
 | `W3I` root integration | root only | Apply shared test/CI wiring and approved README/CHANGELOG/roadmap/plan/release wording; reconcile versions/manifests; run targeted smoke checks | `G3I`: shared files have one owner, smoke checks pass, and the integrated tree is ready for fresh-context review |
-| `W4` independent verification | `adversarial-reviewer`; `test-runner`; `docs-reviewer` | Fresh-context semantic/security review, deterministic targeted/full tests, documentation/traceability review; all read-only | `G4`: all expected checks executed, zero critical blockers, every finding accepted or resolved with evidence |
+| `W4` independent verification | `adversarial_reviewer`; `test_runner`; `docs_reviewer` | Fresh-context semantic/security review, deterministic targeted/full tests, documentation/traceability review; all read-only | `G4`: all expected checks executed, zero critical blockers, every finding accepted or resolved with evidence |
 | `W5` remediation | at most one scoped author at a time; original reviewer remains read-only | Minimal fix for one accepted finding, then targeted rerun and independent re-review | `G5`: no unresolved critical/high finding and no unreviewed cross-scope change |
 | `W5F` candidate freeze | root only | Apply any final shared-file follow-up, rerun targeted checks, create candidate commit `C`, and record its tree; no package yet | `G5F`: working tree/index boundaries are known, `C` is immutable, and any later source change sends execution back to `W5` and creates a new `C` |
-| `W6` portable/package gate | WSL and Windows `test-runner` instances may test `C` in parallel; builds stay serialized; `package-checker` compares | Same strict offline list from clean checkouts of `C`; two clean package builds; inventory, byte parity, and digest comparison | `G6`: platform counts reconcile and both packages built from `C` have identical bytes and SHA-256; a failure invalidates `C` as the release candidate |
+| `W6` portable/package gate | WSL and Windows `test_runner` instances may test `C` in parallel; builds stay serialized; `package_checker` compares | Same strict offline list from clean checkouts of `C`; two clean package builds; inventory, byte parity, and digest comparison | `G6`: platform counts reconcile and both packages built from `C` have identical bytes and SHA-256; a failure invalidates `C` as the release candidate |
 | `W7` offline RC | none | Root records the already immutable `C`, eval-suite hash, validator/policy hashes, model catalog, review records, package digest, and pre-publication acceptance ledger; no tag or push | `G7`: offline RC ledger complete and every offline/pre-publication acceptance ID closed |
 | `W8` release | root only; package checker may perform a final read-only audit | Only after explicit release authorization: signed tag, finalized offline evidence/checksum, push, publication, then terminal read-only publication audit `A` | `G8`: remote tag, commit, ZIP, checksum, evidence manifest, and schema-valid `A` all reconcile |
 
-The `W2A/W2B` `test-author` tasks receive these non-overlapping paths:
+The `W2A/W2B` `test_author` tasks receive these non-overlapping paths:
 
 ```text
 W2A instance A:
@@ -323,15 +323,15 @@ Root rejects a `PASS` unless every criterion in the relevant row is evidenced.
 
 | Role | `PASS` criteria | Required evidence |
 |---|---|---|
-| `repo-explorer` | Maps every in-scope current file and relevant existing contract; distinguishes implemented behavior from planned work; makes no edits; reports all unknowns | File/line references, searched paths, current commit/tree, `changed_paths: []` |
-| `eval-architect` | Produces a complete read-only design for seven cases, schemas, assertion IDs, mutations, acceptance mapping, freeze inputs, the W2A data/validator interface, and W2B profile-validator contract; resolves or explicitly flags every contradictory requirement; makes no edits | Case/assertion matrix, schema/interface proposal, contradiction ledger, `changed_paths: []` |
-| `runtime-author` | Changes only the six runtime paths in section 5.2; satisfies every assigned semantic contract; adds no runtime file or hardcoded model/count/time/topology; never edits an eval/test file | Scoped diff, assigned `R38-R*` IDs, targeted lint/contract exit codes, residual-risk statement |
-| `test-author` | For the `W2A` data task: materializes exactly the frozen schemas/cases/assertions/mutations and passes the combined validator. For the `W2A` validator task: implements the frozen interface and makes all eval/schema/mutation tests pass. For `W2B`: makes all profile/mutation tests pass. Every task touches only assigned paths, never weakens a frozen assertion, and launches no model process | Task phase/scope, frozen input hash, inventory/count reconciliation, relevant validation/mutation results, model-spawn sentinel result |
-| `docs-author` | Produces an exact read-only wording/change proposal for root-owned README, CHANGELOG, roadmap, plan, and release notes; cites primary sources for current external facts; makes no Claude-execution or comparative-quality claim; edits nothing | Proposed sections/patch hunks, link and terminology/version checklist, source URLs, `changed_paths: []` |
-| `adversarial-reviewer` | Uses fresh read-only context; checks correctness, security, trust boundaries, regression risk, and every assigned acceptance ID; edits nothing; leaves no unresolved critical/high finding for `PASS` | Severity-sorted findings with file/line evidence, acceptance coverage, `changed_paths: []` |
-| `test-runner` | Runs the exact assigned manifest; `expected = executed = passed`, `failed = skipped = 0`; distinguishes code failure from environment failure; makes no semantic edit | Command/exit-code list, count summary, platform/runtime metadata, `changed_paths: []` |
-| `package-checker` | For `W2A/W2B`: verifies the released baseline and proves planned eval/Codex/evidence paths are outside package allowlists. For `W6`: confirms two clean builds from `C` are byte-identical and ZIP equals runtime-manifest bytes. For an optional `W8` audit: matches remote tag/assets/digests to `E`. It edits nothing | Task phase, baseline or candidate commit/tree and exclusion report; for `W6`, both SHA-256 values and inventory/byte parity; for `W8`, remote reconciliation fields; always `changed_paths: []` |
-| `docs-reviewer` | Finds no contradiction in scope, model terminology, routing, versions, acceptance status, or release claims; edits nothing; reports any unverifiable statement | Consistency matrix, link/source check, findings, `changed_paths: []` |
+| `repo_explorer` | Maps every in-scope current file and relevant existing contract; distinguishes implemented behavior from planned work; makes no edits; reports all unknowns | File/line references, searched paths, current commit/tree, `changed_paths: []` |
+| `eval_architect` | Produces a complete read-only design for seven cases, schemas, assertion IDs, mutations, acceptance mapping, freeze inputs, the W2A data/validator interface, and W2B profile-validator contract; resolves or explicitly flags every contradictory requirement; makes no edits | Case/assertion matrix, schema/interface proposal, contradiction ledger, `changed_paths: []` |
+| `runtime_author` | Changes only the six runtime paths in section 5.2; satisfies every assigned semantic contract; adds no runtime file or hardcoded model/count/time/topology; never edits an eval/test file | Scoped diff, assigned `R38-R*` IDs, targeted lint/contract exit codes, residual-risk statement |
+| `test_author` | For the `W2A` data task: materializes exactly the frozen schemas/cases/assertions/mutations and passes the combined validator. For the `W2A` validator task: implements the frozen interface and makes all eval/schema/mutation tests pass. For `W2B`: makes all profile/mutation tests pass. Every task touches only assigned paths, never weakens a frozen assertion, and launches no model process | Task phase/scope, frozen input hash, inventory/count reconciliation, relevant validation/mutation results, model-spawn sentinel result |
+| `docs_author` | Produces an exact read-only wording/change proposal for root-owned README, CHANGELOG, roadmap, plan, and release notes; cites primary sources for current external facts; makes no Claude-execution or comparative-quality claim; edits nothing | Proposed sections/patch hunks, link and terminology/version checklist, source URLs, `changed_paths: []` |
+| `adversarial_reviewer` | Uses fresh read-only context; checks correctness, security, trust boundaries, regression risk, and every assigned acceptance ID; edits nothing; leaves no unresolved critical/high finding for `PASS` | Severity-sorted findings with file/line evidence, acceptance coverage, `changed_paths: []` |
+| `test_runner` | Runs the exact assigned manifest; `expected = executed = passed`, `failed = skipped = 0`; distinguishes code failure from environment failure; makes no semantic edit | Command/exit-code list, count summary, platform/runtime metadata, `changed_paths: []` |
+| `package_checker` | For `W2A/W2B`: verifies the released baseline and proves planned eval/Codex/evidence paths are outside package allowlists. For `W6`: confirms two clean builds from `C` are byte-identical and ZIP equals runtime-manifest bytes. For an optional `W8` audit: matches remote tag/assets/digests to `E`. It edits nothing | Task phase, baseline or candidate commit/tree and exclusion report; for `W6`, both SHA-256 values and inventory/byte parity; for `W8`, remote reconciliation fields; always `changed_paths: []` |
+| `docs_reviewer` | Finds no contradiction in scope, model terminology, routing, versions, acceptance status, or release claims; edits nothing; reports any unverifiable statement | Consistency matrix, link/source check, findings, `changed_paths: []` |
 
 Root has a separate integration Definition of Done: all worker packets match
 their input hashes, write scopes never overlap, the shared diff is independently
@@ -455,7 +455,7 @@ These files are outside the distributed skill runtime and do not enter its ZIP:
 
 Root owns shared wiring, CI, version files, README, CHANGELOG, manifests, and
 release metadata. A worker may propose a patch for a shared file but must not
-apply it. Reviewer, runner, and package-checker roles remain read-only.
+apply it. Reviewer, runner, and `package_checker` roles remain read-only.
 
 ## 6. Eval definitions before runtime edits
 

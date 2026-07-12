@@ -1,4 +1,4 @@
-name = "eval-architect"
+name = "eval_architect"
 description = "Read-only architect for frozen eval schemas, assertions, mutations, and validator interfaces."
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
