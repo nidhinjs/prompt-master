@@ -504,7 +504,9 @@ const cases = [
 
   function releaseCriticalCiAndPackageContracts() {
     requireMatch(sources.ci, /^permissions:\s*\n\s+contents:\s*read\s*$/m, 'CI permissions must be contents: read');
-    requireMatch(sources.ci, /runs-on:\s*ubuntu-24\.04\b/, 'CI runner must be a pinned non-latest image');
+    requireMatch(sources.ci, /os:\s*\[ubuntu-24\.04, windows-2025\]/, 'strict CI matrix must pin Ubuntu and Windows images');
+    requireMatch(sources.ci, /runs-on:\s*\$\{\{\s*matrix\.os\s*\}\}/, 'strict CI job must run on the pinned OS matrix');
+    requireMatch(sources.ci, /runs-on:\s*macos-15\b/, 'portable layout runner must pin macOS');
     requireMatch(sources.ci, /timeout-minutes:\s*10\b/, 'CI job needs a timeout');
     requireMatch(sources.ci, /node-version:\s*22\.17\.0\b/, 'CI Node version must be exact');
     const actionRefs = [...sources.ci.matchAll(/^\s*uses:\s*\S+@([^\s#]+)/gm)].map((match) => match[1]);

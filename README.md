@@ -403,7 +403,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.36.0** (versioned pattern registry, nine routed diagnostic shards, fail-closed offline validation, and consistent evidence/safety contracts).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.37.0** (portable fake-Claude safety, identical Windows/Ubuntu strict gates, and machine-validated historical provenance).
 
 ## 📄 License
 

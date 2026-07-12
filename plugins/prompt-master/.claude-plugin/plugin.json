@@ -1,6 +1,6 @@
 {
   "name": "prompt-master",
-  "version": "1.36.0",
+  "version": "1.37.0",
   "description": "Генерирует оптимизированные, готовые к вставке промпты для любого AI-инструмента с минимумом токенов. Routing через канонический реестр provider/model facts, семь workflow-профилей для text, coding, research, builders, media и fallback, а также versioned pattern registry; anti-fabrication протокол включён.",
   "author": {
     "name": "Andrey Zagreev",

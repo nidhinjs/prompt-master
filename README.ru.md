@@ -403,7 +403,7 @@ Prompt Master использует только техники с надёжны
 
 ## ℹ️ История версий
 
-Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.36.0** (versioned pattern registry, девять routed diagnostic shards, fail-closed offline validation и согласованные evidence/safety-контракты).
+Полная история — [CHANGELOG.md](CHANGELOG.md). Текущий релиз: **v1.37.0** (portable fake-Claude safety, одинаковые strict-gates Windows/Ubuntu и машинно проверяемый historical provenance).
 
 ## 📄 Лицензия
 

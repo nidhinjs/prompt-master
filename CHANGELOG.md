@@ -5,6 +5,60 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.37.0] - 2026-07-12
+
+Portable Verification and Historical Provenance release: Windows and Ubuntu
+now execute the same strict offline gate, while the published v1.29 asset has a
+machine-validated record that distinguishes source parity from ZIP-container
+reproducibility.
+
+### Added
+- **Cross-platform Node fake runner:** the candidate safe harness launches its
+  scenario fake as absolute `process.execPath + script`, records redacted
+  hashes instead of prompts, preloads direct- and shell-call guards, and makes
+  inert POSIX/Windows sentinels the entire temporary PATH as an independent
+  fallback.
+- **Historical provenance record:** JSON Schema, an exact v1.29 release-asset
+  record, a dependency-free tag/ZIP validator, and 41 positive/adversarial
+  tests verify tag objects, blobs, archive inventory, decompressed bytes, and
+  SHA-256 values without network access.
+- **Portable verification contracts:** source assertions require the absolute
+  Node scenario fake, both guard-only PATH sentinels, per-check timeouts, pinned
+  runners, historical tags, and zero CI live opt-ins.
+- **v1.38 implementation contract:** a Claude-first release plan freezes the
+  v1.26.3 behavioral baseline, heterogeneous Codex roles, eval-before-edit
+  method, runtime ownership, E2E scenarios, acceptance IDs, and live/release
+  authorization boundaries.
+
+### Changed
+- Ubuntu 24.04 and Windows 2025 share one `test-safe.js --strict` matrix job
+  with identical required-count semantics and historical tags available for
+  provenance validation; macOS retains the clean-checkout Codex layout check.
+- Model-response fixtures and timeout simulation no longer depend on a shell or
+  `/bin/sleep`; minimal POSIX/Windows PATH sentinels remain solely as the
+  policy-required fallback. Production/default resolution in `run-golden.js`
+  remains the literal `claude` command.
+- Golden-suite summaries now reconcile `planned`, `executed`, `passed`,
+  `failed`, and `not_run`; a suite timeout cannot count unexecuted scenarios as
+  passes.
+- The v1.29 finding is corrected: all five published ZIP entries are
+  byte-identical to the tag. Only exact container reproducibility is
+  `not_attested`; the conflicting six-file ZIP was an ignored local rebuild,
+  not the GitHub Release asset. The annotated historical tag is explicitly
+  recorded as unsigned.
+
+### Security
+- Normal CI strips every live/fake opt-in, forces `NO_LIVE_MODEL_CALLS=1`, and
+  fails on any blocked real-Claude marker, skipped check, timeout, environment
+  failure, assertion failure, malformed provenance, or count mismatch.
+- Sensitive environment keys are removed case-insensitively. The preload guard
+  denies Node shell APIs, `shell:true`, and direct shell `-c`/`/c` Claude
+  commands; eight harmless-fixture probes, including omitted-args overloads,
+  prove the target is never executed.
+- Runtime prompt behavior is unchanged. The repository changes verification,
+  provenance, and the future v1.38 implementation contract; no real Claude or
+  other model runner is part of the release gate.
+
 ## [1.36.0] - 2026-07-12
 
 Pattern Registry and Diagnostic Sharding release: Prompt Master now resolves
@@ -724,6 +778,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.37.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.37.0
 [1.36.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.36.0
 [1.35.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.35.0
 [1.34.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.34.0

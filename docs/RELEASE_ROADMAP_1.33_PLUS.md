@@ -1,8 +1,8 @@
 # Release Roadmap: v1.33.0 and Later
 
-Status: active plan; v1.33.0–v1.35.0 completed; v1.36.0 pattern-registry release candidate
-Baseline: released `v1.34.0`, commit `bad3c1f34e810a7371b33bd2b88e751f32902ec9`
-Prepared: 2026-07-10; revised 2026-07-11
+Status: active plan; v1.33.0–v1.37.0 completed; conditional v1.38.0 next
+Baseline: released `v1.36.0`, commit `3ea3403d1191970f2c5a3694a53e17c0b6deb7f5`
+Prepared: 2026-07-10; revised 2026-07-12
 Primary input: [AUDIT_REPORT_2026-07-10.md](../AUDIT_REPORT_2026-07-10.md)
 
 > **Superseding amendment (2026-07-11):** v1.35 is now the GPT-5.6
@@ -20,6 +20,13 @@ Primary input: [AUDIT_REPORT_2026-07-10.md](../AUDIT_REPORT_2026-07-10.md)
 > Behavioral Attestation moves to conditional v1.38.0. Older package headings
 > and acceptance IDs below are retained only for historical traceability.
 
+> **Superseding amendment (2026-07-12, v1.38 scope):** conditional v1.38.0 is
+> `Claude-Revalidated Research Portfolio Orchestration`. It combines the PM-05
+> behavioral attestation with one bounded, optional research-portfolio runtime
+> improvement. The candidate must be based on a published v1.37.0, use v1.26.3
+> as the last Git-provenance Claude A/B baseline, and pass the offline/live
+> gates in `docs/refacktoring/PLAN_v1.38_claude_revalidated_research_orchestration.md`.
+
 ## 1. Purpose
 
 This roadmap sequences the remaining audit work into coherent releases. The
@@ -27,6 +34,8 @@ user authorized implementation of the v1.35 GPT-5.6 package on 2026-07-11
 and later explicitly authorized its commit, package, tag, push, and publication.
 On 2026-07-12 the user separately authorized the v1.36 pattern-registry
 implementation and its commit, package, signed tag, push, and publication.
+The user then authorized the v1.37 portable-verification/provenance commit,
+signed tag, push, and publication on 2026-07-12.
 Live model execution, dependency installation, and changes to local permissions
 remain outside those authorizations.
 
@@ -57,12 +66,12 @@ their release evidence lives in [CHANGELOG.md](../CHANGELOG.md).
   signed tags.
 - PM-15 and PM-16: repaired local links and narrower multi-agent hook context.
 
-The v1.35 working tree currently has this deterministic inventory:
+The released v1.36 tree currently has this deterministic inventory:
 
 - 76 unique golden scenarios.
 - 71 offline fixtures.
 - 10 source-contract suites.
-- Strict safe gate with 11 required checks.
+- Strict safe gate with 14 required checks.
 - No live Claude execution in normal CI.
 
 ## 3. Residual Finding Ledger
@@ -75,11 +84,11 @@ The v1.35 working tree currently has this deterministic inventory:
 | PM-11 Codex packaging | Closed in v1.34.0 | v1.34.0 |
 | GPT-5.6 surface/model routing | Closed and published | v1.35.0 |
 | PM-14 local permissions | Open, local-only: ignored settings pre-approve broad write/release/destructive commands | Immediate local action, no product version |
-| PM-17 historical artifact provenance | Partial: future artifacts are controlled, but the v1.29 ZIP is not reproducible from its tag | v1.37.0 documentation/provenance record |
-| R-01 Windows fake runner | Partial: POSIX and Windows deny shims are generated and source-tested; full Windows strict-gate parity is not yet attested | v1.37.0 |
+| PM-17 historical artifact provenance | Closed in v1.37.0: the published v1.29 ZIP contents match its tag, exact container reproducibility is `not_attested`, and the ignored local rebuild is non-authoritative | v1.37.0 documentation/provenance record |
+| R-01 Windows fake runner | Closed in v1.37.0: Windows and Ubuntu execute the same 16-check strict gate with an absolute Node fake, preload guards, and guard-only PATH sentinels | v1.37.0 |
 
-PM-13 remains closed for the released Linux path. Windows portability is tracked
-separately as R-01 and must not be represented as already verified.
+PM-13 remains closed, and v1.37 closes the separately tracked R-01 Windows
+portability gap through the shared remote strict-safe matrix.
 
 ## 4. Release Sequence
 
@@ -91,7 +100,7 @@ separately as R-01 and must not be represented as already verified.
 | 3 | v1.35.0 | GPT-5.6 Surface-Aware Prompting and Routing | GPT-5.6 facts; ChatGPT Work/Codex/API isolation; model/multi-agent UX | v1.34.0 surfaces frozen |
 | 4 | v1.36.0 | Pattern Registry and Diagnostic Sharding | stable PM IDs, nine routed shards, fail-closed validation, semantic cleanup | v1.35.0 runtime frozen |
 | 5 | v1.37.0 | Portable Verification and Historical Provenance | R-01, PM-17, residual release assurance | v1.36.0 runtime frozen |
-| 6 | v1.38.0, conditional | Behavioral Attestation | PM-05 | v1.37.0 harness plus explicit live-run authorization |
+| 6 | v1.38.0, conditional | Claude-Revalidated Research Portfolio Orchestration | PM-05 plus bounded research-orchestration behavior | published v1.37.0 harness plus explicit live-run authorization |
 
 No calendar date is assigned until the previous release satisfies its exit
 gate. Patch releases are reserved for regressions and are not pre-allocated.
@@ -152,8 +161,9 @@ Every release must satisfy all applicable gates:
 
 - tracked changes match the declared release scope;
 - unrelated untracked files are not staged by `git add -A`;
-- versions agree across every active manifest, SKILL frontmatter, README release
-  line, changelog heading, tag, and artifact name;
+- versions agree across both active plugin manifests, the README release line,
+  changelog heading, tag, and artifact name; `SKILL.md` separately passes its
+  exact `name`/`description` frontmatter-schema check;
 - `git diff --check` is clean;
 - required deterministic checks report
   `expected=executed=passed`, `failed=skipped=0`;
@@ -517,8 +527,9 @@ Worker A:
 
 Worker B:
 
-- `B34-01`: version checks cover Claude manifest, Codex manifest, SKILL,
-  changelog, tag, and artifacts.
+- `B34-01`: version checks cover Claude and Codex manifests, changelog, tag,
+  and artifacts; the canonical and locator `SKILL.md` files separately enforce
+  the exact `name`/`description` frontmatter schema.
 - `B34-02`: repo discovery, plugin skill, and Claude ZIP runtime hashes match.
 - `B34-03`: isolated layout tests detect broken links, plain-text symlink
   checkout, escaping paths, and duplicate copies.
@@ -583,15 +594,19 @@ PM-17 without rewriting historical tags or release assets.
 - Replace the POSIX-only fake executable with a Node-based fake launched through
   absolute `process.execPath` plus a test script argument.
 - Isolate `PATH` and prove every recorded invocation reaches only the fake.
-- Remove `/bin/sh`, `/bin/sleep`, executable-bit, and extensionless-command
-  assumptions from fake-runner tests.
+- Remove shell and `/bin/sleep` from the model-response fake itself. Keep both
+  minimal POSIX and Windows denial sentinels as the entire temporary PATH so a
+  regressed Node preload still cannot resolve an installed real CLI.
 - Add Windows and Ubuntu strict-safe CI jobs with the same required checks.
-- Add a tracked provenance record for v1.29 containing archive hash, entry
-  hashes, tag-tree comparison, and status `non-authoritative mixed artifact`.
-- State that the signed tag tree is canonical; do not silently replace the old
-  ZIP or rewrite history.
-- Validate all v1.33/v1.34 runtime files through the tracked package manifest,
-  not the obsolete six-file count.
+- Add a tracked provenance record for v1.29 containing the published archive
+  hash, entry hashes, tag-tree comparison, and exact signature status.
+- Record that all five published entries match the tag while exact ZIP
+  container reproducibility is `not_attested`; distinguish the published asset
+  from any ignored local rebuild.
+- State that the annotated tag is unsigned. Do not silently replace the old ZIP,
+  rewrite history, or claim signer identity that the historical tag cannot prove.
+- Validate the complete v1.33–v1.36/current runtime chain through the tracked
+  package manifest, not the obsolete six-file count.
 
 ### 9.3 Out of scope
 
@@ -608,7 +623,7 @@ PM-17 without rewriting historical tags or release assets.
 | Worker A - Fake core | `scripts/run-golden.js`, new Node fake helper | Cross-platform absolute fake invocation with unchanged production defaults |
 | Worker B - Safety/CI | fake/safe tests, source contracts, `.github/workflows/ci.yml` | Equivalent strict gates on Windows and Ubuntu |
 | Worker C - Provenance | provenance Markdown/JSON and its offline validator/tests | Verified v1.29 exception record without history mutation |
-| Coordinator | Runtime inventory check, version/changelog/release artifacts | Integrated v1.35.0 release |
+| Coordinator | Runtime inventory check, version/changelog/release artifacts | Integrated v1.37.0 release |
 
 ### 9.5 Agent acceptance
 
@@ -618,7 +633,8 @@ Worker A:
 - `A35-02`: production/default CLI resolution is unchanged.
 - `A35-03`: fake records argv and marker evidence without secrets.
 - `A35-04`: timeout/error/assertion classifications remain stable.
-- `A35-05`: no POSIX-only executable assumption remains in the fake path.
+- `A35-05`: the scenario fake is absolute Node-only; the safety fallback
+  supplies and tests both POSIX and Windows PATH sentinels.
 
 Worker B:
 
@@ -634,7 +650,8 @@ Worker C:
 
 - `C35-01`: provenance record identifies tag, archive hash, entry hashes, and
   mismatches precisely.
-- `C35-02`: record labels v1.29 non-authoritative/non-reproducible.
+- `C35-02`: record states that published entry bytes match the tag and labels
+  only exact container reproducibility `not_attested`.
 - `C35-03`: validator rejects malformed, incomplete, or self-contradictory
   records.
 - `C35-04`: a second reviewer reproduces the comparison.
@@ -642,9 +659,9 @@ Worker C:
 
 Coordinator:
 
-- `K35-01`: v1.33/v1.34 tags/assets and current runtime inventory are audited.
+- `K35-01`: v1.33–v1.36 tags/assets and current runtime inventory are audited.
 - `K35-02`: both CI platforms are green on the release commit.
-- `K35-03`: v1.35 package matches the tracked runtime manifest exactly.
+- `K35-03`: v1.37 package matches the tracked runtime manifest exactly.
 - `K35-04`: version/tag/artifact/signature checks pass.
 
 ### 9.6 Release acceptance
@@ -664,8 +681,8 @@ The main risk is changing the runner command contract while fixing the test
 adapter. Keep the production/default path unchanged and gate the fake prefix
 behind test-only configuration.
 
-Rollback: do not publish v1.35 until both OS jobs are green. If necessary,
-restore v1.34 runner code; keep the provenance record only if independently
+Rollback: do not publish v1.37 until both OS jobs are green. If necessary,
+restore v1.36 runner code; keep the provenance record only if independently
 verified and still accurate.
 
 ## 10. Historical package draft — Behavioral Attestation (now conditional v1.38.0)
@@ -780,21 +797,21 @@ candidate, and produce a new attestation under a new authorization.
 Live evaluation is nondeterministic and consumes quota. Keep the attestation
 outside normal CI and bind every result to one exact candidate.
 
-Rollback means no v1.36 publication. The offline schema/validator may be retained
+Rollback means no attested v1.38 publication. The offline schema/validator may be retained
 only under a differently scoped release that explicitly leaves PM-05 partial.
 
 ## 11. Cross-Release Task Ledger
 
-| Package | Release | Owner | Status at roadmap creation | Required result |
+| Package | Release | Owner | Current status | Required result |
 |---|---|---|---|---|
-| Registry and fact migration | v1.33 | Worker A | pending | One canonical volatile-facts source |
-| Profile sharding | v1.33 | Worker B | pending | One routed bundle per simple request |
-| Runtime and validation migration | v1.33 | Worker C | pending | No duplicated facts; fail-closed validators |
-| Codex entry points | v1.34 | Worker A | pending | Repo/plugin discovery with no copied runtime |
-| Codex tooling and parity | v1.34 | Workers B/C | pending | Cross-surface version/layout/hook evidence |
-| Cross-platform fake runner | v1.37 | Workers A/B | pending | Strict offline gate on Windows and Ubuntu |
-| Historical provenance | v1.37 | Worker C | pending | Reproducible v1.29 exception record |
-| Behavioral attestation | v1.38 | Workers A/B/C | blocked by explicit authorization | Complete dated attestation |
+| Registry and fact migration | v1.33 | Worker A | completed | One canonical volatile-facts source |
+| Profile sharding | v1.33 | Worker B | completed | One routed bundle per simple request |
+| Runtime and validation migration | v1.33 | Worker C | completed | No duplicated facts; fail-closed validators |
+| Codex entry points | v1.34 | Worker A | completed | Repo/plugin discovery with no copied runtime |
+| Codex tooling and parity | v1.34 | Workers B/C | completed | Cross-surface version/layout/hook evidence |
+| Cross-platform fake runner | v1.37 | Workers A/B | completed | Strict offline gate on Windows and Ubuntu |
+| Historical provenance | v1.37 | Worker C | completed | Machine-validated v1.29 source-parity/container-status record |
+| Research portfolio + behavioral attestation | v1.38 | Workers A/B/C | planned; live attestation blocked by explicit authorization | Bounded runtime improvement plus complete dated attestation |
 | Local permission narrowing | no release | Coordinator/user | pending | No broad pre-approved mutations |
 
 ## 12. Definition of Done for the Roadmap

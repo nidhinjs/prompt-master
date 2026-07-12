@@ -85,7 +85,7 @@ for (const [prompt, expected, why] of [
   ['prompt for a team of agents doing research', true, 'child positive smoke'],
   ['help me write a prompt for Midjourney', false, 'child negative smoke'],
 ]) {
-  const res = spawnSync('node', [HOOK], {
+  const res = spawnSync(process.execPath, [HOOK], {
     input: JSON.stringify({ prompt }),
     encoding: 'utf8',
     timeout: TIMEOUT_MS,

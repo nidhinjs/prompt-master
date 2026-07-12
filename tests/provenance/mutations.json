@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0.0",
+  "mutations": [
+    { "id": "missing-release", "op": "delete", "path": "release" },
+    { "id": "unknown-root-key", "op": "set", "path": "unexpected", "value": true },
+    { "id": "bad-asset-hash", "op": "set", "path": "published_asset.sha256", "value": "not-a-hash" },
+    {
+      "id": "coordinated-unrelated-repository",
+      "op": "sequence",
+      "changes": [
+        { "op": "set", "path": "repository", "value": "other/project" },
+        { "op": "set", "path": "published_asset.url", "value": "https://github.com/other/project/releases/download/v1.29.0/prompt-master-1.29.0.zip" }
+      ]
+    },
+    {
+      "id": "coordinated-wrong-release",
+      "op": "sequence",
+      "changes": [
+        { "op": "set", "path": "release", "value": "v1.28.0" },
+        { "op": "set", "path": "canonical_ref.tag_name", "value": "v1.28.0" },
+        { "op": "set", "path": "published_asset.name", "value": "prompt-master-1.28.0.zip" },
+        { "op": "set", "path": "published_asset.url", "value": "https://github.com/azagreev/prompt-master-za/releases/download/v1.28.0/prompt-master-1.28.0.zip" }
+      ]
+    },
+    { "id": "wrong-asset-name", "op": "set", "path": "published_asset.name", "value": "unrelated.zip" },
+    { "id": "wrong-asset-url", "op": "set", "path": "published_asset.url", "value": "https://github.com/azagreev/prompt-master-za/releases/download/v1.29.0/unrelated.zip" },
+    { "id": "wrong-asset-id", "op": "set", "path": "published_asset.api_asset_id", "value": 470714068 },
+    { "id": "zero-asset-size", "op": "set", "path": "published_asset.size_bytes", "value": 0 },
+    { "id": "valid-but-wrong-asset-size", "op": "set", "path": "published_asset.size_bytes", "value": 74529 },
+    { "id": "bad-published-at-shape", "op": "set", "path": "published_asset.published_at", "value": "2026-07-08 22:10:12Z" },
+    { "id": "impossible-published-at", "op": "set", "path": "published_asset.published_at", "value": "2026-02-30T22:10:12Z", "expected_error": "published_at is not a real ISO UTC date-time" },
+    { "id": "publication-after-verification", "op": "set", "path": "published_asset.published_at", "value": "2026-07-13T00:00:00Z", "expected_error": "verified_at must not precede published_at" },
+    { "id": "valid-but-wrong-published-at", "op": "set", "path": "published_asset.published_at", "value": "2026-07-08T22:10:13Z" },
+    { "id": "impossible-verified-at", "op": "set", "path": "content_verification.verified_at", "value": "2026-02-30", "expected_error": "verified_at is not a real calendar date" },
+    { "id": "valid-but-wrong-verified-at", "op": "set", "path": "content_verification.verified_at", "value": "2026-07-13" },
+    { "id": "wrong-digest-source", "op": "set", "path": "published_asset.digest_source", "value": "downloaded_asset" },
+    { "id": "wrong-entry-count", "op": "set", "path": "content_verification.entry_count", "value": 4 },
+    { "id": "duplicate-entry", "op": "copy", "path": "content_verification.files.0", "target": "content_verification.files.1" },
+    { "id": "swapped-entries", "op": "swap", "path": "content_verification.files.0", "target": "content_verification.files.1" },
+    { "id": "unsafe-entry-path", "op": "set", "path": "content_verification.files.0.path", "value": "../SKILL.md" },
+    {
+      "id": "coordinated-noncanonical-entry",
+      "op": "sequence",
+      "changes": [
+        { "op": "set", "path": "content_verification.files.0.path", "value": "README.md" },
+        { "op": "set", "path": "content_verification.files.0.tag_path", "value": "plugins/prompt-master/skills/prompt-master/README.md" }
+      ]
+    },
+    { "id": "wrong-tag-path", "op": "set", "path": "content_verification.files.0.tag_path", "value": "plugins/prompt-master/skills/prompt-master/references/SKILL.md" },
+    { "id": "wrong-tag-content-hash", "op": "set", "path": "content_verification.files.0.sha256", "value": "0000000000000000000000000000000000000000000000000000000000000000" },
+    { "id": "wrong-tag-blob-oid", "op": "set", "path": "content_verification.files.0.tag_blob_oid", "value": "0000000000000000000000000000000000000000" },
+    { "id": "wrong-tag-object-sha", "op": "set", "path": "canonical_ref.tag_object_sha", "value": "0000000000000000000000000000000000000000" },
+    { "id": "false-signature-claim", "op": "set", "path": "canonical_ref.tag_signature", "value": "signed_verified" },
+    { "id": "false-container-claim", "op": "set", "path": "container_reproducibility.status", "value": "reproducible" },
+    { "id": "empty-container-reason-codes", "op": "set", "path": "container_reproducibility.reason_codes", "value": [] },
+    {
+      "id": "unknown-container-reason-code",
+      "op": "set",
+      "path": "container_reproducibility.reason_codes.0",
+      "value": "free_text_claim"
+    },
+    {
+      "id": "reordered-container-reason-codes",
+      "op": "swap",
+      "path": "container_reproducibility.reason_codes.0",
+      "target": "container_reproducibility.reason_codes.1"
+    }
+  ]
+}

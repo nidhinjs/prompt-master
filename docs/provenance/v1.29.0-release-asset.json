@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0.0",
+  "release": "v1.29.0",
+  "repository": "azagreev/prompt-master-za",
+  "canonical_ref": {
+    "tag_name": "v1.29.0",
+    "tag_type": "annotated",
+    "tag_signature": "unsigned",
+    "tag_object_sha": "eb7ebeeb40b2e1983884d2b23ebacc1e58e9acb0",
+    "commit_sha": "283268be4097741b00aba7c2a191c0c22b0eb181",
+    "tree_sha": "a30efb215215f6cd5039bfaeb4eaedba3cbf5774"
+  },
+  "published_asset": {
+    "name": "prompt-master-1.29.0.zip",
+    "url": "https://github.com/azagreev/prompt-master-za/releases/download/v1.29.0/prompt-master-1.29.0.zip",
+    "api_asset_id": 470714067,
+    "published_at": "2026-07-08T22:10:12Z",
+    "size_bytes": 74528,
+    "sha256": "f3bcc8a77bda5273dc9ff348eb32939e161df003ed7f6e02ee850b5c0823427f",
+    "digest_source": "github_release_api"
+  },
+  "content_verification": {
+    "verified_at": "2026-07-12",
+    "status": "tag_content_match",
+    "entry_count": 5,
+    "files": [
+      {
+        "path": "SKILL.md",
+        "tag_path": "plugins/prompt-master/skills/prompt-master/SKILL.md",
+        "tag_blob_oid": "ee968c78c9d6a5cbb010451cf6d136eb33d6d093",
+        "sha256": "b2ef95e23553833feb9fbeed2ea17b5433c782fc3f1dfa6874367b0a99f1dfc1"
+      },
+      {
+        "path": "references/models.md",
+        "tag_path": "plugins/prompt-master/skills/prompt-master/references/models.md",
+        "tag_blob_oid": "24b05f76323532528c74bab18a74e98ac4302aaa",
+        "sha256": "a0bd108dfb5b495a904debcca5063798c26e01026c3b3e2fa76f8a2464f8821a"
+      },
+      {
+        "path": "references/patterns.md",
+        "tag_path": "plugins/prompt-master/skills/prompt-master/references/patterns.md",
+        "tag_blob_oid": "110f5a60ff263e5050eaf1bb9ddd3c94f89a61cf",
+        "sha256": "ba230cec3231663ade7acc9223ae0ba8340549a87fca5a0f7d40b486cf03d4f0"
+      },
+      {
+        "path": "references/templates.md",
+        "tag_path": "plugins/prompt-master/skills/prompt-master/references/templates.md",
+        "tag_blob_oid": "525e259fae35fb5aa62b628efcf4d22b4986293d",
+        "sha256": "7285851c5a7687883f547f6b505137780348d663c0b68aab7dad6080ea7f5e4b"
+      },
+      {
+        "path": "references/tool-profiles.md",
+        "tag_path": "plugins/prompt-master/skills/prompt-master/references/tool-profiles.md",
+        "tag_blob_oid": "20306776f82ae85f58a6eedbcef466a36b2a2540",
+        "sha256": "7be72bf59731981fe213372a27ff79c6e511f32951569126ba975e75727f14b2"
+      }
+    ]
+  },
+  "container_reproducibility": {
+    "status": "not_attested",
+    "reason_codes": [
+      "legacy_wildcard_packaging",
+      "checkout_filesystem_timestamps",
+      "checksum_sidecar_absent",
+      "normalized_container_build_record_absent"
+    ]
+  }
+}

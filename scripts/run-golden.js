@@ -43,10 +43,33 @@ function positiveInt(value, label) {
   return Number(value);
 }
 
+function resolveClaudeInvocation(env = process.env) {
+  const testScript = env.PROMPT_MASTER_TEST_CLAUDE_SCRIPT;
+  if (!testScript) {
+    const command = env.PROMPT_MASTER_CLAUDE_BIN || 'claude';
+    return { command, prefixArgs: [], label: command, testAdapter: false };
+  }
+  if (env.PROMPT_MASTER_CLAUDE_BIN) {
+    throw new Error('PROMPT_MASTER_TEST_CLAUDE_SCRIPT cannot be combined with PROMPT_MASTER_CLAUDE_BIN');
+  }
+  if (!path.isAbsolute(testScript)) {
+    throw new Error('PROMPT_MASTER_TEST_CLAUDE_SCRIPT must be an absolute path');
+  }
+  let stat;
+  try { stat = fs.statSync(testScript); }
+  catch (error) { throw new Error(`PROMPT_MASTER_TEST_CLAUDE_SCRIPT is unavailable: ${error.code || error.message}`); }
+  if (!stat.isFile()) throw new Error('PROMPT_MASTER_TEST_CLAUDE_SCRIPT must point to a file');
+  return {
+    command: process.execPath,
+    prefixArgs: [testScript],
+    label: `${process.execPath} ${testScript}`,
+    testAdapter: true,
+  };
+}
+
 const only = argValue('--only');
 const maxScenarios = positiveInt(argValue('--max-scenarios'), '--max-scenarios');
 const model = process.env.GOLDEN_MODEL || 'sonnet';
-const claudeBin = process.env.PROMPT_MASTER_CLAUDE_BIN || 'claude';
 const perScenarioTimeoutMs =
   positiveInt(process.env.PROMPT_MASTER_SCENARIO_TIMEOUT_MS, 'PROMPT_MASTER_SCENARIO_TIMEOUT_MS') || 300000;
 const suiteTimeoutMs =
@@ -106,21 +129,33 @@ if (maxLiveCalls && toRun.length > maxLiveCalls) {
   process.exit(2);
 }
 
-console.log(`Running ${toRun.length} live golden scenario(s), model=${model}, claude=${claudeBin}\n`);
+let claudeInvocation;
+try { claudeInvocation = resolveClaudeInvocation(); }
+catch (error) {
+  console.error(`Invalid Claude runner configuration: ${error.message}`);
+  process.exit(2);
+}
 
+console.log(
+  `Running ${toRun.length} ${claudeInvocation.testAdapter ? 'fake ' : 'live '}golden scenario(s), ` +
+  `model=${model}, claude=${claudeInvocation.label}\n`
+);
+
+let executed = 0;
+let passed = 0;
 let failed = 0;
 const suiteStarted = Date.now();
 for (const s of toRun) {
   if (Date.now() - suiteStarted > suiteTimeoutMs) {
-    console.log(`SUITE_TIMEOUT after ${Date.now() - suiteStarted}ms`);
-    failed++;
+    console.log(`SUITE_TIMEOUT after ${Date.now() - suiteStarted}ms; remaining=${toRun.length - executed}`);
     break;
   }
+  executed++;
   const started = Date.now();
   process.stdout.write(`— ${s.id} (${model}) … `);
   const res = spawnSync(
-    claudeBin,
-    ['-p', s.request, '--append-system-prompt', skill, '--model', model],
+    claudeInvocation.command,
+    [...claudeInvocation.prefixArgs, '-p', s.request, '--append-system-prompt', skill, '--model', model],
     { encoding: 'utf8', timeout: perScenarioTimeoutMs, maxBuffer: 10 * 1024 * 1024 }
   );
   const elapsed = Date.now() - started;
@@ -153,11 +188,11 @@ for (const s of toRun) {
         .join('\n')
     );
   } else {
+    passed++;
     console.log(`PASS (${elapsed}ms)`);
   }
 }
 
-console.log(
-  `\n${toRun.length - failed}/${toRun.length} passed${failed ? ` — ${failed} FAILED (разбирать вручную)` : ''}`
-);
-process.exit(failed ? 1 : 0);
+const notRun = toRun.length - executed;
+console.log(`\nSUMMARY planned=${toRun.length} executed=${executed} passed=${passed} failed=${failed} not_run=${notRun}`);
+process.exit(failed || notRun ? 1 : 0);
