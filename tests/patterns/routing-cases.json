@@ -1,0 +1,40 @@
+{
+  "evidence_class": "automated-offline-source-contract",
+  "live_behavior": false,
+  "cases": [
+    {
+      "id": "PARCH-E2E-01",
+      "name": "generic-diagnosis",
+      "primary_file": "prompt-design.md",
+      "router_must_include": "Generic prompt diagnosis starts with `prompt-design.md`; do not preload every shard."
+    },
+    {
+      "id": "PARCH-E2E-02",
+      "name": "live-citable-research",
+      "primary_file": "research-evidence.md",
+      "router_terms": ["retrieval", "citations"],
+      "pattern_ids": ["PM-044", "PM-045"]
+    },
+    {
+      "id": "PARCH-E2E-03",
+      "name": "agentic-code-task",
+      "primary_file": "agentic-execution.md",
+      "router_terms": ["file scope", "progress"],
+      "pattern_ids": ["PM-022", "PM-023"]
+    },
+    {
+      "id": "PARCH-E2E-04",
+      "name": "explicit-multi-agent",
+      "primary_file": "orchestration.md",
+      "router_terms": ["worker contracts", "granularity"],
+      "pattern_ids": ["PM-059", "PM-061"]
+    },
+    {
+      "id": "PARCH-E2E-05",
+      "name": "media-edit",
+      "primary_file": "media-generation.md",
+      "router_terms": ["media syntax", "delta edits"],
+      "pattern_ids": ["PM-050"]
+    }
+  ]
+}

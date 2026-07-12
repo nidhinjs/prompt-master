@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/azagreev/prompt-master-za/schema/pattern-index-1.0.0.json",
+  "title": "Prompt Master pattern index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "document_type",
+    "schema_version",
+    "patterns"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "./schema.json"
+    },
+    "document_type": {
+      "const": "pattern_index"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "patterns": {
+      "type": "array",
+      "minItems": 61,
+      "items": {
+        "$ref": "#/$defs/pattern"
+      }
+    }
+  },
+  "$defs": {
+    "pattern_id": {
+      "type": "string",
+      "pattern": "^PM-[0-9]{3}$"
+    },
+    "family": {
+      "type": "string",
+      "enum": [
+        "prompt-design",
+        "context-state",
+        "research-evidence",
+        "agentic-execution",
+        "orchestration",
+        "evaluation-review",
+        "safety-trust",
+        "routing-economics",
+        "media-generation"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "deprecated",
+        "merged",
+        "superseded"
+      ]
+    },
+    "canonical_owner": {
+      "type": "string",
+      "enum": [
+        "patterns",
+        "skill",
+        "agentic",
+        "templates",
+        "profiles",
+        "facts"
+      ]
+    },
+    "pattern": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "legacy_id",
+        "title",
+        "family",
+        "file",
+        "anchor",
+        "status",
+        "tags",
+        "canonical_owner",
+        "related"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/pattern_id"
+        },
+        "legacy_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 3
+        },
+        "family": {
+          "$ref": "#/$defs/family"
+        },
+        "file": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*\\.md$"
+        },
+        "anchor": {
+          "type": "string",
+          "pattern": "^pm-[0-9]{3}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "tags": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        },
+        "canonical_owner": {
+          "$ref": "#/$defs/canonical_owner"
+        },
+        "related": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/pattern_id"
+          }
+        },
+        "redirect_to": {
+          "$ref": "#/$defs/pattern_id"
+        }
+      }
+    }
+  }
+}

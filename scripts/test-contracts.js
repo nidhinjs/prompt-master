@@ -21,6 +21,7 @@ const factShards = factsIndex.shards.map((shard) => JSON.parse(read(
   shard.path
 )));
 const factRecords = factShards.flatMap((shard) => shard.records);
+const semanticContracts = JSON.parse(read('tests/patterns/semantic-contracts.json'));
 const sources = {
   skill: read('plugins/prompt-master/skills/prompt-master/SKILL.md'),
   agentic: read('plugins/prompt-master/skills/prompt-master/references/agentic.md'),
@@ -39,6 +40,11 @@ const sources = {
   lintJs: read('scripts/lint.js'),
   lintPs1: read('scripts/lint.ps1').replace(/^\uFEFF/, ''),
   safeTest: read('scripts/test-safe.js'),
+  patternsValidator: read('scripts/validate-patterns.js'),
+  registryValidator: read('scripts/validate-registry.js'),
+  patternsTest: read('scripts/test-patterns.js'),
+  patternRoutingTest: read('scripts/test-pattern-routing.js'),
+  patternPackageTest: read('scripts/test-pattern-package.js'),
 };
 
 function recordsFor(vendor) {
@@ -70,6 +76,12 @@ function markdownSection(text, heading, level = 2) {
   const nextMatch = tail.match(new RegExp(`^#{1,${level}}\\s+`, 'm'));
   const end = nextMatch ? start + startMatch[0].length + nextMatch.index : text.length;
   return text.slice(start, end);
+}
+
+function patternSection(text, id) {
+  const match = text.match(new RegExp(`^##\\s+${escapeRegex(id)}\\b[\\s\\S]*?(?=^##\\s+PM-[0-9]{3}\\b|(?![\\s\\S]))`, 'm'));
+  assert(match, `missing pattern section ${id}`);
+  return match[0];
 }
 
 function between(text, startPattern, endPattern, label) {
@@ -502,7 +514,7 @@ const cases = [
     const manifest = JSON.parse(sources.runtimeManifest);
     assert(manifest.schema_version === '1.0.0', 'runtime manifest schema_version mismatch');
     assert(manifest.root === 'plugins/prompt-master/skills/prompt-master', 'runtime manifest root mismatch');
-    assert(manifest.files.length === 33, `runtime manifest must contain exactly 33 frozen files, got ${manifest.files.length}`);
+    assert(manifest.files.length === 44, `runtime manifest must contain exactly 44 frozen files, got ${manifest.files.length}`);
     assert(JSON.stringify([...manifest.files].sort()) === JSON.stringify(manifest.files), 'runtime manifest files must be sorted');
     assert(new Set(manifest.files).size === manifest.files.length, 'runtime manifest files must be unique');
     const runtimeRoot = path.join(repoRoot, manifest.root);
@@ -550,14 +562,39 @@ const cases = [
 
     requireMatch(sources.lintJs, /require\('\.\/validate-registry'\)/, 'JS lint must use the canonical registry validator');
     requireMatch(sources.lintJs, /require\('\.\/validate-runtime-inventory'\)/, 'JS lint must use the canonical runtime inventory validator');
+    requireMatch(sources.lintJs, /require\('\.\/validate-patterns'\)/, 'JS lint must use the canonical pattern validator');
     requireMatch(sources.lintJs, /validateRegistry\(\)/, 'JS lint must execute registry validation');
+    requireMatch(sources.lintJs, /validatePatterns\(\)/, 'JS lint must execute pattern validation');
     requireMatch(sources.lintPs1, /Join-Path \$PSScriptRoot 'lint\.js'/, 'PowerShell lint must resolve canonical JS lint');
     requireMatch(sources.lintPs1, /& node \$lintJs/, 'PowerShell lint must delegate to the identical JS lint');
     requireMatch(sources.lintPs1, /exit \$code/, 'PowerShell lint must preserve the canonical lint exit result');
     requireMatch(sources.safeTest, /args:\s*\['scripts\/test-registry\.js'\]/, 'strict safe gate must include registry mutation tests');
+    requireMatch(sources.safeTest, /args:\s*\['scripts\/test-patterns\.js'\]/, 'strict safe gate must include pattern mutation tests');
+    requireMatch(sources.safeTest, /args:\s*\['scripts\/test-pattern-routing\.js'\]/, 'strict safe gate must include pattern routing tests');
+    requireMatch(sources.safeTest, /args:\s*\['scripts\/test-pattern-package\.js'\]/, 'strict safe gate must include pattern package tests');
     requireMatch(sources.safeTest, /args:\s*\['scripts\/test-runtime-inventory\.js'\]/, 'strict safe gate must include runtime inventory mutation tests');
     requireMatch(sources.safeTest, /args:\s*\['scripts\/test-codex-layout\.js'\]/, 'strict safe gate must include Codex layout tests');
     requireMatch(sources.safeTest, /args:\s*\['scripts\/test-codex-hook\.js'\]/, 'strict safe gate must include Codex hook tests');
+    requireMatch(sources.patternsValidator, /tombstone status[\s\S]{0,80}requires redirect_to/, 'pattern validator must fail closed on tombstones without redirects');
+    requireMatch(sources.patternsValidator, /expected exactly one Markdown section/, 'pattern validator must enforce index-to-anchor traceability');
+    requireMatch(sources.patternsTest, /duplicate-id[\s\S]{0,160}duplicate-legacy-id|duplicateId[\s\S]{0,160}duplicateLegacyId/, 'pattern tests must mutate duplicate canonical and legacy IDs');
+    requireMatch(sources.patternRoutingTest, /everyLegacyIdResolvesAndLoads/, 'pattern routing test must resolve and load every legacy ID');
+    requireMatch(sources.patternPackageTest, /stagedBytesMatchSources/, 'pattern package test must compare staged and source bytes');
+    requireMatch(sources.registryValidator, /explicitAnchors[\s\S]{0,240}<a\\s\+\(\?:id\|name\)/, 'Markdown link validation must recognize explicit id/name anchors');
+    requireMatch(sources.registryValidator, /patternsDir[\s\S]{0,240}filter\(\(item\) => item\.endsWith\('\.md'\)\)/, 'Markdown link inventory must include pattern shards');
+    assert(semanticContracts.evidence_class === 'recorded-source-contract', 'semantic contracts must be labeled recorded-source-contract');
+    assert(semanticContracts.live_behavior === false, 'semantic contracts must not claim live behavior');
+    assert(/not live model behavior or behavioral attestation/i.test(semanticContracts.notice), 'semantic contracts must disclose the behavioral boundary');
+    for (const contract of semanticContracts.contracts) {
+      assert(/^PARCH-E2E-0[2-5]-RECORDED$/.test(contract.id), `invalid recorded semantic contract ID ${contract.id}`);
+      const body = patternSection(read(contract.file), contract.pattern_id);
+      for (const fragment of contract.must_include || []) {
+        assert(body.includes(fragment), `${contract.id}: missing recorded source fragment '${fragment}'`);
+      }
+      for (const fragment of contract.must_not_include || []) {
+        assert(!body.includes(fragment), `${contract.id}: forbidden recorded source fragment '${fragment}'`);
+      }
+    }
   },
 ];
 

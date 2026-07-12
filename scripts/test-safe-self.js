@@ -2,11 +2,17 @@
 // Dependency-free unit tests for the fail-closed safe-test coordinator.
 // Child-process outcomes are injected; this file never starts nested processes.
 
+const fs = require('fs');
+const path = require('path');
+
 const {
   LIVE_ENV_KEYS,
+  REPO_ROOT,
+  createClaudeDenyShim,
   exitCodeFor,
   formatSummary,
   isPassingSummary,
+  removeClaudeDenyShim,
   runChecks,
   safeEnv,
 } = require('./test-safe');
@@ -26,7 +32,7 @@ function checks(count) {
   }));
 }
 
-function runWith(results) {
+function runWith(results, options = {}) {
   let index = 0;
   return runChecks(checks(results.length), {
     spawnSync() {
@@ -36,7 +42,8 @@ function runWith(results) {
     },
     stdout: sink(),
     stderr: sink(),
-    env: safeEnv({}),
+    env: options.env || safeEnv({}),
+    claudeDenyShim: options.claudeDenyShim,
   });
 }
 
@@ -51,6 +58,59 @@ const cases = [
     assert(env.NO_LIVE_MODEL_CALLS === '1', 'safeEnv must force NO_LIVE_MODEL_CALLS=1');
     for (const key of LIVE_ENV_KEYS) {
       assert(!(key in env), `safeEnv must remove ${key}`);
+    }
+  },
+
+  function childrenRunFromRepositoryRoot() {
+    let observedCwd;
+    const summary = runChecks(checks(1), {
+      spawnSync(command, args, options) {
+        observedCwd = options.cwd;
+        return pass;
+      },
+      stdout: sink(),
+      stderr: sink(),
+      env: safeEnv({}),
+    });
+    assert(isPassingSummary(summary), 'cwd probe must otherwise pass');
+    assert(path.resolve(observedCwd) === path.resolve(REPO_ROOT), `child cwd must be repo root, got ${observedCwd}`);
+  },
+
+  function claudeDenyShimIsCrossPlatformAndPrepended() {
+    const shim = createClaudeDenyShim();
+    try {
+      const env = safeEnv({ PATH: 'existing-path' }, shim);
+      assert(fs.existsSync(shim.posixFile), 'POSIX claude deny shim missing');
+      assert(fs.existsSync(shim.windowsFile), 'Windows claude.cmd deny shim missing');
+      assert(!fs.existsSync(shim.markerFile), 'deny marker must not exist before execution');
+      assert(env.PATH.startsWith(`${shim.dir}${path.delimiter}`), 'deny shim directory must be first on PATH');
+      assert(env.PROMPT_MASTER_CLAUDE_DENY_MARKER === shim.markerFile, 'deny marker env mismatch');
+    } finally {
+      removeClaudeDenyShim(shim);
+    }
+  },
+
+  function claudeDenyMarkerFailsClosed() {
+    const shim = createClaudeDenyShim();
+    try {
+      const summary = runChecks(checks(2), {
+        spawnSync() {
+          fs.writeFileSync(shim.markerFile, 'blocked\n');
+          return pass;
+        },
+        stdout: sink(),
+        stderr: sink(),
+        env: safeEnv({}, shim),
+        claudeDenyShim: shim,
+      });
+      assert(!isPassingSummary(summary), 'Claude deny marker must fail the gate');
+      assert(exitCodeFor(summary) !== 0, 'Claude deny marker must return non-zero');
+      assert(
+        formatSummary(summary) === 'expected=2 executed=1 passed=0 failed=1 skipped=0',
+        `unexpected Claude-marker summary: ${formatSummary(summary)}`
+      );
+    } finally {
+      removeClaudeDenyShim(shim);
     }
   },
 

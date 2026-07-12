@@ -1,6 +1,6 @@
 # Release Roadmap: v1.33.0 and Later
 
-Status: active plan; v1.33.0, v1.34.0, and v1.35.0 completed; v1.36 next
+Status: active plan; v1.33.0–v1.35.0 completed; v1.36.0 pattern-registry release candidate
 Baseline: released `v1.34.0`, commit `bad3c1f34e810a7371b33bd2b88e751f32902ec9`
 Prepared: 2026-07-10; revised 2026-07-11
 Primary input: [AUDIT_REPORT_2026-07-10.md](../AUDIT_REPORT_2026-07-10.md)
@@ -13,13 +13,22 @@ Primary input: [AUDIT_REPORT_2026-07-10.md](../AUDIT_REPORT_2026-07-10.md)
 > below retain their original numbers for traceability and do not override this
 > amendment.
 
+> **Superseding amendment (2026-07-12):** publishing the pattern-registry work
+> directly as v1.38.0 would create an unnecessary SemVer gap after v1.35.0.
+> The user therefore assigned Pattern Registry and Diagnostic Sharding to
+> v1.36.0. Portable Verification and Historical Provenance moves to v1.37.0;
+> Behavioral Attestation moves to conditional v1.38.0. Older package headings
+> and acceptance IDs below are retained only for historical traceability.
+
 ## 1. Purpose
 
 This roadmap sequences the remaining audit work into coherent releases. The
 user authorized implementation of the v1.35 GPT-5.6 package on 2026-07-11
 and later explicitly authorized its commit, package, tag, push, and publication.
+On 2026-07-12 the user separately authorized the v1.36 pattern-registry
+implementation and its commit, package, signed tag, push, and publication.
 Live model execution, dependency installation, and changes to local permissions
-remain outside that authorization.
+remain outside those authorizations.
 
 The order is intentional:
 
@@ -60,14 +69,14 @@ The v1.35 working tree currently has this deterministic inventory:
 
 | Finding | Current state | Planned closure |
 |---|---|---|
-| PM-05 behavioral coverage | Partial: contracts and recorded fixtures run, but the model does not execute all scenarios and no dated attestation exists | Conditional v1.36.0 |
+| PM-05 behavioral coverage | Partial: contracts and recorded fixtures run, but the model does not execute all scenarios and no dated attestation exists | Conditional v1.38.0 |
 | PM-09 sources of truth/progressive disclosure | Closed in v1.33.0 | v1.33.0 |
 | PM-10 production/preview distinction | Closed in v1.33.0 | v1.33.0 |
 | PM-11 Codex packaging | Closed in v1.34.0 | v1.34.0 |
-| GPT-5.6 surface/model routing | In progress: runtime and deterministic coverage implemented; release gates/publishing remain | v1.35.0 |
+| GPT-5.6 surface/model routing | Closed and published | v1.35.0 |
 | PM-14 local permissions | Open, local-only: ignored settings pre-approve broad write/release/destructive commands | Immediate local action, no product version |
-| PM-17 historical artifact provenance | Partial: future artifacts are controlled, but the v1.29 ZIP is not reproducible from its tag | v1.36.0 documentation/provenance record |
-| R-01 Windows fake runner | Open: current fake launcher is POSIX-specific and CI is Ubuntu-only | v1.36.0 |
+| PM-17 historical artifact provenance | Partial: future artifacts are controlled, but the v1.29 ZIP is not reproducible from its tag | v1.37.0 documentation/provenance record |
+| R-01 Windows fake runner | Partial: POSIX and Windows deny shims are generated and source-tested; full Windows strict-gate parity is not yet attested | v1.37.0 |
 
 PM-13 remains closed for the released Linux path. Windows portability is tracked
 separately as R-01 and must not be represented as already verified.
@@ -80,8 +89,9 @@ separately as R-01 and must not be represented as already verified.
 | 1 | v1.33.0 | Canonical Facts Registry and Profile Sharding | PM-09, PM-10 | v1.32.0 |
 | 2 | v1.34.0 | Codex Native Discovery and Distribution | PM-11 | v1.33.0 runtime layout frozen |
 | 3 | v1.35.0 | GPT-5.6 Surface-Aware Prompting and Routing | GPT-5.6 facts; ChatGPT Work/Codex/API isolation; model/multi-agent UX | v1.34.0 surfaces frozen |
-| 4 | v1.36.0 | Portable Verification and Historical Provenance | R-01, PM-17, residual release assurance | v1.35.0 runtime frozen |
-| 5 | v1.37.0, conditional | Behavioral Attestation | PM-05 | v1.36.0 harness plus explicit live-run authorization |
+| 4 | v1.36.0 | Pattern Registry and Diagnostic Sharding | stable PM IDs, nine routed shards, fail-closed validation, semantic cleanup | v1.35.0 runtime frozen |
+| 5 | v1.37.0 | Portable Verification and Historical Provenance | R-01, PM-17, residual release assurance | v1.36.0 runtime frozen |
+| 6 | v1.38.0, conditional | Behavioral Attestation | PM-05 | v1.37.0 harness plus explicit live-run authorization |
 
 No calendar date is assigned until the previous release satisfies its exit
 gate. Patch releases are reserved for regressions and are not pre-allocated.
@@ -561,7 +571,7 @@ Codex schemas, marketplace compatibility, and untrusted hook state.
 Rollback: remove Codex entry points and return to v1.33.0. Claude manifests,
 runtime, and Claude skill ZIP remain independently usable.
 
-## 9. v1.35.0 - Portable Verification and Historical Provenance
+## 9. Historical package draft — Portable Verification (now v1.37.0)
 
 ### 9.1 Goal
 
@@ -658,7 +668,7 @@ Rollback: do not publish v1.35 until both OS jobs are green. If necessary,
 restore v1.34 runner code; keep the provenance record only if independently
 verified and still accurate.
 
-## 10. v1.36.0 - Behavioral Attestation (Conditional)
+## 10. Historical package draft — Behavioral Attestation (now conditional v1.38.0)
 
 ### 10.1 Authorization gate
 
@@ -782,16 +792,16 @@ only under a differently scoped release that explicitly leaves PM-05 partial.
 | Runtime and validation migration | v1.33 | Worker C | pending | No duplicated facts; fail-closed validators |
 | Codex entry points | v1.34 | Worker A | pending | Repo/plugin discovery with no copied runtime |
 | Codex tooling and parity | v1.34 | Workers B/C | pending | Cross-surface version/layout/hook evidence |
-| Cross-platform fake runner | v1.35 | Workers A/B | pending | Strict offline gate on Windows and Ubuntu |
-| Historical provenance | v1.35 | Worker C | pending | Reproducible v1.29 exception record |
-| Behavioral attestation | v1.36 | Workers A/B/C | blocked by explicit authorization | Complete dated attestation |
+| Cross-platform fake runner | v1.37 | Workers A/B | pending | Strict offline gate on Windows and Ubuntu |
+| Historical provenance | v1.37 | Worker C | pending | Reproducible v1.29 exception record |
+| Behavioral attestation | v1.38 | Workers A/B/C | blocked by explicit authorization | Complete dated attestation |
 | Local permission narrowing | no release | Coordinator/user | pending | No broad pre-approved mutations |
 
 ## 12. Definition of Done for the Roadmap
 
 The roadmap is complete when:
 
-- v1.33 through v1.35 have signed tags, deterministic artifacts, checksum
+- v1.33 through v1.37 have signed tags, deterministic artifacts, checksum
   sidecars, and all release-level criteria;
 - v1.34 provides verified Codex repository and plugin modes without a copied
   runtime source;
@@ -799,7 +809,7 @@ The roadmap is complete when:
 - PM-14 local permissions are narrowed without being misrepresented as a
   shipped feature;
 - PM-17 is documented without rewriting history;
-- PM-05 is marked closed only after an authorized, complete v1.36 attestation;
+- PM-05 is marked closed only after an authorized, complete v1.38 attestation;
 - all deferred/unknown items are explicitly retained rather than silently
   defaulted.
 

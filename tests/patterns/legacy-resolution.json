@@ -1,0 +1,13 @@
+{
+  "evidence_class": "automated-offline",
+  "mapping_contract": {
+    "legacy_start": 1,
+    "legacy_end": 61,
+    "id_prefix": "PM-",
+    "id_width": 3
+  },
+  "required_lookups": [
+    { "legacy_id": 52, "id": "PM-052", "status": "active" },
+    { "legacy_id": 36, "id": "PM-036", "status": "merged", "redirect_to": "PM-001" }
+  ]
+}

@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.36.0] - 2026-07-12
+
+Pattern Registry and Diagnostic Sharding release: Prompt Master now resolves
+61 stable diagnostic IDs through a machine-readable registry and loads only the
+one or two failure-family shards needed for the current prompt.
+
+### Added
+- **Versioned pattern registry:** JSON Schema and an indexed compatibility map
+  preserve 60 active patterns plus the merged `PM-036` tombstone across nine
+  bounded, provider-neutral Markdown shards.
+- **Fail-closed validation:** dependency-free validation covers IDs, legacy
+  mappings, families, owners, redirects, paths, anchors, section contracts,
+  router counts, shard budgets, and runtime-package inventory.
+- **Adversarial offline coverage:** 47 registry mutations, recorded routing
+  contracts, legacy resolution, semantic source contracts, and package parity
+  checks run inside the strict safe gate.
+- **Runner deny shim:** the safe coordinator prepends isolated POSIX and Windows
+  Claude deny launchers, fixes child working directories to the repository, and
+  fails if an invocation marker appears.
+
+### Changed
+- `references/patterns.md` is now a short compatibility router. Generic
+  diagnosis loads `prompt-design.md`; an explicitly composite diagnosis may
+  load one additional shard, never the whole catalog.
+- Research guidance separates pre-execution evidence contracts from post-output
+  claim audits and uses traceability, authority, quality, conflict, freshness,
+  and explicit inference instead of model self-confidence.
+- Retry, deviation, approval, sensitive-data, prototype/blindspot, premise
+  verification, delegation, review, cost, and context-health rules now have one
+  canonical owner and consistent exceptions across SKILL, profiles, templates,
+  and patterns.
+- Public metadata is pattern-count-free; README and installation documentation
+  expose the exact stable/active/tombstone contract and routed shard layout.
+
+### Security
+- Autonomous deviations remain reversible, in scope, and below authority,
+  cost, risk, policy/security, and external-impact thresholds; models and
+  workers cannot self-approve boundary expansion.
+- Artifact transfer minimizes context and redacts secrets, credentials, PII,
+  customer/production data, confidential business content, and unrelated
+  sensitive fields before prompts, logs, memory, review, or worker packets.
+- Release verification remains deterministic and offline. No real Claude,
+  Codex, OpenAI, or other model runner is part of the release gate.
+
 ## [1.35.0] - 2026-07-11
 
 GPT-5.6 surface-aware prompt and routing release: Prompt Master now resolves
@@ -680,6 +724,7 @@ Progressive disclosure (идея из апстрим-PR [nidhinjs#13](https://gi
 
 <!-- Версии 1.0.0–1.7.0 предшествуют форк-релизу в маркетплейс и в этом репозитории не тегированы. Footer-ссылки добавляются начиная с 1.8.0. -->
 
+[1.36.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.36.0
 [1.35.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.35.0
 [1.34.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.34.0
 [1.33.0]: https://github.com/azagreev/prompt-master-za/releases/tag/v1.33.0

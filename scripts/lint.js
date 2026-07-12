@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { validateRegistry } = require('./validate-registry');
 const { validateRuntimeInventory } = require('./validate-runtime-inventory');
+const { validatePatterns } = require('./validate-patterns');
 
 const repoRoot = path.join(__dirname, '..');
 const p = (...parts) => path.join(repoRoot, ...parts);
@@ -33,6 +34,7 @@ const errors = [];
 const warnings = [];
 const SKILL_BODY_BUDGET = 250;
 const profileDir = p('plugins/prompt-master/skills/prompt-master/references/profiles');
+const patternDir = p('plugins/prompt-master/skills/prompt-master/references/patterns');
 
 function rel(abs) {
   return path.relative(repoRoot, abs).replace(/\\/g, '/');
@@ -111,6 +113,13 @@ if (!fs.existsSync(profileDir)) {
   }
 }
 const profileText = Object.entries(profileTexts).map(([name, text]) => `\n<!-- ${name} -->\n${text}`).join('\n');
+const patternTexts = {};
+if (fs.existsSync(patternDir)) {
+  for (const name of fs.readdirSync(patternDir).filter((entry) => entry.endsWith('.md')).sort()) {
+    patternTexts[name] = read(path.join(patternDir, name));
+  }
+}
+const patternText = Object.entries(patternTexts).map(([name, text]) => `\n<!-- ${name} -->\n${text}`).join('\n');
 
 function registryDocuments() {
   const factsDir = p('plugins/prompt-master/skills/prompt-master/references/facts');
@@ -184,26 +193,28 @@ if (JSON.stringify(frontmatterFields) !== JSON.stringify(['description', 'name']
   errors.push(`SKILL.md Codex frontmatter fields must be exactly name and description, got ${frontmatterFields.join(', ') || '(none)'}`);
 }
 
-log('pattern count consistency');
-const patCount = patText.match(/^(\d+)\s+patterns/m)?.[1];
+log('pattern registry and count consistency');
+const patternResult = validatePatterns();
+for (const error of patternResult.errors) errors.push(`patterns: ${error}`);
+const patCount = patternResult.index ? String(patternResult.counts.entries) : null;
 if (!patCount) {
-  errors.push("Cannot read pattern count from patterns.md header");
+  errors.push('Cannot read pattern count from patterns/index.json');
 } else {
-  console.log(`  pattern count from patterns.md = ${patCount}`);
-  for (const [name, text] of [
-    ['SKILL.md', skillText],
-    ['plugin.json', pluginText],
-    ['marketplace.json', marketText],
-    ['README.md', readmeText],
-  ]) {
-    if (!text.includes(patCount)) errors.push(`Pattern count ${patCount} not found in ${name}`);
+  console.log(`  patterns = ${patCount} indexed, ${patternResult.counts.active} active, ${patternResult.counts.tombstones} tombstone(s)`);
+  const activeCount = patternResult.counts.active;
+  if (!new RegExp(`preserves ${patCount} stable IDs?: ${activeCount} active patterns`, 'i').test(readmeText)) {
+    errors.push(`README.md must state the exact pattern contract: ${patCount} stable IDs and ${activeCount} active patterns`);
   }
-  for (const [name, text] of [
-    ['README.ru.md', readmeRuText],
-    ['docs/installation.md', installText],
-  ]) {
-    const m = text.match(/(\d+)\s+паттерн/);
-    if (m && m[1] !== patCount) errors.push(`Pattern count drift in ${name}: says ${m[1]} instead of ${patCount}`);
+  if (!new RegExp(`сохраняет ${patCount} стабильн[^\\s]* ID: ${activeCount} активн`, 'i').test(readmeRuText)) {
+    errors.push(`README.ru.md must state the exact pattern contract: ${patCount} stable IDs and ${activeCount} active patterns`);
+  }
+  if (!new RegExp(`${patCount} стабильн[^\\s]* ID \\(${activeCount} active \\+ PM-036 tombstone\\)`, 'i').test(installText)) {
+    errors.push(`docs/installation.md must state the exact pattern contract: ${patCount} stable IDs and ${activeCount} active patterns`);
+  }
+  for (const [name, text] of [['plugin.json', pluginText], ['marketplace.json', marketText]]) {
+    if (/\b\d+\s+(?:patterns?|паттерн(?:а|ов)?)\b/i.test(text)) {
+      errors.push(`${name}: plugin metadata must remain pattern-count-free; the index owns counts`);
+    }
   }
 }
 
@@ -277,6 +288,7 @@ const skillFiles = {
   'tool-profiles.md': profText,
   'templates.md': tplText,
   'patterns.md': patText,
+  ...Object.fromEntries(Object.entries(patternTexts).map(([name, text]) => [`patterns/${name}`, text])),
   ...Object.fromEntries(Object.entries(profileTexts).map(([name, text]) => [`profiles/${name}`, text])),
 };
 const definedTemplates = matches(tplText, /^##\s+Template\s+([A-Z])\b/gm);
@@ -285,16 +297,18 @@ for (const [name, text] of Object.entries(skillFiles)) {
     if (!definedTemplates.includes(ref)) errors.push(`${name} references 'Template ${ref}' but templates.md has no such section`);
   }
 }
-const outsideRefs = getTemplateRefs([skillText, profText, profileText, patText].join('\n'));
+const outsideRefs = getTemplateRefs([skillText, profText, profileText, patText, patternText].join('\n'));
 for (const template of definedTemplates) {
   if (template >= 'G' && !outsideRefs.includes(template)) {
     warnings.push(`templates.md 'Template ${template}' is never referenced from SKILL.md / tool-profiles.md / patterns.md`);
   }
 }
-const definedPatterns = matches(patText, /^\|\s*(\d+)\s*\|/gm);
+const definedPatterns = (patternResult.index?.patterns || [])
+  .filter((record) => Number.isInteger(record.legacy_id))
+  .map((record) => String(record.legacy_id));
 for (const [name, text] of Object.entries(skillFiles)) {
   for (const ref of unique(matches(text, /pattern\s+#(\d+)/g))) {
-    if (!definedPatterns.includes(ref)) errors.push(`${name} references 'pattern #${ref}' but patterns.md has no row | ${ref} |`);
+    if (!definedPatterns.includes(ref)) errors.push(`${name} references 'pattern #${ref}' but patterns/index.json has no legacy mapping`);
   }
 }
 
@@ -315,6 +329,7 @@ const evergreenConsumers = {
   'SKILL.md': skillText,
   'templates.md': tplText,
   'patterns.md': patText,
+  ...Object.fromEntries(Object.entries(patternTexts).map(([name, text]) => [`patterns/${name}`, text])),
   ...Object.fromEntries(Object.entries(profileTexts).map(([name, text]) => [`profiles/${name}`, text])),
 };
 for (const record of registry.records) {
@@ -323,7 +338,12 @@ for (const record of registry.records) {
     if (text.includes(record.model_id)) errors.push(`${name}: registry model_id '${record.model_id}' duplicated outside facts/**`);
   }
 }
-for (const [name, text] of Object.entries({ 'SKILL.md': skillText, 'templates.md': tplText, 'patterns.md': patText })) {
+for (const [name, text] of Object.entries({
+  'SKILL.md': skillText,
+  'templates.md': tplText,
+  'patterns.md': patText,
+  ...Object.fromEntries(Object.entries(patternTexts).map(([name, text]) => [`patterns/${name}`, text])),
+})) {
   if (/Canonical no-CoT list/i.test(text)) errors.push(`${name}: enumerated no-CoT membership is forbidden; use prompting_constraints.no_cot`);
 }
 for (const [label, rx] of [
@@ -437,6 +457,7 @@ const runtimeFiles = {
   'SKILL.md': skillText,
   'templates.md': tplText,
   'patterns.md': patText,
+  ...Object.fromEntries(Object.entries(patternTexts).map(([name, text]) => [`patterns/${name}`, text])),
   'tool-profiles.md': profText,
   'agentic.md': agenticText,
   ...Object.fromEntries(Object.entries(profileTexts).map(([name, text]) => [`profiles/${name}`, text])),
@@ -464,9 +485,9 @@ if (!candidateFragment) {
     if (rx.test(candidateFragment)) errors.push(`templates.md Candidate / Variant Set Fragment contains forbidden field/pattern: ${rx}`);
   }
 }
-const pattern56 = patText.match(/^\| 56 \|.*$/m)?.[0] || '';
+const pattern56 = patternText.match(/^##\s+PM-056\b[\s\S]*?(?=^##\s+PM-|(?![\s\S]))/m)?.[0] || '';
 if (!/fit/i.test(pattern56) || !/risk \/ tradeoff/i.test(pattern56)) {
-  errors.push('patterns.md pattern #56 must include fit and risk / tradeoff labels');
+  errors.push('PM-056 must include fit and risk / tradeoff labels');
 }
 for (const [name, rx] of [
   ['explicit opt-in variants', /explicitly asks for variants\/alternatives\/options\/directions\/multiple prompts/i],
@@ -631,6 +652,11 @@ if (!/args:\s*\['scripts\/test-contracts\.js'\]/.test(safeTestText)) {
 }
 if (!/args:\s*\['scripts\/test-registry\.js'\]/.test(safeTestText)) {
   errors.push('scripts/test-safe.js must include scripts/test-registry.js in DEFAULT_CHECKS');
+}
+for (const script of ['test-patterns', 'test-pattern-routing', 'test-pattern-package']) {
+  if (!new RegExp(`args:\\s*\\['scripts\\/${script}\\.js'\\]`).test(safeTestText)) {
+    errors.push(`scripts/test-safe.js must include scripts/${script}.js in DEFAULT_CHECKS`);
+  }
 }
 if (!/args:\s*\['scripts\/test-runtime-inventory\.js'\]/.test(safeTestText)) {
   errors.push('scripts/test-safe.js must include scripts/test-runtime-inventory.js in DEFAULT_CHECKS');

@@ -17,12 +17,15 @@
    (все три вхождения ловит линт).
 5. **`references/templates.md`** — тело шаблона И строка в Table of Contents (ToC линтуется);
    Template E повторяет no-CoT список — синхронизируй с каноном (линт проверяет).
-6. **`references/patterns.md`** — паттерны #38/#48/#49/#51 содержат примеры с датами и
-   модель-специфику; проверь упоминания.
-7. **`README.md` + `README.ru.md`** — заявленный список туллов/фич, счётчик паттернов.
-8. **`docs/installation.md`** — счётчик паттернов в секции «Дальше» (линтуется).
+6. **`references/patterns/index.json` и соответствующие shards** — PM-038/048/049/051
+   остаются provider-neutral и ссылаются на facts/profiles; model IDs, даты,
+   lifecycle-статусы и значения параметров не копируются в normative repairs.
+7. **`README.md` + `README.ru.md`** — заявленный список туллов/фич и точные
+   stable/active/tombstone counts pattern registry.
+8. **`docs/installation.md`** — router/index/shard layout и runtime inventory.
 9. **`docs/sources.md`** — добавь источник факта; research-файлы кладём в `docs/` и коммитим.
-10. **`plugin.json` / `marketplace.json`** — описания упоминают модели и счётчик паттернов.
+10. **`plugin.json` / `marketplace.json`** — descriptions остаются count-free и
+    не дублируют volatile model facts.
 
 ## После правок — безопасная проверка
 

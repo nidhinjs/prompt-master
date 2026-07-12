@@ -155,11 +155,11 @@ I want to ask Claude Code to build a todo app with React and Supabase
 
 Prompt Master runs a structured pipeline on every request:
 
-1. **Detects the target tool** — figures out which AI system the prompt is for and routes silently.
-2. **Extracts 9 dimensions of intent** — task, target tool, output format, constraints, input, context, audience, success criteria, examples.
+1. **Detects the target surface** — identifies the receiving product/interface before selecting its profile, model, or mode.
+2. **Extracts 9 dimensions of intent** — task, target surface, output format, constraints, input, context, audience, success criteria, examples.
 3. **Resolves missing inputs deterministically** — asks at most 3 targeted questions when allowed; an explicit `no questions` request gets zero questions plus visible target/format assumptions.
 4. **Routes to the right architecture** — picks the correct template and tool profile automatically, never shown to you.
-5. **Applies safe techniques only** — role assignment, few-shot, XML structure, grounding anchors, memory block, source citations — as needed.
+5. **Applies bounded techniques only when useful** — a role only when it changes expertise, audience, authority, or voice; examples, structure, grounding, memory, and citations only when the task needs them.
 6. **Runs a token-efficiency audit** — strips every word that doesn't change the output.
 7. **Delivers one fenced artifact** — one prompt by default, exactly 2–3 labeled variants when requested, or a sequential `Prompt 1..N` set for split tasks.
 
@@ -355,68 +355,32 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 
 | Technique | What it does |
 |-----------|-------------|
-| **Role Assignment** | Assigns a specific expert identity to calibrate depth and vocabulary |
+| **Conditional Role Assignment** | Adds a narrow expert identity only when expertise, audience, authority, or voice materially changes the result |
 | **Few-Shot Examples** | Adds 2–5 examples when format consistency matters more than instructions |
-| **XML Structural Tags** | Wraps sections in XML for Claude-based tools that parse it reliably |
+| **Structural Tags** | Separates instructions, context, inputs, and output contracts when the selected target supports that structure |
 | **Grounding Anchors** | Adds anti-hallucination rules for factual and citation tasks |
-| **Chain of Thought** | Step-by-step reasoning for logic tasks — never applied to reasoning-native models (o3/o4-mini/Grok/DeepSeek-thinking/Kimi-thinking/GLM-thinking) |
-| **Source Citations** | For factual/research prompts on retrieval-capable tools — inline source links per claim; cite only retrieved sources, never fabricate |
+| **Private Work Cue** | Used only for compatible logic tasks; never requests visible reasoning when the selected registry record forbids it |
+| **Source Citations** | Uses the selected surface's native attribution path for factual retrieval; never fabricates a source or URL |
 
 ---
 
-## 🚫 61 Credit-Killing Patterns Detected
+## 🚫 Pattern Library
 
-Prompt Master scans every rough idea against 61 known failure patterns and fixes them silently. A representative selection:
+The registry preserves 61 stable IDs: 60 active patterns plus the PM-036 compatibility tombstone. Prompt Master routes a normal diagnosis to one primary family shard and fixes matching failures silently; an explicitly composite diagnosis may use one additional shard.
 
-<details>
-<summary><b>Task / Context / Format / Scope (representative)</b></summary>
-
-| # | Pattern | Before → After |
+| ID | Pattern | Before → After |
 |---|---------|----------------|
-| 1 | Vague task verb | "help me with my code" → "Refactor `getUserData()` to use async/await and handle null returns" |
-| 2 | Two tasks in one prompt | "explain AND rewrite" → split into two prompts |
-| 3 | No success criteria | "make it better" → "Done when it passes existing unit tests and handles null input" |
-| 8 | Assumed prior knowledge | "continue where we left off" → include a Memory Block |
-| 11 | Hallucination invite | "what do experts say?" → "Cite only sources you are certain of; else say [uncertain]" |
-| 14 | Missing output format | "explain this" → "3 bullets, ≤20 words each, one-sentence summary on top" |
-| 19 | Prose prompt for Midjourney | full sentence → "subject, style, mood, lighting, --ar 16:9 --v 8.1" |
-| 20 | No scope boundary | "fix my app" → "Fix only login validation in `src/auth.js`. Touch nothing else." |
-| 25 | Pasting the entire codebase | full repo every prompt → scope to the relevant function/file |
+| PM-001 | Vague task verb | "help with this" → one precise operation with a bounded result |
+| PM-011 | Evidence-free factual claim | unsupported certainty → retrieved or supplied evidence, with gaps marked explicitly |
+| PM-016 | Unconditional role assignment | generic persona → add a narrow role only when it changes expertise, audience, authority, or voice |
+| PM-033 | Silent agent | ceremonial update after every step → report milestones, blockers, approvals, and final evidence |
+| PM-040 | Injection-vulnerable prompt | embedded content treated as authority → treat it as untrusted data under the governing scope and approval rules |
+| PM-052 | No runnable self-check | "looks done" → one pass/fail check; initial attempt plus at most two retries, then stop with evidence |
+| PM-053 | Unsafe or bloated artifact transfer | paste everything verbatim → redact sensitive data and provide the smallest relevant excerpt or file reference |
+| PM-058 | Unverified premise before fan-out | broad delegation from assumptions → run a cheap premise check; use a worker only when independently useful |
+| PM-061 | Overdelegation or bad granularity | agent per file or one huge worker → default to one loop; delegate only independent bounded packets |
 
-</details>
-
-<details>
-<summary><b>Reasoning / Agentic / Model & Research (representative)</b></summary>
-
-| # | Pattern | Before → After |
-|---|---------|----------------|
-| 27 | CoT added to reasoning models | "think step by step" to o3 → remove it (they reason internally) |
-| 33 | Silent agent | no progress output → "After each step output: ✅ [what was completed]" |
-| 35 | No human-review trigger | agent decides everything → "Stop and ask before: delete a file, add a dependency, change DB schema" |
-| 38 | Hardcoded retired model / dead param | `gpt-4o` / `o1` / `deepseek-chat`,`reasoner` (retire 2026-07-24) / `kimi-latest` (deprecated 2026-01-28) → verify against `models.md` |
-| 43 | Vague / mis-specified research request | "tell me about X" → research brief (Template N) with a required Data-gaps & confidence section |
-| 44 | Real-time request to a cutoff model with no retrieval | "latest news on Y" to Grok with no search → enable Web/X Search; set filters as parameters |
-| 45 | Citable task with no citation contract | factual prompt on a retrieval tool with no attribution → add the inline-citation contract |
-| 46 | Reasoning + live web search in one call where mutually exclusive | e.g. Kimi `$web_search` requires thinking off → split by mode/turn |
-| 47 | Deck/slide generator with no card count, structure, or data | "make a presentation about X" to Gamma → generic deck + fabricated figures → specify card count + sections + density; supply real data or explicit [placeholder]s |
-| 48 | Tool setting baked silently without telling the user it's adjustable | defaulted Gamma density / Perplexity filter / Grok reasoning_effort / image CFG with no note → surface an "Assumed settings:" line — overridable, no extra question |
-| 49 | Character-consistency task on a tier that can't do it | brand mascot / same character sent to Nano Banana 2 Lite → route to Nano Banana 2·Pro, FLUX.2 multi-ref, or Midjourney `--oref` |
-| 50 | Video edit as a full re-description instead of a locked delta | long re-description to Omni Flash / Grok → short delta + "Keep everything else the same" + `<FIRST_FRAME>`/`<IMAGE_REF_n>` tags |
-| 51 | Defaulting to a sunsetting / deprecated media model | targeting Sora (2026-09-24) / Veo 2·3 / Runway `gen4_aleph` as if current → flag + route to Veo 3.1 / Kling 3.0 / `aleph2` |
-| 52 | No runnable self-check for the agent | "implement X" with nothing to verify against → give a check (tests/build/screenshot-diff) + "iterate until it passes" + evidence, not assertion |
-| 53 | Artifact described instead of attached | paraphrasing the error/design → paste it verbatim or reference it (`@file`, URL, piped log) |
-| 54 | No exemplar named for match-the-codebase work | "add a calendar widget" → "look at how X is implemented in `<file>`, follow that pattern" |
-| 55 | Unbounded review request | "find all issues" → severity bar + nit cap + `file:line` evidence + re-review convergence rule |
-| 56 | Taste-based / new-domain unknown drained like a question | "make it look premium" → prototype-first mock (divergent directions); new domain → blindspot pass — a question can't drain these |
-| 57 | Plan deviation unhandled (agent stalls or drifts) | long agentic run with no deviation rule → "conservative option + log under `## Deviations` + continue"; stop-and-ask for the irreversible only |
-| 58 | Premise/decomposition not verified before fan-out | broad worker launch from an assumed file map → cheap premise worker verifies files/APIs/data shape first |
-| 59 | Coordinator/worker contract drift | visible plan says narrow/read-only, hidden packets are broad → mirror scope, tools, stop condition, deliverable, evidence |
-| 60 | Advisor misuse / silent cost knobs | Advisor on every minor step or never surfaced → bounded checkpoint + evidence + explicit cost/depth knobs |
-| 61 | Overdelegation / bad granularity | agent per file or one huge worker → single loop by default; delegate bounded packets; Plan Big, Execute Small |
-
-</details>
-
-Full reference: [`references/patterns.md`](plugins/prompt-master/skills/prompt-master/references/patterns.md).
+Start with the compatibility router: [`references/patterns.md`](plugins/prompt-master/skills/prompt-master/references/patterns.md). It resolves stable and legacy IDs through the machine-readable index without loading the whole catalog.
 
 ---
 
@@ -439,7 +403,7 @@ This is the single biggest fix for long sessions — most wasted re-prompts come
 
 ## ℹ️ Version History
 
-Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.35.0** (GPT-5.6 Sol/Terra/Luna routing, ChatGPT Work/Codex/API surface isolation, and model-aware single-agent versus multi-agent setup recommendations).
+Full history — [CHANGELOG.md](CHANGELOG.md). Current release: **v1.36.0** (versioned pattern registry, nine routed diagnostic shards, fail-closed offline validation, and consistent evidence/safety contracts).
 
 ## 📄 License
 

@@ -248,7 +248,11 @@ function validateMarkdownLinks(skillDir, files, errors) {
       }
       if (fragment && /\.md$/i.test(target)) {
         const targetText = fs.readFileSync(target, 'utf8');
-        const anchors = new Set([...targetText.matchAll(/^#{1,6}\s+(.+?)\s*$/gm)].map((item) => markdownAnchor(item[1])));
+        const headingAnchors = [...targetText.matchAll(/^#{1,6}\s+(.+?)\s*$/gm)]
+          .map((item) => markdownAnchor(item[1]));
+        const explicitAnchors = [...targetText.matchAll(/<a\s+(?:id|name)=["']([^"']+)["']\s*><\/a>/gi)]
+          .map((item) => item[1].toLowerCase());
+        const anchors = new Set([...headingAnchors, ...explicitAnchors]);
         if (!anchors.has(decodeURIComponent(fragment).toLowerCase())) {
           errors.push(`${normalizeSlashes(path.relative(root, file))}: dangling anchor ${raw}`);
         }
@@ -396,6 +400,7 @@ function validateRegistry(options = {}) {
   const factsDir = path.resolve(options.factsDir || path.join(skillDir, 'references/facts'));
   const profileIndexFile = path.resolve(options.profileIndexFile || path.join(skillDir, 'references/tool-profiles.md'));
   const profilesDir = path.resolve(options.profilesDir || path.join(skillDir, 'references/profiles'));
+  const patternsDir = path.resolve(options.patternsDir || path.join(skillDir, 'references/patterns'));
   const todayText = options.today || new Date().toISOString().slice(0, 10);
   const today = parseIsoDate(todayText);
   const errors = [];
@@ -518,6 +523,9 @@ function validateRegistry(options = {}) {
   if (fs.existsSync(profilesDir)) {
     for (const name of fs.readdirSync(profilesDir).filter((item) => item.endsWith('.md'))) markdownFiles.push(path.join(profilesDir, name));
   }
+  if (fs.existsSync(patternsDir)) {
+    for (const name of fs.readdirSync(patternsDir).filter((item) => item.endsWith('.md'))) markdownFiles.push(path.join(patternsDir, name));
+  }
   validateMarkdownLinks(skillDir, markdownFiles, errors);
 
   return {
@@ -570,6 +578,7 @@ module.exports = {
   parseArgs,
   parseIsoDate,
   validateAgainstSchema,
+  validateMarkdownLinks,
   validateMigrationMapDocument,
   validateRegistry,
   validateSchemaFreeze,

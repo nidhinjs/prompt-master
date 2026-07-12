@@ -1,0 +1,57 @@
+{
+  "evidence_class": "recorded-source-contract",
+  "live_behavior": false,
+  "notice": "These assertions validate recorded source wording and package structure; they are not live model behavior or behavioral attestation.",
+  "registry_counts": {
+    "entries": 61,
+    "active": 60,
+    "tombstones": 1
+  },
+  "load_budgets": {
+    "router_max_lines": 100,
+    "router_max_bytes": 12288,
+    "shard_max_lines": 180,
+    "shard_max_bytes": 24576,
+    "max_shards_per_diagnosis": 2
+  },
+  "package_pattern_files": [
+    "references/patterns.md",
+    "references/patterns/agentic-execution.md",
+    "references/patterns/context-state.md",
+    "references/patterns/evaluation-review.md",
+    "references/patterns/index.json",
+    "references/patterns/media-generation.md",
+    "references/patterns/orchestration.md",
+    "references/patterns/prompt-design.md",
+    "references/patterns/research-evidence.md",
+    "references/patterns/routing-economics.md",
+    "references/patterns/safety-trust.md",
+    "references/patterns/schema.json"
+  ],
+  "contracts": [
+    {
+      "id": "PARCH-E2E-02-RECORDED",
+      "file": "plugins/prompt-master/skills/prompt-master/references/patterns/research-evidence.md",
+      "pattern_id": "PM-045",
+      "must_include": ["native attribution path", "claim-to-source traceability", "without substituting confidence for evidence"]
+    },
+    {
+      "id": "PARCH-E2E-03-RECORDED",
+      "file": "plugins/prompt-master/skills/prompt-master/references/patterns/agentic-execution.md",
+      "pattern_id": "PM-022",
+      "must_include": ["completion and stop triggers", "../agentic.md"]
+    },
+    {
+      "id": "PARCH-E2E-04-RECORDED",
+      "file": "plugins/prompt-master/skills/prompt-master/references/patterns/orchestration.md",
+      "pattern_id": "PM-059",
+      "must_include": ["every bounded packet", "validate returned work"]
+    },
+    {
+      "id": "PARCH-E2E-05-RECORDED",
+      "file": "plugins/prompt-master/skills/prompt-master/references/patterns/media-generation.md",
+      "pattern_id": "PM-050",
+      "must_include": ["smallest direct delta", "lock everything else", "selected profile"]
+    }
+  ]
+}

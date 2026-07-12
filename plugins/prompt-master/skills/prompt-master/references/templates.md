@@ -144,7 +144,7 @@ Experiment: Give 3 variants ranging from minimal to bold.
 
 ### Candidate / Variant Set Fragment
 
-Use only when the user explicitly asks for variants/alternatives/options/directions, or inside #56 prototype-first. Return the requested N exactly for N=2 or N=3; cap N>3 at exactly 3 and state `Variant cap: requested N; returning 3.` outside the fence. An unspecified plural defaults to 3. Put all variants inside one fenced output block.
+Use only when the user explicitly asks for variants/alternatives/options/directions, or inside the PM-056 taste/prototype-first branch. Never apply this fragment to the PM-056 unfamiliar-domain blindspot branch. Return the requested N exactly for N=2 or N=3; cap N>3 at exactly 3 and state `Variant cap: requested N; returning 3.` outside the fence. An unspecified plural defaults to 3. The prototype-first branch always returns exactly 3 divergent directions. Put all variants inside one fenced output block.
 If the user asks for multiple prompt variants, write the ready prompt variants here; do not write one prompt that asks the target model to generate variants later.
 For credentials/auth/security/migrations/prod/deploy/database writes/destructive/R5/R6 work, suppress this fragment, return one prompt, and use the core high-risk note.
 
@@ -297,6 +297,7 @@ Pause and ask for human review when:
 - Two valid implementation paths exist and the choice affects architecture
 - A sub-task still fails after Attempt 1 (initial execution), Attempt 2 (Retry 1), and Attempt 3 (Retry 2). Stop/escalate with evidence; never start Retry 3
 - The task requires changes outside the stated scope
+- Authority, cost, risk, policy/security exposure, or external impact would expand
 
 Verification:
 Run [test suite / build / linter / screenshot-vs-design diff] after each milestone.
@@ -307,8 +308,9 @@ never start Retry 3. Report evidence, not assertions; never suppress an error.
 Deviations:
 If an edge case forces you off the plan, pick the CONSERVATIVE option, log it under
 a "## Deviations" heading (what you found / what the plan said / what you did
-instead / why), and keep going — do not stall waiting for input. Stop-and-ask stays
-reserved for the irreversible actions listed above.
+instead / why), and keep going only when the choice is reversible, in scope, and
+below authority, cost, risk, policy/security, and external-impact thresholds.
+Stop-and-ask applies before irreversible action or any threshold/boundary expansion.
 
 Checkpoints:
 After each major step, output: ✅ [what was completed]
@@ -511,11 +513,14 @@ Stop and ask before:
 - Adding any dependency
 - Modifying database schema or migrations
 - Touching anything outside Scope
+- Expanding authority, cost, risk, policy/security exposure, or external impact
 
 ## Progress
-After each completed step: ✅ [what was done] — [file(s) affected]
-If forced off-plan on a reversible choice: pick the conservative option, log it
-under "## Deviations", and keep going — reserve stop-and-ask for the irreversible.
+At each meaningful milestone: ✅ [what was done] — [file(s) affected] — [evidence]
+If forced off-plan, pick the conservative option, log it under "## Deviations",
+and keep going only when the choice is reversible, in scope, and below authority,
+cost, risk, policy/security, and external-impact thresholds. Otherwise stop for
+approval before the irreversible action or boundary expansion.
 ```
 
 For an agentic/tool-enabled Template M prompt, insert Template H's `Trust
@@ -558,8 +563,8 @@ Scope: [time horizon, geography, exclusions, data types]
 Output structure: [named sections; tables where comparative; length; attribution style only when prompt-controlled]
   - Cap lists (top-N, not "all"); for Sonar API, do NOT ask for URLs in prose.
 Source contract (omit for Sonar API): [provider-supported attribution; for tools with prompt-controlled citations, cite retrieved sources only and mark unsourced claims [uncertain]]
-Source priorities + freshness: [primary vs secondary; date horizon]
-Data gaps & confidence: [REQUIRED closing section — what could not be found, confidence per key claim, and the date/freshness of the data]
+Source priorities + freshness: [domain-appropriate hierarchy; prefer primary only when authoritative; source quality/authority; date horizon]
+Data gaps & confidence: [REQUIRED compatibility label — what could not be found; claim-to-source traceability; evidence authority/quality/agreement or conflict/coverage/freshness; explicit inference; never model self-confidence]
 ```
 
 **Tool-aware:** load the matching research profile and selected fact record. Preserve the Sonar contract: do not request URLs or a prose sources list; the client consumes top-level `citations` and `search_results`, while the prompt retains Data gaps & confidence. Put provider-supported filters and search controls in request parameters rather than prose. For every supported search knob the user did not set, deliver an `Assumed settings:` note line with the chosen value and parameter location; never spend an extra question on it.
@@ -633,10 +638,11 @@ the hidden worker receives.
 
 **Premise verification before fan-out** *(cheap guard before expensive parallel work):*
 ```
-Before broad fan-out, assign one small worker to verify the decomposition
-premise: relevant files/APIs/data shape, whether sub-tasks are independent, and
-the cheapest verification path. If the premise is wrong, revise the plan before
-creating parallel workers.
+Before broad fan-out, perform one small check of the decomposition premise:
+relevant files/APIs/data shape, whether sub-tasks are independent, and the
+cheapest verification path. The coordinator does this by default; delegate it
+only when a bounded independent worker materially improves isolation or speed.
+If the premise is wrong, revise the plan before creating parallel workers.
 ```
 
 **#20/#21 Loop-termination contract** *(runtime behavior — a real agent acting across genuine separate passes, NOT "internally try 3 times," and NOT for our single-pass self-critique)*
@@ -680,8 +686,8 @@ Failure behavior: on error or out-of-scope input, [escalate / hand back / emit d
 Keep each role under ≈1500 tokens of system prompt (heuristic) so it stays sharp.
 
 **#29 HITL gates** — choose the lightest that fits; over-escalation trains the human to rubber-stamp and defeats the gate:
-- **Blocking** — agent pauses, cannot proceed without approval (irreversible/destructive actions).
-- **Advisory** — agent proceeds but flags for review (reversible, moderate risk).
+- **Blocking** — agent pauses before irreversible/destructive action or any authority, scope, cost, risk, policy/security, or external-impact expansion.
+- **Advisory** — agent proceeds but flags for review only when the action is reversible, in scope, and below every governing threshold.
 - **Sampling** — human spot-checks a fraction, not every action (high-volume, low-risk).
 
 **#24 Evidence-required review clause**
@@ -696,7 +702,7 @@ For each verdict, include an evidence field citing the exact output line / file:
 - **Multi-step** — sequenced steps + checkpoints. Use when sub-tasks have ordering/dependencies.
 - **Long-horizon** — orchestrator + sub-agents + handoffs + loop contract. Use only when scope genuinely needs delegation.
 
-**#55 Review-request knobs** *(for any prompt that asks an AI to review code/docs — Claude Code `/code-review`, a review subagent, or a standalone reviewer. An unconstrained "find all issues" reviewer always finds some → nit-noise and over-engineering; calibrate it):*
+**PM-055 Review-request knobs** *(for any prompt that asks an AI to review code/docs — Claude Code `/code-review`, a review subagent, or a standalone reviewer. An unconstrained "find all issues" reviewer always finds some → nit-noise and over-engineering; calibrate it):*
 ```
 Severity: Important = [what would break behavior / leak data / block rollback
 in THIS repo — e.g. incorrect logic, unscoped queries, PII in logs]. Style,
@@ -742,7 +748,7 @@ then write a complete spec to SPEC.md.
 ```
 Note for the user (outside the prompt block): execute the spec in a **fresh session** (clean context + written spec beats a long mixed one). A good spec is self-contained: names the files/interfaces involved, states what is out of scope, and ends with an end-to-end verification step.
 
-**#56 Prototype-first** *(taste-based / "I'll know it when I see it" criteria — visual/UX/scope-shaping work the user can only recognize, not specify. A throwaway mock costs nothing and drains the unknown cheaply; wiring the real app first makes a wrong guess expensive to revert):*
+**PM-056 Prototype-first** *(taste-based / "I'll know it when I see it" criteria — visual/UX/scope-shaping work the user can only recognize, not specify. A throwaway mock costs nothing and drains the unknown cheaply; wiring the real app first makes a wrong guess expensive to revert):*
 ```
 Before wiring anything up, make a single self-contained HTML file with fake data
 showing exactly 3 genuinely different candidate directions for [the thing]
@@ -759,7 +765,7 @@ blindspot pass: surface my unknown unknowns — (a) questions I didn't know to
 ask, (b) what "good" looks like here, (c) prior art already in the codebase,
 (d) potholes to avoid. Then I'll re-prompt you with a real task.
 ```
-Verify: the user can restate the task with at least 3 newly-surfaced constraints or questions. (Distinct from Spec-by-interview, which drains *known* unknowns, and from naming an exemplar (#54), which supplies a reference the user already has.)
+Verify: the user can restate the task with at least 3 newly-surfaced constraints or questions. (Distinct from Spec-by-interview, which drains *known* unknowns, and from naming an exemplar (PM-054), which supplies a reference the user already has.)
 
 **Sourced guardrails** *(Anthropic "Building effective agents" / context-engineering / long-running harnesses; OpenAI harness-engineering & guardrails; OWASP AI Agent Security — sources list: `docs/sources.md` in the repo, https://github.com/azagreev/prompt-master-za — not shipped inside the installed skill):*
 - **Packet contract — every delegated unit has all 7:** single purpose · explicit inputs · narrow tool permissions · result schema · timeout + budget · evidence requirement · no hidden cross-packet dependency.

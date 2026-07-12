@@ -1,7 +1,7 @@
 {
   "name": "prompt-master",
-  "version": "1.35.0",
-  "description": "Генерирует оптимизированные, готовые к вставке промпты для любого AI-инструмента с минимумом токенов. Routing через канонический реестр provider/model facts и семь workflow-профилей для text, coding, research, builders, media и fallback; anti-fabrication протокол, 61 паттерн-фикс.",
+  "version": "1.36.0",
+  "description": "Генерирует оптимизированные, готовые к вставке промпты для любого AI-инструмента с минимумом токенов. Routing через канонический реестр provider/model facts, семь workflow-профилей для text, coding, research, builders, media и fallback, а также versioned pattern registry; anti-fabrication протокол включён.",
   "author": {
     "name": "Andrey Zagreev",
     "url": "https://github.com/azagreev"

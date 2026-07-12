@@ -48,8 +48,10 @@ route to [media.md](media.md), not this bundle.
   options that will not be pursued.
 - Ground progress claims in current-session tool evidence. Report failed or
   unverified checks plainly.
-- Pause only for destructive or irreversible work, a genuine scope change, or
-  input only the user can provide.
+- Continue autonomously only for reversible, in-scope work below the governing
+  authority, cost, risk, policy/security, and external-impact thresholds. Pause
+  at any such boundary expansion, before destructive or irreversible work, or
+  when required input can come only from the user.
 - For delegated work, use bounded independent assignments and asynchronous
   progress; retain integration and verification with the coordinator.
 - A notes file can improve repeated work: one lesson per entry, including the

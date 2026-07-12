@@ -2,6 +2,11 @@
 // Safe local/CI verification. Never calls the real Claude CLI.
 
 const { spawnSync } = require('child_process');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+
+const REPO_ROOT = path.join(__dirname, '..');
 
 const LIVE_ENV_KEYS = [
   'PROMPT_MASTER_ALLOW_CLAUDE_RUNNER',
@@ -15,6 +20,9 @@ const LIVE_ENV_KEYS = [
 const DEFAULT_CHECKS = [
   { command: process.execPath, args: ['scripts/test-safe-self.js'] },
   { command: process.execPath, args: ['scripts/test-registry.js'] },
+  { command: process.execPath, args: ['scripts/test-patterns.js'] },
+  { command: process.execPath, args: ['scripts/test-pattern-routing.js'] },
+  { command: process.execPath, args: ['scripts/test-pattern-package.js'] },
   { command: process.execPath, args: ['scripts/test-runtime-inventory.js'] },
   { command: process.execPath, args: ['scripts/test-contracts.js'] },
   { command: process.execPath, args: ['scripts/test-hook.js'] },
@@ -26,10 +34,45 @@ const DEFAULT_CHECKS = [
   { command: process.execPath, args: ['scripts/test-run-golden-safe.js'] },
 ];
 
-function safeEnv(source = process.env) {
+function createClaudeDenyShim(options = {}) {
+  const baseDir = path.resolve(options.baseDir || os.tmpdir());
+  const dir = fs.mkdtempSync(path.join(baseDir, 'prompt-master-deny-claude-'));
+  const markerFile = path.join(dir, 'claude-invoked.marker');
+  const posixFile = path.join(dir, 'claude');
+  const windowsFile = path.join(dir, 'claude.cmd');
+  fs.writeFileSync(posixFile, [
+    '#!/bin/sh',
+    'printf "blocked claude invocation\\n" > "$PROMPT_MASTER_CLAUDE_DENY_MARKER"',
+    'exit 97',
+    '',
+  ].join('\n'));
+  fs.chmodSync(posixFile, 0o700);
+  fs.writeFileSync(windowsFile, [
+    '@echo off',
+    '> "%PROMPT_MASTER_CLAUDE_DENY_MARKER%" echo blocked claude invocation',
+    'exit /b 97',
+    '',
+  ].join('\r\n'));
+  return { dir, markerFile, posixFile, windowsFile };
+}
+
+function removeClaudeDenyShim(shim) {
+  if (shim?.dir && fs.existsSync(shim.dir)) fs.rmSync(shim.dir, { recursive: true, force: true });
+}
+
+function claudeMarkerExists(shim) {
+  return Boolean(shim?.markerFile && fs.existsSync(shim.markerFile));
+}
+
+function safeEnv(source = process.env, claudeDenyShim = null) {
   const env = { ...source };
   for (const key of LIVE_ENV_KEYS) delete env[key];
   env.NO_LIVE_MODEL_CALLS = '1';
+  if (claudeDenyShim) {
+    const pathKey = Object.keys(env).find((key) => key.toLowerCase() === 'path') || 'PATH';
+    env[pathKey] = `${claudeDenyShim.dir}${path.delimiter}${env[pathKey] || ''}`;
+    env.PROMPT_MASTER_CLAUDE_DENY_MARKER = claudeDenyShim.markerFile;
+  }
   return env;
 }
 
@@ -51,6 +94,7 @@ function runChecks(checks = DEFAULT_CHECKS, options = {}) {
   const stdout = options.stdout || process.stdout;
   const stderr = options.stderr || process.stderr;
   const env = options.env || safeEnv();
+  const claudeDenyShim = options.claudeDenyShim || null;
   const summary = {
     expected: checks.length,
     executed: 0,
@@ -64,11 +108,18 @@ function runChecks(checks = DEFAULT_CHECKS, options = {}) {
     let result;
     try {
       result = spawn(check.command, check.args || [], {
+        cwd: REPO_ROOT,
         encoding: 'utf8',
         stdio: 'pipe',
         env,
       });
     } catch (error) {
+      if (claudeMarkerExists(claudeDenyShim)) {
+        summary.executed++;
+        summary.failed++;
+        writeOutput(stderr, `FAIL (Claude CLI invocation blocked): ${label}\n`);
+        break;
+      }
       summary.failed++;
       writeOutput(stderr, `FAIL (spawn error): ${label}\n${error.message}\n`);
       continue;
@@ -78,6 +129,13 @@ function runChecks(checks = DEFAULT_CHECKS, options = {}) {
     const childStderr = result?.stderr || '';
     writeOutput(stdout, childStdout);
     writeOutput(stderr, childStderr);
+
+    if (claudeMarkerExists(claudeDenyShim)) {
+      summary.executed++;
+      summary.failed++;
+      writeOutput(stderr, `FAIL (Claude CLI invocation blocked): ${label}\n`);
+      break;
+    }
 
     const sandboxSkip = result?.error?.code === 'EPERM';
     const reportedSkip = hasSkipMarker(childStdout, childStderr);
@@ -149,7 +207,22 @@ function main(argv = process.argv.slice(2)) {
     return 2;
   }
 
-  const summary = runChecks();
+  let claudeDenyShim;
+  try { claudeDenyShim = createClaudeDenyShim(); }
+  catch (error) {
+    console.error(`Cannot create Claude deny shim: ${error.message}`);
+    return 1;
+  }
+  const summary = runChecks(DEFAULT_CHECKS, {
+    claudeDenyShim,
+    env: safeEnv(process.env, claudeDenyShim),
+  });
+  const markerCreated = claudeMarkerExists(claudeDenyShim);
+  removeClaudeDenyShim(claudeDenyShim);
+  if (markerCreated && summary.failed === 0) {
+    summary.failed++;
+    summary.passed = Math.max(0, summary.passed - 1);
+  }
   const line = `SUMMARY ${formatSummary(summary)}`;
   const exitCode = exitCodeFor(summary);
   if (exitCode !== 0) {
@@ -165,12 +238,16 @@ if (require.main === module) process.exitCode = main();
 module.exports = {
   DEFAULT_CHECKS,
   LIVE_ENV_KEYS,
+  REPO_ROOT,
+  claudeMarkerExists,
+  createClaudeDenyShim,
   exitCodeFor,
   formatSummary,
   hasSkipMarker,
   isPassingSummary,
   main,
   parseArgs,
+  removeClaudeDenyShim,
   runChecks,
   safeEnv,
 };

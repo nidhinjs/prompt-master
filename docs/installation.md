@@ -206,6 +206,8 @@ rm -rf ~/.claude/skills/prompt-master
 - `plugins/prompt-master/skills/prompt-master/references/profiles/` — семь workflow-профилей
 - `plugins/prompt-master/skills/prompt-master/references/facts/` — канонический реестр provider/model facts
 - `plugins/prompt-master/skills/prompt-master/references/templates.md` — шаблоны промптов
-- `plugins/prompt-master/skills/prompt-master/references/patterns.md` — 61 паттерн-фикс
+- `plugins/prompt-master/skills/prompt-master/references/patterns.md` — compatibility-router для 61 стабильного ID (60 active + PM-036 tombstone)
+- `plugins/prompt-master/skills/prompt-master/references/patterns/index.json` и `schema.json` — машинный registry/contract паттернов
+- `plugins/prompt-master/skills/prompt-master/references/patterns/*.md` — девять тематических shard-файлов; runtime загружает один primary, для explicit composite максимум два
 - `plugins/prompt-master/runtime-manifest.json` — точный tracked inventory файлов release ZIP
 - [CHANGELOG.md](../CHANGELOG.md) — история версий

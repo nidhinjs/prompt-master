@@ -21,17 +21,24 @@ missing, use [decompiler-fallback.md](decompiler-fallback.md).
 - Anchor every instruction to named files/directories, functions, or artifacts;
   never issue an unbounded repository-wide edit.
 - Define “done” with a command, expected exit/result, and evidence to return.
-  Require iteration until it passes or an honest blocked report.
+  Use exactly 3 total execution attempts: Attempt 1 is the initial execution,
+  Attempt 2 is Retry 1, and Attempt 3 is Retry 2. After the third failure,
+  stop/escalate with evidence from every attempt and an honest blocked report;
+  never start a third retry (Retry 3).
 - Stop before deleting files, installing dependencies, changing schemas,
   credentials, infrastructure, or external state unless explicitly authorized.
 - Attach files, directories, logs, errors, screenshots, and MCP resources instead
   of paraphrasing them. Name an exemplar implementation when one exists.
 - One scoped change gets one focused pass. Large independent work packages may
   use an orchestrator; the coordinator retains integration and verification.
-- For unfamiliar or taste-based work, request a prototype/blindspot pass with
-  labelled alternatives, tradeoffs, and a selection cue before broad edits.
-- For long runs, choose a conservative reversible deviation, log it under
-  `## Deviations`, continue, and stop only for irreversible uncertainty.
+- For taste-based work, request a prototype-first pass with exactly 3 divergent
+  directions labelled `Fit`, `Risk / tradeoff`, and `When to use`. For an
+  unfamiliar domain or codebase, request a blindspot inventory and decision
+  forks without forcing a prototype or 3 variants.
+- For long runs, log deviations under `## Deviations` and continue only when the
+  choice is reversible, in scope, and below authority, cost, risk,
+  policy/security, and external-impact thresholds. Stop for approval when any
+  threshold or boundary expands.
 
 ## Codex
 
