@@ -1,7 +1,7 @@
 # Codex Handoff — v1.38 W0B
 
-Status: W0 complete; W0B profiles created; corrected native identifiers await
-fresh-session smoke.
+Status: W0 complete; W0B profiles created and native identifiers corrected;
+`G0B` blocked in the current session pending a verifiable fresh-session spawn.
 
 Prepared: 2026-07-12
 
@@ -11,6 +11,8 @@ Prepared: 2026-07-12
 repository: /mnt/c/users/lenovo/documents/github/prompt-master-za
 branch: main
 planning commit: b63e447 (docs: finalize v1.38 offline execution plan)
+bootstrap commit: a4348c3 (chore: bootstrap v1.38 Codex agent profiles)
+identifier fix: 4c35ad6 (fix: use native Codex agent identifiers)
 next gate: W0B / G0B
 plan: docs/refacktoring/PLAN_v1.38_offline_research_orchestration.md
 ```
@@ -42,6 +44,30 @@ docs_reviewer
 The first W0B smoke proved that Codex rejects hyphenated agent identifiers with
 `agent_name must use only lowercase letters, digits, and underscores`. The
 tracked profiles and plan therefore use underscore identifiers.
+
+## Current blocker evidence
+
+Static/capability checks passed:
+
+- `codex --strict-config --version` parsed the project config under Codex CLI
+  `0.144.1`;
+- `codex debug models` confirmed all planned Sol/Terra/Luna IDs and efforts;
+- a direct Luna low connectivity probe completed successfully;
+- all smoke sessions used `read-only` and made no repository changes.
+
+Native profile proof did not pass:
+
+- ephemeral Ultra attempts failed collaboration initialization with
+  `collab spawn failed: no thread with id`;
+- a persistent `repo_explorer` attempt emitted a `wait` event with an empty
+  receiver list and no child-thread creation event;
+- the final message reported `Actual reasoning effort: not exposed` and
+  `Recursive spawning unavailable: no`, yet labelled itself `PASS`.
+
+Root overrides that inconsistent result to `BLOCKED`. `G0B` requires an actual
+named child thread plus model, reasoning effort, sandbox, and depth evidence for
+every profile. Do not start `W1` until a fresh Codex surface exposes those
+fields or the user explicitly approves an amended orchestration contract.
 
 ## Capability record
 

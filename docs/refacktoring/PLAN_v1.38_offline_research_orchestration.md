@@ -1,8 +1,11 @@
 # Plan v1.38.0 — Offline-Verified Research Portfolio Orchestration
 
 Status: approved implementation plan; the v1.37.0 source/tag prerequisite is
-satisfied; the v1.38 offline candidate and deterministic validation suite are
-not implemented.
+satisfied. Execution started: `W0` is complete at `b63e447`; W0B bootstrap is
+tracked through `4c35ad6`; `G0B` is blocked in the current session because the
+available spawn interface does not expose a verifiable named child thread or
+actual reasoning effort. The runtime candidate and deterministic validation
+suite are not implemented.
 
 Prepared: 2026-07-12; offline scope finalized: 2026-07-12
 
