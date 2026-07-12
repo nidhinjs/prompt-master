@@ -1,7 +1,8 @@
 # Release Roadmap: v1.33.0 and Later
 
-Status: active plan; v1.33.0–v1.37.0 completed; conditional v1.38.0 next
-Baseline: released `v1.36.0`, commit `3ea3403d1191970f2c5a3694a53e17c0b6deb7f5`
+Status: active plan; v1.33.0–v1.37.0 completed; v1.38.0 offline-verification
+scope planned next
+Baseline: released `v1.37.0`, commit `4cecd75fdff5b2de9197a0ecfc88a7612a2a46cd`
 Prepared: 2026-07-10; revised 2026-07-12
 Primary input: [AUDIT_REPORT_2026-07-10.md](../AUDIT_REPORT_2026-07-10.md)
 
@@ -17,15 +18,28 @@ Primary input: [AUDIT_REPORT_2026-07-10.md](../AUDIT_REPORT_2026-07-10.md)
 > directly as v1.38.0 would create an unnecessary SemVer gap after v1.35.0.
 > The user therefore assigned Pattern Registry and Diagnostic Sharding to
 > v1.36.0. Portable Verification and Historical Provenance moves to v1.37.0;
-> Behavioral Attestation moves to conditional v1.38.0. Older package headings
-> and acceptance IDs below are retained only for historical traceability.
+> Behavioral Attestation was provisionally moved to conditional v1.38.0; the
+> final v1.38 scope amendment below supersedes that assignment. Older package
+> headings and acceptance IDs are retained only for historical traceability.
 
-> **Superseding amendment (2026-07-12, v1.38 scope):** conditional v1.38.0 is
-> `Claude-Revalidated Research Portfolio Orchestration`. It combines the PM-05
-> behavioral attestation with one bounded, optional research-portfolio runtime
-> improvement. The candidate must be based on a published v1.37.0, use v1.26.3
-> as the last Git-provenance Claude A/B baseline, and pass the offline/live
-> gates in `docs/refacktoring/PLAN_v1.38_claude_revalidated_research_orchestration.md`.
+> **Superseding amendment (2026-07-12, final v1.38 scope):** v1.38.0 is
+> `Offline-Verified Research Portfolio Orchestration`. It contains the bounded,
+> optional research-portfolio runtime improvement and deterministic/Codex
+> verification only. Claude A/B, a live-model gate, and a claim of behavioral
+> revalidation are not part of this release. PM-05 remains open and unassigned.
+> The candidate is based on published v1.37.0; v1.26.3 remains a labelled
+> historical Claude-authored provenance reference, not an A/B comparator. The
+> execution DAG, model roles, per-agent acceptance, offline E2E, and release
+> graph are defined in
+> [PLAN_v1.38_offline_research_orchestration.md](refacktoring/PLAN_v1.38_offline_research_orchestration.md).
+
+> **Implementation audit (2026-07-12):** the v1.37.0 source/tag prerequisite is
+> satisfied. The current tree contains reusable Managed Agents, evidence,
+> safe-runner, inventory, and packaging foundations, but it does not contain the
+> v1.38 research-portfolio route, deterministic contract suite,
+> `.codex/agents/` profiles, or role-specific review evidence. Offline
+> implementation remains pending. Claude Code Routines and behavioral
+> attestation are not part of v1.38.
 
 ## 1. Purpose
 
@@ -45,8 +59,9 @@ The order is intentional:
 2. Add GPT-5.6 facts plus ChatGPT Work/Codex/API surface isolation and
    model-aware single-agent versus multi-agent recommendations.
 3. Make the verification harness genuinely cross-platform.
-4. Add behavioral attestation only after the user separately authorizes live
-   model execution.
+4. Add the bounded v1.38 research-portfolio route with deterministic offline
+   evidence; keep behavioral attestation deferred until a future scope and
+   execution environment exist.
 
 ## 2. Current Baseline
 
@@ -66,19 +81,19 @@ their release evidence lives in [CHANGELOG.md](../CHANGELOG.md).
   signed tags.
 - PM-15 and PM-16: repaired local links and narrower multi-agent hook context.
 
-The released v1.36 tree currently has this deterministic inventory:
+The released v1.37 tree currently has this deterministic inventory:
 
 - 76 unique golden scenarios.
 - 71 offline fixtures.
 - 10 source-contract suites.
-- Strict safe gate with 14 required checks.
+- Strict safe gate with 16 required checks.
 - No live Claude execution in normal CI.
 
 ## 3. Residual Finding Ledger
 
 | Finding | Current state | Planned closure |
 |---|---|---|
-| PM-05 behavioral coverage | Partial: contracts and recorded fixtures run, but the model does not execute all scenarios and no dated attestation exists | Conditional v1.38.0 |
+| PM-05 behavioral coverage | Partial: contracts and recorded fixtures run, but the model does not execute all scenarios and no dated attestation exists | Deferred; no release assigned, explicitly not v1.38.0 |
 | PM-09 sources of truth/progressive disclosure | Closed in v1.33.0 | v1.33.0 |
 | PM-10 production/preview distinction | Closed in v1.33.0 | v1.33.0 |
 | PM-11 Codex packaging | Closed in v1.34.0 | v1.34.0 |
@@ -100,7 +115,7 @@ portability gap through the shared remote strict-safe matrix.
 | 3 | v1.35.0 | GPT-5.6 Surface-Aware Prompting and Routing | GPT-5.6 facts; ChatGPT Work/Codex/API isolation; model/multi-agent UX | v1.34.0 surfaces frozen |
 | 4 | v1.36.0 | Pattern Registry and Diagnostic Sharding | stable PM IDs, nine routed shards, fail-closed validation, semantic cleanup | v1.35.0 runtime frozen |
 | 5 | v1.37.0 | Portable Verification and Historical Provenance | R-01, PM-17, residual release assurance | v1.36.0 runtime frozen |
-| 6 | v1.38.0, conditional | Claude-Revalidated Research Portfolio Orchestration | PM-05 plus bounded research-orchestration behavior | published v1.37.0 harness plus explicit live-run authorization |
+| 6 | v1.38.0 | Offline-Verified Research Portfolio Orchestration | bounded research-orchestration behavior; PM-05 remains open | published v1.37.0 plus frozen offline contracts, heterogeneous Codex review, and portable/package gates |
 
 No calendar date is assigned until the previous release satisfies its exit
 gate. Patch releases are reserved for regressions and are not pre-allocated.
@@ -685,20 +700,22 @@ Rollback: do not publish v1.37 until both OS jobs are green. If necessary,
 restore v1.36 runner code; keep the provenance record only if independently
 verified and still accurate.
 
-## 10. Historical package draft — Behavioral Attestation (now conditional v1.38.0)
+## 10. Deferred package draft — Behavioral Attestation (no release assigned)
 
 ### 10.1 Authorization gate
 
-This release is conditional. Designing and testing the attestation machinery is
-offline work. Producing a real attestation calls the model and requires a new,
-explicit user authorization in the active conversation.
+This historical package is not part of v1.38. Designing and testing attestation
+machinery may become a separately scoped future task. Producing a real
+attestation would require an available execution environment, a newly assigned
+release, and explicit user authorization in that active conversation.
 
 Without that authorization:
 
 - infrastructure may be prepared and tested with synthetic fixtures;
 - `scripts/run-golden.js` must not be executed;
 - no release may claim PM-05 closed;
-- the release should be postponed or renamed as an infrastructure-only release.
+- v1.38 remains publishable only under its offline-verification claims and
+  cannot inherit any criterion from this deferred package.
 
 ### 10.2 Goal
 
@@ -797,8 +814,9 @@ candidate, and produce a new attestation under a new authorization.
 Live evaluation is nondeterministic and consumes quota. Keep the attestation
 outside normal CI and bind every result to one exact candidate.
 
-Rollback means no attested v1.38 publication. The offline schema/validator may be retained
-only under a differently scoped release that explicitly leaves PM-05 partial.
+Rollback means no attested publication under whichever future release is
+eventually assigned. Any offline schema/validator must live under that future
+scope and must leave PM-05 partial until a complete authorized run exists.
 
 ## 11. Cross-Release Task Ledger
 
@@ -811,7 +829,8 @@ only under a differently scoped release that explicitly leaves PM-05 partial.
 | Codex tooling and parity | v1.34 | Workers B/C | completed | Cross-surface version/layout/hook evidence |
 | Cross-platform fake runner | v1.37 | Workers A/B | completed | Strict offline gate on Windows and Ubuntu |
 | Historical provenance | v1.37 | Worker C | completed | Machine-validated v1.29 source-parity/container-status record |
-| Research portfolio + behavioral attestation | v1.38 | Workers A/B/C | planned; live attestation blocked by explicit authorization | Bounded runtime improvement plus complete dated attestation |
+| Research portfolio orchestration | v1.38 | Codex Ultra plus heterogeneous roles | offline candidate/contracts not implemented | Bounded runtime improvement plus deterministic offline evidence and role-specific reviews |
+| Behavioral attestation | unassigned | future scope | deferred; no Claude execution environment | Keep PM-05 open without blocking or overstating v1.38 |
 | Local permission narrowing | no release | Coordinator/user | pending | No broad pre-approved mutations |
 
 ## 12. Definition of Done for the Roadmap
@@ -826,7 +845,8 @@ The roadmap is complete when:
 - PM-14 local permissions are narrowed without being misrepresented as a
   shipped feature;
 - PM-17 is documented without rewriting history;
-- PM-05 is marked closed only after an authorized, complete v1.38 attestation;
+- PM-05 remains explicitly open and unassigned; v1.38 does not close it or
+  claim Claude behavioral validation;
 - all deferred/unknown items are explicitly retained rather than silently
   defaulted.
 
