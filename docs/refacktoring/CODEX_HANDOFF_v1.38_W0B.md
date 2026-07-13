@@ -1,9 +1,7 @@
 # Codex Handoff — v1.38 W0B
 
-Status: W0 complete; W0B profiles created and native identifiers corrected;
-native `G0B` failed closed; the user approved the process-isolated
-heterogeneous Codex fallback on 2026-07-13; the bootstrap validator passes and
-the nine-role fallback smoke is next.
+Status: W0/W0B complete; native selection failed closed; the user-approved
+process-isolated fallback passed `G0B` on 2026-07-13; `W1/G1` is next.
 
 Prepared: 2026-07-12; amended: 2026-07-13
 
@@ -16,19 +14,19 @@ planning commit: b63e447 (docs: finalize v1.38 offline execution plan)
 bootstrap commit: a4348c3 (chore: bootstrap v1.38 Codex agent profiles)
 identifier fix: 4c35ad6 (fix: use native Codex agent identifiers)
 native blocker commit: a8cad7a (docs: record v1.38 W0B spawn blocker)
-next gate: W0B / G0B
+fallback amendment: f366d31 (chore: authorize v1.38 Codex process fallback)
+next gate: W1 / G1
 plan: docs/refacktoring/PLAN_v1.38_offline_research_orchestration.md
 ```
 
 Current continuation instruction:
 
 ```text
-Continue v1.38 from docs/refacktoring/CODEX_HANDOFF_v1.38_W0B.md. Validate the
-approved codex-exec fallback with one smoke for each of the nine roles in
-batches of at most three. Record a root-attested envelope with thread ID, actual
-model/effort/sandbox, role/instruction/task hashes, Codex version,
-non-recursion evidence, and Git before/after.
-If all pass, close G0B and start W1. Do not run Claude or scripts/run-golden.js.
+Continue v1.38 from docs/refacktoring/CODEX_HANDOFF_v1.38_W0B.md at W1/G1.
+Run repo_explorer, eval_architect, and adversarial_reviewer through the frozen
+codex-exec transport in one read-only wave of at most three; record three
+root-attested envelopes and keep the main Git snapshot unchanged. Reconcile
+their outputs and freeze G1 before W2A. Do not run Claude or run-golden.js.
 ```
 
 Native profile names:
@@ -59,7 +57,10 @@ Static/capability checks passed:
 - a direct Luna low connectivity probe completed successfully;
 - `node scripts/validate-codex-agents.js` passed all nine profiles;
 - `node scripts/test-codex-agents.js` passed eight offline mutations;
-- all smoke sessions used `read-only` and made no repository changes.
+- seven read-only role smokes used `read-only`; `runtime_author` and
+  `test_author` used `workspace-write` only in disposable clean worktrees. All
+  before/after snapshots were identical and every `changed_paths` list was
+  empty.
 
 Native profile proof did not pass:
 
@@ -87,8 +88,10 @@ an effective config override; passes the task through stdin; and independently
 verifies safe rollout fields plus Git boundaries. The first fallback mutation
 proved that CLI `0.144.1` rejects `agents.max_depth=0`, so zero is not used.
 This transport must be labelled `codex-exec`, never native custom-agent spawn.
-`G0B` remains open until the deterministic bootstrap validator and all nine
-role smokes pass.
+`G0B` passed. The sanitized machine record is
+`docs/release-evidence/v1.38.0/orchestration/g0b-smoke.json`: nine role smokes
+and the explicit non-recursion probe passed, maximum overlap was three,
+collaboration/child counts were zero, and every Git snapshot was unchanged.
 
 ## Capability record
 

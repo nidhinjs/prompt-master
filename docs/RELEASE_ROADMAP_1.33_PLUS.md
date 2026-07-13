@@ -830,7 +830,7 @@ scope and must leave PM-05 partial until a complete authorized run exists.
 | Codex tooling and parity | v1.34 | Workers B/C | completed | Cross-surface version/layout/hook evidence |
 | Cross-platform fake runner | v1.37 | Workers A/B | completed | Strict offline gate on Windows and Ubuntu |
 | Historical provenance | v1.37 | Worker C | completed | Machine-validated v1.29 source-parity/container-status record |
-| Research portfolio orchestration | v1.38 | Codex Ultra plus heterogeneous roles | W0 complete; W0B profiles tracked; native selector failed closed; user approved process-isolated Codex fallback on 2026-07-13; G0B fallback smoke pending; candidate/contracts not implemented | Bounded runtime improvement plus deterministic offline evidence and role-specific reviews |
+| Research portfolio orchestration | v1.38 | Codex Ultra plus heterogeneous roles | W0/W0B complete; native selector failed closed; process-isolated fallback passed G0B on 2026-07-13 (9 profiles, 8 mutations, 9 role smokes, non-recursion); W1 next; candidate/contracts not implemented | Bounded runtime improvement plus deterministic offline evidence and role-specific reviews |
 | Behavioral attestation | unassigned | future scope | deferred; no Claude execution environment | Keep PM-05 open without blocking or overstating v1.38 |
 | Local permission narrowing | no release | Coordinator/user | pending | No broad pre-approved mutations |
 

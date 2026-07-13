@@ -1,14 +1,12 @@
 # Plan v1.38.0 — Offline-Verified Research Portfolio Orchestration
 
 Status: approved implementation plan; the v1.37.0 source/tag prerequisite is
-satisfied. Execution started: `W0` is complete at `b63e447`; W0B bootstrap is
-tracked through `4c35ad6`; the native-profile `G0B` failure is recorded at
-`a8cad7a`. A fresh-session retry on 2026-07-13 confirmed that Codex CLI `0.144.1`
-does not expose a callable custom-agent selector. The user explicitly approved
-the process-isolated heterogeneous Codex fallback defined below. Its bootstrap
-validator passes all nine profiles and eight baseline mutations; the nine-role
-smoke is the remaining `G0B` step. The runtime candidate and deterministic
-validation suite are not implemented.
+satisfied. `W0` is complete at `b63e447`; W0B native failure is recorded at
+`a8cad7a`; the user-approved process fallback amendment is `f366d31`. `G0B`
+passed on 2026-07-13: nine profiles, eight mutations, nine effective-role
+smokes, and the non-recursion probe all passed with zero changed paths. `W1` is
+next. The runtime candidate and deterministic validation suite are not
+implemented.
 
 Prepared: 2026-07-12; offline scope finalized: 2026-07-12
 
