@@ -2,10 +2,13 @@
 
 Status: approved implementation plan; the v1.37.0 source/tag prerequisite is
 satisfied. Execution started: `W0` is complete at `b63e447`; W0B bootstrap is
-tracked through `4c35ad6`; `G0B` is blocked in the current session because the
-available spawn interface does not expose a verifiable named child thread or
-actual reasoning effort. The runtime candidate and deterministic validation
-suite are not implemented.
+tracked through `4c35ad6`; the native-profile `G0B` failure is recorded at
+`a8cad7a`. A fresh-session retry on 2026-07-13 confirmed that Codex CLI `0.144.1`
+does not expose a callable custom-agent selector. The user explicitly approved
+the process-isolated heterogeneous Codex fallback defined below. Its bootstrap
+validator passes all nine profiles and eight baseline mutations; the nine-role
+smoke is the remaining `G0B` step. The runtime candidate and deterministic
+validation suite are not implemented.
 
 Prepared: 2026-07-12; offline scope finalized: 2026-07-12
 
@@ -132,14 +135,37 @@ Root execution contract:
 surface:     local Codex
 root model:  gpt-5.6-sol
 root mode:   Ultra
+workers:     process-isolated Codex exec sessions while the native selector is unavailable
 fan-out:     no more than three direct workers at once
-depth:       one; workers never spawn workers
+depth:       one logical layer; every fallback worker disables multi_agent and caps threads at one
 ```
 
 Ultra owns decomposition, delegation, integration, conflict resolution,
 approval boundaries, final verification, and the user-facing result. It is a
 Codex orchestration mode that uses subagents, not an API model slug and not a
 value to append to `gpt-5.6-sol` in an agent file.
+
+The official custom-agent contract remains the preferred transport: project
+TOML files are configuration layers for spawned sessions and may set model,
+reasoning effort, and sandbox. In the pinned CLI, however, the callable
+`spawn_agent` surface exposes only a task label, message, and context-fork
+choice; it exposes no custom-agent/model/effort/sandbox selector. A generic
+child rollout confirmed `agent_role=null` and an effective tuple that did not
+match `repo_explorer`. The plan therefore records native custom-agent spawn as
+unavailable rather than pretending that a task label selected a profile.
+
+On 2026-07-13 the user explicitly approved this bounded fallback: root launches
+separate persistent `codex exec` sessions with exact model, effort, and sandbox
+arguments bound to the tracked role profile. Root supplies the profile's full
+`developer_instructions` as a config override, passes the task packet on stdin,
+records the profile/instruction/task hashes, and independently reads only safe
+`session_meta` and `turn_context` fields from the persisted rollout. This is
+process-isolated heterogeneous Codex, not native named-profile spawning.
+
+The selected `codex-exec` transport is frozen at `G0B` through candidate `C`.
+A later native selector does not change transport mid-release; adopting it
+reopens `G0B` and `G1` and reruns every affected wave. Changing transport never
+weakens role acceptance or release gates.
 
 The model policy follows the official task-shape guidance:
 
@@ -165,7 +191,8 @@ by that Codex client. For every selected model record:
 
 - exact model ID and account/surface availability;
 - `supportedReasoningEfforts` and `defaultReasoningEffort` when exposed;
-- effective model and effort actually reported by the spawned thread;
+- effective model and effort actually reported by the named thread or
+  process-isolated rollout;
 - whether the configured sandbox and required tools are available.
 
 The planned project limit is:
@@ -176,9 +203,39 @@ max_threads = 4 # root plus no more than three direct workers
 max_depth = 1
 ```
 
-The fresh-session smoke must confirm that the pinned client interprets this as
-one root plus at most three open direct-worker threads. If it does not, root
-stops and amends the numeric limit before any implementation delegation.
+The native fresh-session smoke must confirm that the pinned client interprets
+this as one root plus at most three open direct-worker threads whenever native
+custom-agent selection is used. Under the approved process fallback, root
+enforces the equivalent outer limit by launching at most three worker processes
+at once. Each invocation disables `multi_agent`, `multi_agent_v2`, and
+`enable_fanout`, overrides `agents.max_threads=1`, and retains
+`agents.max_depth=1` because CLI `0.144.1` rejects zero. A negative smoke must
+show no collaboration tool call and no child rollout. Any mismatch in the
+recorded command or effective rollout keeps the gate open.
+
+The canonical fallback command shape is:
+
+```text
+<packet-via-stdin> | timeout 300s codex exec --strict-config \
+  --ignore-user-config --disable multi_agent --disable multi_agent_v2 \
+  --disable enable_fanout -C <repo-or-worktree> --sandbox <sandbox> --json \
+  -m <model> -c 'model_reasoning_effort="<effort>"' \
+  -c 'agents.max_threads=1' -c 'agents.max_depth=1' \
+  -c 'developer_instructions="<profile instructions>"' -
+```
+
+The logical command above must be implemented with an argv array and canonical
+stdin bytes, not interpolation of an untrusted task into a shell string. The
+300-second bound applies only to G0B smoke. Later tasks receive an explicit
+finite timeout sized to that task; exit `124` is `BLOCKED`, not a retry or model
+switch. The Windows portable gate uses an equivalent PowerShell wrapper.
+`thread.started` supplies the thread ID. Root locates its persisted rollout and
+extracts only `session_meta.{id,cli_version,cwd,source,model_provider}` and
+`turn_context.{model,effort,sandbox_policy,permission_profile,collaboration_mode}`.
+The effective developer-instruction hash must equal the decoded profile value.
+Requested arguments alone are insufficient: they must agree with effective
+fields. Root records a sanitized execution envelope, not raw rollout or hidden
+reasoning.
 
 The table below is the preferred routing policy, not permission to invent a
 model or unsupported effort. `high` is the default for demanding author/review
@@ -203,13 +260,17 @@ published:
 | `package_checker` | `gpt-5.6-luna` | lowest catalog-supported level | Read-only inventory/hash work; never substitutes judgment for byte/hash checks |
 | `docs_reviewer` | `gpt-5.6-terra` | `high` | Read-only consistency and traceability review |
 
-These profiles are planned implementation inputs and are absent from the
-audited v1.37.0 tree. They must be added and validated before delegation; the
-table does not authorize silent fallback to a different profile, model, or
-effort. If a preferred model is unavailable, root stops before delegation and
-records the missing capability. A replacement requires an explicit plan
-amendment; automatic model selection may be used only when the amended role
-declares it and the actual selection is captured in evidence.
+These profiles are tracked implementation inputs and the canonical role-policy
+source. `scripts/validate-codex-agents.js` validates all nine before delegation.
+Native transport loads them as configuration layers; the approved process
+transport binds the raw profile hash and effective developer-instruction hash,
+and supplies model/effort/sandbox through explicit arguments. Read-only roles
+use their declared sandbox; `runtime_author` and `test_author`, which inherit
+under native transport, map explicitly to workspace-write under process
+transport. Neither transport authorizes silent fallback to a different role,
+model, or effort. If
+a preferred model is unavailable, root stops before delegation and records the
+missing capability. A replacement requires another explicit plan amendment.
 
 Each project profile must define `name`, `description`, and
 `developer_instructions`. Only `runtime_author` and `test_author` inherit a
@@ -223,15 +284,20 @@ commit, tag, push, release, or recursive delegation authority.
 Operational limits:
 
 - at most three active workers plus root;
-- `agents.max_depth = 1`;
+- native transport uses `agents.max_depth = 1`; every process worker disables
+  all three agent/fan-out features and uses `agents.max_depth = 1`,
+  `agents.max_threads = 1`;
 - workers do not spawn workers;
 - no overlapping write scopes;
+- every writable process runs alone in a disposable clean worktree at its
+  immutable input commit; root validates its allowlist and integrates the diff;
 - agents do not commit, tag, push, publish, or invoke a real Claude runner;
 - integration, approvals, and external effects are serialized by root; real
   Claude or another target-model runner is outside this release, while the
   requested Codex subagents execute the implementation/review plan;
 - structural assertions are executed by code, not decided by an LLM;
-- evidence records the actual model, effort, Codex client version, and date;
+- evidence records transport, thread ID, profile/task hashes, actual model,
+  effort, sandbox, Codex client version, date, and changed paths;
 - unavailable profiles fail closed; no silent model substitution.
 
 This heterogeneous topology is not the Responses API Multi-agent beta, whose
@@ -248,10 +314,10 @@ preferable to an unsafe dependency overlap.
 | Wave | Parallel agents | Owned work and output | Gate owned by root |
 |---|---|---|---|
 | `W0` preflight | none | Verify branch, staged/untracked boundaries, v1.37 tag/commit, prohibited runner policy, model catalog, sandbox, and file ownership ledger; preserve the three pre-existing untracked documents and stage no file by wildcard | `G0`: root records provenance/capabilities and prepares a planning-only commit containing exactly this plan and the roadmap before candidate work |
-| `W0B` profile bootstrap | root only, then fresh Codex session | Create `.codex/config.toml` and every `.codex/agents/*.toml` profile; commit bootstrap; record a resume packet; reload the project; smoke-spawn each named role in batches of at most three and record actual model/effort/sandbox | `G0B`: native profile loading and effective thread/depth limits are proven before any delegated project task; missing metadata or selector support stops execution |
-| `W1` read-only design audit | `repo_explorer`; `eval_architect`; `adversarial_reviewer` | Current-code map, eval/schema/interface proposal, safety and release-boundary risks; no edits | `G1`: root reconciles contradictions and freezes task IDs, inputs, owned paths, acceptance IDs, and interfaces |
+| `W0B` profile bootstrap | root only, then fresh Codex session/process smoke | Create `.codex/config.toml`, every `.codex/agents/*.toml` profile, the deterministic bootstrap validator, and baseline mutations; commit bootstrap/amendment; record a resume packet; try native selection fail-closed, then use the explicitly approved process fallback; smoke all nine roles in batches of at most three | `G0B`: every profile is deterministically valid; native selection is recorded unavailable; nine root-attested process envelopes prove role binding, effective model/effort/sandbox, non-recursion, outer concurrency, CLI version, hashes, and unchanged Git boundaries before W1 |
+| `W1` read-only design audit | `repo_explorer`; `eval_architect`; `adversarial_reviewer` | Current-code map, eval/schema/interface proposal, safety and release-boundary risks; three role reports plus three root-attested envelopes; no edits | `G1`: all three bounded tasks finish without timeout/tuple/hash mismatch, main-tree snapshot is unchanged, root reconciles contradictions, and freezes task IDs, inputs, owned paths, acceptance IDs, and interfaces; no silent retry or model swap |
 | `W2A` eval freeze | two `test_author` instances with disjoint data/validator paths; `package_checker` read-only | Instance A materializes `tests/skill-evals/**`; instance B implements the deterministic eval core/validator/tests from the frozen W1 interface; checker verifies baseline objects and exclusion contracts | `G2A`: validator/mutations pass, seven evals/assertions and acceptance map reconcile, baseline verifies, then root creates eval-freeze commit `S` containing data plus validator and records its tree/input hashes |
-| `W2B` Codex profile validator | one `test_author`; `package_checker` read-only | Implement the static Codex profile validator/tests; checker re-audits path/manifest isolation | `G2B`: profile validator and mutation tests pass, no new test can spawn a model process, runtime tree remains untouched |
+| `W2B` Codex execution-evidence hardening | one `test_author`; `package_checker` read-only | Extend the W0B validator/tests with execution-envelope schemas, requested/effective mismatch, timeout, concurrency, non-recursion, raw-rollout exclusion, and package-boundary mutations; checker re-audits isolation | `G2B`: profile/envelope validators and mutations pass, no offline test can spawn a model process, runtime tree remains untouched |
 | `W3` candidate | `runtime_author`; read-only `docs_author` | Author changes only the six runtime paths; docs role returns a source-linked wording/change proposal and touches no shared file | `G3`: root reviews the runtime diff, verifies one canonical owner, and rejects any post-hoc weakening of evals |
 | `W3I` root integration | root only | Apply shared test/CI wiring and approved README/CHANGELOG/roadmap/plan/release wording; reconcile versions/manifests; run targeted smoke checks | `G3I`: shared files have one owner, smoke checks pass, and the integrated tree is ready for fresh-context review |
 | `W4` independent verification | `adversarial_reviewer`; `test_runner`; `docs_reviewer` | Fresh-context semantic/security review, deterministic targeted/full tests, documentation/traceability review; all read-only | `G4`: all expected checks executed, zero critical blockers, every finding accepted or resolved with evidence |
@@ -272,7 +338,7 @@ W2A instance B:
   scripts/validate-skill-evals.js
   scripts/test-skill-evals.js
 
-W2B instance:
+W2B instance (extends the W0B bootstrap implementation):
   scripts/validate-codex-agents.js
   scripts/test-codex-agents.js
 ```
@@ -290,12 +356,19 @@ Every spawn or follow-up message contains:
 2. immutable input commit/tree and relevant frozen artifact hashes;
 3. exclusive writable paths and read-only context paths;
 4. acceptance IDs and exact commands/evidence required;
-5. prohibited actions, including recursive spawning, any model runner,
+5. prohibited actions, including recursive spawning, any additional or nested
+   model runner (the root-launched `codex exec` is the sole authorized call),
    credential access, commit/tag/push/release, and changes outside ownership;
 6. stop conditions for overlap, missing capability, ambiguous authority, or a
    changed input hash;
 7. required return schema and instruction to summarize logs instead of flooding
    the root context.
+
+For the approved process transport, the packet additionally names
+`transport: codex-exec`, includes the tracked role-profile SHA-256, pins
+model/effort/sandbox, and forbids the worker from treating itself as release
+root. The complete profile developer contract is supplied separately as an
+effective config override. Root, not the worker, attests the tuple and hashes.
 
 Each subagent returns exactly the following semantic fields, in Markdown or an
 equivalent structured tool result:
@@ -303,8 +376,8 @@ equivalent structured tool result:
 ```text
 task_id
 status: PASS | FAIL | BLOCKED
-actual_model
-actual_effort
+worker_reported_model
+worker_reported_effort
 changed_paths
 acceptance_ids_checked
 commands_and_exit_codes
@@ -313,6 +386,32 @@ findings_by_severity
 assumptions_or_decisions_needed
 residual_risks
 ```
+
+Worker-reported model fields are informational and may be `not_exposed`. Every
+process execution has a separate root-produced envelope:
+
+```text
+transport
+logical_role
+thread_id
+cli_version
+role_profile_sha256
+developer_instructions_sha256
+task_packet_sha256
+requested_model / effective_model
+requested_effort / effective_effort
+requested_sandbox / effective_sandbox
+started_at / ended_at / exit_code / timeout_seconds
+sanitized_rollout_projection_sha256
+collaboration_tool_calls / nested_thread_count
+git_before / git_after / changed_paths
+max_observed_worker_overlap
+```
+
+Tracked sanitized envelopes live under
+`docs/release-evidence/v1.38.0/orchestration/`; raw rollouts, full prompts,
+hidden reasoning, credentials, and unbounded logs are never committed. A worker
+cannot mark its own envelope `PASS`.
 
 `PASS` is invalid when a required command did not run. `BLOCKED` names the
 specific missing input or authority. Hidden reasoning, raw secrets, full model
@@ -445,9 +544,9 @@ These files are outside the distributed skill runtime and do not enter its ZIP:
 | File | Planned change and owner |
 |---|---|
 | `.codex/config.toml` | Root adds only the verified agent-thread/depth limits needed for one root plus at most three direct workers; the pinned client must confirm the effective count |
-| `.codex/agents/*.toml` | Root bootstraps the role profiles from section 3 after capability preflight |
-| `scripts/validate-codex-agents.js` | Validate profile schema, role inventory, model/effort policy, read-only reviewers, and absence of an invented Ultra slug |
-| `scripts/test-codex-agents.js` | Mutation/smoke fixtures for the static validator; live spawn metadata remains a separate session preflight |
+| `.codex/agents/*.toml` | Root bootstraps the canonical role-policy profiles from section 3 after capability preflight; current CLI execution binds them through the explicitly approved process transport |
+| `scripts/validate-codex-agents.js` | W0B bootstrap validates profile schema, role inventory, model/effort policy, read-only reviewers, and absence of an invented Ultra slug; W2B extends it for sanitized execution envelopes |
+| `scripts/test-codex-agents.js` | W0B baseline mutations cover profiles/config; W2B adds envelope, mismatch, timeout, concurrency, non-recursion, and raw-rollout-exclusion mutations without launching a model |
 | `scripts/test-safe.js` | Root wires every new offline test into the strict manifest and preserves stripping of every inherited live opt-in; v1.38 adds no live opt-in |
 | `scripts/test-safe-self.js` | Prove the new tests cannot inherit a live opt-in and preserve the zero-live boundary |
 | `scripts/test-portable-verification.js` | Consume the canonical strict-test inventory instead of a stale hardcoded test count |
@@ -561,6 +660,9 @@ tests/skill-evals/
 
 docs/release-evidence/v1.38.0/
 ├── freeze-record.json
+├── orchestration/
+│   ├── g0b-smoke.json
+│   └── workers/
 └── reviews/
 ```
 
@@ -589,6 +691,9 @@ The validators must:
   reference without making a behavioral comparison;
 - validate custom-agent required fields, supported documented model IDs,
   declared effort policy, sandbox, role inventory, and no Ultra model slug;
+- validate sanitized process envelopes, role/instruction/task hashes,
+  requested/effective tuple equality, bounded overlap, non-recursion, timeout
+  classification, Git boundaries, and raw-rollout exclusion;
 - prove the new scripts have no route to `claude`, `scripts/run-golden.js`, a
   network client, a model credential, or any live opt-in;
 - emit bounded deterministic JSON summaries with no secrets or raw model data;
@@ -618,6 +723,9 @@ only; they are not evidence that these v1.38 tests executed.
   canonical owner, and invented model capability;
 - custom-agent missing fields, duplicate names, write-enabled reviewer,
   unsupported configured effort, invented Ultra slug, and recursive depth;
+- process-envelope role/instruction/task hash drift, requested/effective tuple
+  mismatch, missing thread, nested spawn, overlap above three, timeout
+  misclassification, dirty-worktree attribution, and raw-rollout inclusion;
 - rejection of self-declared pass, missing commands, skips, environment errors,
   raw secrets, evidence/hash drift, or premature closure of a post-publication
   acceptance ID;
@@ -642,8 +750,9 @@ only; they are not evidence that these v1.38 tests executed.
 3. Each critical mutation fails its exact assertion ID and no unrelated ID.
 4. Ordinary research, strict sequential work, and opaque managed swarms do not
    activate portfolio orchestration.
-5. Invalid Codex profiles fail before any agent spawn; a fresh-session smoke
-   records every available role's actual model/effort/sandbox.
+5. Invalid Codex profiles fail before any agent launch; the native attempt is
+   recorded honestly and the approved process smoke records all nine roles'
+   actual model/effort/sandbox, hashes, thread IDs, and non-recursion.
 6. A changed frozen input or non-ancestor freeze record fails before packaging.
 7. Pre-existing user/untracked documents remain unstaged and absent from ZIP.
 8. WSL and Windows execute the same strict inventory and reconcile counts.
@@ -708,9 +817,11 @@ resembles part of an ID is a prerequisite, not completion evidence.
 ### Orchestration
 
 - `R38-O01`: root is Sol Ultra; catalog preflight and actual worker
-  model/effort/sandbox metadata are recorded without an invented Ultra slug.
-- `R38-O02`: no more than three direct workers, depth one, profile validation,
-  and fresh-session smoke all pass.
+  model/effort/sandbox metadata are recorded without an invented Ultra slug;
+  transport is labelled native or `codex-exec` without conflation.
+- `R38-O02`: no more than three direct workers run concurrently; native depth
+  is one or process workers disable agent/fan-out features and enforce thread
+  cap one; deterministic profile validation and all nine process smokes pass.
 - `R38-O03`: file ownership is exclusive, shared writes are root-only, every
   role-specific PASS contract is evidenced, and external actions are serialized.
 - `R38-O04`: heterogeneous Codex, Responses API Multi-agent, explicit managed
@@ -761,7 +872,10 @@ resembles part of an ID is a prerequisite, not completion evidence.
 - v1.37 source/tag mismatch or missing release baseline: do not create or
   continue a v1.38 runtime candidate. The audited source/tag prerequisite is
   currently satisfied at commit `4cecd75`.
-- required Codex model profile unavailable: stop; do not silently substitute.
+- required Codex model/effort unavailable, process rollout metadata missing, or
+  requested/effective tuple mismatch: stop; do not silently substitute.
+- transport change after `G0B`: reopen `G0B` and `G1` and rerun affected waves;
+  never switch transport opportunistically inside a release candidate.
 - a role-specific PASS contract lacks evidence: keep its gate open regardless
   of the worker's summary.
 - offline eval or independent review does not support the runtime feature: fix

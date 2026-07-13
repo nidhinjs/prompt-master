@@ -1,7 +1,7 @@
 # Release Roadmap: v1.33.0 and Later
 
 Status: active plan; v1.33.0–v1.37.0 completed; v1.38.0 offline-verification
-scope planned next
+implementation in progress
 Baseline: released `v1.37.0`, commit `4cecd75fdff5b2de9197a0ecfc88a7612a2a46cd`
 Prepared: 2026-07-10; revised 2026-07-12
 Primary input: [AUDIT_REPORT_2026-07-10.md](../AUDIT_REPORT_2026-07-10.md)
@@ -36,9 +36,10 @@ Primary input: [AUDIT_REPORT_2026-07-10.md](../AUDIT_REPORT_2026-07-10.md)
 > **Implementation audit (2026-07-12):** the v1.37.0 source/tag prerequisite is
 > satisfied. The current tree contains reusable Managed Agents, evidence,
 > safe-runner, inventory, and packaging foundations, but it does not contain the
-> v1.38 research-portfolio route, deterministic contract suite,
-> `.codex/agents/` profiles, or role-specific review evidence. Offline
-> implementation remains pending. Claude Code Routines and behavioral
+> v1.38 research-portfolio route, deterministic contract suite, or
+> role-specific review evidence. W0B now tracks `.codex/agents/` role policies
+> and the bootstrap validator; runtime/eval implementation remains pending.
+> Claude Code Routines and behavioral
 > attestation are not part of v1.38.
 
 ## 1. Purpose
@@ -829,7 +830,7 @@ scope and must leave PM-05 partial until a complete authorized run exists.
 | Codex tooling and parity | v1.34 | Workers B/C | completed | Cross-surface version/layout/hook evidence |
 | Cross-platform fake runner | v1.37 | Workers A/B | completed | Strict offline gate on Windows and Ubuntu |
 | Historical provenance | v1.37 | Worker C | completed | Machine-validated v1.29 source-parity/container-status record |
-| Research portfolio orchestration | v1.38 | Codex Ultra plus heterogeneous roles | W0 complete; W0B profiles tracked; G0B blocked in the current session because native child model/effort metadata is not exposed; candidate/contracts not implemented | Bounded runtime improvement plus deterministic offline evidence and role-specific reviews |
+| Research portfolio orchestration | v1.38 | Codex Ultra plus heterogeneous roles | W0 complete; W0B profiles tracked; native selector failed closed; user approved process-isolated Codex fallback on 2026-07-13; G0B fallback smoke pending; candidate/contracts not implemented | Bounded runtime improvement plus deterministic offline evidence and role-specific reviews |
 | Behavioral attestation | unassigned | future scope | deferred; no Claude execution environment | Keep PM-05 open without blocking or overstating v1.38 |
 | Local permission narrowing | no release | Coordinator/user | pending | No broad pre-approved mutations |
 
