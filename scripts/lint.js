@@ -179,6 +179,21 @@ if (pluginVersion) {
   if (process.env.GITHUB_REF_TYPE === 'tag' && process.env.GITHUB_REF_NAME !== `v${pluginVersion}`) {
     errors.push(`Release tag mismatch: ${process.env.GITHUB_REF_NAME || '(missing)'} vs v${pluginVersion}`);
   }
+  if (!process.env.GITHUB_ACTIONS) {
+    let hasReleaseTag = false;
+    try {
+      if (fs.existsSync(p('.git/refs/tags/v' + pluginVersion))) hasReleaseTag = true;
+      if (!hasReleaseTag) {
+        const packedRefs = p('.git/packed-refs');
+        if (fs.existsSync(packedRefs)) {
+          hasReleaseTag = new RegExp('refs/tags/v' + pluginVersion.replace(/\./g, '\\.') + '$', 'm').test(fs.readFileSync(packedRefs, 'utf8'));
+        }
+      }
+    } catch (_) { hasReleaseTag = true; }
+    if (!hasReleaseTag) {
+      warnings.push('HEAD version ' + pluginVersion + ' has no git tag v' + pluginVersion + '; create and push it before release (bump-version.ps1 -Tag; git push origin v' + pluginVersion + ')');
+    }
+  }
 }
 
 log('SKILL.md frontmatter fields');

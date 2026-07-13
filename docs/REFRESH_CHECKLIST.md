@@ -38,6 +38,20 @@
 - `./scripts/bump-version.ps1 -Bump minor|patch` — синхронный подъём версии.
 - Заполни секцию в `CHANGELOG.md`.
 
+## Релиз — обязательные шаги (иначе рвётся traceability, F-1)
+
+Версия в `plugin.json` без git-тега = висячая footer-ссылка и непрослеживаемый релиз.
+Тег обязателен и должен быть опубликован:
+
+1. **Тег на релизном коммите (обязательно):** `./scripts/bump-version.ps1 -Bump minor|patch -Tag`
+   — флаг `-Tag` создаёт подписанный тег `vX.Y.Z` (или вручную `git tag -s vX.Y.Z <commit>`).
+2. **Публикация тега (обязательно):** `git push origin vX.Y.Z`. Без этого GitHub Release и
+   footer-ссылка в `CHANGELOG.md` не разрешаются. `lint.js` предупреждает локально, если у
+   текущей версии нет тега; на tag-push CI падает при несоответствии тега версии.
+3. **GitHub Release:** `./scripts/package-skill.ps1 -Upload` — приложи ZIP + sha256 к `vX.Y.Z`.
+4. Сверься с `docs/release-evidence/tag-inventory-2026-07.md`: каждая footer-ссылка `CHANGELOG`
+   должна разрешаться в тег и release.
+
 ## Live eval — запрещён по умолчанию
 
 - `scripts/run-golden.js` делает реальные `claude -p` вызовы и не является обычным
