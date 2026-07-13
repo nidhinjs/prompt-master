@@ -36,6 +36,7 @@ const DEFAULT_CHECKS = [
   { command: process.execPath, args: ['scripts/test-hook.js'] },
   { command: process.execPath, args: ['scripts/test-codex-layout.js'] },
   { command: process.execPath, args: ['scripts/test-codex-hook.js'] },
+  { command: process.execPath, args: ['scripts/test-codex-agents.js'] },
   { command: process.execPath, args: ['scripts/lint.js'] },
   { command: process.execPath, args: ['--check', 'scripts/run-golden.js'] },
   { command: process.execPath, args: ['scripts/test-golden-regex.js'] },

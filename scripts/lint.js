@@ -667,6 +667,9 @@ if (!/args:\s*\['scripts\/test-codex-layout\.js'\]/.test(safeTestText)) {
 if (!/args:\s*\['scripts\/test-codex-hook\.js'\]/.test(safeTestText)) {
   errors.push('scripts/test-safe.js must include scripts/test-codex-hook.js in DEFAULT_CHECKS');
 }
+if (!/args:\s*\['scripts\/test-codex-agents\.js'\]/.test(safeTestText)) {
+  errors.push('scripts/test-safe.js must include scripts/test-codex-agents.js in DEFAULT_CHECKS');
+}
 if (!/Canonical Trust Boundary/.test(contractsTestText) || !/Template L/.test(contractsTestText)) {
   errors.push('scripts/test-contracts.js must enforce trust-boundary and Template L contracts');
 }

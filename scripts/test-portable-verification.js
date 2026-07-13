@@ -39,7 +39,7 @@ const cases = [
 
   function fakeUsesAbsoluteNodeAdapter() {
     const safeNodeChecks = sources.safe.match(/\{ command: process\.execPath, args:/g) || [];
-    assert(safeNodeChecks.length === 16, 'every strict-safe child check must use absolute process.execPath');
+    assert(safeNodeChecks.length === 17, 'every strict-safe child check must use absolute process.execPath');
     assert(/command:\s*process\.execPath/.test(sources.runner), 'test adapter must launch process.execPath');
     assert(/path\.isAbsolute\(testScript\)/.test(sources.runner), 'test adapter path must be absolute');
     assert(/path\.isAbsolute\(fakeClaudeScript\)/.test(sources.runnerTest), 'fake test must assert an absolute script path');

@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
 
 permissions:
@@ -56,3 +57,15 @@ jobs:
         env:
           NO_LIVE_MODEL_CALLS: '1'
         run: node scripts/test-codex-layout.js --production-only
+
+  package-dry:
+    runs-on: windows-2025
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Package dry run (offline)
+        run: pwsh -NoProfile -File scripts/package-skill.ps1 -DryRun
