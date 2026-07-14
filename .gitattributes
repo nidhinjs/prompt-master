@@ -8,3 +8,4 @@
 *.ps1  text eol=lf
 *.json text eol=lf
 *.js   text eol=lf
+*.toml text eol=lf
