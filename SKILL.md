@@ -18,7 +18,7 @@ Build prompts one at a time, ready to paste.
 **Hard rules — NEVER violate these**
 
 - Do not output a prompt without first confirming the target tool — ask if ambiguous
-- Prefer simpler techniques (role assignment, few-shot, grounding anchors, chain of thought) over complex meta-reasoning frameworks in single-prompt contexts. The following techniques carry higher fabrication risk when used in a single prompt and should only be applied when the user explicitly requests them and the target tool supports them:
+- Prefer simpler techniques (role assignment, few-shot examples, grounding anchors, and explicit verification criteria) over complex meta-reasoning frameworks in single-prompt contexts. The following techniques carry higher fabrication risk when used in a single prompt and should only be applied when the user explicitly requests them and the target tool supports them:
   - **Mixture of Experts** -- simulated multi-persona routing in a single forward pass
   - **Tree of Thought** -- simulated branching without real parallel execution
   - **Graph of Thought** -- requires an external graph engine not present in most tools
@@ -91,13 +91,15 @@ Current default is **Opus 4.8**. Opus 4.7 is still selectable — keep its notes
 
 ---
 
-**ChatGPT / GPT-5.x / OpenAI GPT models**
-- Start with the smallest prompt that achieves the goal — add structure only when needed
-- Be explicit about the output contract: what format, what length, what "done" looks like
-- State tool-use expectations explicitly if the model has access to tools
-- Use compact structured outputs — GPT-5.x handles dense instruction well
-- Constrain verbosity when needed: "Respond in under 150 words. No preamble. No caveats."
-- GPT-5.x is strong at long-context synthesis and tone adherence — leverage these
+**ChatGPT / GPT-5.6 / OpenAI GPT models**
+- Start with the smallest prompt that achieves the goal. For complex work, use four compact sections: Goal, Context, Constraints, and Done.
+- Ask for one coherent outcome. Keep adjacent but independently shippable work out of the same prompt.
+- Use Plan Mode for complex or high-blast-radius implementation; let simple, bounded tasks execute directly.
+- Delegate only independent, bounded subtasks. Name each subagent's deliverable and cap concurrency instead of requesting an open-ended swarm.
+- Set reasoning effort intentionally from task difficulty and latency needs. Do not default every task to maximum effort.
+- State tool-use and approval boundaries explicitly when the model has tools.
+- Never request hidden chain-of-thought, private reasoning, or a verbatim reasoning trace. Ask for conclusions, assumptions, evidence, and verification results.
+- Constrain response length when needed: "Respond in under 150 words. No preamble."
 
 ---
 
@@ -182,6 +184,16 @@ Current default is **Opus 4.8**. Opus 4.7 is still selectable — keep its notes
 - Human review triggers required: "Stop and ask before deleting any file, adding any dependency, or affecting the database schema"
 - Session hygiene matters: new task = new session. Use /rewind instead of correcting mid-conversation. /compact at ~50% context, not 90%.
 - For complex tasks: use Template M. It handles scope, criteria, stop conditions, and session strategy in one structured block.
+
+---
+
+**Codex CLI / Codex app / Codex IDE**
+- Structure complex requests as Goal, Context, Constraints, and Done. Keep the final outcome singular and testable.
+- Use Plan Mode when architecture, migrations, or several dependent steps need review before edits.
+- For implementation, state the allowed paths, approval boundary, and concrete verification commands.
+- Request subagents only for independent work with bounded deliverables; keep one primary agent responsible for synthesis.
+- Choose reasoning effort intentionally: lower for mechanical or latency-sensitive work, higher only when judgment or blast radius warrants it.
+- Do not request hidden chain-of-thought. Ask for a concise rationale, evidence, and the checks that prove completion.
 
 ---
 
@@ -384,7 +396,7 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - Entire codebase pasted as context → scope to the relevant file and function only
 
 **Reasoning failures**
-- Logic or analysis task with no step-by-step → add "Think through this carefully before answering"
+- Logic or analysis task with no verification contract → add the evidence, checks, and decision criteria the answer must report
 - CoT added to o3/o4-mini/R1/Qwen3-thinking → REMOVE IT
 - New prompt contradicts prior session decisions → flag, resolve, include memory block
 
@@ -422,8 +434,7 @@ When the user's request references prior work, decisions, or session history —
 **Grounding anchors** — for any factual or citation task:
 "Use only information you are highly confident is accurate. If uncertain, write [uncertain] next to the claim. Do not fabricate citations or statistics."
 
-**Chain of Thought** — for logic, math, and debugging on standard reasoning models ONLY (Claude, GPT-5.x, Gemini, Qwen2.5, Llama). Never on o3/o4-mini/R1/Qwen3-thinking.
-"Think through this step by step before answering."
+**Reasoning visibility** — never ask any model to reveal hidden chain-of-thought. For logic, math, and debugging, request a concise rationale, assumptions, intermediate results needed for audit, and a final verification.
 
 ---
 
