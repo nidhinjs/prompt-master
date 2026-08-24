@@ -16,6 +16,21 @@ A Claude skill that writes the accurate prompts for any AI tool. Zero tokens or 
 2. Go to **claude.ai → Sidebar → Customize → Skills → Upload a Skill**
 
 
+### RECOMMENDED - Claude Code (plugin)
+
+Install as a Claude Code plugin straight from this repo — it doubles as its own marketplace:
+
+```bash
+/plugin marketplace add nidhinjs/prompt-master
+/plugin install prompt-master@prompt-master
+```
+
+Updating later is one command:
+
+```bash
+/plugin marketplace update prompt-master
+```
+
 ### OR Clone directly into Claude Code skills directory (Not Suggested)
 
 ```bash
