@@ -307,6 +307,14 @@ First detect: generation from scratch or editing an existing image?
 
 ---
 
+**Atlas Cloud — Image and Video Models**
+- Atlas Cloud routes to many underlying image and video models, so never treat it as one prompt dialect. Confirm the exact model first; if the user only names Atlas Cloud, ask which model or which generation task they intend to run.
+- Apply the profile for the underlying model (for example SeeDream, Kling, or Sora). Atlas Cloud changes how the model is accessed, not how that model interprets prompts.
+- Detect generation from scratch versus reference-based editing or image-to-video before writing. For reference workflows, tell the user to attach or upload the source media before pasting the prompt.
+- Keep API parameters out of the prompt block. If setup is needed, add only a short note listing parameters that are confirmed by the selected model's current input schema; never invent generic fields or assume one model's parameters work for another.
+
+---
+
 **Image AI — Reference Editing** (when user has an existing image to modify)
 Detect when: user mentions "change", "edit", "modify", "adjust" anything in an existing image, or uploads a reference.
 Always instruct the user to attach the reference image to the tool first. Build the prompt around the delta ONLY — what changes, what stays the same.
