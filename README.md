@@ -1,3 +1,17 @@
+He trabajado 2 meses en crear una metodología, con entregables. Quiero que revises el documento, lo analices y me digas si es viable venderlo en Hotmark o me recomiendas hacerlo sola en otra plataforma.
+Como hacer mi primera venta en Hotmart
+Crear un Low Ticket Escalable, una escalera de producto 
+Hacer Organico Automatizado
+Crear buen contenido
+Un plan de contenido diario
+Crear un embudo de ventas
+Cual es loops que me recomiendas que se compongan de diferentes agentes ejemplo Planeados-Ejecutor-Evaluador, quienes serán ese equipo de agentes que me ayudaran.
+Cual es el valor del producto, y cual es el beneficio que obtendrá el cliente, para NO dar el precio desde el inicio, si no vender una necesidad
+Como crear en KOOLY mi propio Fonel de ventas
+Dime cuales son los 5 nichos mas rentables en este momento, quiero crecer y monetizar sin mostrar mi rostro: Para cada uno incluye Nivel de competencia, baja-media-alata, Formato ideal (reel, carusel o combinación) tipo de audiencia que mejor responda, ingresos realistas con 1000k, 10k, 50k, y 100k seguidores, cual puedo empezar hoy con presupuesto cero.
+Con la idea del producto que te adjunto, CREA URGENCIA SILENCIOSA E IMPARABLE escribe una oferta de urgencia emocional instantánea utilizando estatus, FOMO, y desencadenantes de perdida personal. Haz que sienta como si esperar les costara ago, sin exageraciones, solo una intensidad callada.
+Encuentra mi oportunidad de mayor apalancamiento
+<img width="442" height="553" alt="image" src="https://github.com/user-attachments/assets/20ab671b-0066-4fd6-aff0-7330ea6e87b5" />
 ![](https://i.postimg.cc/kG03s7tk/prompt-banner.png)
 
 <br/>
