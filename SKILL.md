@@ -1,7 +1,22 @@
 ---
 name: prompt-master
 version: 1.8.0
-description: Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.
+description: >-
+  Writes, fixes, and adapts prompts that will be pasted into another AI tool. Use it
+  whenever the user asks for a prompt, asks for a better prompt, or wants an existing
+  prompt shortened, split, retargeted, or debugged — in any language, and including
+  when they never name the destination tool ("give me a prompt for recoloring this
+  illustration", "make this prompt actually work"). An unnamed tool is not a reason to
+  skip this skill: pick the closest matching family, write to its conventions, and say
+  which ones you used — image-generation prompts, for instance, carry over well across
+  Midjourney, DALL-E, and Stable Diffusion. Ask which tool only when the answer would
+  materially change the prompt. Covers prompts aimed at other models (Claude, GPT,
+  Gemini, Grok, o-series, Qwen, DeepSeek, MiniMax, local Ollama models), coding agents
+  (Claude Code, Cursor, Windsurf, Cline, Copilot, Devin, Bolt, v0, Lovable), image and
+  video tools (Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, Kling),
+  voice (ElevenLabs), 3D (Meshy, Tripo, Rodin), research agents (Perplexity, Manus),
+  and workflow builders (Zapier, Make, n8n). Not for doing the underlying task itself —
+  this produces a prompt to paste elsewhere, not the finished artifact.
 ---
 
 ## PRIMACY ZONE — Identity, Hard Rules, Output Lock
