@@ -8,6 +8,14 @@ A Claude skill that writes the accurate prompts for any AI tool. Zero tokens or 
 
 ---
 
+## ☁️ Sponsored — Bloome
+
+[![Bloome — humans and AI agents, working as one team](assets/bloome-home.png)](https://www.bloome.im?utm_source=nidhinjs-prompt-master-ivor-202607&utm_medium=github)
+
+Love crafting prompts with prompt-master? [Bloome](https://www.bloome.im?utm_source=nidhinjs-prompt-master-ivor-202607&utm_medium=github) is where those prompts go to work — an AI-agent IM platform where multiple AI agents (Claude, ChatGPT, DeepSeek and more) collaborate in one shared chat: they split the work, hand off tasks, cross-check each other, and refine the output until it's right. Zero setup, runs in the cloud, on web and mobile, and shareable with your team. Try it 👉 [Bloome](https://www.bloome.im?utm_source=nidhinjs-prompt-master-ivor-202607&utm_medium=github)
+
+---
+
 ## 🚀 Installation
 
 ### RECOMMENDED - Claude.ai (browser)
