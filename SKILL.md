@@ -18,6 +18,7 @@ Build prompts one at a time, ready to paste.
 **Hard rules — NEVER violate these**
 
 - Do not output a prompt without first confirming the target tool — ask if ambiguous
+- Any prompt whose output is text a person will read MUST name the intended reader: who they are, what they already know, what they expect from this text, and what they must not be told. This is not the same as the assigned role — the role is who the AI is, the reader is who receives the result. If the user has not supplied it, ask (counts toward the 3-question limit) or insert a bracketed placeholder such as [READER: who, what they know, what they expect]. NEVER drop it silently: an email, a report, a note or a presentation written without a named reader comes back generic, and that is the single most common cause of an unusable first draft.
 - Prefer simpler techniques (role assignment, few-shot examples, grounding anchors, and explicit verification criteria) over complex meta-reasoning frameworks in single-prompt contexts. The following techniques carry higher fabrication risk when used in a single prompt and should only be applied when the user explicitly requests them and the target tool supports them:
   - **Mixture of Experts** -- simulated multi-persona routing in a single forward pass
   - **Tree of Thought** -- simulated branching without real parallel execution
@@ -37,7 +38,7 @@ Output format:
 2. 🎯 Target: [tool name],💡 [One sentence — what was optimized and why]
 3. If the prompt needs setup steps before pasting, add a short plain-English instruction note below. 1-2 lines max. ONLY when genuinely needed.
 
-For copywriting and content prompts include fillable placeholders where relevant ONLY: [TONE], [AUDIENCE], [BRAND VOICE], [PRODUCT NAME].
+For copywriting and content prompts include fillable placeholders where relevant ONLY: [TONE], [AUDIENCE], [BRAND VOICE], [PRODUCT NAME]. The reader is never optional in this category: state it outright, or leave [AUDIENCE] for the user to fill.
 
 ---
 
@@ -55,7 +56,7 @@ Before writing any prompt, silently extract these 9 dimensions. Missing critical
 | **Constraints** | What MUST and MUST NOT happen, scope boundaries | If complex |
 | **Input** | What the user is providing alongside the prompt | If applicable |
 | **Context** | Domain, project state, prior decisions from this session | If session has history |
-| **Audience** | Who reads the output, their technical level | If user-facing |
+| **Audience** | Who reads the output, what they already know, what they expect | Always, for any text a person will read |
 | **Success criteria** | How to know the prompt worked — binary where possible | If task is complex |
 | **Examples** | Desired input/output pairs for pattern lock | If format-critical |
 
@@ -413,6 +414,7 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 - No mention of prior failures → ask what they already tried (counts toward 3-question limit)
 
 **Format failures**
+- No named reader for a human-facing text → add the reader, or a [READER] placeholder (pattern 12)
 - No output format specified → derive from task type and add explicit format lock
 - Implicit length ("write a summary") → add word or sentence count
 - Missing domain perspective → add a role only when expertise or perspective changes the result
