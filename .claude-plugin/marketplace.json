@@ -1,0 +1,15 @@
+{
+  "name": "prompt-master",
+  "owner": {
+    "name": "nidhinjs",
+    "url": "https://github.com/nidhinjs"
+  },
+  "plugins": [
+    {
+      "name": "prompt-master",
+      "source": ".",
+      "version": "1.7.0",
+      "description": "Generates optimized, token-efficient prompts for any AI tool."
+    }
+  ]
+}
