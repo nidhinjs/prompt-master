@@ -80,3 +80,13 @@
 | 35 | **No human review trigger** | Agent decides everything autonomously | "Stop and ask before: deleting any file, adding any dependency, or changing the database schema" |
 | 36 | **Vague first turn for an agentic model** | "fix the auth bug" with no scope, files, or criteria | Use Template M for Claude or Template N for OpenAI tasks. Front-load the outcome, relevant context, file scope, constraints, action boundaries, and acceptance criteria. |
 | 37 | **Context rot on long sessions** | Repeats corrections while stale assumptions remain in context | Start a new session for unrelated work; otherwise compact around current decisions, constraints, failures, and target state. Delegate only independent, sizeable investigation. |
+---
+
+## Security Patterns
+
+| # | Pattern | Bad Example | Fixed |
+|---|---------|------------|-------|
+| 38 | **Credential Leak** | "my API key is sk-proj-123..." | "Replace with `[API_KEY_REDACTED]`" |
+| 39 | **Private Path Leak** | "/Users/username/Documents/project" | "Replace with `[LOCAL_PATH]`" |
+| 40 | **PII Leak** | "email me at name@email.com" | "Replace with `[EMAIL_REDACTED]`" |
+| 41 | **Internal URL Leak** | "connect to http://192.168.1.1:8080" | "Replace with `[INTERNAL_URL]`" |

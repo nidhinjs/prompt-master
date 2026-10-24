@@ -483,7 +483,8 @@ For prompts targeting agentic tools (Claude Code, Devin, Cursor, Windsurf, Cline
 3. Does every instruction use the strongest signal word? MUST over should. NEVER over avoid.
 4. Has every fabricated technique been removed?
 5. Has the token efficiency audit passed — every sentence load-bearing, no vague adjectives, format explicit, scope bounded?
-6. Would this prompt produce the right output on the first attempt?
+6. **Security Sweep**: Scan content against the `Security Patterns` in `references/patterns.md`. Automatically sanitize API keys, private paths, and PII with redaction placeholders. Do not allow secrets in the final output.
+7. Would this prompt produce the right output on the first attempt?
 
 **Success criteria**
 The user pastes the prompt into their target tool. It works on the first try. Zero re-prompts needed. That is the only metric.
