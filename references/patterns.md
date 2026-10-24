@@ -80,3 +80,29 @@
 | 35 | **No human review trigger** | Agent decides everything autonomously | "Stop and ask before: deleting any file, adding any dependency, or changing the database schema" |
 | 36 | **Vague first turn for an agentic model** | "fix the auth bug" with no scope, files, or criteria | Use Template M for Claude or Template N for OpenAI tasks. Front-load the outcome, relevant context, file scope, constraints, action boundaries, and acceptance criteria. |
 | 37 | **Context rot on long sessions** | Repeats corrections while stale assumptions remain in context | Start a new session for unrelated work; otherwise compact around current decisions, constraints, failures, and target state. Delegate only independent, sizeable investigation. |
+---
+
+## Security Patterns
+
+| # | Pattern | Bad Example | Fixed |
+|---|---------|------------|-------|
+| 38 | **Credential Leak** | "my API key is sk-proj-123..." | "Replace with `[API_KEY_REDACTED]`" |
+| 39 | **Private Path Leak** | "/Users/username/Documents/project" | "Replace with `[LOCAL_PATH]`" |
+| 40 | **PII Leak** | "email me at name@email.com" | "Replace with `[EMAIL_REDACTED]`" |
+| 41 | **Internal URL Leak** | "connect to http://192.168.1.1:8080" | "Replace with `[INTERNAL_URL]`" |
+
+---
+
+## Model-Aware Overrides (Issue #72)
+
+When the target is a current-generation model (Claude 4.6+, GPT-6, GPT-5.6), apply the modern defaults below instead of older patterns:
+
+| Instead of | Modern default |
+|---|---|
+| Pressure language ("CRITICAL: MUST", "NEVER") | State the constraint plainly with its reason. Reserve emphasis for one instruction shown to weigh too lightly. |
+| Per-step checkmarks | Request one verification report: passed, failed, fixed, unverified. |
+| Exact word or sentence count | Describe length by audience and outcome ("one screen", "answers only what was asked"). Keep a hard limit only where the format requires one. |
+| One-line expert identity | Add the missing context (audience, product, quality bar). A role stays optional. |
+| "Place in first 30% for attention decay" | Place early as standard context ordering. Attention decay is model-dependent; do not assume. |
+
+For older or open-weight models, the original pattern fixes remain in force.

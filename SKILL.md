@@ -25,6 +25,7 @@ Build prompts one at a time, ready to paste.
   - **Universal Self-Consistency** -- requires independent sampling passes
   - **Prompt chaining as a layered technique** -- compounds fabrication risk across longer chains
 - Never request hidden chain-of-thought, private reasoning, or a verbatim reasoning trace from any model. Ask for conclusions, assumptions, evidence, concise rationale, and verification results instead.
+- If the user's input contains confidential code, proprietary information, or personal data, do not include it verbatim in the generated prompt. Paraphrase the intent without reproducing sensitive content.
 - Do not ask more than 3 clarifying questions before producing a prompt
 - Do not pad output with explanations the user did not request
 
@@ -45,7 +46,7 @@ For copywriting and content prompts include fillable placeholders where relevant
 
 ### Intent Extraction
 
-Before writing any prompt, silently extract these 9 dimensions. Missing critical dimensions trigger clarifying questions (max 3 total).
+Before writing any prompt, silently extract these 9 dimensions. Missing critical dimensions trigger clarifying questions (max 3 total). The 3-question limit always takes precedence over completeness of extraction. If critical dimensions remain unknown after 3 questions, produce the best prompt possible and note the assumptions made: "I assumed [X] — let me know if that's wrong."
 
 | Dimension | What to extract | Critical? |
 |-----------|----------------|-----------|
@@ -414,8 +415,8 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 
 **Format failures**
 - No output format specified → derive from task type and add explicit format lock
-- Implicit length ("write a summary") → add word or sentence count
-- Missing domain perspective → add a role only when expertise or perspective changes the result
+- Implicit length ("write a summary") → describe length by audience and outcome ("one screen", "answers only what was asked"). Keep a hard limit only where the format requires one.
+- Missing domain perspective → add the missing context (audience, product, quality bar) first. A one-line role stays optional unless expertise meaningfully changes the result.
 - Vague aesthetic ("make it professional") → translate to concrete measurable specs
 
 **Scope failures**
@@ -431,7 +432,7 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 **Agentic failures**
 - No starting state → add current project state description
 - No target state → add specific deliverable description
-- Silent agent → request meaningful milestones, blockers, and final verification evidence
+- Silent agent → ask for one verification report at the end: what passed, what failed, what was fixed, what stayed unverified.
 - Unrestricted filesystem → add scope lock on which files and directories are touchable
 - No human review trigger → add "Stop and ask before: [list destructive actions]"
 
@@ -439,7 +440,7 @@ Scan every user-provided prompt or rough idea for these failure patterns. Fix si
 
 ### Memory Block
 
-When the user's request references prior work, decisions, or session history — prepend this block to the generated prompt. Place it in the first 30% of the prompt so it survives attention decay in the target model.
+When the user's request references prior work, decisions, or session history — prepend this block to the generated prompt. Place it early in the prompt where system context typically receives higher attention.
 
 ```
 ## Context (carry forward)
@@ -479,11 +480,17 @@ For prompts targeting agentic tools (Claude Code, Devin, Cursor, Windsurf, Cline
 **Before delivering any prompt, verify:**
 
 1. Is the target tool correctly identified and the prompt formatted for its specific syntax?
-2. Are the most critical constraints in the first 30% of the generated prompt?
-3. Does every instruction use the strongest signal word? MUST over should. NEVER over avoid.
-4. Has every fabricated technique been removed?
-5. Has the token efficiency audit passed — every sentence load-bearing, no vague adjectives, format explicit, scope bounded?
+2. Are the most critical constraints stated plainly with their reason? (Use emphasis sparingly — only for an instruction shown to be underweighted. Current models respond closely to system prompts; inflated emphasis causes over-triggering.)
+3. Has every fabricated technique been removed?
+4. Has the token efficiency audit passed — every sentence load-bearing, no vague adjectives, format explicit, scope bounded, length described by audience and outcome rather than arbitrary word counts?
+5. **Security Sweep**: Scan content against the `Security Patterns` in `references/patterns.md`. Automatically sanitize API keys, private paths, and PII with redaction placeholders. Do not allow secrets in the final output.
 6. Would this prompt produce the right output on the first attempt?
+
+**Quality gate exit conditions**
+If any check fails:
+- Fix it silently if the fix is clear and does not change the user's intent.
+- If the fix requires changing the user's intent, flag it: "I adjusted [X] to satisfy [constraint]. Let me know if that changes what you need."
+- If the final check cannot be satisfied (the prompt is unlikely to work on the first attempt), say so: "I'm not confident this will work first try — here's what's uncertain: [X]."
 
 **Success criteria**
 The user pastes the prompt into their target tool. It works on the first try. Zero re-prompts needed. That is the only metric.

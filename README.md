@@ -4,7 +4,7 @@
 
 A Claude skill that writes the accurate prompts for any AI tool. Zero tokens or credits wasted. Full context and memory retention. No re-prompting your way to an answer you should have gotten on attempt one.
 
-**Works with:** Claude, ChatGPT, Codex, Grok, Gemini, o1/o3, MiniMax, Cursor, Claude Code, GitHub Copilot, Windsurf, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make, and any AI tool you throw at it.
+**Works with:** Claude, ChatGPT, Codex, Grok, Gemini, o1/o3, MiniMax, Cursor, Claude Code, GitHub Copilot, Windsurf, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make, and any AI tool you throw at it — including Fable 5 for long-horizon autonomous agents.
 
 ---
 
@@ -202,6 +202,7 @@ Prompt Master includes specific profiles for 20+ tools. For anything not on the 
 | Tool | Category | What Prompt Master Fixes |
 |------|----------|--------------------------|
 | **Claude 5 / current Claude** | Reasoning and agentic LLM | Model-aware effort, scope, XML structure, and delegation control |
+| **Fable 5 / Fable 5.1** | Reasoning and agentic LLM | Complete outcome-focused spec, explicit action boundaries, interval-based verification, concurrency caps, progress grounded in tool results |
 | **ChatGPT / OpenAI GPT models** | Reasoning and agentic LLM | GPT-6 Luna, GPT-6.1 Sol, GPT-6 Astra, and GPT-5.6 compatibility; lean contracts and verified controls |
 | **Codex** | Coding agent | File scope, approval boundaries, verification, bounded subagents |
 | **Grok 4.6** | Reasoning and agentic LLM | Search grounding, reasoning effort, tools, caching, and stop conditions |

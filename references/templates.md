@@ -20,6 +20,7 @@ Full template library for Prompt Master. Read the relevant template when the use
 | [L — Prompt Decompiler](#template-l--prompt-decompiler) | Breaking down, adapting, or splitting existing prompts |
 | [M — Current Claude Task Brief](#template-m--current-claude-task-brief) | Complex, multi-step, or agentic task on current Claude models |
 | [N — OpenAI Task Brief](#template-n--openai-task-brief) | Complex tasks on GPT-6, GPT-6.1 Sol, or explicitly selected GPT-5.6 models |
+| [O — Fable 5 Long-Horizon Task Brief](#template-o--fable-5-long-horizon-task-brief) | Long-running autonomous agents on Fable 5 / Fable 5.1 |
 
 ---
 
@@ -481,3 +482,54 @@ Output:
 - Keep API and harness settings in setup notes outside the prompt. Verify supported controls for the exact model, endpoint, and surface.
 
 The task brief and adaptation heuristics are Prompt Master recommendations, not an official OpenAI template or benchmark result.
+
+
+---
+
+## Template O — Fable 5 Long-Horizon Task Brief
+
+*Use for complex, multi-step, long-horizon autonomous tasks on Fable 5 / Fable 5.1. This template provides the complete outcome-focused specification, explicit action boundaries, and infrastructure guidance that Fable 5 requires for reliable long-running operation.*
+
+```
+## Objective
+[What needs to be built, fixed, or produced — one clear sentence. Add WHY if it affects approach. For Fable 5, be exhaustive: the model will not ask for clarification mid-run.]
+
+## Context
+[What exists now — relevant files, current behavior, stack already in place, what was tried and failed. Include ALL assumptions Fable 5 might need.]
+
+## Target State
+[What done looks like — specific files changed, behavior produced, tests passing. Binary where possible. Define the exact artifact(s) that constitute completion.]
+
+## Scope
+- Work only in: [specific files and directories]
+- Do NOT touch: [forbidden files — .env, package-lock.json, configs, anything outside scope]
+
+## Constraints
+- [Stack version, naming conventions, no new dependencies without asking]
+- Only make changes directly requested. Do not add features, abstractions, or files beyond what was asked.
+- Concurrency cap: [max parallel subagents or spend limit if cost matters]
+- Interval verification: [how often Fable 5 should self-verify / report progress]
+
+## Acceptance Criteria
+- [ ] [Binary check 1]
+- [ ] [Binary check 2]
+- [ ] [Binary check 3]
+
+## Action Boundaries
+- Proceed with reversible, in-scope inspection, edits, and validation.
+- Delegate independent, sizeable workstreams to subagents with bounded deliverables.
+- Stop and ask before destructive or irreversible actions, external writes, purchases, material scope expansion, or decisions that require user-only input.
+- Ground every long-run progress claim in actual tool results, changed artifacts, or verification output.
+
+## Progress Evidence
+For long-running work, report progress only when it changes or when a checkpoint is reached. Every completion claim must cite a tool result, changed artifact, or verification output.
+
+## Session Strategy
+- New session — unrelated to prior context, start fresh
+- Subagent — delegate only [independent, sizeable workstream], with a bounded deliverable
+- Compact first — compact around [decisions, constraints, and current state], then begin
+```
+
+**Effort** — configure in the API or harness rather than requesting private reasoning in the prompt. For Fable 5.1, use the highest effort the harness allows for planning; lower for execution phases. Do not hardcode thinking budgets.
+
+**When to use:** Fable 5 / Fable 5.1 when the task is complex, multi-file, long-horizon, autonomous, or requires reliable execution over many steps without human intervention. Not needed for simple one-shot tasks.
